@@ -1,7 +1,9 @@
 .loader {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--azimuth-space-sm);
 }
 
 .circle {
@@ -58,6 +60,10 @@
 .label {
   font-size: var(--azimuth-fs-sm);
   color: var(--azimuth-color-text-muted);
-  margin-top: var(--azimuth-space-sm);
   text-align: center;
+}
+
+@keyframes azimuth-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

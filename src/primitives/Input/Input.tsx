@@ -271,40 +271,44 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           labelPosition === 'inner' && styles.wrapperInnerLabel,
         )}
       >
-        {label && labelPosition !== 'inner' && (
-          <div className={styles.labelRow}>
+        <div className={styles.headerArea}>
+          {label && labelPosition !== 'inner' && (
+            <div className={styles.labelRow}>
+              <label
+                htmlFor={generatedId}
+                className={cn(styles.label, required && styles.required)}
+              >
+                {label}
+              </label>
+              {showCharCount && maxLength !== undefined && (
+                <span className={styles.charCount}>
+                  {String(currentValue).length}/{maxLength}
+                </span>
+              )}
+            </div>
+          )}
+          {label && labelPosition === 'inner' && (
             <label
               htmlFor={generatedId}
               className={cn(styles.label, required && styles.required)}
             >
               {label}
             </label>
-            {showCharCount && maxLength !== undefined && (
-              <span className={styles.charCount}>
-                {String(currentValue).length}/{maxLength}
-              </span>
-            )}
-          </div>
-        )}
-        {label && labelPosition === 'inner' && (
-          <label
-            htmlFor={generatedId}
-            className={cn(styles.label, required && styles.required)}
-          >
-            {label}
-          </label>
-        )}
-        {subtitle && (
-          <span id={`${generatedId}-subtitle`} className={styles.subtitle}>
-            {subtitle}
-          </span>
-        )}
+          )}
+          {subtitle && (
+            <span id={`${generatedId}-subtitle`} className={styles.subtitle}>
+              {subtitle}
+            </span>
+          )}
+        </div>
         {inputElement}
-        {error && (
-          <span id={`${generatedId}-error`} className={styles.errorMessage} role="alert">
-            {error}
-          </span>
-        )}
+        <div className={styles.footerArea}>
+          {error && (
+            <span id={`${generatedId}-error`} className={styles.errorMessage} role="alert">
+              {error}
+            </span>
+          )}
+        </div>
       </div>
     );
   },

@@ -20,6 +20,8 @@ export interface CarouselProps extends ComponentPropsWithoutRef<'div'> {
   autoPlay?: boolean;
   /** Time in milliseconds between auto-advances. @default 5000 */
   interval?: number;
+  /** Milliseconds between automatic rotations. Enables auto-advance with this interval. */
+  autoRotate?: number;
   /** Whether to show dot indicators. @default true */
   showDots?: boolean;
   /** Whether to show arrow controls. @default true */
@@ -34,6 +36,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
       children,
       autoPlay = false,
       interval = 5000,
+      autoRotate,
       showDots = true,
       showArrows = true,
       loop = true,
@@ -53,6 +56,8 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
         : false;
     const [activeIndex, setActiveIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
+    const shouldAutoPlay = autoPlay || autoRotate !== undefined;
+    const rotationInterval = autoRotate ?? interval;
     const timerRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
     const goTo = useCallback(
@@ -70,15 +75,15 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
     const goPrev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
 
     useEffect(() => {
-      if (!autoPlay || isPaused || totalSlides <= 1 || prefersReducedMotion) return;
+      if (!shouldAutoPlay || isPaused || totalSlides <= 1 || prefersReducedMotion) return;
 
-      timerRef.current = setInterval(goNext, interval);
+      timerRef.current = setInterval(goNext, rotationInterval);
       return () => {
         if (timerRef.current !== undefined) {
           clearInterval(timerRef.current);
         }
       };
-    }, [autoPlay, isPaused, interval, goNext, totalSlides]);
+    }, [shouldAutoPlay, isPaused, rotationInterval, goNext, totalSlides]);
 
     if (totalSlides === 0) return null;
 

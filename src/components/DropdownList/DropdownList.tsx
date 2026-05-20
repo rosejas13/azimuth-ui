@@ -13,6 +13,8 @@ import styles from './DropdownList.module.css';
 
 /** Props for the DropdownList component. */
 export interface DropdownListProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+  /** The label text for the dropdown. */
+  label?: string;
   /** Array of dropdown options with value, label, and optional disabled/separator flags. */
   options: Array<{
     value: string;
@@ -47,6 +49,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
       searchable = false,
       disabled = false,
       error,
+      label,
       className,
       ...props
     },
@@ -197,6 +200,11 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
         {...props}
       >
         <div ref={wrapperRef}>
+          {label && (
+            <label className={styles.label} id={label.toLowerCase().replace(/\s+/g, '-')}>
+              {label}
+            </label>
+          )}
           <button
             type="button"
             className={styles.trigger}

@@ -10,8 +10,23 @@
   gap: var(--azimuth-space-md);
 }
 
+.wrapperHorizontal .headerArea {
+  min-height: auto;
+}
+
 .wrapperInnerLabel {
   position: relative;
+}
+
+.headerArea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-xs);
+  min-height: calc(var(--azimuth-fs-sm) * var(--azimuth-lh-base));
+}
+
+.footerArea {
+  min-height: calc(var(--azimuth-fs-xs) * var(--azimuth-lh-base));
 }
 
 .labelRow {

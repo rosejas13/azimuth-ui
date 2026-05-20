@@ -4,6 +4,14 @@
   min-width: 180px;
 }
 
+.label {
+  display: block;
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 600;
+  color: var(--azimuth-color-text-secondary);
+  margin-bottom: var(--azimuth-space-xs);
+}
+
 .trigger {
   display: inline-flex;
   align-items: center;

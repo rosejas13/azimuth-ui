@@ -76,3 +76,29 @@
 .lineContent {
   white-space: pre;
 }
+
+/* syntax highlighting */
+.token-keyword {
+  color: var(--azimuth-color-primary);
+}
+
+.token-string {
+  color: var(--azimuth-color-success-text);
+}
+
+.token-comment {
+  color: var(--azimuth-color-text-muted);
+  font-style: italic;
+}
+
+.token-number {
+  color: var(--azimuth-color-accent);
+}
+
+.token-tag {
+  color: #c084fc;
+}
+
+.token-function {
+  color: var(--azimuth-color-warning-text);
+}

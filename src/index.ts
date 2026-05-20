@@ -87,6 +87,9 @@ export type { DataTableProps, Column } from './components/DataTable';
 export { DateTimePicker } from './components/DateTimePicker';
 export type { DateTimePickerProps } from './components/DateTimePicker';
 
+export { DateRangePicker } from './components/DateRangePicker';
+export type { DateRangePickerProps, DateRange } from './components/DateRangePicker';
+
 export { Dialog } from './components/Dialog';
 export type { DialogProps } from './components/Dialog';
 

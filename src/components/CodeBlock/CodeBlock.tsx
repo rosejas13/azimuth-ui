@@ -1,7 +1,8 @@
 'use client';
 
-import { type ComponentPropsWithoutRef, forwardRef, useState, useCallback } from 'react';
+import { type ComponentPropsWithoutRef, forwardRef, useState, useCallback, useMemo } from 'react';
 import { cn } from '@/utils/cn';
+import { highlightCode } from './highlightCode';
 import styles from './CodeBlock.module.css';
 
 /** Props for the CodeBlock component. */
@@ -16,6 +17,8 @@ export interface CodeBlockProps extends Omit<ComponentPropsWithoutRef<'pre'>, 'c
   showCopyButton?: boolean;
   /** Maximum height of the code block (CSS value). */
   maxHeight?: string;
+  /** Whether to apply syntax highlighting. @default true */
+  highlight?: boolean;
 }
 
 export const CodeBlock = forwardRef<HTMLPreElement, CodeBlockProps>(
@@ -26,6 +29,7 @@ export const CodeBlock = forwardRef<HTMLPreElement, CodeBlockProps>(
       showLineNumbers = false,
       showCopyButton = false,
       maxHeight,
+      highlight = true,
       className,
       style,
       ...props
@@ -42,6 +46,11 @@ export const CodeBlock = forwardRef<HTMLPreElement, CodeBlockProps>(
     }, [code]);
 
     const lines = code.split('\n');
+
+    const highlightedLines = useMemo(() => {
+      if (!highlight) return null;
+      return lines.map((line) => highlightCode(line, language || ''));
+    }, [code, language, highlight]);
 
     return (
       <pre
@@ -72,7 +81,16 @@ export const CodeBlock = forwardRef<HTMLPreElement, CodeBlockProps>(
                   {i + 1}
                 </span>
               )}
-              <span className={styles.lineContent}>{line || '\u00A0'}</span>
+              {highlight && highlightedLines ? (
+                <span
+                  className={styles.lineContent}
+                  dangerouslySetInnerHTML={{
+                    __html: highlightedLines[i]!,
+                  }}
+                />
+              ) : (
+                <span className={styles.lineContent}>{line || '\u00A0'}</span>
+              )}
             </span>
           ))}
         </code>

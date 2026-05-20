@@ -1,5 +1,5 @@
 import '../src/styles/global.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ThemeProvider,
   Container, Grid, Stack, Divider,
@@ -8,14 +8,14 @@ import {
   Alert, Toast, Card, Modal, Drawer, SlideSheet,
   Breadcrumbs, Pagination, Tabs, DropdownList,
   DataTable, Dialog, Menu, Navbar, SearchBar, Slider,
-  Calendar, Carousel, Chip, CodeBlock, DateTimePicker, EmptyState,
-  Form, InputGroup, Kbd, List, PageLayout, SectionView,
+  Calendar, Carousel, Chip, CodeBlock, DateTimePicker, DateRangePicker,
+  EmptyState, Form, InputGroup, Kbd, List, PageLayout, SectionView,
   SegmentedButton, Skeleton, Table, TextArea, TextBox,
 } from '../src';
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ id, title, children }: { id?: string; title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: 'var(--azimuth-space-3xl)' }}>
+    <div id={id} style={{ marginBottom: 'var(--azimuth-space-3xl)' }}>
       <Text size="h2" style={{ marginBottom: 'var(--azimuth-space-lg)' }}>{title}</Text>
       {children}
     </div>
@@ -33,6 +33,29 @@ function DemoBox({ label, children }: { label: string; children: React.ReactNode
   );
 }
 
+function ThemeToggle() {
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('theme');
+    const isDark = stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    setDark(isDark);
+  }, []);
+
+  function toggle() {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle('dark', next);
+    localStorage.setItem('theme', next ? 'dark' : 'light');
+  }
+
+  return (
+    <Button variant="secondary" size="sm" onClick={toggle}>
+      {dark ? '☀ Light' : '☾ Dark'}
+    </Button>
+  );
+}
+
 export function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -43,10 +66,10 @@ export function App() {
   const [toastVisible, setToastVisible] = useState(true);
 
   const NAV_ITEMS = [
-    { key: 'home', label: 'Home', href: '#', active: true },
-    { key: 'docs', label: 'Docs', href: '#' },
-    { key: 'components', label: 'Components', href: '#' },
-    { key: 'github', label: 'GitHub', href: '#' },
+    { key: 'buttons', label: 'Buttons', href: '#buttons' },
+    { key: 'forms', label: 'Forms', href: '#forms' },
+    { key: 'cards', label: 'Cards', href: '#cards' },
+    { key: 'overlays', label: 'Overlays', href: '#overlays' },
   ];
 
   const BREADCRUMB_ITEMS = [
@@ -67,8 +90,7 @@ export function App() {
     <div>
       <Navbar logo="Azimuth" items={NAV_ITEMS} actions={
         <Stack direction="horizontal" spacing="sm">
-          <Button size="sm" variant="secondary">Login</Button>
-          <Button size="sm">Get Started</Button>
+          <ThemeToggle />
         </Stack>
       } />
 
@@ -83,7 +105,7 @@ export function App() {
           </Text>
 
           {/* ===== BUTTONS ===== */}
-          <Section title="Buttons">
+          <Section id="buttons" title="Buttons">
             <DemoBox label="Variants">
               <Button variant="primary">Primary</Button>
               <Button variant="secondary">Secondary</Button>
@@ -120,7 +142,7 @@ export function App() {
           <Divider />
 
           {/* ===== FORM ELEMENTS ===== */}
-          <Section title="Form Elements">
+          <Section id="forms" title="Form Elements">
             <Grid cols={2} gap="lg">
               <Input label="Email" type="email" placeholder="you@example.com" subtitle="We'll never share your email." />
               <Input label="Password" type="password" placeholder="••••••••" />
@@ -179,7 +201,7 @@ export function App() {
           <Divider />
 
           {/* ===== CARDS ===== */}
-          <Section title="Cards">
+          <Section id="cards" title="Cards">
             <Grid cols={2} gap="lg">
               <Card header={<Text weight="semibold">Basic Card</Text>}>
                 <Text size="sm" color="secondary">
@@ -253,7 +275,7 @@ export function App() {
           <Divider />
 
           {/* ===== OVERLAYS ===== */}
-          <Section title="Overlays">
+          <Section id="overlays" title="Overlays">
             <Stack direction="horizontal" spacing="md" wrap>
               <Button onClick={() => setModalOpen(true)}>Open Modal</Button>
               <Button variant="secondary" onClick={() => setDrawerOpen(true)}>Open Drawer</Button>
@@ -339,6 +361,8 @@ export function App() {
               <Loader variant="circle" size="sm" />
               <Loader variant="circle" size="md" />
               <Loader variant="circle" size="lg" />
+            </DemoBox>
+            <DemoBox label="Loader with Label">
               <Loader variant="bar" size="md" label="Loading..." />
             </DemoBox>
             <DemoBox label="Progress">
@@ -441,17 +465,15 @@ export function App() {
 
           <Section title="List & Table">
             <Grid cols={2} gap="lg">
-              <div>
-                <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>List</Text>
+              <Card header={<Text weight="semibold">List</Text>}>
                 <List>
                   <List.Item>React</List.Item>
                   <List.Item>TypeScript</List.Item>
                   <List.Item>Vitest</List.Item>
                   <List.Item>Storybook</List.Item>
                 </List>
-              </div>
-              <div>
-                <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Table</Text>
+              </Card>
+              <Card header={<Text weight="semibold">Table</Text>}>
                 <Table>
                   <thead>
                     <tr>
@@ -464,17 +486,18 @@ export function App() {
                     <tr><td>Bob</td><td>Designer</td></tr>
                   </tbody>
                 </Table>
-              </div>
+              </Card>
             </Grid>
           </Section>
 
           <Divider />
 
           <Section title="CodeBlock & InputGroup">
-            <DemoBox label="Code Block">
+            <DemoBox label="Code Block (highlighted)">
               <CodeBlock
                 language="tsx"
                 showCopyButton
+                highlight
                 code={`import { Button } from '@azimuth/ui';\n\nfunction App() {\n  return <Button>Click me</Button>;\n}`}
               />
             </DemoBox>
@@ -491,8 +514,8 @@ export function App() {
           <Section title="PageLayout & SectionView">
             <PageLayout
               sidebar={
-                <div style={{ padding: 'var(--azimuth-space-md)', border: '1px solid var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-md)' }}>
-                  <Text size="sm" weight="semibold">Sidebar</Text>
+                <div style={{ padding: 'var(--azimuth-space-md)' }}>
+                  <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Sidebar</Text>
                   <List>
                     <List.Item active>Overview</List.Item>
                     <List.Item>Settings</List.Item>
@@ -509,7 +532,7 @@ export function App() {
 
           <Divider />
 
-          <Section title="Calendar & DateTimePicker">
+          <Section title="Calendar, DateTimePicker & Date Range">
             <Grid cols={2} gap="lg">
               <div>
                 <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Calendar</Text>
@@ -520,6 +543,13 @@ export function App() {
                 <DateTimePicker onChange={(d) => console.log(d)} />
               </div>
             </Grid>
+            <div style={{ marginTop: 'var(--azimuth-space-xl)' }}>
+              <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Date Range Picker</Text>
+              <DateRangePicker
+                label="Select dates"
+                onChange={(range) => console.log(range)}
+              />
+            </div>
           </Section>
 
           <Divider />
@@ -532,12 +562,12 @@ export function App() {
                 action={<Button size="sm" variant="secondary">Clear Filters</Button>}
               />
             </DemoBox>
-            <DemoBox label="Carousel">
-              <Carousel>
-                {[1, 2, 3].map((i) => (
-                  <div key={i} style={{ padding: 'var(--azimuth-space-xl)', textAlign: 'center', background: 'var(--azimuth-color-surface-raised)', borderRadius: 'var(--azimuth-radius-md)' }}>
+            <DemoBox label="Carousel (auto-rotate 3s)">
+              <Carousel autoRotate={3000}>
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} style={{ padding: 'var(--azimuth-space-xl)', textAlign: 'center', background: 'var(--azimuth-color-surface-hover)', borderRadius: 'var(--azimuth-radius-md)' }}>
                     <Text size="h4">Slide {i}</Text>
-                    <Text size="sm" color="secondary">Carousel content slide</Text>
+                    <Text size="sm" color="secondary">Auto-advances every 3 seconds</Text>
                   </div>
                 ))}
               </Carousel>
@@ -554,6 +584,7 @@ export function App() {
             <DemoBox label="Config Options">
               <CodeBlock
                 language="tsx"
+                highlight
                 code={`<ThemeProvider config={{\n  accentColor: '#e8734a',\n  borderRadius: 'md',\n  flat: false,\n  spacing: 'normal',\n  mode: 'system',\n  motion: 'snappy',\n  animations: true,\n  fontDisplay: 'Inter, sans-serif',\n  fontBody: 'Inter, sans-serif',\n}}>\n  <App />\n</ThemeProvider>`}
               />
             </DemoBox>
@@ -563,35 +594,37 @@ export function App() {
 
           {/* ===== FORM ===== */}
           <Section title="Form Component">
-            <Form
-              onSubmit={(data) => {
-                alert(`Submitted: ${JSON.stringify(Object.fromEntries(data.entries()))}`);
-              }}
-            >
-              <Stack spacing="md">
-                <Form.Field label="Full Name" required>
-                  <Input placeholder="Enter your name" />
-                </Form.Field>
-                <Form.Field label="Email" required helpText="We'll never share it.">
-                  <Input type="email" placeholder="you@example.com" />
-                </Form.Field>
-                <Form.Field label="Message" error="This field is required">
-                  <textarea
-                    placeholder="Your message..."
-                    style={{
-                      width: '100%', minHeight: '100px', padding: 'var(--azimuth-space-sm) var(--azimuth-space-md)',
-                      border: '1px solid var(--azimuth-color-error-text)', borderRadius: 'var(--azimuth-radius-md)',
-                      fontFamily: 'var(--azimuth-font-body)', fontSize: 'var(--azimuth-fs-base)',
-                      background: 'var(--azimuth-color-surface)', color: 'var(--azimuth-color-text)',
-                    }}
-                  />
-                </Form.Field>
-                <Stack direction="horizontal" justify="end" spacing="sm">
-                  <Button variant="secondary" type="button">Cancel</Button>
-                  <Button type="submit">Submit</Button>
+            <Card>
+              <Form
+                onSubmit={(data) => {
+                  alert(`Submitted: ${JSON.stringify(Object.fromEntries(data.entries()))}`);
+                }}
+              >
+                <Stack spacing="md">
+                  <Form.Field label="Full Name" required>
+                    <Input placeholder="Enter your name" />
+                  </Form.Field>
+                  <Form.Field label="Email" required helpText="We'll never share it.">
+                    <Input type="email" placeholder="you@example.com" />
+                  </Form.Field>
+                  <Form.Field label="Message" error="This field is required">
+                    <textarea
+                      placeholder="Your message..."
+                      style={{
+                        width: '100%', minHeight: '100px', padding: 'var(--azimuth-space-sm) var(--azimuth-space-md)',
+                        border: '1px solid var(--azimuth-color-error-text)', borderRadius: 'var(--azimuth-radius-md)',
+                        fontFamily: 'var(--azimuth-font-body)', fontSize: 'var(--azimuth-fs-base)',
+                        background: 'var(--azimuth-color-surface)', color: 'var(--azimuth-color-text)',
+                      }}
+                    />
+                  </Form.Field>
+                  <Stack direction="horizontal" justify="end" spacing="sm">
+                    <Button variant="secondary" type="button">Cancel</Button>
+                    <Button type="submit">Submit</Button>
+                  </Stack>
                 </Stack>
-              </Stack>
-            </Form>
+              </Form>
+            </Card>
           </Section>
         </div>
       </Container>

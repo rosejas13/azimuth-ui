@@ -45,15 +45,17 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
     return (
       <div className={cn(styles.wrapper, styles[size])}>
-        {label && (
-          <label
-            htmlFor={generatedId}
-            className={cn(styles.label, required && styles.required)}
-          >
-            {label}
-          </label>
-        )}
-        {subtitle && <span id={`${generatedId}-subtitle`} className={styles.subtitle}>{subtitle}</span>}
+        <div className={styles.headerArea}>
+          {label && (
+            <label
+              htmlFor={generatedId}
+              className={cn(styles.label, required && styles.required)}
+            >
+              {label}
+            </label>
+          )}
+          {subtitle && <span id={`${generatedId}-subtitle`} className={styles.subtitle}>{subtitle}</span>}
+        </div>
         <div className={styles.selectContainer}>
           <select
             ref={ref}
@@ -94,11 +96,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ▾
           </span>
         </div>
-        {error && (
-          <span id={`${generatedId}-error`} className={styles.errorMessage} role="alert">
-            {error}
-          </span>
-        )}
+        <div className={styles.footerArea}>
+          {error && (
+            <span id={`${generatedId}-error`} className={styles.errorMessage} role="alert">
+              {error}
+            </span>
+          )}
+        </div>
       </div>
     );
   },
