@@ -8,7 +8,6 @@ export default defineConfig({
   external: ['react', 'react-dom'],
   treeshake: true,
   sourcemap: true,
-  // CSS Modules handled as regular CSS
   loader: {
     '.css': 'css',
   },

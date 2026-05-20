@@ -1,9 +1,12 @@
 # Azimuth UI
 
+[![version](https://img.shields.io/npm/v/@azimuth/ui?style=flat-square)](https://www.npmjs.com/package/@azimuth/ui)
+[![license](https://img.shields.io/github/license/rosejas13/azimuth-ui?style=flat-square)](LICENSE)
+
 A configurable, accessible React component library. Theme-driven via a single `<ThemeProvider>` with CSS custom properties. Configure border radius, flatness, accent color, spacing density, animations, and dark mode — every component responds instantly.
 
 ```bash
-npm install @azimuth/ui
+npm install @azimuth/ui react react-dom
 ```
 
 ```tsx
@@ -25,7 +28,7 @@ function App() {
 
 ## Features
 
-- **24 components**: Button, Text, Input, Select, Checkbox, Radio, Toggle, Card, Modal, Dialog, Drawer, SlideSheet, Alert, Toast, Badge, Tag, Avatar, Loader, ProgressBar, Tooltip, Navbar, Tabs, Breadcrumbs, Pagination, DropdownList, DataTable, Form, Menu, SearchBar, Slider, and more
+- **58 components**: Primitives, layout utilities, and full-featured UI components
 - **ThemeProvider**: Single config controls every component's appearance
 - **CSS custom properties**: All styling via `--azimuth-*` tokens
 - **Dark mode**: Built-in light/dark/system mode support
@@ -34,6 +37,20 @@ function App() {
 - **TypeScript**: Full type safety with strict mode
 - **Zero CSS runtime**: CSS Modules compiled to vanilla CSS
 - **Animation**: Snappy easing with `prefers-reduced-motion` support
+
+## Components
+
+### Primitives (8)
+
+`Button` `Checkbox` `Icon` `Input` `Radio` `Select` `Text` `Toggle`
+
+### Layout (4)
+
+`Container` `Divider` `Grid` `Stack`
+
+### Components (46)
+
+`Alert` `Avatar` `Badge` `Breadcrumbs` `Calendar` `Card` `Carousel` `Chip` `CodeBlock` `Cursor` `DataTable` `DateTimePicker` `Dialog` `Drawer` `DropdownList` `EmptyState` `FanMenu` `Flyout` `Form` `InputGroup` `Kbd` `List` `Loader` `LoginSignup` `Menu` `Modal` `Navbar` `PageLayout` `Pagination` `ProgressBar` `ResizablePanel` `SearchBar` `SectionView` `SegmentedButton` `Skeleton` `Slider` `SlideSheet` `Table` `Tabs` `Tag` `TextArea` `TextBox` `Toast` `Tooltip` `TreeList` `VisuallyHidden`
 
 ## Quick Start
 
@@ -70,13 +87,22 @@ interface ThemeConfig {
 ## Development
 
 ```bash
-git clone git@github.com:you/azimuth-ui.git
+git clone https://github.com/rosejas13/azimuth-ui.git
 cd azimuth-ui
 npm install
-npm run test          # 381 tests
+npm run test          # 619 tests
 npm run typecheck     # Strict TypeScript
 npm run demo          # Component showcase
 ```
+
+## Contributing
+
+Contributions are welcome. Please follow the coding conventions outlined in `AGENTS.md`. Before submitting a PR, ensure:
+
+- All existing tests pass (`npm run test`)
+- TypeScript compiles without errors (`npm run typecheck`)
+- The build succeeds (`npm run build`)
+- New components include tests and follow existing patterns
 
 ## License
 

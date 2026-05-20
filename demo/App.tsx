@@ -7,7 +7,10 @@ import {
   Badge, Tag, Avatar, Loader, ProgressBar, Tooltip,
   Alert, Toast, Card, Modal, Drawer, SlideSheet,
   Breadcrumbs, Pagination, Tabs, DropdownList,
-  DataTable, Form, Dialog, Menu, Navbar, SearchBar, Slider,
+  DataTable, Dialog, Menu, Navbar, SearchBar, Slider,
+  Calendar, Carousel, Chip, CodeBlock, DateTimePicker, EmptyState,
+  Form, InputGroup, Kbd, List, PageLayout, SectionView,
+  SegmentedButton, Skeleton, Table, TextArea, TextBox,
 } from '../src';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -382,6 +385,178 @@ export function App() {
                 <SearchBar placeholder="Search..." onSearch={(q) => console.log(q)} clearable />
               </div>
             </Grid>
+          </Section>
+
+          <Divider />
+
+          {/* ===== MORE COMPONENTS ===== */}
+          <Section title="Chips & Segmented Button">
+            <DemoBox label="Chips">
+              <Chip variant="neutral" onClick={() => {}}>Filter</Chip>
+              <Chip variant="accent" selected onClick={() => {}}>Selected</Chip>
+              <Chip variant="success" onClick={() => {}}>Online</Chip>
+              <Chip variant="danger" onClick={() => {}}>Offline</Chip>
+              <Chip variant="neutral" deletable onDelete={() => {}}>Removable</Chip>
+            </DemoBox>
+            <DemoBox label="Segmented Button">
+              <SegmentedButton
+                options={[
+                  { value: 'day', label: 'Day' },
+                  { value: 'week', label: 'Week' },
+                  { value: 'month', label: 'Month' },
+                ]}
+                defaultValue="week"
+                onChange={(v) => console.log(v)}
+              />
+            </DemoBox>
+          </Section>
+
+          <Divider />
+
+          <Section title="TextArea & TextBox">
+            <Grid cols={2} gap="lg">
+              <TextArea label="Bio" placeholder="Tell us about yourself..." rows={3} />
+              <TextBox label="Rich Content" placeholder="Enter styled content..." />
+            </Grid>
+          </Section>
+
+          <Divider />
+
+          <Section title="Skeleton & Kbd">
+            <DemoBox label="Skeleton">
+              <Skeleton width="200px" height="16px" />
+              <Skeleton width="150px" height="16px" />
+              <Skeleton width="180px" height="16px" />
+            </DemoBox>
+            <DemoBox label="Keyboard shortcuts">
+              <Kbd>⌘</Kbd> + <Kbd>C</Kbd>
+              <span style={{ margin: '0 var(--azimuth-space-sm)' }}>|</span>
+              <Kbd>⌘</Kbd> + <Kbd>V</Kbd>
+              <span style={{ margin: '0 var(--azimuth-space-sm)' }}>|</span>
+              <Kbd>⌘</Kbd> + <Kbd>⌫</Kbd>
+            </DemoBox>
+          </Section>
+
+          <Divider />
+
+          <Section title="List & Table">
+            <Grid cols={2} gap="lg">
+              <div>
+                <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>List</Text>
+                <List>
+                  <List.Item>React</List.Item>
+                  <List.Item>TypeScript</List.Item>
+                  <List.Item>Vitest</List.Item>
+                  <List.Item>Storybook</List.Item>
+                </List>
+              </div>
+              <div>
+                <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Table</Text>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Role</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Alice</td><td>Engineer</td></tr>
+                    <tr><td>Bob</td><td>Designer</td></tr>
+                  </tbody>
+                </Table>
+              </div>
+            </Grid>
+          </Section>
+
+          <Divider />
+
+          <Section title="CodeBlock & InputGroup">
+            <DemoBox label="Code Block">
+              <CodeBlock
+                language="tsx"
+                showCopyButton
+                code={`import { Button } from '@azimuth/ui';\n\nfunction App() {\n  return <Button>Click me</Button>;\n}`}
+              />
+            </DemoBox>
+            <DemoBox label="Input Group">
+              <InputGroup>
+                <Input placeholder="First name" />
+                <Input placeholder="Last name" />
+              </InputGroup>
+            </DemoBox>
+          </Section>
+
+          <Divider />
+
+          <Section title="PageLayout & SectionView">
+            <PageLayout
+              sidebar={
+                <div style={{ padding: 'var(--azimuth-space-md)', border: '1px solid var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-md)' }}>
+                  <Text size="sm" weight="semibold">Sidebar</Text>
+                  <List>
+                    <List.Item active>Overview</List.Item>
+                    <List.Item>Settings</List.Item>
+                    <List.Item>Billing</List.Item>
+                  </List>
+                </div>
+              }
+            >
+              <SectionView title="Overview">
+                <Text size="sm" color="secondary">PageLayout with sidebar and SectionView for content organization.</Text>
+              </SectionView>
+            </PageLayout>
+          </Section>
+
+          <Divider />
+
+          <Section title="Calendar & DateTimePicker">
+            <Grid cols={2} gap="lg">
+              <div>
+                <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Calendar</Text>
+                <Calendar onChange={(d) => console.log(d)} />
+              </div>
+              <div>
+                <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>DateTime Picker</Text>
+                <DateTimePicker onChange={(d) => console.log(d)} />
+              </div>
+            </Grid>
+          </Section>
+
+          <Divider />
+
+          <Section title="EmptyState & Carousel">
+            <DemoBox label="Empty State">
+              <EmptyState
+                title="No results found"
+                description="Try adjusting your search or filter criteria."
+                action={<Button size="sm" variant="secondary">Clear Filters</Button>}
+              />
+            </DemoBox>
+            <DemoBox label="Carousel">
+              <Carousel>
+                {[1, 2, 3].map((i) => (
+                  <div key={i} style={{ padding: 'var(--azimuth-space-xl)', textAlign: 'center', background: 'var(--azimuth-color-surface-raised)', borderRadius: 'var(--azimuth-radius-md)' }}>
+                    <Text size="h4">Slide {i}</Text>
+                    <Text size="sm" color="secondary">Carousel content slide</Text>
+                  </div>
+                ))}
+              </Carousel>
+            </DemoBox>
+          </Section>
+
+          <Divider />
+
+          {/* ===== THEME CONFIG ===== */}
+          <Section title="Theme Configuration">
+            <Text size="sm" color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+              This demo uses the default Azimuth theme. Customize via ThemeProvider config:
+            </Text>
+            <DemoBox label="Config Options">
+              <CodeBlock
+                language="tsx"
+                code={`<ThemeProvider config={{\n  accentColor: '#e8734a',\n  borderRadius: 'md',\n  flat: false,\n  spacing: 'normal',\n  mode: 'system',\n  motion: 'snappy',\n  animations: true,\n  fontDisplay: 'Inter, sans-serif',\n  fontBody: 'Inter, sans-serif',\n}}>\n  <App />\n</ThemeProvider>`}
+              />
+            </DemoBox>
           </Section>
 
           <Divider />

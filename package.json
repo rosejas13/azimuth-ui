@@ -1,6 +1,6 @@
 {
   "name": "@azimuth/ui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A configurable, accessible React component library. Theme-driven via a single ThemeProvider with CSS custom properties. Built with TypeScript and CSS Modules.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -28,7 +28,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006",
     "demo": "vite demo --config demo/vite.config.ts",
-    "build": "tsup",
+    "build": "tsup && sed -i \"1i'use client';\" dist/index.js && sed -i \"1i'use client';\" dist/index.cjs",
     "build-storybook": "storybook build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
