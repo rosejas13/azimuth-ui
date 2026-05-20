@@ -1,0 +1,67 @@
+.sectionView {
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius);
+  background: var(--azimuth-color-surface);
+  overflow: hidden;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-base);
+  color: var(--azimuth-color-text);
+  transition: background var(--azimuth-transition-fast);
+  text-align: left;
+  gap: var(--azimuth-space-sm);
+}
+
+.trigger:hover {
+  background: var(--azimuth-color-surface-hover);
+}
+
+.trigger:focus-visible {
+  box-shadow: var(--azimuth-shadow-focus);
+  outline: none;
+}
+
+.title {
+  font-weight: 600;
+  min-width: 0;
+}
+
+.chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--azimuth-color-text-secondary);
+  transition: transform var(--azimuth-transition-fast);
+}
+
+.chevronExpanded {
+  transform: rotate(180deg);
+}
+
+.content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--azimuth-transition-base);
+}
+
+.contentExpanded {
+  max-height: 2000px;
+}
+
+.contentInner {
+  padding: 0 var(--azimuth-space-lg) var(--azimuth-space-lg);
+  font-family: var(--azimuth-font-body);
+  color: var(--azimuth-color-text);
+  line-height: var(--azimuth-lh-base);
+}

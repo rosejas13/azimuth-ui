@@ -1,0 +1,67 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: var(--azimuth-font-body);
+}
+
+.spacingSm {
+  gap: var(--azimuth-space-sm);
+}
+
+.spacingMd {
+  gap: var(--azimuth-space-md);
+}
+
+.spacingLg {
+  gap: var(--azimuth-space-lg);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-xs);
+}
+
+.label {
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.required {
+  color: var(--azimuth-color-error-text);
+  margin-left: 2px;
+}
+
+.helpText {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+  line-height: 1.4;
+}
+
+.error {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-error-text);
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-xs);
+}
+
+.fieldControl {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-xs);
+}
+
+.fieldControlError {
+  /* Error border is applied via global selectors on child inputs */
+}
+
+.fieldControlError :global(input),
+.fieldControlError :global(textarea),
+.fieldControlError :global(select) {
+  border-color: var(--azimuth-color-error-text);
+}

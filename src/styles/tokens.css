@@ -1,0 +1,164 @@
+:root {
+  --azimuth-fs-xs: 0.75rem;
+  --azimuth-fs-sm: 0.875rem;
+  --azimuth-fs-base: 1rem;
+  --azimuth-fs-lg: 1.125rem;
+  --azimuth-fs-h5: 1.25rem;
+  --azimuth-fs-h4: 1.5rem;
+  --azimuth-fs-h3: 1.75rem;
+  --azimuth-fs-h2: 2rem;
+  --azimuth-fs-h1: 2.5rem;
+
+  --azimuth-lh-tight: 1.2;
+  --azimuth-lh-base: 1.6;
+  --azimuth-lh-display: 1.05;
+
+  --azimuth-radius: var(--azimuth-radius-md, 8px);
+  --azimuth-radius-none: 0px;
+  --azimuth-radius-sm: 4px;
+  --azimuth-radius-md: 8px;
+  --azimuth-radius-lg: 12px;
+  --azimuth-radius-xl: 16px;
+  --azimuth-radius-full: 9999px;
+
+  --azimuth-space-xs: 0.25rem;
+  --azimuth-space-sm: 0.5rem;
+  --azimuth-space-md: 1rem;
+  --azimuth-space-lg: 1.5rem;
+  --azimuth-space-xl: 2rem;
+  --azimuth-space-2xl: 3rem;
+  --azimuth-space-3xl: 4rem;
+  --azimuth-space-4xl: 6rem;
+
+  --azimuth-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --azimuth-transition-fast: 150ms var(--azimuth-ease);
+  --azimuth-transition-base: 250ms var(--azimuth-ease);
+  --azimuth-transition-slow: 400ms var(--azimuth-ease);
+
+  --azimuth-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --azimuth-shadow-md: 0 2px 8px 0 rgb(0 0 0 / 0.06);
+  --azimuth-shadow-lg: 0 4px 16px 0 rgb(0 0 0 / 0.08);
+
+  --azimuth-accent: #e8734a;
+  --azimuth-font-display: 'Onest', system-ui, sans-serif;
+  --azimuth-font-body: 'Onest', system-ui, sans-serif;
+}
+
+:root {
+  --azimuth-color-bg: oklch(98.5% 0.005 85);
+  --azimuth-color-surface: oklch(99% 0.003 85);
+  --azimuth-color-surface-hover: oklch(97% 0.005 85);
+  --azimuth-color-text: oklch(20% 0.01 85);
+  --azimuth-color-text-secondary: oklch(45% 0.01 85);
+  --azimuth-color-text-muted: oklch(55% 0.008 85);
+  --azimuth-color-border: oklch(78% 0.008 85);
+  --azimuth-color-border-strong: oklch(80% 0.01 85);
+  --azimuth-color-primary: oklch(50% 0.13 195);
+  --azimuth-color-primary-hover: oklch(45% 0.14 195);
+  --azimuth-color-primary-subtle: oklch(92% 0.04 195);
+  --azimuth-color-on-primary: oklch(99% 0 0);
+  --azimuth-color-accent: var(--azimuth-accent);
+  --azimuth-color-accent-hover: oklch(60% 0.18 35);
+  --azimuth-color-accent-subtle: oklch(92% 0.05 35);
+  --azimuth-color-on-accent: oklch(99% 0 0);
+  --azimuth-color-success-bg: oklch(92% 0.04 145);
+  --azimuth-color-success-text: oklch(35% 0.06 145);
+  --azimuth-color-warning-bg: oklch(94% 0.05 85);
+  --azimuth-color-warning-text: oklch(45% 0.08 85);
+  --azimuth-color-error-bg: oklch(92% 0.05 30);
+  --azimuth-color-error-text: oklch(40% 0.08 30);
+  --azimuth-color-info-bg: oklch(92% 0.04 250);
+  --azimuth-color-info-text: oklch(35% 0.06 250);
+  --azimuth-color-overlay: rgb(0 0 0 / 0.5);
+  --azimuth-shadow-focus: 0 0 0 3px var(--azimuth-color-primary-subtle);
+  --azimuth-shadow-focus-error: 0 0 0 3px var(--azimuth-color-error-bg);
+
+  --azimuth-font-mono: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+}
+
+.dark, [data-theme="dark"] {
+  color-scheme: dark;
+  --azimuth-color-bg: oklch(14% 0.008 220);
+  --azimuth-color-surface: oklch(19% 0.01 220);
+  --azimuth-color-surface-hover: oklch(22% 0.01 220);
+  --azimuth-color-text: oklch(90% 0.005 85);
+  --azimuth-color-text-secondary: oklch(65% 0.005 85);
+  --azimuth-color-text-muted: oklch(45% 0.005 85);
+  --azimuth-color-border: oklch(28% 0.01 220);
+  --azimuth-color-border-strong: oklch(35% 0.01 220);
+  --azimuth-color-primary: oklch(62% 0.12 195);
+  --azimuth-color-primary-hover: oklch(68% 0.13 195);
+  --azimuth-color-primary-subtle: oklch(25% 0.04 195);
+  --azimuth-color-on-primary: oklch(14% 0.008 220);
+  --azimuth-accent: oklch(70% 0.15 35);
+  --azimuth-color-accent: var(--azimuth-accent);
+  --azimuth-color-accent-hover: oklch(75% 0.16 35);
+  --azimuth-color-accent-subtle: oklch(25% 0.05 35);
+  --azimuth-color-on-accent: oklch(14% 0.008 220);
+  --azimuth-color-success-bg: oklch(22% 0.04 145);
+  --azimuth-color-success-text: oklch(65% 0.06 145);
+  --azimuth-color-warning-bg: oklch(25% 0.05 85);
+  --azimuth-color-warning-text: oklch(70% 0.08 85);
+  --azimuth-color-error-bg: oklch(22% 0.05 30);
+  --azimuth-color-error-text: oklch(65% 0.08 30);
+  --azimuth-color-info-bg: oklch(22% 0.04 250);
+  --azimuth-color-info-text: oklch(65% 0.06 250);
+  --azimuth-color-overlay: rgb(0 0 0 / 0.5);
+  --azimuth-shadow-focus: 0 0 0 3px var(--azimuth-color-primary-subtle);
+  --azimuth-shadow-focus-error: 0 0 0 3px var(--azimuth-color-error-bg);
+
+  --azimuth-font-mono: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+}
+
+@supports not (color: oklch(0 0 0)) {
+  :root {
+    --azimuth-color-bg: #f8f8f5;
+    --azimuth-color-surface: #fdfdfc;
+    --azimuth-color-surface-hover: #f0f0ed;
+    --azimuth-color-text: #303030;
+    --azimuth-color-text-secondary: #7a7a78;
+    --azimuth-color-text-muted: #a0a09e;
+    --azimuth-color-border: #dededb;
+    --azimuth-color-border-strong: #c8c8c5;
+    --azimuth-color-primary: #2e9e8e;
+    --azimuth-color-primary-hover: #258a7c;
+    --azimuth-color-primary-subtle: #e0f0ec;
+    --azimuth-color-on-primary: #ffffff;
+    --azimuth-color-accent-hover: #d4623a;
+    --azimuth-color-accent-subtle: #fae8e0;
+    --azimuth-color-on-accent: #ffffff;
+    --azimuth-color-success-bg: #e0f0e0;
+    --azimuth-color-success-text: #2e7a2e;
+    --azimuth-color-warning-bg: #f5f0e0;
+    --azimuth-color-warning-text: #7a6e2e;
+    --azimuth-color-error-bg: #fae0e0;
+    --azimuth-color-error-text: #7a2e2e;
+    --azimuth-color-info-bg: #e0e8f0;
+    --azimuth-color-info-text: #2e4a7a;
+  }
+  .dark, [data-theme="dark"] {
+    --azimuth-color-bg: #121218;
+    --azimuth-color-surface: #1e1e24;
+    --azimuth-color-surface-hover: #282830;
+    --azimuth-color-text: #e8e8e5;
+    --azimuth-color-text-secondary: #a0a09e;
+    --azimuth-color-text-muted: #70706e;
+    --azimuth-color-border: #3a3a40;
+    --azimuth-color-border-strong: #505058;
+    --azimuth-color-primary: #4ad4be;
+    --azimuth-color-primary-hover: #5ee0cc;
+    --azimuth-color-primary-subtle: #1a2a28;
+    --azimuth-color-on-primary: #121218;
+    --azimuth-color-accent-hover: #f5a07a;
+    --azimuth-color-accent-subtle: #2a1a18;
+    --azimuth-color-on-accent: #121218;
+    --azimuth-color-success-bg: #1a2a1a;
+    --azimuth-color-success-text: #4ae04a;
+    --azimuth-color-warning-bg: #2a2a1a;
+    --azimuth-color-warning-text: #e0e04a;
+    --azimuth-color-error-bg: #2a1a1a;
+    --azimuth-color-error-text: #f05e5e;
+    --azimuth-color-info-bg: #1a1e2a;
+    --azimuth-color-info-text: #4a7ae0;
+  }
+}

@@ -1,0 +1,25 @@
+.skeleton {
+  display: block;
+  border-radius: var(--azimuth-radius-sm);
+  background: var(--azimuth-color-border);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(255 255 255 / 0.3) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: azimuth-shimmer 1.5s ease infinite;
+}
+
+.text {
+  border-radius: var(--azimuth-radius);
+}
+
+.circle {
+  border-radius: var(--azimuth-radius-full);
+}
+
+.rect {
+  border-radius: var(--azimuth-radius-md);
+}

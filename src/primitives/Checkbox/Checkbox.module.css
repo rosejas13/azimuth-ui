@@ -1,0 +1,73 @@
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--azimuth-space-sm);
+  cursor: pointer;
+  user-select: none;
+}
+
+.wrapperDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkbox {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--azimuth-color-border-strong);
+  border-radius: var(--azimuth-radius-sm);
+  background: var(--azimuth-color-surface);
+  cursor: pointer;
+  flex-shrink: 0;
+  display: grid;
+  place-content: center;
+  transition:
+    border-color var(--azimuth-transition-fast),
+    background var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast);
+}
+
+.checkbox:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 2px;
+}
+
+.checkbox:checked {
+  background: var(--azimuth-color-primary);
+  border-color: var(--azimuth-color-primary);
+}
+
+.checkbox:checked::after {
+  content: '';
+  width: 6px;
+  height: 9px;
+  border: solid var(--azimuth-color-on-primary);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -1px;
+  animation: azimuth-checkmark-in 150ms var(--azimuth-ease) forwards;
+}
+
+@keyframes azimuth-checkmark-in {
+  from { opacity: 0; transform: rotate(45deg) scale(0.5); }
+  to { opacity: 1; transform: rotate(45deg) scale(1); }
+}
+
+.checkbox:disabled {
+  cursor: not-allowed;
+}
+
+.checkbox:indeterminate::after {
+  content: '';
+  width: 10px;
+  height: 2px;
+  background: var(--azimuth-color-primary);
+  border-radius: 1px;
+}
+
+.label {
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text);
+  line-height: 1.5;
+}

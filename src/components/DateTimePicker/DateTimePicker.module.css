@@ -1,0 +1,68 @@
+.wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-md);
+  background: var(--azimuth-color-surface);
+  overflow: hidden;
+}
+
+.timeSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.divider {
+  height: 1px;
+  background: var(--azimuth-color-border);
+  margin: 0 var(--azimuth-space-md);
+}
+
+.timeInputs {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--azimuth-space-xs);
+  padding: var(--azimuth-space-md);
+}
+
+.timeField {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timeLabel {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+  font-family: var(--azimuth-font-body);
+}
+
+.timeSeparator {
+  font-size: var(--azimuth-fs-base);
+  color: var(--azimuth-color-text-secondary);
+  padding-bottom: 4px;
+  font-weight: 500;
+}
+
+.select {
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-sm);
+  background: var(--azimuth-color-bg);
+  color: var(--azimuth-color-text);
+  font-size: var(--azimuth-fs-sm);
+  font-family: var(--azimuth-font-body);
+  cursor: pointer;
+  transition: border-color var(--azimuth-transition-fast);
+  min-width: 52px;
+}
+
+.select:hover {
+  border-color: var(--azimuth-color-border-strong);
+}
+
+.select:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
+}

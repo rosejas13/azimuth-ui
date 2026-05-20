@@ -1,0 +1,116 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  background: var(--azimuth-color-overlay);
+  animation: azimuth-fade-in var(--azimuth-transition-fast) forwards;
+}
+
+.sheet {
+  position: fixed;
+  background: var(--azimuth-color-surface);
+  border: 1px solid var(--azimuth-color-border);
+  box-shadow: var(--azimuth-shadow-lg);
+  display: flex;
+  flex-direction: column;
+  animation-duration: var(--azimuth-transition-base);
+  animation-timing-function: var(--azimuth-ease);
+  animation-fill-mode: forwards;
+}
+
+.bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: var(--azimuth-radius-xl) var(--azimuth-radius-xl) 0 0;
+  animation-name: azimuth-slide-in-up;
+}
+
+.top {
+  top: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0 0 var(--azimuth-radius-xl) var(--azimuth-radius-xl);
+  animation-name: azimuth-slide-in-down;
+}
+
+.left {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  animation-name: azimuth-slide-in-left;
+}
+
+.right {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  animation-name: azimuth-slide-in-right;
+}
+
+.handle {
+  display: flex;
+  justify-content: center;
+  padding: var(--azimuth-space-md) 0 0;
+  flex-shrink: 0;
+}
+
+.handleBar {
+  width: 36px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--azimuth-color-border);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--azimuth-space-md);
+  padding: var(--azimuth-space-lg) var(--azimuth-space-xl);
+}
+
+.title {
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-h5);
+  color: var(--azimuth-color-text);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.closeButton {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--azimuth-radius-lg);
+  background: transparent;
+  color: var(--azimuth-color-text-secondary);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0;
+  transition: background var(--azimuth-transition-fast), color var(--azimuth-transition-fast);
+}
+
+.closeButton:hover {
+  background: var(--azimuth-color-border);
+  color: var(--azimuth-color-text);
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--azimuth-color-text);
+  outline-offset: 2px;
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--azimuth-space-xl);
+  font-family: var(--azimuth-font-body);
+  color: var(--azimuth-color-text);
+}

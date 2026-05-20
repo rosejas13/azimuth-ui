@@ -1,0 +1,89 @@
+.segmentedButton {
+  display: inline-flex;
+  align-items: stretch;
+  border-radius: var(--azimuth-radius);
+  overflow: hidden;
+  border: 1px solid var(--azimuth-color-border);
+  background: var(--azimuth-color-surface);
+}
+
+.fullWidth {
+  display: flex;
+  width: 100%;
+}
+
+.option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--azimuth-space-sm);
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--azimuth-color-text-secondary);
+  font-family: var(--azimuth-font-body);
+  cursor: pointer;
+  transition:
+    background var(--azimuth-transition-fast),
+    color var(--azimuth-transition-fast);
+  white-space: nowrap;
+}
+
+.option:not(:last-child) {
+  border-right: 1px solid var(--azimuth-color-border);
+}
+
+.option:hover:not(:disabled):not(.optionSelected) {
+  background: var(--azimuth-color-surface-hover);
+  color: var(--azimuth-color-text);
+}
+
+.option:focus-visible {
+  box-shadow: var(--azimuth-shadow-focus);
+  outline: none;
+  z-index: 1;
+}
+
+.optionSelected {
+  background: var(--azimuth-color-primary);
+  color: var(--azimuth-color-on-primary);
+}
+
+.optionSelected:hover {
+  background: var(--azimuth-color-primary-hover);
+}
+
+.optionDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sm .option {
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  font-size: var(--azimuth-fs-xs);
+  min-height: 28px;
+}
+
+.md .option {
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  font-size: var(--azimuth-fs-sm);
+  min-height: 36px;
+}
+
+.lg .option {
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
+  font-size: var(--azimuth-fs-base);
+  min-height: 44px;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.label {
+  line-height: 1;
+}

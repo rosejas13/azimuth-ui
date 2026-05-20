@@ -1,0 +1,115 @@
+.tabs {
+  font-family: var(--azimuth-font-body);
+}
+
+.tabList {
+  display: flex;
+  border-bottom: 2px solid var(--azimuth-color-border);
+  margin: 0 0 var(--azimuth-space-md);
+  padding: 0;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  border: none;
+  background: transparent;
+  color: var(--azimuth-color-text-secondary);
+  font-size: var(--azimuth-fs-sm);
+  font-family: var(--azimuth-font-body);
+  cursor: pointer;
+  position: relative;
+  transition: color var(--azimuth-transition-fast);
+  white-space: nowrap;
+}
+
+.tab:hover:not(.tabDisabled) {
+  color: var(--azimuth-color-text);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
+}
+
+.tabActive {
+  color: var(--azimuth-color-primary);
+}
+
+.tabDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tabPanel {
+  font-size: var(--azimuth-fs-base);
+  color: var(--azimuth-color-text);
+}
+
+.tabPanel:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
+}
+
+/* Underline variant */
+.underline .tabList {
+  border-bottom: 2px solid var(--azimuth-color-border);
+}
+
+.underline .tab {
+  margin-bottom: -2px;
+}
+
+.underline .tabActive::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--azimuth-space-sm);
+  right: var(--azimuth-space-sm);
+  height: 2px;
+  background: var(--azimuth-color-primary);
+  border-radius: var(--azimuth-radius-full);
+}
+
+/* Pills variant */
+.pills .tabList {
+  border-bottom: none;
+  gap: var(--azimuth-space-xs);
+  margin-bottom: var(--azimuth-space-md);
+}
+
+.pills .tab {
+  border-radius: var(--azimuth-radius-full);
+  padding: var(--azimuth-space-xs) var(--azimuth-space-md);
+}
+
+.pills .tabActive {
+  background: var(--azimuth-color-primary-subtle);
+}
+
+/* Buttons variant */
+.buttons .tabList {
+  border-bottom: none;
+  gap: 0;
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  overflow: hidden;
+  margin-bottom: var(--azimuth-space-md);
+}
+
+.buttons .tab {
+  border-right: 1px solid var(--azimuth-color-border);
+  border-radius: 0;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+}
+
+.buttons .tab:last-child {
+  border-right: none;
+}
+
+.buttons .tabActive {
+  background: var(--azimuth-color-primary);
+  color: var(--azimuth-color-on-primary);
+}

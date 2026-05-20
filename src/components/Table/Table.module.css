@@ -1,0 +1,71 @@
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text);
+}
+
+.bordered {
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  overflow: hidden;
+}
+
+.bordered th,
+.bordered td {
+  border: 1px solid var(--azimuth-color-border);
+}
+
+.head {
+  background: var(--azimuth-color-surface);
+  border-bottom: 2px solid var(--azimuth-color-border);
+}
+
+.headCell {
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  text-align: left;
+  font-weight: 600;
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.bordered .head {
+  background: var(--azimuth-color-primary-subtle);
+}
+
+.body {
+  background: var(--azimuth-color-surface);
+}
+
+.row {
+  transition: background var(--azimuth-transition-fast);
+}
+
+.row + .row {
+  border-top: 1px solid var(--azimuth-color-border);
+}
+
+.striped .row:nth-child(even) {
+  background: var(--azimuth-color-bg);
+}
+
+.hoverable .body .row:hover {
+  background: var(--azimuth-color-surface-hover);
+}
+
+.cell {
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  text-align: left;
+  vertical-align: middle;
+  line-height: var(--azimuth-lh-base);
+}
+
+.sm .headCell,
+.sm .cell {
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+}

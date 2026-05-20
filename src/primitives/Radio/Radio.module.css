@@ -1,0 +1,62 @@
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--azimuth-space-sm);
+  cursor: pointer;
+  user-select: none;
+}
+
+.wrapperDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.radio {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--azimuth-color-border-strong);
+  border-radius: 50%;
+  background: var(--azimuth-color-surface);
+  cursor: pointer;
+  flex-shrink: 0;
+  display: grid;
+  place-content: center;
+  transition:
+    border-color var(--azimuth-transition-fast),
+    background var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast);
+}
+
+.radio:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 2px;
+}
+
+.radio:checked {
+  border-color: var(--azimuth-color-primary);
+}
+
+.radio:checked::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--azimuth-color-primary);
+  animation: azimuth-radio-dot-in 150ms var(--azimuth-ease) forwards;
+}
+
+@keyframes azimuth-radio-dot-in {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+.radio:disabled {
+  cursor: not-allowed;
+}
+
+.label {
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text);
+  line-height: 1.5;
+}

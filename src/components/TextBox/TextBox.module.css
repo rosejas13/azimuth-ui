@@ -1,0 +1,20 @@
+.root {
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius);
+  padding: var(--azimuth-space-md);
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-sm);
+  line-height: var(--azimuth-lh-base);
+  color: var(--azimuth-color-text);
+  overflow-x: auto;
+}
+
+.plain {
+  background: var(--azimuth-color-surface);
+}
+
+.code {
+  background: var(--azimuth-color-bg);
+  font-family: var(--azimuth-font-mono);
+  font-size: var(--azimuth-fs-xs);
+}

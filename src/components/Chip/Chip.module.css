@@ -1,0 +1,136 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--azimuth-space-xs);
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  border-radius: var(--azimuth-radius-full);
+  font-size: var(--azimuth-fs-xs);
+  font-weight: 500;
+  line-height: 1.5;
+  border: 1px solid var(--azimuth-color-border);
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  transition:
+    background var(--azimuth-transition-fast),
+    color var(--azimuth-transition-fast),
+    border-color var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:focus-visible {
+  outline: none;
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.selected {
+  border-color: transparent;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.deleteBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity var(--azimuth-transition-fast);
+  flex-shrink: 0;
+}
+
+.deleteBtn:hover {
+  opacity: 1;
+}
+
+.sm {
+  padding: 2px var(--azimuth-space-xs);
+  font-size: var(--azimuth-fs-xs);
+}
+
+.neutral.selected {
+  background: var(--azimuth-color-primary-subtle);
+  color: var(--azimuth-color-primary);
+  border-color: var(--azimuth-color-primary-subtle);
+}
+
+.accent {
+  background: var(--azimuth-color-accent-subtle);
+  color: var(--azimuth-color-accent);
+  border-color: var(--azimuth-color-accent-subtle);
+}
+
+.accent.selected {
+  background: var(--azimuth-color-accent);
+  color: var(--azimuth-color-on-accent);
+}
+
+.success {
+  background: var(--azimuth-color-success-bg);
+  color: var(--azimuth-color-success-text);
+  border-color: var(--azimuth-color-success-bg);
+}
+
+.success.selected {
+  background: var(--azimuth-color-success-text);
+  color: var(--azimuth-color-bg);
+}
+
+.warning {
+  background: var(--azimuth-color-warning-bg);
+  color: var(--azimuth-color-warning-text);
+  border-color: var(--azimuth-color-warning-bg);
+}
+
+.warning.selected {
+  background: var(--azimuth-color-warning-text);
+  color: var(--azimuth-color-bg);
+}
+
+.danger {
+  background: var(--azimuth-color-error-bg);
+  color: var(--azimuth-color-error-text);
+  border-color: var(--azimuth-color-error-bg);
+}
+
+.danger.selected {
+  background: var(--azimuth-color-error-text);
+  color: var(--azimuth-color-bg);
+}
+
+.info {
+  background: var(--azimuth-color-info-bg);
+  color: var(--azimuth-color-info-text);
+  border-color: var(--azimuth-color-info-bg);
+}
+
+.info.selected {
+  background: var(--azimuth-color-info-text);
+  color: var(--azimuth-color-bg);
+}
+
+.neutral.selected:hover {
+  background: var(--azimuth-color-primary);
+  color: var(--azimuth-color-on-primary);
+}
+
+.accent.selected:hover {
+  background: var(--azimuth-color-accent-hover);
+}

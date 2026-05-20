@@ -1,0 +1,77 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-base);
+  line-height: var(--azimuth-lh-base);
+  color: var(--azimuth-color-text);
+  background: var(--azimuth-color-bg);
+  transition:
+    background var(--azimuth-transition-base),
+    color var(--azimuth-transition-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--azimuth-font-display, system-ui, sans-serif);
+  line-height: var(--azimuth-lh-tight);
+  font-weight: 600;
+  color: var(--azimuth-color-text);
+}
+
+a {
+  color: var(--azimuth-color-primary);
+  text-decoration: none;
+  transition: color var(--azimuth-transition-fast);
+}
+
+a:hover {
+  color: var(--azimuth-color-primary-hover);
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--azimuth-color-primary-subtle);
+  color: var(--azimuth-color-text);
+}
+
+img, svg {
+  max-width: 100%;
+  display: block;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

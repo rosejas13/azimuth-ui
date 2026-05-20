@@ -1,0 +1,35 @@
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text);
+}
+
+.bulleted {
+  list-style: disc;
+  padding-left: var(--azimuth-space-lg);
+}
+
+.item {
+  line-height: var(--azimuth-lh-base);
+}
+
+.sm .item {
+  margin-bottom: var(--azimuth-space-xs);
+}
+
+.md .item {
+  margin-bottom: var(--azimuth-space-sm);
+}
+
+.lg .item {
+  margin-bottom: var(--azimuth-space-md);
+}
+
+.sm .item:last-child,
+.md .item:last-child,
+.lg .item:last-child {
+  margin-bottom: 0;
+}

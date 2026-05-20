@@ -1,0 +1,93 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-xs);
+}
+
+.label {
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 600;
+  color: var(--azimuth-color-text-secondary);
+}
+
+.required::after {
+  content: ' *';
+  color: var(--azimuth-color-error-text);
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--azimuth-space-sm);
+}
+
+.subtitle {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-base);
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  line-height: var(--azimuth-lh-base);
+  resize: vertical;
+  transition:
+    border-color var(--azimuth-transition-fast),
+    background var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast);
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--azimuth-color-primary);
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--azimuth-color-surface-hover);
+}
+
+.textarea::placeholder {
+  color: var(--azimuth-color-text-muted);
+}
+
+.hasError {
+  border-color: var(--azimuth-color-error-text);
+}
+
+.hasError:focus {
+  box-shadow: var(--azimuth-shadow-focus-error);
+}
+
+.errorMessage {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-error-text);
+}
+
+.charCount {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+  text-align: right;
+}
+
+.sm .textarea {
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  font-size: var(--azimuth-fs-sm);
+  min-height: 60px;
+}
+
+.lg .textarea {
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
+  font-size: var(--azimuth-fs-lg);
+  min-height: 120px;
+}

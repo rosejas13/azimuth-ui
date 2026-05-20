@@ -1,0 +1,156 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-md);
+}
+
+.wrapperVertical {
+  flex-direction: column;
+  height: 200px;
+  width: auto;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  touch-action: none;
+  user-select: none;
+}
+
+.containerVertical {
+  height: 100%;
+  width: auto;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hiddenInput {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-full);
+  cursor: pointer;
+}
+
+.trackVertical {
+  width: 6px;
+  height: 100%;
+}
+
+.trackSm {
+  height: 4px;
+}
+
+.trackVertical.trackSm {
+  width: 4px;
+}
+
+.trackLg {
+  height: 8px;
+}
+
+.trackVertical.trackLg {
+  width: 8px;
+}
+
+.fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--azimuth-color-primary);
+  border-radius: var(--azimuth-radius-full);
+  transition: width var(--azimuth-transition-base);
+}
+
+.fillVertical {
+  top: auto;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  transition: height var(--azimuth-transition-base);
+}
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--azimuth-color-primary);
+  border-radius: 50%;
+  background: var(--azimuth-color-surface);
+  cursor: grab;
+  transform: translate(-50%, -50%);
+  transition:
+    box-shadow var(--azimuth-transition-fast),
+    transform var(--azimuth-transition-fast);
+  box-shadow: var(--azimuth-shadow-sm);
+}
+
+.thumb:active {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.thumb:focus-visible {
+  outline: none;
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.thumbVertical {
+  left: 50%;
+  transform: translate(-50%, 50%);
+}
+
+.thumbVertical:active {
+  transform: translate(-50%, 50%) scale(1.15);
+}
+
+.thumbSm {
+  width: 14px;
+  height: 14px;
+}
+
+.thumbLg {
+  width: 22px;
+  height: 22px;
+}
+
+.disabled {
+  opacity: 0.5;
+}
+
+.disabled .track {
+  cursor: not-allowed;
+}
+
+.disabled .thumb {
+  cursor: not-allowed;
+}
+
+.disabled .thumb:active {
+  transform: translate(-50%, -50%);
+}
+
+.disabled .thumbVertical:active {
+  transform: translate(-50%, 50%);
+}
+
+.valueLabel {
+  min-width: 28px;
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 500;
+  color: var(--azimuth-color-text);
+  text-align: center;
+}

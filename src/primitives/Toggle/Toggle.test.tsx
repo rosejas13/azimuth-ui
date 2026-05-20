@@ -1,0 +1,48 @@
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
+import { Toggle } from './Toggle';
+
+describe('Toggle', () => {
+  it('renders toggle', () => {
+    render(<Toggle />);
+    expect(screen.getByRole('switch')).toBeInTheDocument();
+  });
+
+  it('renders with label via prop', () => {
+    render(<Toggle label="Notifications" />);
+    expect(screen.getByLabelText('Notifications')).toBeInTheDocument();
+  });
+
+  it('renders with label via children', () => {
+    render(<Toggle>Notifications</Toggle>);
+    expect(screen.getByLabelText('Notifications')).toBeInTheDocument();
+  });
+
+  it('toggles on click', async () => {
+    const handleChange = vi.fn();
+    const user = userEvent.setup();
+    render(<Toggle onChange={handleChange} />);
+    await user.click(screen.getByRole('switch'));
+    expect(handleChange).toHaveBeenCalledOnce();
+  });
+
+  it('can be disabled', () => {
+    render(<Toggle disabled />);
+    expect(screen.getByRole('switch')).toBeDisabled();
+  });
+
+  it('can be checked by default', () => {
+    render(<Toggle defaultChecked />);
+    expect(screen.getByRole('switch')).toBeChecked();
+  });
+
+  it('renders all sizes', () => {
+    const sizes = ['sm', 'md', 'lg'] as const;
+    for (const size of sizes) {
+      const { unmount } = render(<Toggle size={size} />);
+      expect(screen.getByRole('switch')).toBeInTheDocument();
+      unmount();
+    }
+  });
+});

@@ -1,0 +1,105 @@
+'use client';
+
+import {
+  type ComponentPropsWithoutRef,
+  forwardRef,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
+import { cn } from '@/utils/cn';
+import styles from './Toast.module.css';
+
+type ToastVariant = 'warning' | 'success' | 'error' | 'info';
+
+/** Props for the Toast component. */
+export interface ToastProps extends ComponentPropsWithoutRef<'div'> {
+  /** Color variant of the toast. @default 'info' */
+  variant?: ToastVariant;
+  /** Title text for the toast. */
+  title: string;
+  /** Optional message body text. */
+  message?: string;
+  /** Whether the toast can be dismissed by the user. @default false */
+  dismissible?: boolean;
+  /** Callback fired when the toast is dismissed. */
+  onDismiss?: () => void;
+  /** Milliseconds after which the toast automatically dismisses. */
+  autoDismiss?: number;
+  /** Whether the toast body can be expanded. @default false */
+  expandable?: boolean;
+  /** The content of the component. */
+  children?: React.ReactNode;
+}
+
+export const Toast = forwardRef<HTMLDivElement, ToastProps>(
+  (
+    {
+      variant = 'info',
+      title,
+      message,
+      dismissible = false,
+      onDismiss,
+      autoDismiss,
+      expandable = false,
+      className,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const [expanded, setExpanded] = useState(false);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+    useEffect(() => {
+      if (autoDismiss && onDismiss) {
+        timerRef.current = setTimeout(onDismiss, autoDismiss);
+        return () => {
+          if (timerRef.current !== undefined) {
+            clearTimeout(timerRef.current);
+          }
+        };
+      }
+    }, [autoDismiss, onDismiss]);
+
+    return (
+      <div
+        ref={ref}
+        className={cn(styles.toast, styles[variant], className)}
+        role="status"
+        aria-live="polite"
+        {...props}
+      >
+        <div className={styles.content}>
+          <strong className={styles.title}>{title}</strong>
+          {message && <p className={styles.message}>{message}</p>}
+          {expandable && (
+            <button
+              type="button"
+              className={styles.expandBtn}
+              onClick={() => setExpanded((prev) => !prev)}
+              aria-expanded={expanded}
+            >
+              {expanded ? 'Show less' : 'Show more'}
+            </button>
+          )}
+          {expanded && children && (
+            <div className={styles.expanded}>{children}</div>
+          )}
+        </div>
+        {dismissible && (
+          <button
+            type="button"
+            className={styles.dismiss}
+            onClick={onDismiss}
+            aria-label="Dismiss"
+          >
+            ×
+          </button>
+        )}
+      </div>
+    );
+  },
+);
+
+Toast.displayName = 'Toast';

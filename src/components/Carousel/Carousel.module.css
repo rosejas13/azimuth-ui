@@ -1,0 +1,108 @@
+.wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.viewport {
+  overflow: hidden;
+  border-radius: var(--azimuth-radius-md);
+}
+
+.track {
+  display: flex;
+  transition: transform var(--azimuth-transition-base);
+}
+
+.slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-full);
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  cursor: pointer;
+  font-size: var(--azimuth-fs-lg);
+  transition:
+    background var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast),
+    opacity var(--azimuth-transition-fast);
+  opacity: 0;
+  z-index: 2;
+}
+
+.wrapper:hover .arrow {
+  opacity: 1;
+}
+
+.arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.arrow:hover:not(:disabled) {
+  background: var(--azimuth-color-surface-hover);
+  box-shadow: var(--azimuth-shadow-sm);
+}
+
+.arrow:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+.arrowPrev {
+  left: var(--azimuth-space-sm);
+}
+
+.arrowNext {
+  right: var(--azimuth-space-sm);
+}
+
+.arrowIcon {
+  line-height: 1;
+  font-size: 20px;
+}
+
+.dots {
+  position: absolute;
+  bottom: var(--azimuth-space-md);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--azimuth-space-xs);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border: none;
+  border-radius: var(--azimuth-radius-full);
+  background: var(--azimuth-color-border);
+  cursor: pointer;
+  padding: 0;
+  transition: background var(--azimuth-transition-fast);
+}
+
+.dot:hover {
+  background: var(--azimuth-color-border-strong);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 2px;
+}
+
+.dotActive {
+  background: var(--azimuth-color-primary);
+}

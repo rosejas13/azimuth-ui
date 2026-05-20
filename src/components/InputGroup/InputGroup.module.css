@@ -1,0 +1,32 @@
+.inputGroup {
+  display: flex;
+  align-items: stretch;
+}
+
+.inputGroup > * {
+  position: relative;
+  border-radius: 0;
+}
+
+.inputGroup > * + * {
+  margin-left: -1px;
+}
+
+.inputGroup > *:first-child {
+  border-top-left-radius: var(--azimuth-radius);
+  border-bottom-left-radius: var(--azimuth-radius);
+}
+
+.inputGroup > *:last-child {
+  border-top-right-radius: var(--azimuth-radius);
+  border-bottom-right-radius: var(--azimuth-radius);
+}
+
+.inputGroup > *:focus,
+.inputGroup > *:focus-within {
+  z-index: 1;
+}
+
+.inputGroup > *:hover {
+  z-index: 2;
+}

@@ -1,0 +1,35 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--azimuth-space-4xl) var(--azimuth-space-xl);
+}
+
+.icon {
+  margin-bottom: var(--azimuth-space-md);
+  color: var(--azimuth-color-text-muted);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-h5);
+  font-weight: 700;
+  color: var(--azimuth-color-text);
+  line-height: var(--azimuth-lh-tight);
+}
+
+.description {
+  margin: var(--azimuth-space-sm) 0 0;
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text-muted);
+  line-height: var(--azimuth-lh-base);
+  max-width: 420px;
+}
+
+.action {
+  margin-top: var(--azimuth-space-lg);
+}

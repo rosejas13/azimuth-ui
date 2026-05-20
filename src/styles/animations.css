@@ -1,0 +1,145 @@
+@keyframes azimuth-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes azimuth-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes azimuth-slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes azimuth-slide-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes azimuth-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes azimuth-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes azimuth-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes azimuth-bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.93);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes azimuth-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes azimuth-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes azimuth-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.azimuth-anim-fade-in {
+  animation: azimuth-fade-in var(--azimuth-transition-base) forwards;
+}
+
+.azimuth-anim-fade-out {
+  animation: azimuth-fade-out var(--azimuth-transition-base) forwards;
+}
+
+.azimuth-anim-slide-in-up {
+  animation: azimuth-slide-in-up var(--azimuth-transition-base) var(--azimuth-ease) forwards;
+}
+
+.azimuth-anim-slide-in-down {
+  animation: azimuth-slide-in-down var(--azimuth-transition-base) var(--azimuth-ease) forwards;
+}
+
+.azimuth-anim-slide-in-left {
+  animation: azimuth-slide-in-left var(--azimuth-transition-base) var(--azimuth-ease) forwards;
+}
+
+.azimuth-anim-slide-in-right {
+  animation: azimuth-slide-in-right var(--azimuth-transition-base) var(--azimuth-ease) forwards;
+}
+
+.azimuth-anim-scale-in {
+  animation: azimuth-scale-in var(--azimuth-transition-base) var(--azimuth-ease) forwards;
+}
+
+.azimuth-anim-bounce-in {
+  animation: azimuth-bounce-in 350ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.azimuth-anim-spin {
+  animation: azimuth-spin 1s linear infinite;
+}
+
+.azimuth-anim-pulse {
+  animation: azimuth-pulse 2s ease-in-out infinite;
+}
+
+.azimuth-anim-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(255 255 255 / 0.3) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: azimuth-shimmer 1.5s ease infinite;
+}

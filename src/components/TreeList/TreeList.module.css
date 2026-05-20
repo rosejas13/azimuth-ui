@@ -1,0 +1,153 @@
+.root {
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text);
+  background: var(--azimuth-color-bg);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  padding: var(--azimuth-space-xs) 0;
+  overflow: auto;
+}
+
+.root:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+}
+
+.group {
+  overflow: hidden;
+  transition:
+    max-height var(--azimuth-transition-base) var(--azimuth-ease),
+    opacity var(--azimuth-transition-base) var(--azimuth-ease);
+}
+
+.groupExpanded {
+  max-height: 2000px;
+  opacity: 1;
+}
+
+.groupCollapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-xs);
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--azimuth-transition-fast);
+  border-radius: var(--azimuth-radius-sm);
+  margin: 0 var(--azimuth-space-xs);
+  min-height: 28px;
+}
+
+.node:hover {
+  background: var(--azimuth-color-surface-hover);
+}
+
+.nodeSelected {
+  background: var(--azimuth-color-primary-subtle);
+  color: var(--azimuth-color-primary);
+}
+
+.nodeSelected:hover {
+  background: var(--azimuth-color-primary-subtle);
+}
+
+.nodeDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nodeDisabled:hover {
+  background: transparent;
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--azimuth-color-text-muted);
+  font-size: var(--azimuth-fs-xs);
+  cursor: pointer;
+  padding: 0;
+  transition: transform var(--azimuth-transition-fast) var(--azimuth-ease);
+  border-radius: var(--azimuth-radius-sm);
+}
+
+.arrow:hover {
+  color: var(--azimuth-color-text);
+  background: var(--azimuth-color-surface-hover);
+}
+
+.arrowExpanded {
+  transform: rotate(90deg);
+}
+
+.noArrow {
+  width: 16px;
+  flex-shrink: 0;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--azimuth-color-text-muted);
+  font-size: var(--azimuth-fs-sm);
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lines .group {
+  position: relative;
+}
+
+.lines .node::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--level, 0) * var(--azimuth-space-lg) + var(--azimuth-space-md));
+  top: 0;
+  bottom: 50%;
+  width: 1px;
+  background: var(--azimuth-color-border);
+  pointer-events: none;
+}
+
+.lines .node::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--level, 0) * var(--azimuth-space-lg) + var(--azimuth-space-md));
+  top: 50%;
+  width: calc(var(--azimuth-space-md));
+  height: 1px;
+  background: var(--azimuth-color-border);
+  pointer-events: none;
+}
+
+.lines .node:last-child::before {
+  bottom: 50%;
+  height: 50%;
+}
+
+.lines .node:first-child::before {
+  top: 50%;
+}

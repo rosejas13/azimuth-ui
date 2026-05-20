@@ -1,0 +1,92 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-xs);
+}
+
+.label {
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 600;
+  color: var(--azimuth-color-text-secondary);
+}
+
+.required::after {
+  content: ' *';
+  color: var(--azimuth-color-error-text);
+}
+
+.subtitle {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+}
+
+.selectContainer {
+  position: relative;
+}
+
+.select {
+  appearance: none;
+  width: 100%;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  padding-right: calc(var(--azimuth-space-md) + 24px);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-base);
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  cursor: pointer;
+  line-height: 1.5;
+  transition:
+    border-color var(--azimuth-transition-fast),
+    background var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast);
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--azimuth-color-primary);
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--azimuth-color-surface-hover);
+}
+
+.hasError {
+  border-color: var(--azimuth-color-error-text);
+}
+
+.hasError:focus {
+  box-shadow: var(--azimuth-shadow-focus-error);
+}
+
+.chevron {
+  position: absolute;
+  right: var(--azimuth-space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--azimuth-color-text-muted);
+  font-size: var(--azimuth-fs-xs);
+  transition: transform var(--azimuth-transition-fast);
+}
+
+.errorMessage {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-error-text);
+}
+
+.sm .select {
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  padding-right: calc(var(--azimuth-space-sm) + 24px);
+  font-size: var(--azimuth-fs-sm);
+}
+
+.lg .select {
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
+  padding-right: calc(var(--azimuth-space-lg) + 24px);
+  font-size: var(--azimuth-fs-lg);
+}
