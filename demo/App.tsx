@@ -11,6 +11,7 @@ import {
   Calendar, Carousel, Chip, CodeBlock, DateTimePicker, DateRangePicker,
   EmptyState, Form, InputGroup, Kbd, List, PageLayout, SectionView,
   SegmentedButton, Skeleton, Table, TextArea, TextBox,
+  type ThemePreset,
 } from '../src';
 
 function Section({ id, title, children }: { id?: string; title: string; children: React.ReactNode }) {
@@ -56,7 +57,11 @@ function ThemeToggle() {
   );
 }
 
-export function App() {
+export function App({ currentPreset, presets, onPresetChange }: {
+  currentPreset: string
+  presets: ThemePreset[]
+  onPresetChange: (id: string) => void
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -103,6 +108,34 @@ export function App() {
             A configurable, accessible React component library. Theme-driven with a single ThemeProvider.
             Built with TypeScript, CSS Modules, and WCAG 2.2 AA.
           </Text>
+
+          {/* ===== PRESET SELECTOR ===== */}
+          <Card style={{ marginBottom: 'var(--azimuth-space-2xl)' }}>
+            <Stack spacing="md">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--azimuth-space-sm)' }}>
+                <div>
+                  <Text weight="semibold">Theme Presets</Text>
+                  <Text size="sm" color="secondary">Choose a look and feel.</Text>
+                </div>
+                <Text size="xs" color="muted">{presets.length} presets available</Text>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--azimuth-space-sm)' }}>
+                {presets.map(p => (
+                  <Button
+                    key={p.id}
+                    size="sm"
+                    variant={currentPreset === p.id ? 'primary' : 'secondary'}
+                    onClick={() => onPresetChange(p.id)}
+                  >
+                    {p.name}
+                  </Button>
+                ))}
+              </div>
+              <Text size="xs" color="secondary" style={{ fontStyle: 'italic' }}>
+                {presets.find(p => p.id === currentPreset)?.description}
+              </Text>
+            </Stack>
+          </Card>
 
           {/* ===== BUTTONS ===== */}
           <Section id="buttons" title="Buttons">
