@@ -8,6 +8,7 @@ export type ColorMode = 'light' | 'dark' | 'system';
 
 export interface ThemeConfig {
   accentColor?: string;
+  primaryColor?: string;
   borderRadius?: BorderRadius;
   flat?: boolean;
   spacing?: Spacing;
@@ -32,6 +33,7 @@ export interface ThemeTokens {
 
 export const DEFAULT_THEME: Required<ThemeConfig> = {
   accentColor: '#e8734a',
+  primaryColor: '#2e9e8e',
   borderRadius: 'md',
   flat: false,
   spacing: 'normal',

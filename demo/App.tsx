@@ -1,7 +1,6 @@
 import '../src/styles/global.css';
 import React, { useState, useEffect } from 'react';
 import {
-  ThemeProvider,
   Container, Grid, Stack, Divider,
   Button, Text, Icon, Input, Checkbox, Radio, Select, Toggle,
   Badge, Tag, Avatar, Loader, ProgressBar, Tooltip,
@@ -11,8 +10,8 @@ import {
   Calendar, Carousel, Chip, CodeBlock, DateTimePicker, DateRangePicker,
   EmptyState, Form, InputGroup, Kbd, List, PageLayout, SectionView,
   SegmentedButton, Skeleton, Table, TextArea, TextBox,
-  type ThemePreset,
 } from '../src';
+import type { ColorPreset, StylePreset } from '../src/theme';
 
 function Section({ id, title, children }: { id?: string; title: string; children: React.ReactNode }) {
   return (
@@ -57,10 +56,13 @@ function ThemeToggle() {
   );
 }
 
-export function App({ currentPreset, presets, onPresetChange }: {
-  currentPreset: string
-  presets: ThemePreset[]
-  onPresetChange: (id: string) => void
+export function App({ currentColor, colors, onColorChange, currentStyle, styles, onStyleChange }: {
+  currentColor: string
+  colors: ColorPreset[]
+  onColorChange: (id: string) => void
+  currentStyle: string
+  styles: StylePreset[]
+  onStyleChange: (id: string) => void
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -109,30 +111,58 @@ export function App({ currentPreset, presets, onPresetChange }: {
             Built with TypeScript, CSS Modules, and WCAG 2.2 AA.
           </Text>
 
-          {/* ===== PRESET SELECTOR ===== */}
-          <Card style={{ marginBottom: 'var(--azimuth-space-2xl)' }}>
+          {/* ===== COLOR PRESET SELECTOR ===== */}
+          <Card style={{ marginBottom: 'var(--azimuth-space-md)' }}>
             <Stack spacing="md">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--azimuth-space-sm)' }}>
                 <div>
-                  <Text weight="semibold">Theme Presets</Text>
-                  <Text size="sm" color="secondary">Choose a look and feel.</Text>
+                  <Text weight="semibold">Color Presets</Text>
+                  <Text size="sm" color="secondary">Choose a color scheme.</Text>
                 </div>
-                <Text size="xs" color="muted">{presets.length} presets available</Text>
+                <Text size="xs" color="muted">{colors.length} colors available</Text>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--azimuth-space-sm)' }}>
-                {presets.map(p => (
+                {colors.map(p => (
                   <Button
                     key={p.id}
                     size="sm"
-                    variant={currentPreset === p.id ? 'primary' : 'secondary'}
-                    onClick={() => onPresetChange(p.id)}
+                    variant={currentColor === p.id ? 'primary' : 'secondary'}
+                    onClick={() => onColorChange(p.id)}
                   >
                     {p.name}
                   </Button>
                 ))}
               </div>
               <Text size="xs" color="secondary" style={{ fontStyle: 'italic' }}>
-                {presets.find(p => p.id === currentPreset)?.description}
+                {colors.find(p => p.id === currentColor)?.description}
+              </Text>
+            </Stack>
+          </Card>
+
+          {/* ===== STYLE PRESET SELECTOR ===== */}
+          <Card style={{ marginBottom: 'var(--azimuth-space-2xl)' }}>
+            <Stack spacing="md">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--azimuth-space-sm)' }}>
+                <div>
+                  <Text weight="semibold">Style Presets</Text>
+                  <Text size="sm" color="secondary">Choose a look and feel.</Text>
+                </div>
+                <Text size="xs" color="muted">{styles.length} styles available</Text>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--azimuth-space-sm)' }}>
+                {styles.map(p => (
+                  <Button
+                    key={p.id}
+                    size="sm"
+                    variant={currentStyle === p.id ? 'primary' : 'secondary'}
+                    onClick={() => onStyleChange(p.id)}
+                  >
+                    {p.name}
+                  </Button>
+                ))}
+              </div>
+              <Text size="xs" color="secondary" style={{ fontStyle: 'italic' }}>
+                {styles.find(p => p.id === currentStyle)?.description}
               </Text>
             </Stack>
           </Card>

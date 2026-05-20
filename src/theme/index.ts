@@ -2,8 +2,10 @@ export { ThemeProvider } from './ThemeProvider';
 export { useTheme } from './useTheme';
 export { ThemeContext } from './ThemeContext';
 export { DEFAULT_THEME } from './types';
-export { PRESETS, PRESET_LIST, getPreset } from './presets';
-export type { ThemePreset } from './presets';
+export { COLOR_PRESETS, COLOR_PRESET_LIST, getColorPreset } from './color-presets';
+export { STYLE_PRESETS, STYLE_PRESET_LIST, getStylePreset } from './style-presets';
+export type { ColorPreset } from './color-presets';
+export type { StylePreset } from './style-presets';
 export type {
   ThemeConfig,
   ThemeTokens,

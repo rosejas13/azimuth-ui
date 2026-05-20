@@ -1,19 +1,36 @@
 import React, { useState, useCallback } from 'react';
 import ReactDOM from 'react-dom/client';
-import { ThemeProvider, PRESETS, PRESET_LIST, type ThemePreset, type ThemeConfig } from '../src/theme';
+import { ThemeProvider, COLOR_PRESETS, COLOR_PRESET_LIST, STYLE_PRESETS, STYLE_PRESET_LIST, type ThemeConfig } from '../src/theme';
+import type { ColorPreset, StylePreset } from '../src/theme';
 import { App } from './App';
 
 function DemoShell() {
-  const [presetId, setPresetId] = useState('ocean');
-  const preset = PRESETS[presetId]!;
+  const [colorId, setColorId] = useState('ocean');
+  const [styleId, setStyleId] = useState('balanced');
 
-  const handlePresetChange = useCallback((id: string) => {
-    setPresetId(id);
+  const themeConfig: ThemeConfig = {
+    ...COLOR_PRESETS[colorId]!.config,
+    ...STYLE_PRESETS[styleId]!.config,
+  };
+
+  const handleColorChange = useCallback((id: string) => {
+    setColorId(id);
+  }, []);
+
+  const handleStyleChange = useCallback((id: string) => {
+    setStyleId(id);
   }, []);
 
   return (
-    <ThemeProvider config={preset.config as ThemeConfig}>
-      <App currentPreset={presetId} presets={PRESET_LIST} onPresetChange={handlePresetChange} />
+    <ThemeProvider config={themeConfig}>
+      <App
+        currentColor={colorId}
+        colors={COLOR_PRESET_LIST}
+        onColorChange={handleColorChange}
+        currentStyle={styleId}
+        styles={STYLE_PRESET_LIST}
+        onStyleChange={handleStyleChange}
+      />
     </ThemeProvider>
   );
 }

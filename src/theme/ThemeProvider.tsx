@@ -81,6 +81,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     setCSSVar('--azimuth-space-4xl', spaces['4xl']);
 
     setCSSVar('--azimuth-accent', c.accentColor);
+    setCSSVar('--azimuth-color-primary', c.primaryColor);
     setCSSVar('--azimuth-font-display', c.fontDisplay);
     setCSSVar('--azimuth-font-body', c.fontBody);
 

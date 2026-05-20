@@ -3,9 +3,12 @@ export {
   useTheme,
   ThemeContext,
   DEFAULT_THEME,
-  PRESETS,
-  PRESET_LIST,
-  getPreset,
+  COLOR_PRESETS,
+  COLOR_PRESET_LIST,
+  getColorPreset,
+  STYLE_PRESETS,
+  STYLE_PRESET_LIST,
+  getStylePreset,
 } from './theme';
 export type {
   ThemeConfig,
@@ -14,7 +17,8 @@ export type {
   Spacing,
   Motion,
   ColorMode,
-  ThemePreset,
+  ColorPreset,
+  StylePreset,
 } from './theme';
 
 export { cn } from './utils';
