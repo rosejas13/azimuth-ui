@@ -557,7 +557,7 @@ function PricingPage() {
             onChange={(v) => setYearly(v === 'yearly')}
             options={[
               { value: 'monthly', label: 'Monthly' },
-              { value: 'yearly', label: 'Yearly', icon: <Badge variant="success" style={{ fontSize: '0.6rem' }}>Save 20%</Badge> },
+              { value: 'yearly', label: 'Yearly', icon: <Badge variant="success" size="xs">Save 20%</Badge> },
             ]}
           />
         </div>
