@@ -12,6 +12,7 @@
 /* Align */
 .alignStart { align-items: start; }
 .alignCenter { align-items: center; }
+.alignEnd { align-items: end; }
 .alignStretch { align-items: stretch; }
 
 /* Variants */
