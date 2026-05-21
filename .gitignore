@@ -10,3 +10,4 @@ coverage/
 !.env.example
 .DS_Store
 tasks/LICENSING_TODO.md
+.vscode/
