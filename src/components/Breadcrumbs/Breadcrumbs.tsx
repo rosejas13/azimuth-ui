@@ -2,15 +2,12 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Breadcrumbs.module.css';
 
-/** Props for the Breadcrumbs component. */
 export interface BreadcrumbsProps extends ComponentPropsWithoutRef<'nav'> {
-  /** Array of breadcrumb items with label and optional href. */
   items: Array<{ label: string; href?: string }>;
-  /** Custom separator string between items. @default '/' */
+  /** @default '/' */
   separator?: string;
   /** Maximum number of items before collapsing. 0 disables collapsing. @default 0 */
   maxItems?: number;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

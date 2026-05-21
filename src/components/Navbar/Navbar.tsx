@@ -10,37 +10,24 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Navbar.module.css';
 
-/** A navigation item used in the Navbar. */
 export interface NavItem {
-  /** Unique key identifier for the item. */
   key: string;
-  /** Display text for the item. */
   label: string;
-  /** URL for navigation links. */
   href?: string;
-  /** Icon displayed alongside the label. */
   icon?: React.ReactNode;
-  /** Whether the item is currently active. */
   active?: boolean;
-  /** Click handler for the item. */
   onClick?: () => void;
 }
 
-/** Props for the Navbar component. */
 export interface NavbarProps extends Omit<ComponentPropsWithoutRef<'nav'>, 'children'> {
-  /** Branding element displayed on the left. */
   logo?: React.ReactNode;
-  /** URL the logo links to. @default '/' */
+  /** @default '/' */
   logoHref?: string;
-  /** Navigation items to render. @default [] */
   items?: NavItem[];
-  /** Key of the currently active nav item. */
   activeKey?: string;
-  /** Action elements displayed on the right side. */
   actions?: React.ReactNode;
-  /** Viewport width in pixels below which the mobile menu activates. @default 768 */
+  /** @default 768 */
   mobileBreakpoint?: number;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

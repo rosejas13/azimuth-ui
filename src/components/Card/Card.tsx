@@ -4,17 +4,13 @@ import { type ComponentPropsWithoutRef, forwardRef, useState, useId } from 'reac
 import { cn } from '@/utils/cn';
 import styles from './Card.module.css';
 
-/** Props for the Card component. */
 export interface CardProps extends ComponentPropsWithoutRef<'div'> {
-  /** Header content rendered above the body. */
   header?: React.ReactNode;
-  /** Footer content rendered below the body. */
   footer?: React.ReactNode;
-  /** Whether the card body is collapsible. @default false */
+  /** @default false */
   expandable?: boolean;
-  /** Whether the card is expanded by default. @default true */
+  /** @default true */
   defaultExpanded?: boolean;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 
@@ -66,9 +62,7 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
 
 CardRoot.displayName = 'Card';
 
-/** Props for the Card.Header subcomponent. */
 export interface CardHeaderProps extends ComponentPropsWithoutRef<'div'> {
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 
@@ -84,9 +78,7 @@ const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
 
 CardHeader.displayName = 'Card.Header';
 
-/** Props for the Card.Footer subcomponent. */
 export interface CardFooterProps extends ComponentPropsWithoutRef<'div'> {
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 
@@ -102,7 +94,6 @@ const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
 
 CardFooter.displayName = 'Card.Footer';
 
-/** Props for the Card.Title subcomponent. */
 export interface CardTitleProps extends ComponentPropsWithoutRef<'h3'> {
   children?: React.ReactNode;
 }
@@ -119,7 +110,6 @@ const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
 
 CardTitle.displayName = 'Card.Title';
 
-/** Props for the Card.Description subcomponent. */
 export interface CardDescriptionProps extends ComponentPropsWithoutRef<'p'> {
   children?: React.ReactNode;
 }
@@ -136,7 +126,6 @@ const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionProps>(
 
 CardDescription.displayName = 'Card.Description';
 
-/** Props for the Card.Content subcomponent. */
 export interface CardContentProps extends ComponentPropsWithoutRef<'div'> {
   children?: React.ReactNode;
 }

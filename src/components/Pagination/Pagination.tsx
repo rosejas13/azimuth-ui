@@ -4,19 +4,15 @@ import { type ComponentPropsWithoutRef, forwardRef, useCallback } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Pagination.module.css';
 
-/** Props for the Pagination component. */
 export interface PaginationProps extends ComponentPropsWithoutRef<'nav'> {
-  /** The currently active page number (1-based). */
   currentPage: number;
-  /** Total number of pages. */
   totalPages: number;
-  /** Callback fired when a page is selected. */
   onPageChange: (page: number) => void;
-  /** Number of sibling pages shown on each side of the current page. @default 1 */
+  /** @default 1 */
   siblingCount?: number;
-  /** Whether to show first/last page buttons. @default false */
+  /** @default false */
   showFirstLast?: boolean;
-  /** Size variant of the pagination component. @default 'md' */
+  /** @default 'md' */
   size?: 'sm' | 'md';
 }
 

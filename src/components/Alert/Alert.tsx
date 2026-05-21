@@ -38,21 +38,17 @@ const VARIANT_CLASS: Record<AlertVariant, string> = {
   notification: styles.notification,
 };
 
-/** Props for the Alert component. */
 export interface AlertProps extends ComponentPropsWithoutRef<'div'> {
-  /** The visual variant of the alert. @default 'info' */
+  /** @default 'info' */
   variant?: AlertVariant;
-  /** Optional title text for the alert. */
   title?: string;
-  /** Whether the alert can be dismissed. @default false */
+  /** @default false */
   dismissible?: boolean;
-  /** Callback fired when the alert is dismissed. */
   onDismiss?: () => void;
   /** Time in milliseconds before auto-dismissal. */
   autoDismiss?: number;
-  /** Whether to show the variant icon. @default true */
+  /** @default true */
   icon?: boolean;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

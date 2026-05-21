@@ -11,18 +11,15 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Flyout.module.css';
 
-/** Props for the Flyout component. */
 export interface FlyoutProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'content'> {
-  /** The element that triggers the flyout. */
   trigger: React.ReactNode;
-  /** The content rendered inside the flyout. */
   content: React.ReactNode;
-  /** Placement of the flyout relative to the trigger. @default 'bottom' */
+  /** @default 'bottom' */
   side?: 'top' | 'bottom' | 'left' | 'right';
-  /** Delay before opening in milliseconds. @default 200 */
+  /** @default 200 */
   openDelay?: number;
-  /** Delay before closing in milliseconds. @default 150 */
+  /** @default 150 */
   closeDelay?: number;
 }
 

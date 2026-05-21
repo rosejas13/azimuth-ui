@@ -5,18 +5,17 @@ import styles from './ProgressBar.module.css';
 type ProgressBarColor = 'primary' | 'accent' | 'success' | 'warning' | 'danger';
 type ProgressBarSize = 'sm' | 'md' | 'lg';
 
-/** Props for the ProgressBar component. */
 export interface ProgressBarProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
-  /** The current progress value. @default 0 */
+  /** @default 0 */
   value?: number;
-  /** The maximum progress value. @default 100 */
+  /** @default 100 */
   max?: number;
-  /** Whether the progress bar is in indeterminate mode. @default false */
+  /** @default false */
   indeterminate?: boolean;
-  /** Color variant of the progress bar. @default 'primary' */
+  /** @default 'primary' */
   color?: ProgressBarColor;
-  /** Size variant of the progress bar. @default 'md' */
+  /** @default 'md' */
   size?: ProgressBarSize;
 }
 

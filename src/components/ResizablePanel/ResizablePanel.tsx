@@ -11,15 +11,12 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './ResizablePanel.module.css';
 
-/** Props for the ResizablePanel component. */
 export interface ResizablePanelProps extends ComponentPropsWithoutRef<'div'> {
-  /** Direction in which panels can be resized. @default 'horizontal' */
+  /** @default 'horizontal' */
   direction?: 'horizontal' | 'vertical';
-  /** Initial size distribution for child panels as percentages. */
   defaultSizes?: number[];
-  /** Minimum size in pixels for each panel. @default 50 */
+  /** @default 50 */
   minSize?: number;
-  /** The content of the component. */
   children: React.ReactNode;
 }
 

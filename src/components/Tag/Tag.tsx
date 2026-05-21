@@ -6,15 +6,12 @@ import styles from './Tag.module.css';
 
 type TagVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
 
-/** Props for the Tag component. */
 export interface TagProps extends ComponentPropsWithoutRef<'span'> {
-  /** Color variant of the tag. @default 'neutral' */
+  /** @default 'neutral' */
   variant?: TagVariant;
-  /** Whether the tag displays a remove button. @default false */
+  /** @default false */
   removable?: boolean;
-  /** Callback fired when the remove button is clicked. */
   onRemove?: () => void;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

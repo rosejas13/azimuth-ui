@@ -6,15 +6,12 @@ import styles from './Tooltip.module.css';
 
 type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 
-/** Props for the Tooltip component. */
 export interface TooltipProps extends Omit<ComponentPropsWithoutRef<'div'>, 'content'> {
-  /** Content displayed inside the tooltip. */
   content: React.ReactNode;
-  /** Position of the tooltip relative to the trigger. @default 'top' */
+  /** @default 'top' */
   position?: TooltipPosition;
-  /** Delay in milliseconds before the tooltip appears. @default 300 */
+  /** @default 300 */
   delay?: number;
-  /** The content of the component. */
   children: React.ReactNode;
 }
 

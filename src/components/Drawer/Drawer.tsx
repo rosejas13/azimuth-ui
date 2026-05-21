@@ -11,23 +11,17 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import styles from './Drawer.module.css';
 
-/** Props for the Drawer component. */
 export interface DrawerProps extends ComponentPropsWithoutRef<'div'> {
-  /** Whether the drawer is visible. */
   open: boolean;
-  /** Callback fired when the drawer requests to close. */
   onClose: () => void;
-  /** The side of the screen the drawer slides from. @default 'left' */
+  /** @default 'left' */
   side?: 'left' | 'right';
-  /** Drawer title text. */
   title?: string;
-  /** The width of the drawer. @default 'md' */
+  /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
-  /** Whether clicking the overlay closes the drawer. @default false */
+  /** @default false */
   persistent?: boolean;
-  /** The content of the drawer body. */
   children?: React.ReactNode;
-  /** Footer content. */
   footer?: React.ReactNode;
 }
 

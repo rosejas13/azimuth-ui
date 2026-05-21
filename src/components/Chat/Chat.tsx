@@ -4,25 +4,17 @@ import { type ComponentPropsWithoutRef, type KeyboardEvent, forwardRef, useRef, 
 import { cn } from '@/utils/cn';
 import styles from './Chat.module.css';
 
-/** A single message within a chat conversation. */
 export interface ChatMessage {
-  /** Unique identifier for the message. */
   id: string;
-  /** The message text content. */
   text: string;
-  /** Whether the message was sent by the current user or another participant. */
   sender: 'user' | 'other';
-  /** Optional timestamp for when the message was sent. */
   timestamp?: Date;
 }
 
-/** Props for the Chat component. */
 export interface ChatProps extends ComponentPropsWithoutRef<'div'> {
-  /** Array of chat messages to display. */
   messages: ChatMessage[];
-  /** Callback fired when the user sends a message. Receives the trimmed message text. */
   onSend: (text: string) => void;
-  /** Placeholder text for the message input. @default 'Type a message...' */
+  /** @default 'Type a message...' */
   placeholder?: string;
 }
 
@@ -67,7 +59,7 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
         <div className={styles.header}>
           <span className={styles.headerTitle}>Chat</span>
         </div>
-        <div ref={listRef} className={styles.list}>
+        <div ref={listRef} className={styles.list} aria-live="polite">
           {messages.length === 0 && (
             <div className={styles.empty}>No messages yet. Start the conversation!</div>
           )}

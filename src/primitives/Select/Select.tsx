@@ -4,22 +4,16 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Select.module.css';
 
-/** A select dropdown component with label, validation, and custom options. */
 export interface SelectProps
   extends Omit<ComponentPropsWithoutRef<'select'>, 'size'> {
-  /** The label text for the select. */
   label?: string;
-  /** Helper text displayed below the label. */
   subtitle?: string;
-  /** Error message displayed below the select. */
   error?: string;
-  /** Whether the select is required. @default false */
+  /** @default false */
   required?: boolean;
-  /** The size of the select. @default 'md' */
+  /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
-  /** Placeholder option text displayed when no value is selected. */
   placeholder?: string;
-  /** The list of options to display in the dropdown. */
   options: Array<{ value: string; label: string; disabled?: boolean }>;
 }
 

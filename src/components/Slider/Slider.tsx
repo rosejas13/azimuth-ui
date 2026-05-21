@@ -11,26 +11,22 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Slider.module.css';
 
-/** Props for the Slider component. */
 export interface SliderProps
   extends Omit<ComponentPropsWithoutRef<'input'>, 'type' | 'onChange' | 'size'> {
-  /** Minimum value of the slider. @default 0 */
+  /** @default 0 */
   min?: number;
-  /** Maximum value of the slider. @default 100 */
+  /** @default 100 */
   max?: number;
-  /** Step increment for the slider. @default 1 */
+  /** @default 1 */
   step?: number;
-  /** Current slider value (controlled). */
   value?: number;
-  /** Default slider value (uncontrolled). */
   defaultValue?: number;
-  /** Callback fired when the slider value changes. */
   onChange?: (value: number) => void;
-  /** Orientation of the slider. @default 'horizontal' */
+  /** @default 'horizontal' */
   orientation?: 'horizontal' | 'vertical';
-  /** Whether to display the current value as a label. @default false */
+  /** @default false */
   showValue?: boolean;
-  /** Size variant of the slider. @default 'md' */
+  /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
 }
 

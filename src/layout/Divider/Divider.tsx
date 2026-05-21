@@ -2,9 +2,8 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Divider.module.css';
 
-/** A horizontal or vertical separator line. */
 export interface DividerProps extends ComponentPropsWithoutRef<'hr'> {
-  /** The orientation of the divider. @default 'horizontal' */
+  /** @default 'horizontal' */
   orientation?: 'horizontal' | 'vertical';
 }
 

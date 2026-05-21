@@ -12,21 +12,19 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Carousel.module.css';
 
-/** Props for the Carousel component. */
 export interface CarouselProps extends ComponentPropsWithoutRef<'div'> {
-  /** The slides of the carousel. */
   children: React.ReactNode;
-  /** Whether the carousel auto-advances. @default false */
+  /** @default false */
   autoPlay?: boolean;
-  /** Time in milliseconds between auto-advances. @default 5000 */
+  /** @default 5000 */
   interval?: number;
   /** Milliseconds between automatic rotations. Enables auto-advance with this interval. */
   autoRotate?: number;
-  /** Whether to show dot indicators. @default true */
+  /** @default true */
   showDots?: boolean;
-  /** Whether to show arrow controls. @default true */
+  /** @default true */
   showArrows?: boolean;
-  /** Whether the carousel wraps around. @default true */
+  /** @default true */
   loop?: boolean;
 }
 

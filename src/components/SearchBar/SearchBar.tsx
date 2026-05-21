@@ -11,20 +11,16 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './SearchBar.module.css';
 
-/** Props for the SearchBar component. */
 export interface SearchBarProps
   extends Omit<ComponentPropsWithoutRef<'input'>, 'onSubmit'> {
-  /** Callback fired with the debounced search query. */
   onSearch?: (query: string) => void;
-  /** Array of suggestion strings to display as the user types. */
   suggestions?: string[];
-  /** Callback fired when a suggestion is selected. */
   onSuggestionSelect?: (suggestion: string) => void;
-  /** Debounce delay in milliseconds before firing onSearch. @default 300 */
+  /** @default 300 */
   debounceMs?: number;
-  /** Placeholder text for the search input. @default 'Search...' */
+  /** @default 'Search...' */
   placeholder?: string;
-  /** Whether to show a clear button when the input has a value. @default true */
+  /** @default true */
   clearable?: boolean;
 }
 

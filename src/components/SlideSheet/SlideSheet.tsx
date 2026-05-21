@@ -11,23 +11,16 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import styles from './SlideSheet.module.css';
 
-/** Props for the SlideSheet component. */
 export interface SlideSheetProps extends ComponentPropsWithoutRef<'div'> {
-  /** Whether the sheet is open. */
   open: boolean;
-  /** Callback fired when the sheet requests to close. */
   onClose: () => void;
-  /** Side of the screen from which the sheet slides in. @default 'bottom' */
+  /** @default 'bottom' */
   side?: 'top' | 'bottom' | 'left' | 'right';
-  /** Title displayed in the sheet header. */
   title?: string;
-  /** Height or width of the sheet as a CSS value. */
   height?: string;
-  /** Array of snap point sizes as CSS values. */
   snapPoints?: string[];
-  /** Whether clicking the overlay should close the sheet. @default false */
+  /** @default false */
   persistent?: boolean;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

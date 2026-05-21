@@ -11,18 +11,13 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './SectionView.module.css';
 
-/** Props for the SectionView component. */
 export interface SectionViewProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onToggle'> {
-  /** Title text displayed in the section header. */
   title: string;
-  /** Whether the section is expanded by default (uncontrolled). @default false */
+  /** @default false */
   defaultExpanded?: boolean;
-  /** Whether the section is expanded (controlled). */
   expanded?: boolean;
-  /** Callback fired when the expanded state changes. */
   onToggle?: (expanded: boolean) => void;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

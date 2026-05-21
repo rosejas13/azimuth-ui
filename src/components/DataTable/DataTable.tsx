@@ -13,56 +13,40 @@ import { Loader } from '@/components/Loader';
 import { Table } from '@/components/Table';
 import styles from './DataTable.module.css';
 
-/** Column definition for the DataTable component. */
 export interface Column<T> {
-  /** Unique key for the column matching the data field. */
   key: string;
-  /** Display title for the column header. */
   title: string;
-  /** Whether the column is sortable. @default false */
+  /** @default false */
   sortable?: boolean;
-  /** Whether the column is searchable. @default true */
+  /** @default true */
   searchable?: boolean;
-  /** Custom render function for the cell value. */
   render?: (value: unknown, row: T, index: number) => React.ReactNode;
 }
 
-/** Props for the DataTable component. */
 export interface DataTableProps<T>
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
-  /** Optional title displayed above the table. */
   title?: string;
-  /** Column definitions for the table. */
   columns: Column<T>[];
-  /** Array of data rows. */
   data: T[];
-  /** Message shown when there is no data. @default 'No data available' */
+  /** @default 'No data available' */
   emptyMessage?: string;
-  /** Controlled page size for pagination. */
   pageSize?: number;
-  /** Default page size. @default 10 */
+  /** @default 10 */
   defaultPageSize?: number;
-  /** Available page size options for the selector. */
   pageSizeOptions?: number[];
-  /** Whether to show the search input. @default false */
+  /** @default false */
   searchable?: boolean;
-  /** Placeholder text for the search input. @default 'Search...' */
+  /** @default 'Search...' */
   searchPlaceholder?: string;
-  /** Specific column keys to search (defaults to all searchable columns). */
   searchColumns?: string[];
-  /** Action buttons or content for the header. */
   actions?: React.ReactNode;
-  /** Whether rows have an edit action. @default false */
+  /** @default false */
   editable?: boolean;
-  /** Callback fired when a row edit is triggered. */
   onEdit?: (row: T, index: number) => void;
-  /** Callback fired when a row is clicked. */
   onRowClick?: (row: T, index: number) => void;
-  /** Callback for server-side search (overrides client-side filtering). */
   onSearch?: (query: string) => void;
-  /** Whether data is loading. @default false */
+  /** @default false */
   loading?: boolean;
-  /** Error message string to display. */
   error?: string;
 }
 

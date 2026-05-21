@@ -12,44 +12,32 @@ import styles from './LoginSignup.module.css';
 
 export type AuthView = 'login' | 'signup' | 'reset';
 
-/** External authentication provider definition. */
 export interface AuthProvider {
-  /** Unique identifier for the provider. */
   id: string;
-  /** Display name for the provider. */
   label: string;
-  /** Optional icon element for the provider button. */
   icon?: React.ReactNode;
-  /** Optional accent color for the provider button. */
   color?: string;
 }
 
-/** Props for the LoginSignup component. */
 export interface LoginSignupProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onSubmit'> {
-  /** The initial view to display. @default 'login' */
+  /** @default 'login' */
   defaultView?: AuthView;
-  /** Array of external auth providers. */
   providers?: AuthProvider[];
-  /** Callback fired on login submit. */
   onLogin?: (data: {
     email: string;
     password: string;
     remember?: boolean;
   }) => void;
-  /** Callback fired on signup submit. */
   onSignup?: (data: {
     name?: string;
     email: string;
     password: string;
   }) => void;
-  /** Callback fired on password reset submit. */
   onResetPassword?: (data: { email: string }) => void;
-  /** Callback fired when an external provider is clicked. */
   onProviderAuth?: (providerId: string) => void;
-  /** Whether the form is submitting. @default false */
+  /** @default false */
   loading?: boolean;
-  /** Error message to display. */
   error?: string;
 }
 

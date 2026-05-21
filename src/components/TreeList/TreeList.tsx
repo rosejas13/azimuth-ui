@@ -12,33 +12,21 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './TreeList.module.css';
 
-/** A node in the tree list data structure. */
 export interface TreeNode {
-  /** Unique identifier for the node. */
   id: string;
-  /** Display label for the node. */
   label: string;
-  /** Icon displayed alongside the label. */
   icon?: React.ReactNode;
-  /** Child nodes nested under this node. */
   children?: TreeNode[];
-  /** Whether the node is disabled. */
   disabled?: boolean;
 }
 
-/** Props for the TreeList component. */
 export interface TreeListProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onSelect' | 'onToggle'> {
-  /** Array of root-level tree nodes. */
   data: TreeNode[];
-  /** IDs of nodes expanded by default. */
   defaultExpanded?: string[];
-  /** ID of the currently selected node (controlled). */
   selectedId?: string;
-  /** Callback fired when a node is selected. */
   onSelect?: (node: TreeNode) => void;
-  /** Callback fired when a node is expanded or collapsed. */
   onToggle?: (node: TreeNode, expanded: boolean) => void;
-  /** Whether to show connecting lines between nodes. @default false */
+  /** @default false */
   showLines?: boolean;
 }
 

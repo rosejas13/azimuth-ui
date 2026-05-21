@@ -6,17 +6,13 @@ type GridCols = 1 | 2 | 3 | 4 | 'auto';
 type GridAlign = 'start' | 'center' | 'end' | 'stretch';
 type GridVariant = 'auto' | 'highlight' | 'sidebar';
 
-/** A CSS Grid layout component with configurable columns, gap, and alignment. */
 export interface GridProps extends ComponentPropsWithoutRef<'div'> {
-  /** The number of columns or auto-fit behavior. @default 'auto' */
+  /** @default 'auto' */
   cols?: GridCols;
-  /** The spacing token for grid gap (e.g. 'md', 'lg'). */
   gap?: string;
-  /** Vertical alignment of grid items. */
   align?: GridAlign;
-  /** The visual variant of the grid. @default 'auto' */
+  /** @default 'auto' */
   variant?: GridVariant;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

@@ -2,19 +2,14 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './PageLayout.module.css';
 
-/** Props for the PageLayout component. */
 export interface PageLayoutProps extends ComponentPropsWithoutRef<'div'> {
-  /** Sidebar content to render beside the main content. */
   sidebar?: React.ReactNode;
-  /** Width of the sidebar as a CSS value. @default '260px' */
+  /** @default '260px' */
   sidebarWidth?: string;
-  /** Position of the sidebar relative to the content. @default 'left' */
+  /** @default 'left' */
   sidebarPosition?: 'left' | 'right';
-  /** Top navigation bar content. */
   topNav?: React.ReactNode;
-  /** Footer content rendered at the bottom of the layout. */
   footer?: React.ReactNode;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

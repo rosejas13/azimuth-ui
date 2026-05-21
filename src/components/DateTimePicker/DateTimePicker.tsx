@@ -12,26 +12,20 @@ import { cn } from '@/utils/cn';
 import { Calendar } from '@/components/Calendar';
 import styles from './DateTimePicker.module.css';
 
-/** Props for the DateTimePicker component. */
 export interface DateTimePickerProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'defaultValue'> {
-  /** The controlled selected date/time. */
   value?: Date;
-  /** The default selected date/time (uncontrolled). */
   defaultValue?: Date;
-  /** Callback fired when the value changes. */
   onChange?: (date: Date) => void;
-  /** Whether to show time selection. @default true */
+  /** @default true */
   showTime?: boolean;
-  /** Whether to show seconds selection. @default false */
+  /** @default false */
   showSeconds?: boolean;
-  /** Minimum selectable date. */
   minDate?: Date;
-  /** Maximum selectable date. */
   maxDate?: Date;
-  /** Step size for hour selection. @default 1 */
+  /** @default 1 */
   hourStep?: number;
-  /** Step size for minute selection. @default 1 */
+  /** @default 1 */
   minuteStep?: number;
 }
 

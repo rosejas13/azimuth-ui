@@ -14,21 +14,16 @@ import styles from './TextArea.module.css';
 
 type TextAreaBaseProps = ComponentPropsWithoutRef<'textarea'>;
 
-/** Props for the TextArea component. */
 export interface TextAreaProps extends Omit<TextAreaBaseProps, 'size'> {
-  /** Label text displayed above the textarea. */
   label?: string;
-  /** Subtitle text displayed below the label. */
   subtitle?: string;
-  /** Error message displayed below the textarea. */
   error?: string;
-  /** Whether the field is marked as required. @default false */
+  /** @default false */
   required?: boolean;
-  /** Maximum character length of the input. */
   maxLength?: number;
-  /** Whether to display a character count. @default false */
+  /** @default false */
   showCharCount?: boolean;
-  /** Size variant of the textarea. @default 'md' */
+  /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
 }
 

@@ -4,10 +4,8 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Radio.module.css';
 
-/** A radio button input component with label support. */
 export interface RadioProps
   extends Omit<ComponentPropsWithoutRef<'input'>, 'size' | 'type'> {
-  /** The label text displayed next to the radio button. */
   label?: string;
 }
 

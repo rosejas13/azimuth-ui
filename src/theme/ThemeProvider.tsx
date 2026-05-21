@@ -5,11 +5,8 @@ import { ThemeContext } from './ThemeContext';
 import { DEFAULT_THEME } from './types';
 import type { ColorMode, ThemeConfig, ThemeTokens } from './types';
 
-/** Props for the ThemeProvider component. */
 interface ThemeProviderProps {
-  /** Theme configuration overrides merging with defaults. */
   config?: ThemeConfig;
-  /** The content rendered within the theme context. */
   children: ReactNode;
 }
 
