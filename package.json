@@ -74,7 +74,7 @@
     "theme",
     "accessible"
   ],
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
     "url": "https://github.com/rosejas13/azimuth-ui.git"
@@ -82,5 +82,8 @@
   "homepage": "https://github.com/rosejas13/azimuth-ui#readme",
   "bugs": {
     "url": "https://github.com/rosejas13/azimuth-ui/issues"
+  },
+  "dependencies": {
+    "@azimuth/ui": "file:azimuth-ui-0.2.0.tgz"
   }
 }

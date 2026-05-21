@@ -48,9 +48,9 @@ function App() {
 
 `Container` `Divider` `Grid` `Stack`
 
-### Components (46)
+### Components (48)
 
-`Alert` `Avatar` `Badge` `Breadcrumbs` `Calendar` `Card` `Carousel` `Chip` `CodeBlock` `Cursor` `DataTable` `DateTimePicker` `Dialog` `Drawer` `DropdownList` `EmptyState` `FanMenu` `Flyout` `Form` `InputGroup` `Kbd` `List` `Loader` `LoginSignup` `Menu` `Modal` `Navbar` `PageLayout` `Pagination` `ProgressBar` `ResizablePanel` `SearchBar` `SectionView` `SegmentedButton` `Skeleton` `Slider` `SlideSheet` `Table` `Tabs` `Tag` `TextArea` `TextBox` `Toast` `Tooltip` `TreeList` `VisuallyHidden`
+`Alert` `Avatar` `Badge` `Breadcrumbs` `Calendar` `Card` `Carousel` `Chat` `Chip` `CodeBlock` `Cursor` `DataTable` `DateRangePicker` `DateTimePicker` `Dialog` `Drawer` `DropdownList` `EmptyState` `FanMenu` `FileUpload` `Flyout` `Form` `InputGroup` `Kbd` `List` `Loader` `LoginSignup` `Menu` `Modal` `Navbar` `PageLayout` `Pagination` `ProgressBar` `ResizablePanel` `SearchBar` `SectionView` `SegmentedButton` `Skeleton` `Slider` `SlideSheet` `Table` `Tabs` `Tag` `TextArea` `TextBox` `Toast` `Tooltip` `TreeList` `VisuallyHidden`
 
 ## Quick Start
 
@@ -106,4 +106,9 @@ Contributions are welcome. Please follow the coding conventions outlined in `AGE
 
 ## License
 
-MIT
+Dual-licensed: **AGPL v3** (free, with conditions) or **Commercial License** (paid, no restrictions).
+
+- **Personal / open-source projects**: Use under AGPL v3. Free, but your project must also be AGPL v3.
+- **Commercial / proprietary use**: Requires a commercial license. Contact licenses@azimuth.dev for pricing.
+
+See [LICENSE](LICENSE) for details.
