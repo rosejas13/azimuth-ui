@@ -11,29 +11,21 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import styles from './Dialog.module.css';
 
-/** Props for the Dialog component. */
 export interface DialogProps extends Omit<ComponentPropsWithoutRef<'div'>, 'title'> {
-  /** Whether the dialog is visible. */
   open: boolean;
-  /** Callback fired when the dialog requests to close. */
   onClose: () => void;
-  /** Dialog title text. */
   title?: string;
-  /** Dialog description text. */
   description?: string;
-  /** The visual variant of the dialog. @default 'info' */
+  /** @default 'info' */
   variant?: 'info' | 'warning' | 'danger';
-  /** Label for the confirm button. @default 'Confirm' */
+  /** @default 'Confirm' */
   confirmLabel?: string;
-  /** Label for the cancel button. @default 'Cancel' */
+  /** @default 'Cancel' */
   cancelLabel?: string;
-  /** Callback fired when the confirm button is clicked. */
   onConfirm?: () => void;
-  /** Callback fired when the cancel button is clicked. */
   onCancel?: () => void;
-  /** Whether the dialog is in a loading state. @default false */
+  /** @default false */
   loading?: boolean;
-  /** The content of the dialog body. */
   children?: React.ReactNode;
 }
 

@@ -5,13 +5,11 @@ import styles from './Loader.module.css';
 type LoaderVariant = 'circle' | 'bar';
 type LoaderSize = 'sm' | 'md' | 'lg';
 
-/** Props for the Loader component. */
 export interface LoaderProps extends ComponentPropsWithoutRef<'div'> {
-  /** The visual variant of the loader. @default 'circle' */
+  /** @default 'circle' */
   variant?: LoaderVariant;
-  /** The size of the loader. @default 'md' */
+  /** @default 'md' */
   size?: LoaderSize;
-  /** Accessible label for the loader. */
   label?: string;
 }
 

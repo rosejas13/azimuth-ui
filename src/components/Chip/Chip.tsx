@@ -6,23 +6,18 @@ import styles from './Chip.module.css';
 
 type ChipVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
 
-/** Props for the Chip component. */
 export interface ChipProps extends ComponentPropsWithoutRef<'span'> {
-  /** The visual variant of the chip. @default 'neutral' */
+  /** @default 'neutral' */
   variant?: ChipVariant;
-  /** The size of the chip. @default 'md' */
+  /** @default 'md' */
   size?: 'sm' | 'md';
-  /** Whether the chip can be removed. @default false */
+  /** @default false */
   deletable?: boolean;
-  /** Callback fired when the chip is deleted. */
   onDelete?: () => void;
-  /** Whether the chip is selected. @default false */
+  /** @default false */
   selected?: boolean;
-  /** Callback fired when the chip is clicked. */
   onClick?: () => void;
-  /** Leading avatar or icon element. */
   avatar?: React.ReactNode;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

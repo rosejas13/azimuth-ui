@@ -4,21 +4,17 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './List.module.css';
 
-/** Props for the List.Item subcomponent. */
 export interface ListItemProps extends ComponentPropsWithoutRef<'li'> {
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 
-/** Props for the List component. */
 export interface ListProps extends Omit<ComponentPropsWithoutRef<'ul'>, 'type'> {
-  /** Whether to render an ordered list (ol). @default false */
+  /** @default false */
   ordered?: boolean;
-  /** Spacing between list items. @default 'md' */
+  /** @default 'md' */
   spacing?: 'sm' | 'md' | 'lg';
-  /** Whether to show bullet markers. @default false */
+  /** @default false */
   bulleted?: boolean;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

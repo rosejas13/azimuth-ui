@@ -4,15 +4,12 @@ import styles from './Skeleton.module.css';
 
 type SkeletonVariant = 'text' | 'circle' | 'rect';
 
-/** Props for the Skeleton component. */
 export interface SkeletonProps extends ComponentPropsWithoutRef<'div'> {
-  /** Shape variant of the skeleton placeholder. @default 'text' */
+  /** @default 'text' */
   variant?: SkeletonVariant;
-  /** Width of the skeleton as a CSS value. */
   width?: string;
-  /** Height of the skeleton as a CSS value. */
   height?: string;
-  /** Number of skeleton items to render. @default 1 */
+  /** @default 1 */
   count?: number;
 }
 

@@ -5,19 +5,15 @@ import { cn } from '@/utils/cn';
 import { highlightCode } from './highlightCode';
 import styles from './CodeBlock.module.css';
 
-/** Props for the CodeBlock component. */
 export interface CodeBlockProps extends Omit<ComponentPropsWithoutRef<'pre'>, 'children'> {
-  /** The source code string to display. */
   code: string;
-  /** The programming language for labeling. */
   language?: string;
-  /** Whether to show line numbers. @default false */
+  /** @default false */
   showLineNumbers?: boolean;
-  /** Whether to show a copy button. @default false */
+  /** @default false */
   showCopyButton?: boolean;
-  /** Maximum height of the code block (CSS value). */
   maxHeight?: string;
-  /** Whether to apply syntax highlighting. @default true */
+  /** @default true */
   highlight?: boolean;
 }
 

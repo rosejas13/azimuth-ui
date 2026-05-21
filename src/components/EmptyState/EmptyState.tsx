@@ -2,15 +2,10 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './EmptyState.module.css';
 
-/** Props for the EmptyState component. */
 export interface EmptyStateProps extends ComponentPropsWithoutRef<'div'> {
-  /** Optional icon rendered above the title. */
   icon?: React.ReactNode;
-  /** The title text. */
   title: string;
-  /** An optional description below the title. */
   description?: string;
-  /** Action element rendered at the bottom. */
   action?: React.ReactNode;
 }
 

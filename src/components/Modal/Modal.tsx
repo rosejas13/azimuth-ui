@@ -11,25 +11,18 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import styles from './Modal.module.css';
 
-/** Props for the Modal component. */
 export interface ModalProps extends ComponentPropsWithoutRef<'div'> {
-  /** Whether the modal is visible. */
   open: boolean;
-  /** Callback fired when the modal requests to close. */
   onClose: () => void;
-  /** Modal title text. */
   title?: string;
-  /** Optional subtitle text. */
   subtitle?: string;
-  /** Whether clicking the overlay closes the modal. @default false */
+  /** @default false */
   persistent?: boolean;
-  /** Backdrop blur intensity. @default 'none' */
+  /** @default 'none' */
   blur?: 'none' | 'sm' | 'md' | 'lg';
-  /** The size of the modal. @default 'md' */
+  /** @default 'md' */
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  /** The content of the modal body. */
   children?: React.ReactNode;
-  /** Footer content. */
   footer?: React.ReactNode;
 }
 

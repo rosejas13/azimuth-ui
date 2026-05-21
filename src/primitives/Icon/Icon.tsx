@@ -4,11 +4,9 @@ import styles from './Icon.module.css';
 
 type IconSize = 'sm' | 'md' | 'lg' | 'xl' | 'xl2';
 
-/** A wrapper component for rendering icons with consistent sizing. */
 export interface IconProps extends HTMLAttributes<HTMLSpanElement> {
-  /** The size of the icon. @default 'md' */
+  /** @default 'md' */
   size?: IconSize;
-  /** The icon element to render. */
   children: React.ReactNode;
 }
 

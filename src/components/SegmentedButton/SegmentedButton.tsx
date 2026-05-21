@@ -11,32 +11,22 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './SegmentedButton.module.css';
 
-/** An option within a SegmentedButton group. */
 export interface SegmentedButtonOption {
-  /** Unique value identifier for the option. */
   value: string;
-  /** Display label for the option. */
   label: string;
-  /** Icon displayed alongside the label. */
   icon?: React.ReactNode;
-  /** Whether the option is disabled. */
   disabled?: boolean;
 }
 
-/** Props for the SegmentedButton component. */
 export interface SegmentedButtonProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
-  /** Array of options to render. */
   options: SegmentedButtonOption[];
-  /** Currently selected value (controlled). */
   value?: string;
-  /** Default selected value (uncontrolled). */
   defaultValue?: string;
-  /** Callback fired when the selected value changes. */
   onChange?: (value: string) => void;
-  /** Size variant of the segmented button. @default 'md' */
+  /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
-  /** Whether the button group stretches to full width. @default false */
+  /** @default false */
   fullWidth?: boolean;
 }
 

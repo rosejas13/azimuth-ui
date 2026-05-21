@@ -17,22 +17,15 @@ const MONTH_NAMES = [
 
 const DAY_NAMES_SUN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-/** Props for the Calendar component. */
 export interface CalendarProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'defaultValue'> {
-  /** The controlled selected date. */
   value?: Date;
-  /** The default selected date (uncontrolled). */
   defaultValue?: Date;
-  /** Callback fired when a date is selected. */
   onChange?: (date: Date) => void;
-  /** Minimum selectable date. */
   minDate?: Date;
-  /** Maximum selectable date. */
   maxDate?: Date;
-  /** Whether to show week numbers. @default false */
+  /** @default false */
   showWeekNumbers?: boolean;
-  /** Locale for formatting weekday names (e.g. 'en-US'). */
   locale?: string;
 }
 

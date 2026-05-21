@@ -15,21 +15,17 @@ export type ButtonVariant =
 
 type ButtonSize = 'sm' | 'md' | 'lg';
 
-/** A styled button component with multiple visual variants and size options. */
 export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
-  /** The visual style variant. @default 'primary' */
+  /** @default 'primary' */
   variant?: ButtonVariant;
-  /** The size of the button. @default 'md' */
+  /** @default 'md' */
   size?: ButtonSize;
-  /** Optional icon element to display alongside the label. */
   icon?: React.ReactNode;
-  /** Where to position the icon relative to the label. @default 'left' */
+  /** @default 'left' */
   iconPosition?: 'left' | 'right';
-  /** Whether the button expands to fill its container width. */
   fullWidth?: boolean;
-  /** The shape of the button. @default 'default' */
+  /** @default 'default' */
   shape?: 'default' | 'circle';
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

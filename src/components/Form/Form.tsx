@@ -9,13 +9,10 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Form.module.css';
 
-/** Props for the Form component. */
 export interface FormProps extends Omit<ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
-  /** Callback fired with form data keyed by field name. */
   onSubmit?: (data: Record<string, FormDataEntryValue>) => void;
-  /** Vertical spacing between fields. @default 'md' */
+  /** @default 'md' */
   spacing?: 'sm' | 'md' | 'lg';
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 
@@ -75,17 +72,12 @@ const FormRoot = forwardRef<HTMLFormElement, FormProps>(
 
 FormRoot.displayName = 'Form';
 
-/** Props for the Form.Field subcomponent. */
 export interface FormFieldProps extends ComponentPropsWithoutRef<'div'> {
-  /** Label text for the field. */
   label?: string;
-  /** Whether the field is required. @default false */
+  /** @default false */
   required?: boolean;
-  /** Error message to display. */
   error?: string;
-  /** Help text for the field. */
   helpText?: string;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

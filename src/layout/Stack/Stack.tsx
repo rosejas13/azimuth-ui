@@ -12,19 +12,15 @@ type StackJustify =
   | 'around';
 type StackSpacing = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-/** A flexbox layout component for stacking elements with configurable direction and spacing. */
 export interface StackProps extends ComponentPropsWithoutRef<'div'> {
-  /** The direction to stack elements. @default 'vertical' */
+  /** @default 'vertical' */
   direction?: StackDirection;
-  /** Cross-axis alignment of stack items. */
   align?: StackAlign;
-  /** Main-axis distribution of stack items. */
   justify?: StackJustify;
-  /** The spacing between stack items. @default 'md' */
+  /** @default 'md' */
   spacing?: StackSpacing;
-  /** Whether stack items should wrap to the next line. @default false */
+  /** @default false */
   wrap?: boolean;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

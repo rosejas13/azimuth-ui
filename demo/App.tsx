@@ -718,7 +718,7 @@ function ContactPage() {
 
           <div style={{ marginTop: 'var(--azimuth-space-xl)' }}>
             <Card header={<Text weight="semibold">Office Hours</Text>}>
-              <Calendar onChange={(d) => {}} showWeekNumbers />
+              <Calendar onChange={(d) => {}} showWeekNumbers aria-label="Office hours calendar" />
             </Card>
           </div>
 
@@ -1123,11 +1123,11 @@ export function App() {
                 Get product updates and accessibility tips monthly.
               </Text>
               <InputGroup>
-                <Input placeholder="your@email.com" size="sm" />
+                <Input placeholder="your@email.com" size="sm" aria-label="Email address" />
                 <Button size="sm">Subscribe</Button>
               </InputGroup>
               <div style={{ marginTop: 'var(--azimuth-space-md)' }}>
-                <Slider defaultValue={75} showValue size="sm" />
+                <Slider defaultValue={75} showValue size="sm" aria-label="Satisfaction level" />
                 <Text size="xs" color="muted" style={{ marginTop: 'var(--azimuth-space-xs)' }}>Satisfaction level: 75%</Text>
               </div>
             </div>

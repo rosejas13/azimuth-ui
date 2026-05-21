@@ -4,17 +4,15 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Table.module.css';
 
-/** Props for the Table component. */
 export interface TableProps extends ComponentPropsWithoutRef<'table'> {
-  /** Whether rows have alternating background colors. @default false */
+  /** @default false */
   striped?: boolean;
-  /** Whether the table has visible borders. @default false */
+  /** @default false */
   bordered?: boolean;
-  /** Whether rows are highlighted on hover. @default false */
+  /** @default false */
   hoverable?: boolean;
-  /** Size variant of the table. @default 'md' */
+  /** @default 'md' */
   size?: 'sm' | 'md';
-  /** The content of the component. */
   children: React.ReactNode;
 }
 

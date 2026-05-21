@@ -11,23 +11,18 @@ import styles from './Toast.module.css';
 
 type ToastVariant = 'warning' | 'success' | 'error' | 'info';
 
-/** Props for the Toast component. */
 export interface ToastProps extends ComponentPropsWithoutRef<'div'> {
-  /** Color variant of the toast. @default 'info' */
+  /** @default 'info' */
   variant?: ToastVariant;
-  /** Title text for the toast. */
   title: string;
-  /** Optional message body text. */
   message?: string;
-  /** Whether the toast can be dismissed by the user. @default false */
+  /** @default false */
   dismissible?: boolean;
-  /** Callback fired when the toast is dismissed. */
   onDismiss?: () => void;
+  /** @default false */
+  expandable?: boolean;
   /** Milliseconds after which the toast automatically dismisses. */
   autoDismiss?: number;
-  /** Whether the toast body can be expanded. @default false */
-  expandable?: boolean;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

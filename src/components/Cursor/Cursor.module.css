@@ -1,0 +1,4 @@
+.cursor {
+  display: inline-flex;
+  cursor: inherit;
+}

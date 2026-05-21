@@ -4,11 +4,9 @@ import styles from './TextBox.module.css';
 
 type TextBoxVariant = 'plain' | 'code';
 
-/** Props for the TextBox component. */
 export interface TextBoxProps extends ComponentPropsWithoutRef<'div'> {
-  /** Display variant of the text box. @default 'plain' */
+  /** @default 'plain' */
   variant?: TextBoxVariant;
-  /** The content of the component. */
   children: React.ReactNode;
 }
 

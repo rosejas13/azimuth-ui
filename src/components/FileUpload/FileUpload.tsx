@@ -4,17 +4,15 @@ import { type ComponentPropsWithoutRef, forwardRef, useCallback, useRef, useStat
 import { cn } from '@/utils/cn';
 import styles from './FileUpload.module.css';
 
-/** Props for the FileUpload component. */
 export interface FileUploadProps extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
-  /** Callback fired when files are selected, dropped, or pasted. Receives the array of valid File objects. */
   onFilesSelected?: (files: File[]) => void;
   /** Accepted file types string (e.g. 'image/*,.pdf'). Passed to the underlying file input. */
   accept?: string;
-  /** Whether multiple files can be selected. @default true */
+  /** @default true */
   multiple?: boolean;
   /** Maximum file size in megabytes. Files exceeding this size are rejected with an error. @default 10 */
   maxSize?: number;
-  /** Whether the upload area is disabled. @default false */
+  /** @default false */
   disabled?: boolean;
 }
 
@@ -97,6 +95,14 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
       }
     }, [disabled, validateAndAdd]);
 
+    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+      if (disabled) return;
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        inputRef.current?.click();
+      }
+    }, [disabled]);
+
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files && e.target.files.length > 0) {
         validateAndAdd(e.target.files);
@@ -118,6 +124,7 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onPaste={handlePaste}
+        onKeyDown={handleKeyDown}
         tabIndex={disabled ? -1 : 0}
         role="button"
         aria-label="File upload area"
@@ -153,7 +160,7 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
         {error && <div className={styles.error} role="alert">{error}</div>}
 
         {files.length > 0 && (
-          <ul className={styles.fileList}>
+          <ul className={styles.fileList} aria-live="polite">
             {files.map((file, i) => (
               <li key={`${file.name}-${i}`} className={styles.fileItem}>
                 <div className={styles.fileInfo}>

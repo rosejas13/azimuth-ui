@@ -18,25 +18,20 @@ const AS_MAP: Record<string, ElementType> = {
   h5: 'h5',
 };
 
-/** A typography component with size, weight, color, and variant options. */
 export interface TextProps extends ComponentPropsWithoutRef<'p'> {
-  /** The HTML element or component to render as. */
   as?: ElementType;
-  /** The font size. @default 'base' */
+  /** @default 'base' */
   size?: TextSize;
-  /** The font weight. */
   weight?: TextWeight;
-  /** The text color. */
   color?: TextColor;
-  /** The typographic style variant. @default 'body' */
+  /** @default 'body' */
   variant?: TextVariant;
-  /** Whether to transform text to uppercase. @default false */
+  /** @default false */
   uppercase?: boolean;
-  /** Whether to truncate text with an ellipsis on overflow. @default false */
+  /** @default false */
   truncate?: boolean;
-  /** Whether to prevent text wrapping. @default false */
+  /** @default false */
   nowrap?: boolean;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

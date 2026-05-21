@@ -11,30 +11,24 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './DropdownList.module.css';
 
-/** Props for the DropdownList component. */
 export interface DropdownListProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
-  /** The label text for the dropdown. */
   label?: string;
-  /** Array of dropdown options with value, label, and optional disabled/separator flags. */
   options: Array<{
     value: string;
     label: string;
     disabled?: boolean;
     separator?: boolean;
   }>;
-  /** Controlled selected value(s). */
   value?: string | string[];
-  /** Callback fired when selection changes. */
   onChange?: (value: string | string[]) => void;
-  /** Placeholder text when nothing is selected. @default 'Select...' */
+  /** @default 'Select...' */
   placeholder?: string;
-  /** Whether multiple selections are allowed. @default false */
+  /** @default false */
   multiple?: boolean;
-  /** Whether to show a search input. @default false */
+  /** @default false */
   searchable?: boolean;
-  /** Whether the dropdown is disabled. @default false */
+  /** @default false */
   disabled?: boolean;
-  /** Error message to display. */
   error?: string;
 }
 

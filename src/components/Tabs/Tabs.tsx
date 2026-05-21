@@ -19,17 +19,12 @@ interface TabItem {
   disabled?: boolean;
 }
 
-/** Props for the Tabs component. */
 export interface TabsProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
-  /** Array of tab items to render. */
   tabs: TabItem[];
-  /** ID of the default active tab (uncontrolled). */
   defaultTab?: string;
-  /** ID of the currently active tab (controlled). */
   activeTab?: string;
-  /** Callback fired when the active tab changes. */
   onChange?: (tabId: string) => void;
-  /** Visual variant of the tab control. @default 'underline' */
+  /** @default 'underline' */
   variant?: 'underline' | 'pills' | 'buttons';
 }
 

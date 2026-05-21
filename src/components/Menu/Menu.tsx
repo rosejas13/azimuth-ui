@@ -11,31 +11,20 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Menu.module.css';
 
-/** Menu item definition for the Menu component. */
 export interface MenuItem {
-  /** Unique identifier for the menu item. */
   key: string;
-  /** Display label for the item. */
   label: string;
-  /** Optional icon element. */
   icon?: React.ReactNode;
-  /** Whether the item is disabled. */
   disabled?: boolean;
-  /** Whether the item represents a destructive action. */
   danger?: boolean;
-  /** Whether the item is a visual separator. */
   separator?: boolean;
 }
 
-/** Props for the Menu component. */
 export interface MenuProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onSelect'> {
-  /** Array of menu items. */
   items: MenuItem[];
-  /** Custom trigger element. */
   trigger?: React.ReactNode;
-  /** Callback fired when an item is selected. */
   onSelect?: (key: string) => void;
-  /** Horizontal alignment of the dropdown. @default 'left' */
+  /** @default 'left' */
   side?: 'left' | 'right';
 }
 

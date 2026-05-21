@@ -15,33 +15,26 @@ type InputBaseProps = ComponentPropsWithoutRef<'input'>;
 
 /** A text input component with label, validation, autocomplete, and stepper support. */
 export interface InputProps extends Omit<InputBaseProps, 'size'> {
-  /** The label text for the input. */
   label?: string;
   /** Helper text displayed below the label. */
   subtitle?: string;
   /** Error message displayed below the input. */
   error?: string;
-  /** Whether the input is required. @default false */
+  /** @default false */
   required?: boolean;
-  /** The size of the input. @default 'md' */
+  /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
-  /** The position of the label relative to the input. @default 'top' */
+  /** @default 'top' */
   labelPosition?: 'top' | 'left' | 'inner';
-  /** Whether to show increment/decrement steppers for number inputs. @default false */
+  /** @default false */
   showSteppers?: boolean;
-  /** Minimum value for number inputs. */
   min?: number;
-  /** Maximum value for number inputs. */
   max?: number;
-  /** Step increment for number inputs. */
   step?: number;
-  /** List of autocomplete suggestions. */
   autocompleteOptions?: string[];
-  /** Callback fired when an autocomplete suggestion is selected. */
   onAutocompleteSelect?: (value: string) => void;
-  /** Maximum number of characters allowed. */
   maxLength?: number;
-  /** Whether to show a character count. @default false */
+  /** @default false */
   showCharCount?: boolean;
 }
 

@@ -9,12 +9,10 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Toggle.module.css';
 
-/** A toggle switch component with label and size options. */
 export interface ToggleProps
   extends Omit<ComponentPropsWithoutRef<'input'>, 'size' | 'type'> {
-  /** The label text displayed next to the toggle. */
   label?: string;
-  /** The size of the toggle switch. @default 'md' */
+  /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
 }
 

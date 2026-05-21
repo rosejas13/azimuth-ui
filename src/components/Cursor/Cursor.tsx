@@ -1,40 +1,25 @@
 'use client';
 
-import {
-  type ComponentPropsWithoutRef,
-  forwardRef,
-  useEffect,
-  useRef,
-} from 'react';
+import { type ComponentPropsWithoutRef, forwardRef, useEffect, useRef } from 'react';
+import { cn } from '@/utils/cn';
+import styles from './Cursor.module.css';
 
 type CursorValue =
-  | 'pointer'
-  | 'default'
-  | 'not-allowed'
-  | 'text'
-  | 'move'
-  | 'wait'
-  | 'grab'
-  | 'grabbing'
-  | 'crosshair'
-  | 'help'
-  | 'none'
-  | 'col-resize'
-  | 'row-resize';
+  | 'pointer' | 'default' | 'not-allowed' | 'text' | 'move' | 'wait'
+  | 'grab' | 'grabbing' | 'crosshair' | 'help' | 'none' | 'col-resize' | 'row-resize';
 
-/** Props for the Cursor component. */
 export interface CursorProps extends ComponentPropsWithoutRef<'span'> {
-  /** The CSS cursor value to apply. @default 'default' */
+  /** @default 'default' */
   cursor?: CursorValue;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 
 export const Cursor = forwardRef<HTMLSpanElement, CursorProps>(
-  ({ cursor = 'default', children, style, ...props }, ref) => {
+  ({ cursor = 'default', children, className, style, ...props }, ref) => {
     return (
       <span
         ref={ref}
+        className={cn(styles.cursor, className)}
         style={{ cursor, ...style }}
         {...props}
       >

@@ -5,13 +5,11 @@ import styles from './Badge.module.css';
 type BadgeVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
 type BadgeSize = 'xs' | 'sm' | 'md';
 
-/** Props for the Badge component. */
 export interface BadgeProps extends ComponentPropsWithoutRef<'span'> {
-  /** The visual variant of the badge. @default 'neutral' */
+  /** @default 'neutral' */
   variant?: BadgeVariant;
-  /** The size of the badge. @default 'md' */
+  /** @default 'md' */
   size?: BadgeSize;
-  /** The content of the component. */
   children?: React.ReactNode;
 }
 

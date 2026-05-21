@@ -11,29 +11,20 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './FanMenu.module.css';
 
-/** Option definition for the FanMenu component. */
 export interface FanMenuOption {
-  /** Unique identifier for the option. */
   key: string;
-  /** Display label for the option. */
   label: string;
-  /** Optional icon element. */
   icon?: React.ReactNode;
-  /** Callback fired when the option is clicked. */
   onClick?: () => void;
-  /** Whether the option is disabled. */
   disabled?: boolean;
 }
 
-/** Props for the FanMenu component. */
 export interface FanMenuProps extends ComponentPropsWithoutRef<'div'> {
-  /** Array of fan menu options. */
   options: FanMenuOption[];
-  /** Custom trigger element. */
   trigger?: React.ReactNode;
-  /** Direction the menu expands. @default 'up' */
+  /** @default 'up' */
   direction?: 'up' | 'down' | 'left' | 'right';
-  /** Spacing between options in pixels. @default 8 */
+  /** @default 8 */
   gap?: number;
 }
 

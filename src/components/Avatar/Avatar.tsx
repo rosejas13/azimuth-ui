@@ -6,17 +6,13 @@ import styles from './Avatar.module.css';
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-/** Props for the Avatar component. */
 export interface AvatarProps extends ComponentPropsWithoutRef<'div'> {
-  /** The image source URL. */
   src?: string;
-  /** Alt text for the image. */
   alt?: string;
-  /** Text used to generate initials when the image fails to load. */
   fallback?: string;
-  /** The size of the avatar. @default 'md' */
+  /** @default 'md' */
   size?: AvatarSize;
-  /** Whether to render a square avatar. @default false */
+  /** @default false */
   square?: boolean;
 }
 
