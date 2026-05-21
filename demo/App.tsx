@@ -1,718 +1,1360 @@
 import '../src/styles/global.css';
-import React, { useState, useEffect } from 'react';
-import logoSvg from './logo.svg';
+import { useState, useCallback } from 'react';
 import {
   Container, Grid, Stack, Divider,
   Button, Text, Icon, Input, Checkbox, Radio, Select, Toggle,
   Badge, Tag, Avatar, Loader, ProgressBar, Tooltip,
-  Alert, Toast, Card, Modal, Drawer, SlideSheet,
+  Alert, Card, Modal, Drawer, SlideSheet,
   Breadcrumbs, Pagination, Tabs, DropdownList,
   DataTable, Dialog, Menu, Navbar, SearchBar, Slider,
   Calendar, Carousel, Chip, CodeBlock, DateTimePicker, DateRangePicker,
   EmptyState, Form, InputGroup, Kbd, List, PageLayout, SectionView,
   SegmentedButton, Skeleton, Table, TextArea, TextBox,
+  FanMenu, Flyout, LoginSignup, ResizablePanel,
+  TreeList, Toast, useToast,
+  useThemeMode, type ColorMode,
+  Chat, FileUpload, type ChatMessage,
 } from '../src';
-import type { ColorPreset, StylePreset } from '../src/theme';
+import type { TreeNode } from '../src';
+import {
+  NAV_ITEMS, PRODUCTS, TEAM_MEMBERS, TESTIMONIALS, FAQ_ITEMS,
+  PRICING_PLANS, STATS, CONTACT_REASONS, SITEMAP_TREE,
+  type Product, type TeamMember,
+} from './mock-data';
+import logoSvg from './logo.svg';
+import { ComponentsPage } from './ComponentsPage';
 
-function Section({ id, title, children }: { id?: string; title: string; children: React.ReactNode }) {
+function PageNav({ activePage, onPageChange }: { activePage: string; onPageChange: (key: string) => void }) {
   return (
-    <div id={id} style={{ marginBottom: 'var(--azimuth-space-3xl)' }}>
-      <Text size="h2" style={{ marginBottom: 'var(--azimuth-space-lg)' }}>{title}</Text>
-      {children}
+    <Stack direction="horizontal" spacing="xs" align="center" wrap>
+      {NAV_ITEMS.map(item => (
+        <Button
+          key={item.key}
+          variant={activePage === item.key ? 'primary' : 'tertiary'}
+          size="sm"
+          onClick={() => onPageChange(item.key)}
+        >
+          {item.label}
+        </Button>
+      ))}
+    </Stack>
+  );
+}
+
+function ThemeToggle() {
+  const { mode, toggle } = useThemeMode();
+  const label = mode === 'dark' ? 'Dark' : mode === 'light' ? 'Light' : 'System';
+  return (
+    <Button variant="secondary" size="sm" onClick={toggle}>
+      {label}
+    </Button>
+  );
+}
+
+function StatCard({ value, label }: { value: string; label: string }) {
+  return (
+    <Card style={{ textAlign: 'center' }}>
+      <Text size="h2" color="accent" style={{ marginBottom: 'var(--azimuth-space-xs)' }}>{value}</Text>
+      <Text size="xs" color="secondary">{label}</Text>
+    </Card>
+  );
+}
+
+function ProductCard({ product, onDetails }: { product: Product; onDetails: (p: Product) => void }) {
+  return (
+    <Card
+      header={
+        <Stack direction="horizontal" justify="between" align="center">
+          <Text weight="semibold">{product.name}</Text>
+          <Badge variant={product.price === 0 ? 'success' : 'warning'}>
+            {product.price === 0 ? 'Free' : `$${product.price}/mo`}
+          </Badge>
+        </Stack>
+      }
+      footer={
+        <Stack direction="horizontal" spacing="sm">
+          <Button size="sm" fullWidth onClick={() => onDetails(product)}>Details</Button>
+          <Button size="sm" variant="secondary" fullWidth>Get Started</Button>
+        </Stack>
+      }
+    >
+      <Stack spacing="sm">
+        <Text size="sm" color="secondary">{product.tagline}</Text>
+        <Divider />
+        <Stack direction="horizontal" spacing="xs" wrap>
+          {product.badges.map(b => (
+            <Badge key={b.label} variant={b.variant}>{b.label}</Badge>
+          ))}
+        </Stack>
+      </Stack>
+    </Card>
+  );
+}
+
+function TeamCard({ member }: { member: TeamMember }) {
+  return (
+    <Card>
+      <Stack align="center" spacing="sm" style={{ textAlign: 'center' }}>
+        <Avatar size="xl" fallback={member.name.split(' ').map(n => n[0]).join('')} />
+        <div>
+          <Text weight="semibold">{member.name}</Text>
+          <Text size="sm" color="accent">{member.role}</Text>
+        </div>
+        <Text size="sm" color="secondary">{member.bio}</Text>
+        <Stack direction="horizontal" spacing="sm" justify="center">
+          {member.socials.map(s => (
+            <Chip key={s.platform} size="sm" variant="neutral" onClick={() => {}}>{s.platform}</Chip>
+          ))}
+        </Stack>
+        <Text size="xs" color="muted">Since {member.since}</Text>
+      </Stack>
+    </Card>
+  );
+}
+
+function PricingCard({ plan, yearly }: { plan: typeof PRICING_PLANS[0]; yearly: boolean }) {
+  const price = yearly ? plan.yearlyPrice : plan.monthlyPrice;
+  return (
+    <Card
+      style={plan.highlighted ? {
+        borderColor: 'var(--azimuth-accent)',
+        borderWidth: '2px',
+        transform: 'scale(1.02)',
+      } : undefined}
+      header={
+        <Stack spacing="xs" align="center">
+          {plan.badge && <Badge variant="accent">{plan.badge}</Badge>}
+          <Text weight="bold" size="h3">{plan.name}</Text>
+          <Text size="sm" color="secondary" style={{ textAlign: 'center' }}>{plan.description}</Text>
+          <Stack direction="horizontal" align="end" spacing="xs">
+            <Text size="h1" color="accent">{price === 0 ? 'Free' : `$${price}`}</Text>
+            {price > 0 && <Text size="sm" color="muted">/{yearly ? 'yr' : 'mo'}</Text>}
+          </Stack>
+        </Stack>
+      }
+      footer={
+        <Button variant={plan.highlighted ? 'primary' : 'secondary'} fullWidth>
+          {plan.name === 'Enterprise' ? 'Contact Sales' : 'Get Started'}
+        </Button>
+      }
+    >
+      <List spacing="sm">
+        {plan.features.map(f => <List.Item key={f}>{f}</List.Item>)}
+      </List>
+    </Card>
+  );
+}
+
+function TestimonialCard({ t }: { t: typeof TESTIMONIALS[0] }) {
+  return (
+    <Card>
+      <Stack spacing="md">
+        <Stack direction="horizontal" spacing="xs">
+          {Array.from({ length: 5 }, (_, i) => (
+            <Text key={i} size="sm" color={i < t.rating ? 'accent' : 'muted'}>Star</Text>
+          ))}
+        </Stack>
+        <Text size="sm" style={{ fontStyle: 'italic', color: 'var(--azimuth-color-text)' }}>"{t.quote}"</Text>
+        <Divider />
+        <Stack direction="horizontal" spacing="sm" align="center">
+          <Avatar size="sm" fallback={t.author.split(' ').map(n => n[0]).join('')} />
+          <div>
+            <Text size="sm" weight="semibold">{t.author}</Text>
+            <Text size="xs" color="secondary">{t.role}, {t.company}</Text>
+          </div>
+        </Stack>
+      </Stack>
+    </Card>
+  );
+}
+
+function HomePage({ onProductDetails }: { onProductDetails: (p: Product) => void }) {
+  const featured = PRODUCTS.slice(0, 4);
+  return (
+    <div>
+      <div style={{ padding: 'var(--azimuth-space-4xl) 0 var(--azimuth-space-3xl)' }}>
+        <Stack spacing="lg" align="center" style={{ textAlign: 'center' }}>
+          <Badge variant="accent" style={{ fontSize: 'var(--azimuth-fs-sm)' }}>v0.2.0 -- Now in Public Beta</Badge>
+          <Text size="h1" variant="display" style={{ maxWidth: '16ch' }}>
+            Build Accessible UIs at Scale
+          </Text>
+          <Text size="lg" color="secondary" style={{ maxWidth: '60ch' }}>
+            A configurable, accessible React component library. Theme-driven with a single ThemeProvider.
+            WCAG 2.2 AA compliant, built with TypeScript and CSS Modules.
+          </Text>
+          <Stack direction="horizontal" spacing="md">
+            <Button size="lg">Get Started Free</Button>
+            <Button size="lg" variant="secondary">
+              Watch Demo
+            </Button>
+          </Stack>
+          <Stack direction="horizontal" spacing="lg" style={{ marginTop: 'var(--azimuth-space-lg)' }}>
+            <Tooltip content="60+ production-ready components">
+              <Stack direction="horizontal" spacing="xs" align="center">
+                <Text size="h4" color="accent">60+</Text>
+                <Text size="sm" color="secondary">Components</Text>
+              </Stack>
+            </Tooltip>
+            <Divider orientation="vertical" />
+            <Tooltip content="WCAG 2.2 AA compliant out of the box">
+              <Stack direction="horizontal" spacing="xs" align="center">
+                <Text size="h4" color="accent">WCAG 2.2</Text>
+                <Text size="sm" color="secondary">AA Compliant</Text>
+              </Stack>
+            </Tooltip>
+            <Divider orientation="vertical" />
+            <Tooltip content="100% TypeScript with strict mode">
+              <Stack direction="horizontal" spacing="xs" align="center">
+                <Text size="h4" color="accent">100%</Text>
+                <Text size="sm" color="secondary">TypeScript</Text>
+              </Stack>
+            </Tooltip>
+          </Stack>
+        </Stack>
+      </div>
+
+      <Divider />
+
+      <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
+        <Stack spacing="lg" align="center" style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-2xl)' }}>
+          <Text size="h2">Trusted by teams worldwide</Text>
+          <Text size="sm" color="secondary">Join thousands of developers building better UIs</Text>
+        </Stack>
+        <Grid cols={{ base: 2, md: 3, lg: 6 }} gap="md">
+          {STATS.map(s => <StatCard key={s.id} value={s.value} label={s.label} />)}
+        </Grid>
+      </div>
+
+      <Divider />
+
+      <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
+        <Stack spacing="lg" align="center" style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-2xl)' }}>
+          <Text size="h2">Featured Products</Text>
+          <Text size="sm" color="secondary">Explore our component ecosystem</Text>
+        </Stack>
+        <Grid cols={{ base: 1, md: 2 }} gap="lg">
+          {featured.map(p => <ProductCard key={p.id} product={p} onDetails={onProductDetails} />)}
+        </Grid>
+      </div>
+
+      <Divider />
+
+      <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
+        <Stack spacing="lg" align="center" style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-2xl)' }}>
+          <Text size="h2">What our customers say</Text>
+          <Text size="sm" color="secondary">Real feedback from real teams</Text>
+        </Stack>
+        <Carousel autoRotate={4000} showDots showArrows loop>
+          {TESTIMONIALS.map(t => (
+            <div key={t.id} style={{ padding: 'var(--azimuth-space-md)' }}>
+              <TestimonialCard t={t} />
+            </div>
+          ))}
+        </Carousel>
+      </div>
+
+      <Divider />
+
+      <div style={{ padding: 'var(--azimuth-space-3xl) 0', textAlign: 'center' }}>
+        <Stack spacing="lg" align="center">
+          <Text size="h2">Ready to get started?</Text>
+          <Text size="lg" color="secondary" style={{ maxWidth: '50ch' }}>
+            Start building accessible, beautiful interfaces today. No credit card required.
+          </Text>
+          <Stack direction="horizontal" spacing="md">
+            <Button size="lg">Start Free Trial</Button>
+            <Button size="lg" variant="secondary">
+              Read Docs
+            </Button>
+          </Stack>
+        </Stack>
+      </div>
     </div>
   );
 }
 
-function DemoBox({ label, children }: { label: string; children: React.ReactNode }) {
+function AboutPage() {
   return (
-    <div style={{ padding: 'var(--azimuth-space-md)', border: '1px dashed var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-md)', marginBottom: 'var(--azimuth-space-md)' }}>
-      <Text size="xs" color="muted" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>{label}</Text>
-      <Stack direction="horizontal" spacing="sm" align="center" wrap>
-        {children}
+    <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
+      <Stack spacing="2xl">
+        <div style={{ textAlign: 'center' }}>
+          <Badge variant="info" style={{ marginBottom: 'var(--azimuth-space-md)' }}>Our Story</Badge>
+          <Text size="h1" variant="display" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+            Building the future of accessible UI
+          </Text>
+          <Text size="lg" color="secondary" style={{ maxWidth: '60ch', margin: '0 auto' }}>
+            Azimuth was founded in 2023 with a simple mission: make professional, accessible UI development
+            accessible to every team. We believe great design and accessibility should never be a trade-off.
+          </Text>
+        </div>
+
+        <Divider />
+
+        <div>
+          <Text size="h2" style={{ marginBottom: 'var(--azimuth-space-xl)' }}>Our Values</Text>
+          <Grid cols={{ base: 1, md: 3 }} gap="lg">
+            {[
+              { title: 'Accessibility First', desc: 'Every component is built to WCAG 2.2 AA standards as a baseline, not an afterthought.' },
+              { title: 'Developer Experience', desc: 'Clean APIs, comprehensive TypeScript types, and thorough documentation make development a joy.' },
+              { title: 'Performance Matters', desc: 'Tree-shakeable exports, zero runtime overhead, and CSS Custom Properties for blazing fast rendering.' },
+            ].map(v => (
+              <Card key={v.title} header={
+                <Stack direction="horizontal" spacing="sm" align="center">
+                  <Text weight="semibold">{v.title}</Text>
+                </Stack>
+              }>
+                <Text size="sm" color="secondary">{v.desc}</Text>
+              </Card>
+            ))}
+          </Grid>
+        </div>
+
+        <Divider />
+
+        <div>
+          <Text size="h2" style={{ marginBottom: 'var(--azimuth-space-xl)' }}>Our Timeline</Text>
+          <ResizablePanel direction="vertical" minSize={60}>
+            <div style={{ padding: 'var(--azimuth-space-md)' }}>
+              <Stack spacing="sm">
+                <Text size="sm" weight="semibold" color="accent">2023 Q1 -- Inception</Text>
+                <Text size="sm" color="secondary">Project started as an internal tool at a Fortune 500 company. The vision: a component library that does not sacrifice accessibility for aesthetics.</Text>
+                <Divider />
+                <Text size="sm" weight="semibold" color="accent">2023 Q3 -- Alpha Release</Text>
+                <Text size="sm" color="secondary">First public alpha with 30 core components. Over 1,000 developers joined the waitlist within the first week.</Text>
+                <Divider />
+                <Text size="sm" weight="semibold" color="accent">2024 Q1 -- Beta Launch</Text>
+                <Text size="sm" color="secondary">Expanded to 50 components. Introduced the theming system with OKLCH color space support.</Text>
+                <Divider />
+                <Text size="sm" weight="semibold" color="accent">2024 Q3 -- v1.0 Release</Text>
+                <Text size="sm" color="secondary">Stable release with 60+ components, WCAG 2.2 AA certification, and enterprise support.</Text>
+              </Stack>
+            </div>
+            <div style={{ padding: 'var(--azimuth-space-md)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Alert variant="info" title="Pro Tip: Resizable">
+                Drag the divider to resize these panels. All Azimuth components support responsive layouts.
+              </Alert>
+            </div>
+          </ResizablePanel>
+        </div>
+
+        <Divider />
+
+        <div>
+          <Text size="h2" style={{ marginBottom: 'var(--azimuth-space-xl)', textAlign: 'center' }}>Meet the Team</Text>
+          <Grid cols={{ base: 1, md: 2, lg: 3 }} gap="lg">
+            {TEAM_MEMBERS.map(m => <TeamCard key={m.id} member={m} />)}
+          </Grid>
+        </div>
+
+        <Divider />
+
+        <div style={{ textAlign: 'center' }}>
+          <Stack spacing="lg" align="center">
+            <Text size="h3">Our Technology Stack</Text>
+            <div style={{ display: 'flex', gap: 'var(--azimuth-space-md)', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {[{ n: 'React 19', v: 'info' }, { n: 'TypeScript', v: 'accent' }, { n: 'CSS Modules', v: 'success' }, { n: 'tsup', v: 'neutral' }, { n: 'Vitest', v: 'warning' }, { n: 'Storybook', v: 'danger' }].map(t => (
+                <Chip key={t.n} variant={t.v as any} onClick={() => {}}>{t.n}</Chip>
+              ))}
+            </div>
+            <Text size="sm" color="secondary">Built with modern tooling for modern teams</Text>
+          </Stack>
+        </div>
       </Stack>
     </div>
   );
 }
 
-function ThemeToggle() {
-  const [dark, setDark] = useState(false);
+function ProductsPage({ onProductDetails }: { onProductDetails: (p: Product) => void }) {
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('name');
+  const [activeChips, setActiveChips] = useState<string[]>([]);
 
-  useEffect(() => {
-    const stored = localStorage.getItem('theme');
-    const isDark = stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-    setDark(isDark);
-  }, []);
+  const categories = ['all', ...new Set(PRODUCTS.map(p => p.category))];
+  const allTags = [...new Set(PRODUCTS.flatMap(p => p.badges.map(b => b.label)))];
 
-  function toggle() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle('dark', next);
-    localStorage.setItem('theme', next ? 'dark' : 'light');
-  }
+  const filtered = PRODUCTS
+    .filter(p => {
+      if (category !== 'all' && p.category !== category) return false;
+      if (activeChips.length > 0 && !p.badges.some(b => activeChips.includes(b.label))) return false;
+      if (search && !p.name.toLowerCase().includes(search.toLowerCase()) && !p.tagline.toLowerCase().includes(search.toLowerCase())) return false;
+      return true;
+    })
+    .sort((a, b) => sortBy === 'name' ? a.name.localeCompare(b.name) : sortBy === 'users' ? b.activeUsers - a.activeUsers : b.rating - a.rating);
+
+  const quantity = filtered.length;
 
   return (
-    <Button variant="secondary" size="sm" onClick={toggle}>
-      {dark ? '☀ Light' : '☾ Dark'}
-    </Button>
+    <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
+      <Stack spacing="xl">
+        <div>
+          <Badge variant="success" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>{quantity} Products Available</Badge>
+          <Text size="h1" variant="display">Products</Text>
+          <Text size="lg" color="secondary">Explore the complete Azimuth ecosystem</Text>
+        </div>
+
+        <Stack spacing="md">
+          <Grid cols={{ base: 1, md: 2, lg: 4 }} gap="md">
+            <SearchBar
+              placeholder="Search products..."
+              onSearch={setSearch}
+              clearable
+            />
+            <Select
+              label="Category"
+              size="sm"
+              value={category}
+              options={categories.map(c => ({ value: c, label: c.charAt(0).toUpperCase() + c.slice(1) }))}
+            />
+            <DropdownList
+              label="Sort By"
+              size="sm"
+              placeholder="Sort..."
+              value={sortBy}
+              options={[
+                { value: 'name', label: 'Name' },
+                { value: 'users', label: 'Popularity' },
+                { value: 'rating', label: 'Rating' },
+              ]}
+            />
+            <Input label="Max Price" type="number" size="sm" placeholder="Any" />
+          </Grid>
+
+          <div style={{ display: 'flex', gap: 'var(--azimuth-space-sm)', flexWrap: 'wrap', alignItems: 'center' }}>
+            <Text size="xs" color="secondary" weight="semibold">Filters:</Text>
+            {allTags.map(tag => (
+              <Chip
+                key={tag}
+                size="sm"
+                variant={activeChips.includes(tag) ? 'accent' : 'neutral'}
+                selected={activeChips.includes(tag)}
+                onClick={() => setActiveChips(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])}
+              >
+                {tag}
+              </Chip>
+            ))}
+            {activeChips.length > 0 && (
+              <Button variant="tertiary" size="sm" onClick={() => setActiveChips([])}>Clear All</Button>
+            )}
+          </div>
+        </Stack>
+
+        <Tabs
+          variant="pills"
+          tabs={[
+            {
+              id: 'grid',
+              label: 'Grid View',
+              content: (
+                <Grid cols={{ base: 1, md: 2, lg: 3 }} gap="lg">
+                  {filtered.map(p => <ProductCard key={p.id} product={p} onDetails={onProductDetails} />)}
+                </Grid>
+              ),
+            },
+            {
+              id: 'table',
+              label: 'Table View',
+              content: (
+                <DataTable
+                  title="Product Comparison"
+                  columns={[
+                    { key: 'name', title: 'Name', sortable: true },
+                    { key: 'category', title: 'Category', sortable: true },
+                    { key: 'price', title: 'Price', sortable: true, render: (v) => v === 0 ? 'Free' : `$${v}/mo` },
+                    { key: 'version', title: 'Version' },
+                    { key: 'rating', title: 'Rating', sortable: true, render: (v) => `${v}/5` },
+                    { key: 'activeUsers', title: 'Users', sortable: true, render: (v) => v.toLocaleString() },
+                  ]}
+                  data={filtered as any}
+                  searchable
+                  searchPlaceholder="Search table..."
+                  pageSize={5}
+                  pageSizeOptions={[3, 5, 10]}
+                  actions={
+                    <Button size="sm" variant="secondary">Export CSV</Button>
+                  }
+                  onRowClick={(row) => onProductDetails(row as any)}
+                />
+              ),
+            },
+          ]}
+        />
+
+        <Divider />
+
+        <div>
+          <Text size="h3" style={{ marginBottom: 'var(--azimuth-space-md)' }}>API Integration</Text>
+          <Text size="sm" color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+            Integrate Azimuth into your workflow with our REST API.
+          </Text>
+          <Tabs
+            variant="buttons"
+            tabs={[
+              {
+                id: 'js',
+                label: 'JavaScript',
+                content: (
+                  <CodeBlock
+                    language="javascript"
+                    showLineNumbers
+                    showCopyButton
+                    highlight
+                    code={`// Install Azimuth Core\nnpm install @azimuth/ui\n\n// Import components\nimport { Button, ThemeProvider } from '@azimuth/ui';\nimport '@azimuth/ui/styles.css';\n\n// Use in your app\nfunction App() {\n  return (\n    <ThemeProvider>\n      <Button>Click me</Button>\n    </ThemeProvider>\n  );\n}`}
+                    maxHeight="300px"
+                  />
+                ),
+              },
+              {
+                id: 'tsx',
+                label: 'TypeScript/React',
+                content: (
+                  <CodeBlock
+                    language="tsx"
+                    showLineNumbers
+                    showCopyButton
+                    highlight
+                    code={`import { ThemeProvider, Button, type ThemeConfig } from '@azimuth/ui';\nimport '@azimuth/ui/styles.css';\n\nconst config: ThemeConfig = {\n  accentColor: '#6366f1',\n  borderRadius: 'lg',\n  mode: 'system',\n};\n\nexport function Root({ children }) {\n  return (\n    <ThemeProvider config={config}>\n      {children}\n    </ThemeProvider>\n  );\n}`}
+                    maxHeight="300px"
+                  />
+                ),
+              },
+              {
+                id: 'curl',
+                label: 'REST API',
+                content: (
+                  <CodeBlock
+                    language="bash"
+                    showLineNumbers
+                    showCopyButton
+                    highlight
+                    code={`# Get all components\ncurl https://api.azimuth.dev/v1/components \\\n  -H "Authorization: Bearer $AZIMUTH_TOKEN"\n\n# Get specific component\ncurl https://api.azimuth.dev/v1/components/button \\\n  -H "Authorization: Bearer $AZIMUTH_TOKEN"\n\n# Get component themes\ncurl https://api.azimuth.dev/v1/themes/ocean \\\n  -H "Authorization: Bearer $AZIMUTH_TOKEN"`}
+                    maxHeight="300px"
+                  />
+                ),
+              },
+            ]}
+          />
+        </div>
+      </Stack>
+    </div>
   );
 }
 
-export function App({ currentColor, colors, onColorChange, currentStyle, styles, onStyleChange }: {
-  currentColor: string
-  colors: ColorPreset[]
-  onColorChange: (id: string) => void
-  currentStyle: string
-  styles: StylePreset[]
-  onStyleChange: (id: string) => void
-}) {
-  const [modalOpen, setModalOpen] = useState(false);
+function PricingPage() {
+  const [yearly, setYearly] = useState(false);
+
+  return (
+    <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
+      <Stack spacing="2xl" align="center">
+        <div style={{ textAlign: 'center' }}>
+          <Badge variant="info" style={{ marginBottom: 'var(--azimuth-space-md)' }}>Simple Pricing</Badge>
+          <Text size="h1" variant="display">Plans for every team</Text>
+          <Text size="lg" color="secondary" style={{ maxWidth: '50ch', margin: '0 auto var(--azimuth-space-lg)' }}>
+            Start free, upgrade as you grow. All plans include our core components and theming system.
+          </Text>
+          <SegmentedButton
+            value={yearly ? 'yearly' : 'monthly'}
+            onChange={(v) => setYearly(v === 'yearly')}
+            options={[
+              { value: 'monthly', label: 'Monthly' },
+              { value: 'yearly', label: 'Yearly', icon: <Badge variant="success" style={{ fontSize: '0.6rem' }}>Save 20%</Badge> },
+            ]}
+          />
+        </div>
+
+        <Grid cols={{ base: 1, md: 2, lg: 3 }} gap="lg" style={{ width: '100%' }}>
+          {PRICING_PLANS.map(plan => <PricingCard key={plan.id} plan={plan} yearly={yearly} />)}
+        </Grid>
+
+        <Divider />
+
+        <div style={{ width: '100%' }}>
+          <Text size="h3" style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-xl)' }}>Frequently Asked Questions</Text>
+          <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+            <Tabs
+              variant="underline"
+              tabs={[
+                {
+                  id: 'faq',
+                  label: 'General',
+                  content: (
+                    <Stack spacing="sm">
+                      {FAQ_ITEMS.map(item => (
+                        <SectionView key={item.id} title={item.question}>
+                          <Text size="sm" color="secondary">{item.answer}</Text>
+                        </SectionView>
+                      ))}
+                    </Stack>
+                  ),
+                },
+                {
+                  id: 'compare',
+                  label: 'Plan Comparison',
+                  content: (
+                    <DataTable
+                      title="Feature Comparison"
+                      columns={[
+                        { key: 'feature', title: 'Feature', sortable: true },
+                        { key: 'starter', title: 'Starter', sortable: true },
+                        { key: 'pro', title: 'Pro', sortable: true },
+                        { key: 'enterprise', title: 'Enterprise', sortable: true },
+                      ]}
+                      data={[
+                        { feature: 'Components', starter: '60+', pro: '120+', enterprise: 'Custom' },
+                        { feature: 'Theming', starter: 'Yes', pro: 'Yes', enterprise: 'Yes' },
+                        { feature: 'Figma Kit', starter: 'No', pro: 'Yes', enterprise: 'Yes' },
+                        { feature: 'Priority Support', starter: 'No', pro: 'Yes', enterprise: 'Dedicated' },
+                        { feature: 'SLA Guarantee', starter: 'No', pro: 'No', enterprise: 'Yes' },
+                        { feature: 'Price', starter: 'Free', pro: '$49/mo', enterprise: '$299/mo' },
+                      ]}
+                      pageSize={10}
+                    />
+                  ),
+                },
+              ]}
+            />
+          </div>
+        </div>
+
+        <Divider />
+
+        <div style={{ textAlign: 'center' }}>
+          <Text size="h4" style={{ marginBottom: 'var(--azimuth-space-md)' }}>Still have questions?</Text>
+          <Stack direction="horizontal" spacing="md" justify="center">
+            <Button variant="secondary" onClick={() => {}}>Email Us</Button>
+            <Button variant="secondary" onClick={() => {}}>Live Chat</Button>
+          </Stack>
+        </div>
+      </Stack>
+    </div>
+  );
+}
+
+function ContactPage() {
+  const { toast } = useToast();
+
+  return (
+    <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
+      <Grid cols={{ base: 1, md: 2 }} gap="xl">
+        <div>
+          <Badge variant="accent" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Get in Touch</Badge>
+          <Text size="h1" variant="display" style={{ marginBottom: 'var(--azimuth-space-md)' }}>Contact Us</Text>
+          <Text size="lg" color="secondary" style={{ marginBottom: 'var(--azimuth-space-xl)' }}>
+            Have a question, feedback, or want to partner with us? We would love to hear from you.
+          </Text>
+
+          <Card>
+            <Form
+              onSubmit={(data) => {
+                toast({ title: 'Message sent!', message: 'We will get back to you within 24 hours.', variant: 'success' });
+              }}
+            >
+              <Stack spacing="md">
+                <Grid cols={2} gap="md">
+                  <Form.Field label="First Name" required>
+                    <Input placeholder="Jane" />
+                  </Form.Field>
+                  <Form.Field label="Last Name" required>
+                    <Input placeholder="Doe" />
+                  </Form.Field>
+                </Grid>
+                <Form.Field label="Email" required>
+                  <Input type="email" placeholder="jane@example.com" />
+                </Form.Field>
+                <Form.Field label="Company">
+                  <Input placeholder="Acme Inc." />
+                </Form.Field>
+                <Form.Field label="Reason for Contact">
+                  <Select
+                    placeholder="Select a reason..."
+                    options={CONTACT_REASONS}
+                  />
+                </Form.Field>
+                <Form.Field label="Message" required>
+                  <TextArea placeholder="Tell us about your project..." rows={4} />
+                </Form.Field>
+                <Form.Field label="Attachments">
+                  <FileUpload
+                    accept="image/*,.pdf,.doc,.docx"
+                    maxSize={10}
+                    onFilesSelected={(files) => {
+                      toast({ title: `${files.length} file(s) selected`, variant: 'info' });
+                    }}
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <Checkbox label="Subscribe to our newsletter" />
+                </Form.Field>
+                <Stack direction="horizontal" justify="end">
+                  <Button type="submit">Send Message</Button>
+                </Stack>
+              </Stack>
+            </Form>
+          </Card>
+        </div>
+
+        <div>
+          <Card header={<Text weight="semibold">Partner Portal</Text>}>
+            <LoginSignup
+              defaultView="login"
+              onLogin={(data) => {
+                toast({ title: 'Welcome back!', message: `Logged in as ${data.email}`, variant: 'success' });
+              }}
+              onSignup={(data) => {
+                toast({ title: 'Account created!', message: 'Check your email to verify.', variant: 'success' });
+              }}
+              onResetPassword={(data) => {
+                toast({ title: 'Reset link sent', message: `Check ${data.email} for instructions.`, variant: 'info' });
+              }}
+              providers={[
+                { id: 'github', label: 'GitHub' },
+                { id: 'google', label: 'Google' },
+              ]}
+              onProviderAuth={(id) => {
+                toast({ title: `Connecting to ${id}...`, variant: 'info' });
+              }}
+            />
+          </Card>
+
+          <div style={{ marginTop: 'var(--azimuth-space-xl)' }}>
+            <Card header={<Text weight="semibold">Office Hours</Text>}>
+              <Calendar onChange={(d) => {}} showWeekNumbers />
+            </Card>
+          </div>
+
+          <div style={{ marginTop: 'var(--azimuth-space-xl)' }}>
+            <Card header={<Text weight="semibold">Schedule a Meeting</Text>}>
+              <Stack spacing="md">
+                <DateTimePicker
+                  onChange={(d) => {}}
+                  showTime
+                  showSeconds={false}
+                  minuteStep={15}
+                />
+                <DateRangePicker
+                  label="Availability Window"
+                  onChange={(range) => {}}
+                />
+              </Stack>
+            </Card>
+          </div>
+        </div>
+      </Grid>
+    </div>
+  );
+}
+
+function PrivacyPage() {
+  return (
+    <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <Stack spacing="xl">
+          <div>
+            <Badge variant="neutral" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Last updated: May 2026</Badge>
+            <Text size="h1" variant="display">Privacy Policy</Text>
+            <Text size="lg" color="secondary">How we handle your data at Azimuth</Text>
+          </div>
+
+          <Alert variant="info" title="Our Commitment">
+            We take your privacy seriously. This policy describes how we collect, use, and protect your personal information.
+          </Alert>
+
+          <Breadcrumbs
+            items={[
+              { label: 'Home', href: '#' },
+              { label: 'Legal', href: '#' },
+              { label: 'Privacy Policy' },
+            ]}
+          />
+
+          <Tabs
+            variant="underline"
+            tabs={[
+              {
+                id: 'overview',
+                label: 'Overview',
+                content: (
+                  <Stack spacing="md">
+                    <Text size="h3">Information We Collect</Text>
+                    <List bulleted>
+                      <List.Item>Account information (name, email, company)</List.Item>
+                      <List.Item>Usage data (components used, features accessed)</List.Item>
+                      <List.Item>Payment information (processed securely by Stripe)</List.Item>
+                      <List.Item>Communication preferences</List.Item>
+                    </List>
+                    <Divider />
+                    <Text size="h3">How We Use Your Data</Text>
+                    <List bulleted>
+                      <List.Item>To provide and improve our services</List.Item>
+                      <List.Item>To send product updates and security notices</List.Item>
+                      <List.Item>To analyze usage patterns and optimize performance</List.Item>
+                      <List.Item>To provide customer support</List.Item>
+                    </List>
+                  </Stack>
+                ),
+              },
+              {
+                id: 'details',
+                label: 'Details',
+                content: (
+                  <Stack spacing="md">
+                    <SectionView title="Data Collection">
+                      <Text size="sm" color="secondary">
+                        We collect information you provide directly, such as when you create an account,
+                        subscribe to our newsletter, or contact support. We also automatically collect
+                        certain technical information, including IP address, browser type, and usage patterns.
+                      </Text>
+                    </SectionView>
+                    <SectionView title="Data Sharing">
+                      <Text size="sm" color="secondary">
+                        We never sell your personal data. We may share anonymized, aggregate data with
+                        partners for analytics purposes. Service providers (hosting, payment processing)
+                        have access to necessary data under strict confidentiality agreements.
+                      </Text>
+                    </SectionView>
+                    <SectionView title="Your Rights">
+                      <Text size="sm" color="secondary">
+                        You have the right to access, correct, or delete your personal data. You can
+                        export your data at any time from your account settings. Contact our privacy
+                        team at privacy@azimuth.dev for assistance.
+                      </Text>
+                    </SectionView>
+                    <SectionView title="Security Measures">
+                      <Text size="sm" color="secondary">
+                        We implement industry-standard security measures including encryption at rest
+                        and in transit, regular security audits, and strict access controls. Our
+                        infrastructure is SOC 2 compliant.
+                      </Text>
+                    </SectionView>
+                    <SectionView title="Cookies">
+                      <Text size="sm" color="secondary">
+                        We use essential cookies for authentication and security. Analytics cookies
+                        help us improve our service. You can manage cookie preferences in your
+                        browser settings.
+                      </Text>
+                    </SectionView>
+                  </Stack>
+                ),
+              },
+              {
+                id: 'contact-privacy',
+                label: 'Contact',
+                content: (
+                  <Card>
+                    <Stack spacing="md">
+                      <Text weight="semibold">Privacy Team</Text>
+                      <Text size="sm" color="secondary">
+                        For privacy-related inquiries, contact our Data Protection Officer:
+                      </Text>
+                      <List>
+                        <List.Item>Email: privacy@azimuth.dev</List.Item>
+                        <List.Item>Phone: +1 (555) 123-4567</List.Item>
+                        <List.Item>Address: 123 UI Street, San Francisco, CA 94105</List.Item>
+                      </List>
+                      <Divider />
+                      <Text size="sm" color="secondary">
+                        We respond to all privacy inquiries within 48 hours.
+                      </Text>
+                    </Stack>
+                  </Card>
+                ),
+              },
+            ]}
+          />
+
+          <Divider />
+
+          <Card
+            expandable
+            header={<Text weight="semibold">Version History</Text>}
+          >
+            <Table striped size="sm">
+              <Table.Head>
+                <Table.Row>
+                  <Table.HeadCell>Version</Table.HeadCell>
+                  <Table.HeadCell>Date</Table.HeadCell>
+                  <Table.HeadCell>Changes</Table.HeadCell>
+                </Table.Row>
+              </Table.Head>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell>2.0</Table.Cell>
+                  <Table.Cell>May 2026</Table.Cell>
+                  <Table.Cell>Updated data processing disclosures</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                  <Table.Cell>1.1</Table.Cell>
+                  <Table.Cell>Jan 2026</Table.Cell>
+                  <Table.Cell>Added AI training opt-out</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                  <Table.Cell>1.0</Table.Cell>
+                  <Table.Cell>Aug 2025</Table.Cell>
+                  <Table.Cell>Initial privacy policy</Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            </Table>
+          </Card>
+        </Stack>
+      </div>
+    </div>
+  );
+}
+
+export function App() {
+  const [activePage, setActivePage] = useState('home');
+  const [modalProduct, setModalProduct] = useState<Product | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [tab, setTab] = useState('t1');
-  const [notifications, setNotifications] = useState<Array<{id: string; variant: 'success' | 'error' | 'warning' | 'info'; title: string; message?: string}>>([]);
+  const [dialogVariant, setDialogVariant] = useState<'info' | 'warning' | 'danger'>('info');
+  const [alertsVisible, setAlertsVisible] = useState(true);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMinimized, setChatMinimized] = useState(false);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    { id: '1', text: 'Hi! How can we help you today?', sender: 'other', timestamp: new Date() },
+  ]);
 
-  function addNotification(variant: 'success' | 'error' | 'warning' | 'info', title: string, message?: string) {
-    const id = Math.random().toString(36).slice(2);
-    setNotifications(prev => [...prev, {id, variant, title, message}]);
-    setTimeout(() => {
-      setNotifications(prev => prev.filter(n => n.id !== id));
-    }, 5000);
-  }
+  const { toast } = useToast();
 
-  const NAV_ITEMS = [
-    { key: 'buttons', label: 'Buttons', href: '#buttons' },
-    { key: 'forms', label: 'Forms', href: '#forms' },
-    { key: 'cards', label: 'Cards', href: '#cards' },
-    { key: 'overlays', label: 'Overlays', href: '#overlays' },
-  ];
+  const showRandomToast = useCallback(() => {
+    const variants = ['success', 'error', 'warning', 'info'] as const;
+    const v = variants[Math.floor(Math.random() * variants.length)];
+    toast({ title: `${v.charAt(0).toUpperCase() + v.slice(1)} notification`, message: 'This is a demo toast from Azimuth.', variant: v, duration: 4000 });
+  }, [toast]);
 
-  const BREADCRUMB_ITEMS = [
-    { label: 'Home', href: '#' },
-    { label: 'Components', href: '#' },
-    { label: 'Button', href: '#' },
-  ];
+  const handleProductDetails = useCallback((product: Product) => {
+    setModalProduct(product);
+  }, []);
 
-  const TABLE_DATA = [
-    { name: 'React', type: 'Library', version: '19.0', status: 'Active' },
-    { name: 'TypeScript', type: 'Language', version: '5.6', status: 'Active' },
-    { name: 'Vitest', type: 'Testing', version: '2.1', status: 'Active' },
-    { name: 'ESLint', type: 'Linting', version: '9.0', status: 'Active' },
-    { name: 'Prettier', type: 'Formatting', version: '3.8', status: 'Active' },
-  ];
+  const NAVBAR_ITEMS = NAV_ITEMS
+    .filter(item => ['home', 'components', 'pricing', 'contact'].includes(item.key))
+    .map(item => ({
+      key: item.key,
+      label: item.label,
+      href: '#',
+      onClick: () => setActivePage(item.key),
+    }));
+
+  const pageTitle: Record<string, string> = {
+    home: 'Home',
+    components: 'Components',
+    about: 'About',
+    products: 'Products',
+    pricing: 'Pricing',
+    contact: 'Contact',
+    privacy: 'Privacy',
+  };
 
   return (
-    <div>
-      <Navbar logo={<img src={logoSvg} alt="Azimuth" style={{ height: 36, width: 'auto' }} />} items={NAV_ITEMS} actions={
-        <Stack direction="horizontal" spacing="sm">
-          <ThemeToggle />
-        </Stack>
-      } />
-
-      {notifications.length > 0 && (
-        <div style={{
-          position: 'fixed', top: 'var(--azimuth-space-md)', right: 'var(--azimuth-space-md)',
-          zIndex: 10000, display: 'flex', flexDirection: 'column', gap: 'var(--azimuth-space-sm)',
-        }}>
-          {notifications.map(n => (
-            <Toast key={n.id} variant={n.variant} title={n.title} message={n.message}
-              dismissible onDismiss={() => setNotifications(prev => prev.filter(x => x.id !== n.id))}
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Navbar
+        logo={
+          <Stack direction="horizontal" spacing="sm" align="center">
+            <img src={logoSvg} alt="Azimuth" style={{ height: 28, width: 'auto' }} />
+            <Text weight="bold" size="lg">Azimuth</Text>
+          </Stack>
+        }
+        items={NAVBAR_ITEMS}
+        activeKey={activePage}
+        actions={
+          <Stack direction="horizontal" spacing="sm" align="center">
+            <Menu
+              side="left"
+              items={[
+                { key: 'toast', label: 'Test Toast' },
+                { key: 'drawer', label: 'Open Drawer' },
+                { key: 'sheet', label: 'Open Sheet' },
+                { key: 'dialog', label: 'Show Dialog' },
+              ]}
+              onSelect={(key) => {
+                if (key === 'toast') showRandomToast();
+                if (key === 'drawer') setDrawerOpen(true);
+                if (key === 'sheet') setSheetOpen(true);
+                if (key === 'dialog') { setDialogVariant('warning'); setDialogOpen(true); }
+              }}
             />
-          ))}
+            <ThemeToggle />
+          </Stack>
+        }
+      />
+
+      <Container style={{ flex: 1 }}>
+        <div style={{ padding: 'var(--azimuth-space-md) 0' }}>
+          <Stack direction="horizontal" justify="between" align="center" wrap>
+            <PageNav activePage={activePage} onPageChange={setActivePage} />
+            <Breadcrumbs
+              items={[
+                { label: 'Azimuth' },
+                { label: pageTitle[activePage] || 'Home' },
+              ]}
+            />
+          </Stack>
         </div>
-      )}
 
-      <Container>
-        <div style={{ padding: 'var(--azimuth-space-4xl) 0' }}>
-          <Text size="h1" variant="display" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
-            Azimuth Component Library
-          </Text>
-          <Text size="lg" color="secondary" style={{ marginBottom: 'var(--azimuth-space-2xl)', maxWidth: '60ch' }}>
-            A configurable, accessible React component library. Theme-driven with a single ThemeProvider.
-            Built with TypeScript, CSS Modules, and WCAG 2.2 AA.
-          </Text>
+        <Divider />
 
-          {/* ===== COLOR PRESET SELECTOR ===== */}
-          <Card style={{ marginBottom: 'var(--azimuth-space-md)' }}>
-            <Stack spacing="md">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--azimuth-space-sm)' }}>
-                <div>
-                  <Text weight="semibold">Color Presets</Text>
-                  <Text size="sm" color="secondary">Choose a color scheme.</Text>
-                </div>
-                <Text size="xs" color="muted">{colors.length} colors available</Text>
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--azimuth-space-sm)' }}>
-                {colors.map(p => (
-                  <Button
-                    key={p.id}
-                    size="sm"
-                    variant={currentColor === p.id ? 'primary' : 'secondary'}
-                    onClick={() => onColorChange(p.id)}
-                  >
-                    {p.name}
-                  </Button>
-                ))}
-              </div>
-              <Text size="xs" color="secondary" style={{ fontStyle: 'italic' }}>
-                {colors.find(p => p.id === currentColor)?.description}
-              </Text>
-            </Stack>
-          </Card>
-
-          {/* ===== STYLE PRESET SELECTOR ===== */}
-          <Card style={{ marginBottom: 'var(--azimuth-space-2xl)' }}>
-            <Stack spacing="md">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--azimuth-space-sm)' }}>
-                <div>
-                  <Text weight="semibold">Style Presets</Text>
-                  <Text size="sm" color="secondary">Choose a look and feel.</Text>
-                </div>
-                <Text size="xs" color="muted">{styles.length} styles available</Text>
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--azimuth-space-sm)' }}>
-                {styles.map(p => (
-                  <Button
-                    key={p.id}
-                    size="sm"
-                    variant={currentStyle === p.id ? 'primary' : 'secondary'}
-                    onClick={() => onStyleChange(p.id)}
-                  >
-                    {p.name}
-                  </Button>
-                ))}
-              </div>
-              <Text size="xs" color="secondary" style={{ fontStyle: 'italic' }}>
-                {styles.find(p => p.id === currentStyle)?.description}
-              </Text>
-            </Stack>
-          </Card>
-
-          {/* ===== BUTTONS ===== */}
-          <Section id="buttons" title="Buttons">
-            <DemoBox label="Variants">
-              <Button variant="primary">Primary</Button>
-              <Button variant="secondary">Secondary</Button>
-              <Button variant="tertiary">Tertiary</Button>
-              <Button variant="link">Link</Button>
-              <Button variant="danger">Danger</Button>
-            </DemoBox>
-            <DemoBox label="Sizes">
-              <Button size="sm">Small</Button>
-              <Button size="md">Medium</Button>
-              <Button size="lg">Large</Button>
-            </DemoBox>
-            <DemoBox label="With Icons">
-              <Button icon={<span>+</span>}>Add Item</Button>
-              <Button icon={<span>→</span>} iconPosition="right">Next</Button>
-              <Button icon={<span>X</span>} variant="secondary" aria-label="Close" />
-            </DemoBox>
-          </Section>
-
-          <Divider />
-
-          {/* ===== TYPOGRAPHY ===== */}
-          <Section title="Typography">
-            <Text size="h1">H1 Heading</Text>
-            <Text size="h2">H2 Heading</Text>
-            <Text size="h3">H3 Heading</Text>
-            <Text size="h4">H4 Heading</Text>
-            <Text size="h5">H5 Heading</Text>
-            <Text size="base">Body text. The quick brown fox jumps over the lazy dog.</Text>
-            <Text size="sm" color="secondary">Secondary small text</Text>
-            <Text size="xs" color="muted">Muted extra-small text</Text>
-          </Section>
-
-          <Divider />
-
-          {/* ===== FORM ELEMENTS ===== */}
-          <Section id="forms" title="Form Elements">
-            <Grid cols={2} gap="lg" align="end">
-              <Input label="Email" type="email" placeholder="you@example.com" subtitle="We'll never share your email." />
-              <Input label="Password" type="password" placeholder="••••••••" />
-              <Input label="Number" type="number" showSteppers min={0} max={100} defaultValue={50} />
-              <Input label="Username" error="Username is taken" />
-            </Grid>
-            <div style={{ marginTop: 'var(--azimuth-space-xl)' }}>
-              <Grid cols={4} gap="md">
-                <Select label="Country" placeholder="Select..." options={[{ value: 'us', label: 'United States' }, { value: 'ca', label: 'Canada' }, { value: 'mx', label: 'Mexico' }]} />
-                <DropdownList label="Framework" placeholder="Choose..." options={[{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }, { value: 'svelte', label: 'Svelte' }]} />
-                <div />
-                <div />
-              </Grid>
-            </div>
-            <Stack spacing="md" style={{ marginTop: 'var(--azimuth-space-xl)' }}>
-              <Checkbox label="Accept terms and conditions" />
-              <Stack direction="horizontal" spacing="lg">
-                <Radio name="theme" label="Light" defaultChecked />
-                <Radio name="theme" label="Dark" />
-                <Radio name="theme" label="System" />
-              </Stack>
-              <Toggle label="Enable notifications" defaultChecked />
-            </Stack>
-          </Section>
-
-          <Divider />
-
-          {/* ===== ALERTS & TOASTS ===== */}
-          <Section title="Alerts & Toasts">
-            <Text size="sm" color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
-              Click a button to trigger a popup notification.
-            </Text>
-            <Stack direction="horizontal" spacing="md" wrap>
-              <Button variant="primary" onClick={() => addNotification('success', 'Success!', 'Your changes have been saved.')}>
-                Show Success
-              </Button>
-              <Button variant="secondary" onClick={() => addNotification('error', 'Error', 'Something went wrong.')}>
-                Show Error
-              </Button>
-              <Button variant="secondary" onClick={() => addNotification('warning', 'Warning', 'Your session will expire soon.')}>
-                Show Warning
-              </Button>
-              <Button variant="secondary" onClick={() => addNotification('info', 'Information', 'A new version is available.')}>
-                Show Info
-              </Button>
-            </Stack>
-          </Section>
-
-          <Divider />
-
-          {/* ===== CARDS ===== */}
-          <Section id="cards" title="Cards">
-            <Grid cols={2} gap="lg">
-              <Card header={<Text weight="semibold">Basic Card</Text>}>
-                <Text size="sm" color="secondary">
-                  This is a basic card with header and body content.
-                </Text>
-              </Card>
-              <Card
-                header={<Text weight="semibold">Expandable Card</Text>}
-                expandable
-                footer={
-                  <Stack direction="horizontal" justify="end" spacing="sm">
-                    <Button size="sm" variant="tertiary">Cancel</Button>
-                    <Button size="sm">Confirm</Button>
-                  </Stack>
-                }
-              >
-                <Text size="sm" color="secondary">
-                  Click the toggle in the header to expand or collapse this content.
-                  This can be used for additional details.
-                </Text>
-              </Card>
-            </Grid>
-          </Section>
-
-          <Divider />
-
-          {/* ===== DATA TABLE ===== */}
-          <Section title="Data Table">
-            <DataTable
-              title="Technologies"
-              columns={[
-                { key: 'name', title: 'Name', sortable: true },
-                { key: 'type', title: 'Type', sortable: true },
-                { key: 'version', title: 'Version' },
-                { key: 'status', title: 'Status' },
-              ]}
-              data={TABLE_DATA}
-              searchable
-              searchPlaceholder="Search technologies..."
-              pageSize={3}
-              pageSizeOptions={[2, 3, 5]}
-            />
-          </Section>
-
-          <Divider />
-
-          {/* ===== TABS ===== */}
-          <Section title="Tabs">
-            <Tabs
-              tabs={[
-                { id: 't1', label: 'Preview', content: <div style={{ padding: 'var(--azimuth-space-md) 0' }}><Text>This is the preview content of tab 1.</Text></div> },
-                { id: 't2', label: 'Code', content: <div style={{ padding: 'var(--azimuth-space-md) 0' }}><Text variant="mono" size="sm">{'<Button variant="primary">Click me</Button>'}</Text></div> },
-                { id: 't3', label: 'Settings', content: <div style={{ padding: 'var(--azimuth-space-md) 0' }}><Toggle label="Auto-save" /></div>, disabled: true },
-              ]}
-              activeTab={tab}
-              onChange={setTab}
-              variant="underline"
-            />
-          </Section>
-
-          <Divider />
-
-          {/* ===== NAVIGATION ===== */}
-          <Section title="Navigation">
-            <Breadcrumbs items={BREADCRUMB_ITEMS} />
-            <div style={{ marginTop: 'var(--azimuth-space-xl)' }}>
-              <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} showFirstLast />
-            </div>
-          </Section>
-
-          <Divider />
-
-          {/* ===== OVERLAYS ===== */}
-          <Section id="overlays" title="Overlays">
-            <Stack direction="horizontal" spacing="md" wrap>
-              <Button onClick={() => setModalOpen(true)}>Open Modal</Button>
-              <Button variant="secondary" onClick={() => setDrawerOpen(true)}>Open Drawer</Button>
-              <Button variant="secondary" onClick={() => setSheetOpen(true)}>Open Bottom Sheet</Button>
-              <Button variant="danger" onClick={() => setDialogOpen(true)}>Delete Confirmation</Button>
-            </Stack>
-
-            <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Edit Profile" subtitle="Update your personal information" footer={
-              <Stack direction="horizontal" justify="end" spacing="sm">
-                <Button variant="secondary" onClick={() => setModalOpen(false)}>Cancel</Button>
-                <Button onClick={() => setModalOpen(false)}>Save Changes</Button>
-              </Stack>
-            }>
-              <Stack spacing="md">
-                <Input label="Full Name" defaultValue="John Doe" />
-                <Input label="Email" type="email" defaultValue="john@example.com" />
-                <Select label="Role" options={[{ value: 'dev', label: 'Developer' }, { value: 'design', label: 'Designer' }]} />
-              </Stack>
-            </Modal>
-
-            <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} title="Filters" side="right" footer={
-              <Stack direction="horizontal" spacing="sm">
-                <Button variant="secondary" onClick={() => setDrawerOpen(false)} fullWidth>Reset</Button>
-                <Button onClick={() => setDrawerOpen(false)} fullWidth>Apply</Button>
-              </Stack>
-            }>
-              <Stack spacing="md">
-                <Checkbox label="Active" defaultChecked />
-                <Checkbox label="Archived" />
-                <Select label="Category" options={[{ value: 'all', label: 'All' }, { value: 'tech', label: 'Tech' }]} />
-              </Stack>
-            </Drawer>
-
-            <SlideSheet open={sheetOpen} onClose={() => setSheetOpen(false)} title="Details" side="bottom" height="50vh">
-              <Text>Slide sheet content goes here. Drag the handle to resize.</Text>
-            </SlideSheet>
-
-            <Dialog
-              open={dialogOpen}
-              onClose={() => setDialogOpen(false)}
-              title="Delete Item?"
-              description="This action cannot be undone. Are you sure?"
-              variant="danger"
-              confirmLabel="Delete"
-              onConfirm={() => setDialogOpen(false)}
-              onCancel={() => setDialogOpen(false)}
-            />
-          </Section>
-
-          <Divider />
-
-          {/* ===== BADGES, TAGS, AVATARS ===== */}
-          <Section title="Badges, Tags & Avatars">
-            <DemoBox label="Badges">
-              <Badge variant="neutral">New</Badge>
-              <Badge variant="accent">Featured</Badge>
-              <Badge variant="success">Done</Badge>
-              <Badge variant="warning">Pending</Badge>
-              <Badge variant="danger">Failed</Badge>
-              <Badge variant="info">Info</Badge>
-            </DemoBox>
-            <DemoBox label="Tags">
-              <Tag variant="neutral">React</Tag>
-              <Tag variant="accent">TypeScript</Tag>
-              <Tag variant="success" removable onRemove={() => {}}>Approved</Tag>
-              <Tag variant="danger" removable onRemove={() => {}}>Rejected</Tag>
-            </DemoBox>
-            <DemoBox label="Avatars">
-              <Avatar fallback="John Doe" size="xs" />
-              <Avatar fallback="Jane Smith" size="sm" />
-              <Avatar fallback="Admin" size="md" />
-              <Avatar fallback="User X" size="lg" />
-              <Avatar fallback="R C" size="xl" />
-              <Avatar fallback="SQ" size="md" square />
-            </DemoBox>
-          </Section>
-
-          <Divider />
-
-          {/* ===== MISC ===== */}
-          <Section title="Loaders & Progress">
-            <DemoBox label="Loaders">
-              <Loader variant="circle" size="sm" />
-              <Loader variant="circle" size="md" />
-              <Loader variant="circle" size="lg" />
-            </DemoBox>
-            <DemoBox label="Loader with Label">
-              <Loader variant="bar" size="md" label="Loading..." />
-            </DemoBox>
-            <DemoBox label="Progress">
-              <ProgressBar value={30} color="primary" />
-              <ProgressBar value={60} color="success" style={{ marginTop: 'var(--azimuth-space-md)' }} />
-              <ProgressBar indeterminate style={{ marginTop: 'var(--azimuth-space-md)' }} />
-            </DemoBox>
-          </Section>
-
-          <Divider />
-
-          {/* ===== TOOLTIPS & MENUS ===== */}
-          <Section title="Tooltips & Menus">
-            <Stack direction="horizontal" spacing="md" align="center">
-              <Tooltip content="This is a tooltip">
-                <Button variant="secondary">Hover me</Button>
-              </Tooltip>
-              <Tooltip content="Top tooltip" position="top">
-                <span style={{ cursor: 'help', borderBottom: '1px dotted var(--azimuth-color-text-muted)' }}>Top</span>
-              </Tooltip>
-              <Menu
-                items={[
-                  { key: 'edit', label: 'Edit', icon: <span>📝</span> },
-                  { key: 'duplicate', label: 'Duplicate' },
-                  { key: 'sep', label: '', separator: true },
-                  { key: 'delete', label: 'Delete', danger: true },
-                ]}
-                onSelect={(key) => console.log(key)}
-              />
-            </Stack>
-          </Section>
-
-          <Divider />
-
-          {/* ===== SLIDER & SEARCH ===== */}
-          <Section title="Slider & Search">
-            <Grid cols={2} gap="lg">
-              <div>
-                <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Volume</Text>
-                <Slider defaultValue={50} showValue />
-              </div>
-              <div>
-                <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Search</Text>
-                <SearchBar placeholder="Search..." onSearch={(q) => console.log(q)} clearable />
-              </div>
-            </Grid>
-          </Section>
-
-          <Divider />
-
-          {/* ===== MORE COMPONENTS ===== */}
-          <Section title="Chips & Segmented Button">
-            <DemoBox label="Chips">
-              <Chip variant="neutral" onClick={() => {}}>Filter</Chip>
-              <Chip variant="accent" selected onClick={() => {}}>Selected</Chip>
-              <Chip variant="success" onClick={() => {}}>Online</Chip>
-              <Chip variant="danger" onClick={() => {}}>Offline</Chip>
-              <Chip variant="neutral" deletable onDelete={() => {}}>Removable</Chip>
-            </DemoBox>
-            <DemoBox label="Segmented Button">
-              <SegmentedButton
-                options={[
-                  { value: 'day', label: 'Day' },
-                  { value: 'week', label: 'Week' },
-                  { value: 'month', label: 'Month' },
-                ]}
-                defaultValue="week"
-                onChange={(v) => console.log(v)}
-              />
-            </DemoBox>
-          </Section>
-
-          <Divider />
-
-          <Section title="TextArea & TextBox">
-            <Grid cols={2} gap="lg">
-              <TextArea label="Bio" placeholder="Tell us about yourself..." rows={3} />
-              <TextBox label="Rich Content" placeholder="Enter styled content..." />
-            </Grid>
-          </Section>
-
-          <Divider />
-
-          <Section title="Skeleton & Kbd">
-            <DemoBox label="Skeleton">
-              <Skeleton width="200px" height="16px" />
-              <Skeleton width="150px" height="16px" />
-              <Skeleton width="180px" height="16px" />
-            </DemoBox>
-            <DemoBox label="Keyboard shortcuts">
-              <Kbd>⌘</Kbd> + <Kbd>C</Kbd>
-              <span style={{ margin: '0 var(--azimuth-space-sm)' }}>|</span>
-              <Kbd>⌘</Kbd> + <Kbd>V</Kbd>
-              <span style={{ margin: '0 var(--azimuth-space-sm)' }}>|</span>
-              <Kbd>⌘</Kbd> + <Kbd>⌫</Kbd>
-            </DemoBox>
-          </Section>
-
-          <Divider />
-
-          <Section title="List & Table">
-            <Grid cols={2} gap="lg">
-              <Card header={<Text weight="semibold">List</Text>}>
-                <List>
-                  <List.Item>React</List.Item>
-                  <List.Item>TypeScript</List.Item>
-                  <List.Item>Vitest</List.Item>
-                  <List.Item>Storybook</List.Item>
-                </List>
-              </Card>
-              <Card header={<Text weight="semibold">Table</Text>}>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Role</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>Alice</td><td>Engineer</td></tr>
-                    <tr><td>Bob</td><td>Designer</td></tr>
-                  </tbody>
-                </Table>
-              </Card>
-            </Grid>
-          </Section>
-
-          <Divider />
-
-          <Section title="CodeBlock & InputGroup">
-            <DemoBox label="Code Block (highlighted)">
-              <CodeBlock
-                language="tsx"
-                showCopyButton
-                highlight
-                code={`import { Button } from '@azimuth/ui';\n\nfunction App() {\n  return <Button>Click me</Button>;\n}`}
-              />
-            </DemoBox>
-            <DemoBox label="Input Group">
-              <InputGroup>
-                <Input placeholder="First name" />
-                <Input placeholder="Last name" />
-              </InputGroup>
-            </DemoBox>
-          </Section>
-
-          <Divider />
-
-          <Section title="PageLayout & SectionView">
-            <PageLayout
-              sidebar={
-                <div style={{ padding: 'var(--azimuth-space-md)' }}>
-                  <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Sidebar</Text>
-                  <List>
-                    <List.Item active>Overview</List.Item>
-                    <List.Item>Settings</List.Item>
-                    <List.Item>Billing</List.Item>
-                  </List>
-                </div>
-              }
+        {alertsVisible && (
+          <div style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+            <Alert
+              variant="notification"
+              title="Welcome to the Azimuth Demo"
+              dismissible
+              onDismiss={() => setAlertsVisible(false)}
             >
-              <SectionView title="Overview">
-                <Text size="sm" color="secondary">PageLayout with sidebar and SectionView for content organization.</Text>
-              </SectionView>
-            </PageLayout>
-          </Section>
+              <Text size="sm">This page showcases all Azimuth components in a realistic business context. Try the theme toggle, interactive elements, and explore each page.</Text>
+            </Alert>
+          </div>
+        )}
 
+        {activePage === 'home' && <HomePage onProductDetails={handleProductDetails} />}
+        {activePage === 'components' && <ComponentsPage />}
+        {activePage === 'about' && <AboutPage />}
+        {activePage === 'products' && <ProductsPage onProductDetails={handleProductDetails} />}
+        {activePage === 'pricing' && <PricingPage />}
+        {activePage === 'contact' && <ContactPage />}
+        {activePage === 'privacy' && <PrivacyPage />}
+
+        {activePage === 'home' && (
           <Divider />
+        )}
 
-          <Section title="Calendar, DateTimePicker & Date Range">
+        {activePage === 'home' && (
+          <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
+            <Text size="h3" style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-xl)' }}>Performance and Status</Text>
             <Grid cols={2} gap="lg">
-              <div>
-                <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Calendar</Text>
-                <Calendar onChange={(d) => console.log(d)} />
-              </div>
-              <div>
-                <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>DateTime Picker</Text>
-                <DateTimePicker onChange={(d) => console.log(d)} />
-              </div>
-            </Grid>
-            <div style={{ marginTop: 'var(--azimuth-space-xl)' }}>
-              <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Date Range Picker</Text>
-              <DateRangePicker
-                label="Select dates"
-                onChange={(range) => console.log(range)}
-              />
-            </div>
-          </Section>
-
-          <Divider />
-
-          <Section title="EmptyState & Carousel">
-            <DemoBox label="Empty State">
-              <EmptyState
-                title="No results found"
-                description="Try adjusting your search or filter criteria."
-                action={<Button size="sm" variant="secondary">Clear Filters</Button>}
-              />
-            </DemoBox>
-            <DemoBox label="Carousel (auto-rotate 3s)">
-              <Carousel autoRotate={3000}>
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} style={{ padding: 'var(--azimuth-space-xl)', textAlign: 'center', background: 'var(--azimuth-color-surface-hover)', borderRadius: 'var(--azimuth-radius-md)' }}>
-                    <Text size="h4">Slide {i}</Text>
-                    <Text size="sm" color="secondary">Auto-advances every 3 seconds</Text>
-                  </div>
-                ))}
-              </Carousel>
-            </DemoBox>
-          </Section>
-
-          <Divider />
-
-          {/* ===== THEME CONFIG ===== */}
-          <Section title="Theme Configuration">
-            <Text size="sm" color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
-              This demo uses the default Azimuth theme. Customize via ThemeProvider config:
-            </Text>
-            <DemoBox label="Config Options">
-              <CodeBlock
-                language="tsx"
-                highlight
-                code={`<ThemeProvider config={{\n  accentColor: '#e8734a',\n  borderRadius: 'md',\n  flat: false,\n  spacing: 'normal',\n  mode: 'system',\n  motion: 'snappy',\n  animations: true,\n  fontDisplay: 'Inter, sans-serif',\n  fontBody: 'Inter, sans-serif',\n}}>\n  <App />\n</ThemeProvider>`}
-              />
-            </DemoBox>
-          </Section>
-
-          <Divider />
-
-          {/* ===== FORM ===== */}
-          <Section title="Form Component">
-            <Card>
-              <Form
-                onSubmit={(data) => {
-                  alert(`Submitted: ${JSON.stringify(Object.fromEntries(data.entries()))}`);
-                }}
-              >
+              <Card header={<Stack direction="horizontal" justify="between"><Text weight="semibold">Component Usage</Text><Badge variant="success">Healthy</Badge></Stack>}>
                 <Stack spacing="md">
-                  <Form.Field label="Full Name" required>
-                    <Input placeholder="Enter your name" />
-                  </Form.Field>
-                  <Form.Field label="Email" required helpText="We'll never share it.">
-                    <Input type="email" placeholder="you@example.com" />
-                  </Form.Field>
-                  <Form.Field label="Message" error="This field is required">
-                    <textarea
-                      placeholder="Your message..."
-                      style={{
-                        width: '100%', minHeight: '100px', padding: 'var(--azimuth-space-sm) var(--azimuth-space-md)',
-                        border: '1px solid var(--azimuth-color-error-text)', borderRadius: 'var(--azimuth-radius-md)',
-                        fontFamily: 'var(--azimuth-font-body)', fontSize: 'var(--azimuth-fs-base)',
-                        background: 'var(--azimuth-color-surface)', color: 'var(--azimuth-color-text)',
-                      }}
-                    />
-                  </Form.Field>
-                  <Stack direction="horizontal" justify="end" spacing="sm">
-                    <Button variant="secondary" type="button">Cancel</Button>
-                    <Button type="submit">Submit</Button>
+                  <Stack spacing="xs">
+                    <Stack direction="horizontal" justify="between">
+                      <Text size="sm">Bundle Size</Text>
+                      <Text size="sm" weight="semibold">12.4 kB</Text>
+                    </Stack>
+                    <ProgressBar value={12} max={100} color="accent" size="sm" />
+                  </Stack>
+                  <Stack spacing="xs">
+                    <Stack direction="horizontal" justify="between">
+                      <Text size="sm">TypeScript Coverage</Text>
+                      <Text size="sm" weight="semibold">100%</Text>
+                    </Stack>
+                    <ProgressBar value={100} color="success" size="sm" />
+                  </Stack>
+                  <Stack spacing="xs">
+                    <Stack direction="horizontal" justify="between">
+                      <Text size="sm">Test Coverage</Text>
+                      <Text size="sm" weight="semibold">87%</Text>
+                    </Stack>
+                    <ProgressBar value={87} color="primary" size="sm" />
                   </Stack>
                 </Stack>
-              </Form>
-            </Card>
-          </Section>
-        </div>
+              </Card>
+              <Card header={<Text weight="semibold">Demo Information</Text>}>
+                <Stack spacing="md">
+                  <div>
+                    <Text size="xs" color="muted">Active Page</Text>
+                    <Text size="sm" weight="semibold">{pageTitle[activePage]}</Text>
+                  </div>
+                  <div>
+                    <Text size="xs" color="muted">Components Used</Text>
+                    <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: 'var(--azimuth-space-xs)' }}>
+                      {['Navbar', 'Button', 'Card', 'Grid', 'Tabs', 'DataTable', 'Carousel', 'Modal', 'Drawer', 'Dialog', 'Toast', 'Form', 'Calendar', 'LoginSignup', 'ResizablePanel', 'TreeList', 'FanMenu', 'Flyout', 'Slider', 'CodeBlock', 'SearchBar', 'Pagination', 'Avatar', 'Badge', 'Chip', 'Alert', 'ProgressBar'].map(c => (
+                        <Tag key={c} variant="neutral" removable onRemove={() => {}}>{c}</Tag>
+                      ))}
+                    </div>
+                  </div>
+                </Stack>
+              </Card>
+            </Grid>
+          </div>
+        )}
       </Container>
 
+      <Divider />
+
       <footer style={{
-        textAlign: 'center', padding: 'var(--azimuth-space-xl) 0',
-        borderTop: '1px solid var(--azimuth-color-border)',
+        padding: 'var(--azimuth-space-3xl) 0 var(--azimuth-space-xl)',
         fontSize: 'var(--azimuth-fs-sm)', color: 'var(--azimuth-color-text-muted)',
       }}>
-        Azimuth — Built with TypeScript, React 19, and CSS Modules
+        <Container>
+          <Grid cols={{ base: 1, sm: 2, lg: 4 }} gap="xl">
+            <div>
+              <Stack direction="horizontal" spacing="sm" align="center" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+                <img src={logoSvg} alt="Azimuth" style={{ height: 24, width: 'auto' }} />
+                <Text weight="bold">Azimuth</Text>
+              </Stack>
+              <Text size="sm" color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+                Building accessible, beautiful UIs for every team.
+              </Text>
+              <Stack direction="horizontal" spacing="sm">
+                <Button variant="tertiary" size="sm">GitHub</Button>
+                <Button variant="tertiary" size="sm">Twitter</Button>
+                <Button variant="tertiary" size="sm">LinkedIn</Button>
+              </Stack>
+            </div>
+            <div>
+              <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Sitemap</Text>
+              <TreeList
+                data={SITEMAP_TREE as unknown as TreeNode[]}
+                showLines
+                defaultExpanded={['products-node', 'company-node', 'resources-node', 'legal-node']}
+                onSelect={(node) => {
+                  const pageMap: Record<string, string> = {
+                    'about-node': 'about', 'contact-node': 'contact',
+                    'privacy-node': 'privacy', 'products-node': 'products',
+                  };
+                  if (pageMap[node.id]) setActivePage(pageMap[node.id]);
+                }}
+              />
+            </div>
+            <div>
+              <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Latest Updates</Text>
+              <Stack spacing="sm">
+                <Text size="xs" color="muted">May 2026</Text>
+                <Text size="sm">v0.2.0 released with 10 new components</Text>
+                <Text size="xs" color="muted">Apr 2026</Text>
+                <Text size="sm">WCAG 2.2 AA certification completed</Text>
+                <Text size="xs" color="muted">Mar 2026</Text>
+                <Text size="sm">10,000 GitHub stars</Text>
+              </Stack>
+            </div>
+            <div>
+              <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Newsletter</Text>
+              <Text size="xs" color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+                Get product updates and accessibility tips monthly.
+              </Text>
+              <InputGroup>
+                <Input placeholder="your@email.com" size="sm" />
+                <Button size="sm">Subscribe</Button>
+              </InputGroup>
+              <div style={{ marginTop: 'var(--azimuth-space-md)' }}>
+                <Slider defaultValue={75} showValue size="sm" />
+                <Text size="xs" color="muted" style={{ marginTop: 'var(--azimuth-space-xs)' }}>Satisfaction level: 75%</Text>
+              </div>
+            </div>
+          </Grid>
+          <Divider style={{ margin: 'var(--azimuth-space-xl) 0' }} />
+          <Stack direction="horizontal" justify="between" align="center" wrap>
+            <Text size="xs" color="muted">
+              &copy; 2026 Azimuth UI. Built with TypeScript, React 19, and CSS Modules.
+            </Text>
+            <Stack direction="horizontal" spacing="sm">
+              <Menu
+                side="right"
+                items={[
+                  { key: 'privacy', label: 'Privacy Policy' },
+                  { key: 'terms', label: 'Terms of Service' },
+                  { key: 'sep', label: '', separator: true },
+                  { key: 'contact', label: 'Contact Us' },
+                ]}
+                onSelect={(key) => setActivePage(key === 'privacy' ? 'privacy' : key === 'contact' ? 'contact' : activePage)}
+              />
+            </Stack>
+          </Stack>
+        </Container>
       </footer>
+
+      <Modal
+        open={!!modalProduct}
+        onClose={() => setModalProduct(null)}
+        title={modalProduct?.name || ''}
+        subtitle={modalProduct?.tagline}
+        size="lg"
+        footer={
+          <Stack direction="horizontal" justify="between" align="center">
+            <Stack direction="horizontal" spacing="xs">
+              <Text size="xs" color="muted">Version {modalProduct?.version}</Text>
+              <Divider orientation="vertical" />
+              <Tooltip content={`${modalProduct?.activeUsers.toLocaleString()} active users`}>
+                <Text size="xs" color="muted">{modalProduct?.activeUsers.toLocaleString()} users</Text>
+              </Tooltip>
+            </Stack>
+            <Stack direction="horizontal" spacing="sm">
+              <Button variant="secondary" onClick={() => setModalProduct(null)}>Close</Button>
+              <Button>Get Started</Button>
+            </Stack>
+          </Stack>
+        }
+      >
+        {modalProduct && (
+          <Stack spacing="lg">
+            <Grid cols={2} gap="md">
+              <Card header={<Text weight="semibold" size="sm">Product Details</Text>}>
+                <Stack spacing="sm">
+                  <div>
+                    <Text size="xs" color="muted">Price</Text>
+                    <Text weight="bold" size="h3">{modalProduct.price === 0 ? 'Free' : `$${modalProduct.price}/mo`}</Text>
+                  </div>
+                  <div>
+                    <Text size="xs" color="muted">Category</Text>
+                    <Chip variant="accent" size="sm" onClick={() => {}}>{modalProduct.category}</Chip>
+                  </div>
+                  <div>
+                    <Text size="xs" color="muted">Rating</Text>
+                    <Text size="sm">{modalProduct.rating}/5</Text>
+                  </div>
+                </Stack>
+              </Card>
+              <Card header={<Text weight="semibold" size="sm">Key Features</Text>}>
+                <List bulleted>
+                  {modalProduct.features.map(f => <List.Item key={f}>{f}</List.Item>)}
+                </List>
+              </Card>
+            </Grid>
+            <Text size="sm" color="secondary">{modalProduct.description}</Text>
+            <Stack direction="horizontal" spacing="xs" wrap>
+              {modalProduct.badges.map(b => (
+                <Badge key={b.label} variant={b.variant}>{b.label}</Badge>
+              ))}
+            </Stack>
+          </Stack>
+        )}
+      </Modal>
+
+      <Drawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        title="Notifications and Settings"
+        side="right"
+        size="sm"
+        footer={
+          <Stack direction="horizontal" spacing="sm">
+            <Button variant="secondary" onClick={() => setDrawerOpen(false)} fullWidth>Close</Button>
+            <Button onClick={() => { showRandomToast(); }} fullWidth>Test Toast</Button>
+          </Stack>
+        }
+      >
+        <Stack spacing="md">
+          <Text size="sm" weight="semibold">Notification Preferences</Text>
+          <Toggle label="Push Notifications" defaultChecked />
+          <Toggle label="Email Digest" defaultChecked />
+          <Toggle label="Weekly Reports" />
+          <Divider />
+          <Text size="sm" weight="semibold">Display Settings</Text>
+          <Select label="Font Size" options={[{ value: 'sm', label: 'Small' }, { value: 'md', label: 'Medium' }, { value: 'lg', label: 'Large' }]} />
+          <Radio name="layout" label="Compact" />
+          <Radio name="layout" label="Comfortable" defaultChecked />
+          <Divider />
+          <Button variant="danger" size="sm" fullWidth onClick={() => { setDialogVariant('danger'); setDialogOpen(true); }}>
+            Reset All Settings
+          </Button>
+        </Stack>
+      </Drawer>
+
+      <SlideSheet
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        title="Quick Help"
+        side="bottom"
+        height="40vh"
+        snapPoints={['25vh', '40vh', '70vh']}
+      >
+        <Stack spacing="md">
+          <Alert variant="info" title="Need help?" dismissible>
+            Browse our documentation or contact support.
+          </Alert>
+          <SearchBar placeholder="Search help articles..." onSearch={() => {}} clearable />
+          <Grid cols={2} gap="md">
+            <Card header={<Text weight="semibold" size="sm">Getting Started</Text>} footer={<Button size="sm" variant="tertiary">Read</Button>}>
+              <Text size="xs" color="secondary">Learn how to install and configure Azimuth in your project.</Text>
+            </Card>
+            <Card header={<Text weight="semibold" size="sm">API Reference</Text>} footer={<Button size="sm" variant="tertiary">Read</Button>}>
+              <Text size="xs" color="secondary">Complete API documentation for all components and hooks.</Text>
+            </Card>
+          </Grid>
+        </Stack>
+      </SlideSheet>
+
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        title={dialogVariant === 'danger' ? 'Reset Settings?' : dialogVariant === 'warning' ? 'Are you sure?' : 'Information'}
+        description={
+          dialogVariant === 'danger'
+            ? 'This will reset all your preferences to default values. This action cannot be undone.'
+            : dialogVariant === 'warning'
+              ? 'Please confirm this action before proceeding.'
+              : 'This is an informational dialog demonstrating the Dialog component.'
+        }
+        variant={dialogVariant}
+        confirmLabel="Confirm"
+        cancelLabel="Cancel"
+        onConfirm={() => {
+          toast({ title: 'Action confirmed!', variant: 'success' });
+          setDialogOpen(false);
+        }}
+        onCancel={() => {
+          toast({ title: 'Action cancelled.', variant: 'info', duration: 2000 });
+          setDialogOpen(false);
+        }}
+      />
+
+      <div style={{
+        position: 'fixed',
+        bottom: 'var(--azimuth-space-lg)',
+        right: 'var(--azimuth-space-lg)',
+        zIndex: 100,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        gap: 'var(--azimuth-space-sm)',
+      }}>
+        {chatOpen && !chatMinimized && (
+          <div style={{
+            width: '320px', height: '420px',
+            boxShadow: 'var(--azimuth-shadow-lg)',
+            borderRadius: 'var(--azimuth-radius-lg)',
+            overflow: 'hidden',
+            display: 'flex', flexDirection: 'column',
+            background: 'var(--azimuth-color-surface)',
+            border: '1px solid var(--azimuth-color-border)',
+          }}>
+            <div style={{
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              padding: 'var(--azimuth-space-sm) var(--azimuth-space-md)',
+              borderBottom: '1px solid var(--azimuth-color-border)',
+            }}>
+              <Text weight="semibold" size="sm">Chat Support</Text>
+              <Stack direction="horizontal" spacing="xs">
+                <Button variant="tertiary" size="sm" onClick={() => setChatMinimized(true)}>_</Button>
+                <Button variant="tertiary" size="sm" onClick={() => setChatOpen(false)}>X</Button>
+              </Stack>
+            </div>
+            <div style={{ flex: 1, overflow: 'hidden' }}>
+              <Chat
+                messages={chatMessages}
+                onSend={(text) => {
+                  const userMsg: ChatMessage = { id: Date.now().toString(), text, sender: 'user', timestamp: new Date() };
+                  const reply: ChatMessage = {
+                    id: (Date.now() + 1).toString(),
+                    text: 'Thanks for your message! Our team will get back to you shortly.',
+                    sender: 'other',
+                    timestamp: new Date(),
+                  };
+                  setChatMessages(prev => [...prev, userMsg, reply]);
+                }}
+                placeholder="Type a message..."
+              />
+            </div>
+          </div>
+        )}
+        {chatMinimized && (
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setChatMinimized(false)}
+          >
+            Chat Support
+          </Button>
+        )}
+        <Button
+          size="lg"
+          shape="circle"
+          onClick={() => { setChatOpen(true); setChatMinimized(false); }}
+          aria-label="Open chat support"
+        >
+          ?
+        </Button>
+      </div>
     </div>
   );
 }
