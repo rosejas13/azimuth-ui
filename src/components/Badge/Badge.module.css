@@ -3,11 +3,14 @@
   align-items: center;
   padding: 2px var(--azimuth-space-sm);
   border-radius: var(--azimuth-radius-full);
-  font-size: var(--azimuth-fs-xs);
   font-weight: 600;
   line-height: 1.5;
   white-space: nowrap;
 }
+
+.xs { font-size: var(--azimuth-fs-xs); padding: 1px var(--azimuth-space-xs); }
+.sm { font-size: var(--azimuth-fs-xs); }
+.md { font-size: var(--azimuth-fs-xs); }
 
 .neutral {
   background: var(--azimuth-color-primary-subtle);
