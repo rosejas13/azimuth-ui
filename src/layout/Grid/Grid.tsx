@@ -3,7 +3,7 @@ import { cn } from '@/utils/cn';
 import styles from './Grid.module.css';
 
 type GridCols = 1 | 2 | 3 | 4 | 'auto';
-type GridAlign = 'start' | 'center' | 'stretch';
+type GridAlign = 'start' | 'center' | 'end' | 'stretch';
 type GridVariant = 'auto' | 'highlight' | 'sidebar';
 
 /** A CSS Grid layout component with configurable columns, gap, and alignment. */

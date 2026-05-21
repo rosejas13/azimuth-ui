@@ -1,7 +1,10 @@
 .wrapper {
-  position: relative;
   display: inline-block;
   min-width: 180px;
+}
+
+.control {
+  position: relative;
 }
 
 .label {

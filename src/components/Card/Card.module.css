@@ -4,7 +4,6 @@
   background: var(--azimuth-color-surface);
   border: 1px solid var(--azimuth-color-border);
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
-  overflow: hidden;
   transition:
     box-shadow var(--azimuth-transition-fast),
     background var(--azimuth-transition-fast);
@@ -25,6 +24,11 @@
   font-size: var(--azimuth-fs-base);
   font-family: var(--azimuth-font-body);
   color: var(--azimuth-color-text);
+}
+
+.header:first-child {
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md)) var(--azimuth-radius, var(--azimuth-radius-md)) 0 0;
+  overflow: hidden;
 }
 
 .headerContent {
@@ -79,6 +83,18 @@
   padding-bottom: 0;
 }
 
+.body:first-child {
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md)) var(--azimuth-radius, var(--azimuth-radius-md)) 0 0;
+}
+
+.body:last-child {
+  border-radius: 0 0 var(--azimuth-radius, var(--azimuth-radius-md)) var(--azimuth-radius, var(--azimuth-radius-md));
+}
+
+.body:only-child {
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+}
+
 .footer {
   padding: var(--azimuth-space-sm) var(--azimuth-space-md);
   border-top: 1px solid var(--azimuth-color-border);
@@ -86,4 +102,9 @@
   color: var(--azimuth-color-text-secondary);
   font-family: var(--azimuth-font-body);
   font-size: var(--azimuth-fs-sm);
+}
+
+.footer:last-child {
+  border-radius: 0 0 var(--azimuth-radius, var(--azimuth-radius-md)) var(--azimuth-radius, var(--azimuth-radius-md));
+  overflow: hidden;
 }

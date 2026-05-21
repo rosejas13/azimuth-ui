@@ -205,37 +205,38 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
               {label}
             </label>
           )}
-          <button
-            type="button"
-            className={styles.trigger}
-            onClick={toggleOpen}
-            onKeyDown={handleKeyDown}
-            disabled={disabled}
-            aria-haspopup="listbox"
-            aria-expanded={open}
-            aria-invalid={error ? 'true' : undefined}
-          >
-            <span
-              className={cn(
-                styles.triggerText,
-                isPlaceholder && styles.placeholder,
-              )}
+          <div className={styles.control}>
+            <button
+              type="button"
+              className={styles.trigger}
+              onClick={toggleOpen}
+              onKeyDown={handleKeyDown}
+              disabled={disabled}
+              aria-haspopup="listbox"
+              aria-expanded={open}
+              aria-invalid={error ? 'true' : undefined}
             >
-              {displayText}
-            </span>
-            <span
-              className={cn(
-                styles.chevron,
-                open && styles.chevronOpen,
-              )}
-              aria-hidden="true"
-            >
-              ▾
-            </span>
-          </button>
+              <span
+                className={cn(
+                  styles.triggerText,
+                  isPlaceholder && styles.placeholder,
+                )}
+              >
+                {displayText}
+              </span>
+              <span
+                className={cn(
+                  styles.chevron,
+                  open && styles.chevronOpen,
+                )}
+                aria-hidden="true"
+              >
+                ▾
+              </span>
+            </button>
 
-          {open && (
-            <div className={styles.panel} role="listbox" aria-multiselectable={multiple}>
+            {open && (
+              <div className={styles.panel} role="listbox" aria-multiselectable={multiple}>
               {searchable && (
                 <input
                   ref={searchInputRef}
@@ -334,6 +335,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
               </ul>
             </div>
           )}
+          </div>
         </div>
 
         {error && (
