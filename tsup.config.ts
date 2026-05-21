@@ -9,6 +9,6 @@ export default defineConfig({
   treeshake: true,
   sourcemap: true,
   loader: {
-    '.css': 'css',
+    '.css': 'local-css',
   },
 });
