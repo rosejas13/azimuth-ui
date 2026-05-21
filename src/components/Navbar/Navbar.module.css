@@ -1,8 +1,8 @@
 .nav {
   display: flex;
   align-items: center;
-  gap: var(--azimuth-space-xl);
-  padding: var(--azimuth-space-lg) var(--azimuth-space-xl);
+  gap: var(--azimuth-space-md);
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
   background: var(--azimuth-color-surface);
   border-bottom: 1px solid var(--azimuth-color-border);
   width: 100%;

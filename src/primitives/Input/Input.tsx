@@ -262,6 +262,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       </div>
     );
 
+    const hasHeader = label || subtitle;
+    const hasFooter = error;
+
     return (
       <div
         className={cn(
@@ -271,44 +274,48 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           labelPosition === 'inner' && styles.wrapperInnerLabel,
         )}
       >
-        <div className={styles.headerArea}>
-          {label && labelPosition !== 'inner' && (
-            <div className={styles.labelRow}>
+        {hasHeader && (
+          <div className={styles.headerArea}>
+            {label && labelPosition !== 'inner' && (
+              <div className={styles.labelRow}>
+                <label
+                  htmlFor={generatedId}
+                  className={cn(styles.label, required && styles.required)}
+                >
+                  {label}
+                </label>
+                {showCharCount && maxLength !== undefined && (
+                  <span className={styles.charCount}>
+                    {String(currentValue).length}/{maxLength}
+                  </span>
+                )}
+              </div>
+            )}
+            {label && labelPosition === 'inner' && (
               <label
                 htmlFor={generatedId}
                 className={cn(styles.label, required && styles.required)}
               >
                 {label}
               </label>
-              {showCharCount && maxLength !== undefined && (
-                <span className={styles.charCount}>
-                  {String(currentValue).length}/{maxLength}
-                </span>
-              )}
-            </div>
-          )}
-          {label && labelPosition === 'inner' && (
-            <label
-              htmlFor={generatedId}
-              className={cn(styles.label, required && styles.required)}
-            >
-              {label}
-            </label>
-          )}
-          {subtitle && (
-            <span id={`${generatedId}-subtitle`} className={styles.subtitle}>
-              {subtitle}
-            </span>
-          )}
-        </div>
+            )}
+            {subtitle && (
+              <span id={`${generatedId}-subtitle`} className={styles.subtitle}>
+                {subtitle}
+              </span>
+            )}
+          </div>
+        )}
         {inputElement}
-        <div className={styles.footerArea}>
-          {error && (
-            <span id={`${generatedId}-error`} className={styles.errorMessage} role="alert">
-              {error}
-            </span>
-          )}
-        </div>
+        {hasFooter && (
+          <div className={styles.footerArea}>
+            {error && (
+              <span id={`${generatedId}-error`} className={styles.errorMessage} role="alert">
+                {error}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     );
   },

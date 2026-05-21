@@ -94,7 +94,7 @@ export const SectionView = forwardRef<HTMLDivElement, SectionViewProps>(
         </button>
         <div
           id={contentId}
-          className={cn(styles.content, isExpanded && styles.contentExpanded)}
+          className={cn(styles.contentWrapper, isExpanded && styles.open)}
           role="region"
           aria-labelledby={`${contentId}-trigger`}
         >

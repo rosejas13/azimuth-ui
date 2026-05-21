@@ -15,12 +15,12 @@
 
 .content {
   position: absolute;
-  z-index: 100;
+  z-index: 1200;
   padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
   background: var(--azimuth-color-text);
   color: var(--azimuth-color-bg);
   border-radius: var(--azimuth-radius-md);
-  font-size: var(--azimuth-fs-xs);
+  font-size: var(--azimuth-fs-sm);
   line-height: 1.4;
   white-space: nowrap;
   pointer-events: none;

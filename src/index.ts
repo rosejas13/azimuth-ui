@@ -1,6 +1,7 @@
 export {
   ThemeProvider,
   useTheme,
+  useThemeMode,
   ThemeContext,
   DEFAULT_THEME,
   COLOR_PRESETS,
@@ -80,6 +81,9 @@ export type { CardProps, CardHeaderProps, CardFooterProps } from './components/C
 export { Carousel } from './components/Carousel';
 export type { CarouselProps } from './components/Carousel';
 
+export { Chat } from './components/Chat';
+export type { ChatProps, ChatMessage } from './components/Chat';
+
 export { Chip } from './components/Chip';
 export type { ChipProps } from './components/Chip';
 
@@ -97,6 +101,9 @@ export type { DateTimePickerProps } from './components/DateTimePicker';
 
 export { DateRangePicker } from './components/DateRangePicker';
 export type { DateRangePickerProps, DateRange } from './components/DateRangePicker';
+
+export { FileUpload } from './components/FileUpload';
+export type { FileUploadProps } from './components/FileUpload';
 
 export { Dialog } from './components/Dialog';
 export type { DialogProps } from './components/Dialog';
@@ -188,8 +195,8 @@ export type { TextAreaProps } from './components/TextArea';
 export { TextBox } from './components/TextBox';
 export type { TextBoxProps } from './components/TextBox';
 
-export { Toast } from './components/Toast';
-export type { ToastProps } from './components/Toast';
+export { Toast, ToastProvider, useToast, ToastContext } from './components/Toast';
+export type { ToastProps, ToastOptions, ToastPosition } from './components/Toast';
 
 export { Tooltip } from './components/Tooltip';
 export type { TooltipProps } from './components/Tooltip';
@@ -199,3 +206,10 @@ export type { TreeListProps, TreeNode } from './components/TreeList';
 
 export { VisuallyHidden } from './components/VisuallyHidden';
 export type { VisuallyHiddenProps } from './components/VisuallyHidden';
+
+export {
+  useDisclosure,
+  useClickOutside,
+  useMediaQuery,
+  useControllableState,
+} from './hooks';

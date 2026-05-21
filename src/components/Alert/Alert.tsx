@@ -5,8 +5,11 @@ import {
   forwardRef,
   useEffect,
   useRef,
+  useState,
 } from 'react';
 import { cn } from '@/utils/cn';
+
+const EXIT_ANIMATION_DURATION = 200;
 import styles from './Alert.module.css';
 
 type AlertVariant =
@@ -68,18 +71,33 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
     },
     ref,
   ) => {
+    const [dismissing, setDismissing] = useState(false);
     const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+    const exitTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
     useEffect(() => {
       if (autoDismiss && onDismiss) {
-        timerRef.current = setTimeout(onDismiss, autoDismiss);
+        timerRef.current = setTimeout(() => {
+          setDismissing(true);
+          exitTimerRef.current = setTimeout(() => { onDismiss?.(); }, EXIT_ANIMATION_DURATION);
+        }, autoDismiss);
         return () => {
           if (timerRef.current !== undefined) {
             clearTimeout(timerRef.current);
           }
+          if (exitTimerRef.current !== undefined) {
+            clearTimeout(exitTimerRef.current);
+          }
         };
       }
     }, [autoDismiss, onDismiss]);
+
+    const handleDismiss = () => {
+      setDismissing(true);
+      if (onDismiss) {
+        setTimeout(onDismiss, EXIT_ANIMATION_DURATION);
+      }
+    };
 
     const role =
       variant === 'info' || variant === 'notification' ? 'status' : 'alert';
@@ -89,7 +107,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
     return (
       <div
         ref={ref}
-        className={cn(styles.root, VARIANT_CLASS[variant], className)}
+        className={cn(styles.root, VARIANT_CLASS[variant], dismissing && styles.dismissing, className)}
         role={role}
         aria-live={ariaLive}
         {...props}
@@ -107,7 +125,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
           <button
             type="button"
             className={styles.dismiss}
-            onClick={onDismiss}
+            onClick={handleDismiss}
             aria-label="Dismiss"
           >
             ×
