@@ -18,8 +18,6 @@ export interface ProgressBarProps
   color?: ProgressBarColor;
   /** Size variant of the progress bar. @default 'md' */
   size?: ProgressBarSize;
-  /** Whether to display the percentage label. @default false */
-  showLabel?: boolean;
 }
 
 export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
@@ -30,7 +28,6 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
       indeterminate = false,
       color = 'primary',
       size = 'md',
-      showLabel = false,
       className,
       ...props
     },
@@ -48,6 +45,7 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
           styles[color],
           className,
         )}
+        {...props}
         role="progressbar"
         aria-valuenow={indeterminate ? undefined : value}
         aria-valuemin={0}
@@ -55,7 +53,6 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
         aria-valuetext={
           indeterminate ? undefined : `${Math.round(pct)}%`
         }
-        {...props}
       >
         <div
           className={styles.fill}

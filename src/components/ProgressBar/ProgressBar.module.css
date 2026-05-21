@@ -31,3 +31,10 @@
   0% { transform: translateX(-100%); }
   100% { transform: translateX(350%); }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .indeterminate .fill {
+    animation: none;
+    width: 100%;
+  }
+}
