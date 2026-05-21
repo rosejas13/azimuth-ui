@@ -1,5 +1,6 @@
 import '../src/styles/global.css';
 import React, { useState, useEffect } from 'react';
+import logoSvg from './logo.svg';
 import {
   Container, Grid, Stack, Divider,
   Button, Text, Icon, Input, Checkbox, Radio, Select, Toggle,
@@ -69,8 +70,15 @@ export function App({ currentColor, colors, onColorChange, currentStyle, styles,
   const [sheetOpen, setSheetOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [tab, setTab] = useState('t1');
-  const [alertVisible, setAlertVisible] = useState(true);
-  const [toastVisible, setToastVisible] = useState(true);
+  const [notifications, setNotifications] = useState<Array<{id: string; variant: 'success' | 'error' | 'warning' | 'info'; title: string; message?: string}>>([]);
+
+  function addNotification(variant: 'success' | 'error' | 'warning' | 'info', title: string, message?: string) {
+    const id = Math.random().toString(36).slice(2);
+    setNotifications(prev => [...prev, {id, variant, title, message}]);
+    setTimeout(() => {
+      setNotifications(prev => prev.filter(n => n.id !== id));
+    }, 5000);
+  }
 
   const NAV_ITEMS = [
     { key: 'buttons', label: 'Buttons', href: '#buttons' },
@@ -95,11 +103,24 @@ export function App({ currentColor, colors, onColorChange, currentStyle, styles,
 
   return (
     <div>
-      <Navbar logo="Azimuth" items={NAV_ITEMS} actions={
+      <Navbar logo={<img src={logoSvg} alt="Azimuth" style={{ height: 36, width: 'auto' }} />} items={NAV_ITEMS} actions={
         <Stack direction="horizontal" spacing="sm">
           <ThemeToggle />
         </Stack>
       } />
+
+      {notifications.length > 0 && (
+        <div style={{
+          position: 'fixed', top: 'var(--azimuth-space-md)', right: 'var(--azimuth-space-md)',
+          zIndex: 10000, display: 'flex', flexDirection: 'column', gap: 'var(--azimuth-space-sm)',
+        }}>
+          {notifications.map(n => (
+            <Toast key={n.id} variant={n.variant} title={n.title} message={n.message}
+              dismissible onDismiss={() => setNotifications(prev => prev.filter(x => x.id !== n.id))}
+            />
+          ))}
+        </div>
+      )}
 
       <Container>
         <div style={{ padding: 'var(--azimuth-space-4xl) 0' }}>
@@ -206,7 +227,7 @@ export function App({ currentColor, colors, onColorChange, currentStyle, styles,
 
           {/* ===== FORM ELEMENTS ===== */}
           <Section id="forms" title="Form Elements">
-            <Grid cols={2} gap="lg">
+            <Grid cols={2} gap="lg" align="end">
               <Input label="Email" type="email" placeholder="you@example.com" subtitle="We'll never share your email." />
               <Input label="Password" type="password" placeholder="••••••••" />
               <Input label="Number" type="number" showSteppers min={0} max={100} defaultValue={50} />
@@ -235,30 +256,23 @@ export function App({ currentColor, colors, onColorChange, currentStyle, styles,
 
           {/* ===== ALERTS & TOASTS ===== */}
           <Section title="Alerts & Toasts">
-            {alertVisible && (
-              <Alert variant="success" title="Success!" dismissible onDismiss={() => setAlertVisible(false)}>
-                Your changes have been saved successfully.
-              </Alert>
-            )}
-            <Alert variant="warning" title="Warning" style={{ marginTop: 'var(--azimuth-space-md)' }}>
-              Your session will expire in 5 minutes.
-            </Alert>
-            <Alert variant="alert" title="Error" style={{ marginTop: 'var(--azimuth-space-md)' }}>
-              Failed to save changes. Please try again.
-            </Alert>
-            <Alert variant="info" title="Information" style={{ marginTop: 'var(--azimuth-space-md)' }}>
-              A new version is available.
-            </Alert>
-            {toastVisible && (
-              <div style={{ marginTop: 'var(--azimuth-space-md)' }}>
-                <Toast variant="success" title="File uploaded" message="photo.jpg" dismissible onDismiss={() => setToastVisible(false)} expandable>
-                  <div style={{ padding: 'var(--azimuth-space-sm) 0' }}>
-                    <Text size="xs" color="secondary">Size: 2.4 MB</Text>
-                    <Text size="xs" color="secondary">Uploaded: Just now</Text>
-                  </div>
-                </Toast>
-              </div>
-            )}
+            <Text size="sm" color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+              Click a button to trigger a popup notification.
+            </Text>
+            <Stack direction="horizontal" spacing="md" wrap>
+              <Button variant="primary" onClick={() => addNotification('success', 'Success!', 'Your changes have been saved.')}>
+                Show Success
+              </Button>
+              <Button variant="secondary" onClick={() => addNotification('error', 'Error', 'Something went wrong.')}>
+                Show Error
+              </Button>
+              <Button variant="secondary" onClick={() => addNotification('warning', 'Warning', 'Your session will expire soon.')}>
+                Show Warning
+              </Button>
+              <Button variant="secondary" onClick={() => addNotification('info', 'Information', 'A new version is available.')}>
+                Show Info
+              </Button>
+            </Stack>
           </Section>
 
           <Divider />
