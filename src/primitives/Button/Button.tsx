@@ -27,6 +27,8 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   iconPosition?: 'left' | 'right';
   /** Whether the button expands to fill its container width. */
   fullWidth?: boolean;
+  /** The shape of the button. @default 'default' */
+  shape?: 'default' | 'circle';
   /** The content of the component. */
   children?: React.ReactNode;
 }
@@ -39,6 +41,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       icon,
       iconPosition = 'left',
       fullWidth = false,
+      shape = 'default',
       className,
       disabled,
       children,
@@ -59,6 +62,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           styles[size],
           flat && styles.flat,
           isIconOnly && styles.iconOnly,
+          shape === 'circle' && styles.circle,
           fullWidth && styles.fullWidth,
           className,
         )}

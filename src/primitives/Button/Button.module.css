@@ -4,7 +4,7 @@
   justify-content: center;
   gap: var(--azimuth-space-sm);
   padding: var(--azimuth-space-sm) var(--azimuth-space-lg);
-  border: none;
+  border: 1px solid transparent;
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
   font-family: var(--azimuth-font-body);
   font-size: var(--azimuth-fs-sm);
@@ -88,7 +88,7 @@
 /* Sizes */
 .sm {
   padding: var(--azimuth-space-xs) var(--azimuth-space-md);
-  font-size: var(--azimuth-fs-xs);
+  font-size: var(--azimuth-fs-sm);
 }
 
 .md {
@@ -132,6 +132,16 @@
 
 .button:not(.flat):not(.link):not(.tertiary):hover:not(:disabled) {
   box-shadow: var(--azimuth-shadow-md);
+}
+
+/* Shape */
+.circle {
+  border-radius: 50%;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
 }
 
 /* Full width */

@@ -5,7 +5,6 @@ import {
   forwardRef,
   useState,
   useEffect,
-  useRef,
 } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Toast.module.css';
@@ -49,16 +48,11 @@ export const Toast = forwardRef<HTMLDivElement, ToastProps>(
     ref,
   ) => {
     const [expanded, setExpanded] = useState(false);
-    const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
     useEffect(() => {
       if (autoDismiss && onDismiss) {
-        timerRef.current = setTimeout(onDismiss, autoDismiss);
-        return () => {
-          if (timerRef.current !== undefined) {
-            clearTimeout(timerRef.current);
-          }
-        };
+        const timer = setTimeout(onDismiss, autoDismiss);
+        return () => clearTimeout(timer);
       }
     }, [autoDismiss, onDismiss]);
 

@@ -37,6 +37,12 @@ export interface DialogProps extends Omit<ComponentPropsWithoutRef<'div'>, 'titl
   children?: React.ReactNode;
 }
 
+/**
+ * A modal dialog with a confirm/cancel interface, overlay, and Escape key handling.
+ *
+ * Renders via portal to `document.body`. Supports info, warning, and danger variants.
+ * Closable via the X button, Cancel button, Escape key, or overlay click.
+ */
 export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
   (
     {
@@ -125,6 +131,15 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
         {...props}
       >
         <div className={styles.panel}>
+          <button
+            type="button"
+            className={styles.closeButton}
+            onClick={handleCancel}
+            aria-label="Close dialog"
+          >
+            X
+          </button>
+
           {(title || description) && (
             <div className={styles.header}>
               {title && (

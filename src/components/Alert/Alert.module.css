@@ -1,3 +1,8 @@
+.dismissing {
+  animation: azimuth-fade-out 0.2s ease forwards;
+  pointer-events: none;
+}
+
 .root {
   display: flex;
   align-items: flex-start;

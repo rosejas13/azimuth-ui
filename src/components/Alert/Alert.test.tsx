@@ -70,6 +70,7 @@ describe('Alert', () => {
     const btn = screen.getByRole('button', { name: 'Dismiss' });
     expect(btn).toBeInTheDocument();
     await user.click(btn);
+    await new Promise(r => setTimeout(r, 250));
     expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 
@@ -90,6 +91,7 @@ describe('Alert', () => {
     );
     expect(onDismiss).not.toHaveBeenCalled();
     vi.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(200);
     expect(onDismiss).toHaveBeenCalledTimes(1);
     vi.useRealTimers();
   });

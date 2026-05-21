@@ -102,7 +102,61 @@ const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
 
 CardFooter.displayName = 'Card.Footer';
 
+/** Props for the Card.Title subcomponent. */
+export interface CardTitleProps extends ComponentPropsWithoutRef<'h3'> {
+  children?: React.ReactNode;
+}
+
+const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
+  ({ className, children, ...props }, ref) => {
+    return (
+      <h3 ref={ref} className={cn(styles.title, className)} {...props}>
+        {children}
+      </h3>
+    );
+  },
+);
+
+CardTitle.displayName = 'Card.Title';
+
+/** Props for the Card.Description subcomponent. */
+export interface CardDescriptionProps extends ComponentPropsWithoutRef<'p'> {
+  children?: React.ReactNode;
+}
+
+const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionProps>(
+  ({ className, children, ...props }, ref) => {
+    return (
+      <p ref={ref} className={cn(styles.description, className)} {...props}>
+        {children}
+      </p>
+    );
+  },
+);
+
+CardDescription.displayName = 'Card.Description';
+
+/** Props for the Card.Content subcomponent. */
+export interface CardContentProps extends ComponentPropsWithoutRef<'div'> {
+  children?: React.ReactNode;
+}
+
+const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
+  ({ className, children, ...props }, ref) => {
+    return (
+      <div ref={ref} className={cn(styles.content, className)} {...props}>
+        {children}
+      </div>
+    );
+  },
+);
+
+CardContent.displayName = 'Card.Content';
+
 export const Card = Object.assign(CardRoot, {
   Header: CardHeader,
   Footer: CardFooter,
+  Title: CardTitle,
+  Description: CardDescription,
+  Content: CardContent,
 });

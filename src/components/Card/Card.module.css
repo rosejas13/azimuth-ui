@@ -62,6 +62,7 @@
 }
 
 .body {
+  flex: 1;
   padding: var(--azimuth-space-md);
   color: var(--azimuth-color-text);
   font-family: var(--azimuth-font-body);
@@ -107,4 +108,27 @@
 .footer:last-child {
   border-radius: 0 0 var(--azimuth-radius, var(--azimuth-radius-md)) var(--azimuth-radius, var(--azimuth-radius-md));
   overflow: hidden;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--azimuth-fs-lg);
+  font-weight: 600;
+  font-family: var(--azimuth-font-body);
+  color: var(--azimuth-color-text);
+  line-height: var(--azimuth-lh-heading);
+}
+
+.description {
+  margin: 0;
+  font-size: var(--azimuth-fs-sm);
+  font-family: var(--azimuth-font-body);
+  color: var(--azimuth-color-text-secondary);
+  line-height: var(--azimuth-lh-base);
+}
+
+.content {
+  padding: var(--azimuth-space-md);
+  font-family: var(--azimuth-font-body);
+  color: var(--azimuth-color-text);
 }

@@ -1,0 +1,107 @@
+.root {
+  border: 2px dashed var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-md);
+  padding: var(--azimuth-space-xl);
+  cursor: pointer;
+  transition: all var(--azimuth-transition-base);
+  background: var(--azimuth-color-surface);
+  outline: none;
+  text-align: center;
+}
+
+.root:focus-visible {
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.dragOver {
+  border-color: var(--azimuth-color-accent);
+  background: var(--azimuth-color-accent-subtle);
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--azimuth-space-md);
+}
+
+.icon {
+  font-size: var(--azimuth-fs-h1);
+  color: var(--azimuth-color-accent);
+  line-height: 1;
+}
+
+.title {
+  font-weight: 600;
+  color: var(--azimuth-color-text);
+}
+
+.subtitle {
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text-secondary);
+}
+
+.error {
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-error-text);
+  margin-top: var(--azimuth-space-sm);
+  padding: var(--azimuth-space-sm);
+  background: var(--azimuth-color-error-bg);
+  border-radius: var(--azimuth-radius-sm);
+}
+
+.fileList {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--azimuth-space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-sm);
+  text-align: left;
+}
+
+.fileItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  background: var(--azimuth-color-surface-hover);
+  border-radius: var(--azimuth-radius-md);
+}
+
+.fileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fileName {
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 500;
+  color: var(--azimuth-color-text);
+}
+
+.fileSize {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-secondary);
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--azimuth-fs-lg);
+  color: var(--azimuth-color-text-muted);
+  padding: var(--azimuth-space-xs);
+  border-radius: var(--azimuth-radius-sm);
+}
+
+.removeBtn:hover {
+  background: var(--azimuth-color-error-bg);
+  color: var(--azimuth-color-error-text);
+}
