@@ -28,7 +28,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006",
     "demo": "vite demo --config demo/vite.config.ts",
-    "build": "tsup && sed -i \"1i'use client';\" dist/index.js && sed -i \"1i'use client';\" dist/index.cjs",
+    "build": "tsup && node scripts/inject-use-client.mjs",
     "build-storybook": "storybook build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
