@@ -1,5 +1,6 @@
 export { ThemeProvider } from './ThemeProvider';
 export { useTheme } from './useTheme';
+export { useThemeMode } from './useThemeMode';
 export { ThemeContext } from './ThemeContext';
 export { DEFAULT_THEME } from './types';
 export { COLOR_PRESETS, COLOR_PRESET_LIST, getColorPreset } from './color-presets';

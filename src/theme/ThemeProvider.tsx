@@ -3,7 +3,7 @@
 import { type ReactNode, useEffect, useMemo, useRef } from 'react';
 import { ThemeContext } from './ThemeContext';
 import { DEFAULT_THEME } from './types';
-import type { ThemeConfig, ThemeTokens } from './types';
+import type { ColorMode, ThemeConfig, ThemeTokens } from './types';
 
 /** Props for the ThemeProvider component. */
 interface ThemeProviderProps {
@@ -45,22 +45,54 @@ function setCSSVar(name: string, value: string) {
   }
 }
 
+function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+  const clean = hex.replace('#', '');
+  if (!/^[0-9a-fA-F]{6}$/.test(clean)) return null;
+  return {
+    r: parseInt(clean.slice(0, 2), 16) / 255,
+    g: parseInt(clean.slice(2, 4), 16) / 255,
+    b: parseInt(clean.slice(4, 6), 16) / 255,
+  };
+}
+
+function srgbToLinear(v: number): number {
+  return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+}
+
 function parseOklch(color: string): { l: number; c: number; h: number } | null {
   const match = color.match(/^oklch\(\s*([\d.]+)%?\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*[\d.]+)?\s*\)$/);
-  if (!match) return null;
-  return { l: parseFloat(match[1]), c: parseFloat(match[2]), h: parseFloat(match[3]) };
+  if (match) {
+    return { l: parseFloat(match[1]), c: parseFloat(match[2]), h: parseFloat(match[3]) };
+  }
+  // Fallback: convert hex to approximate OKLCH
+  const rgb = hexToRgb(color);
+  if (!rgb) return null;
+  const rl = srgbToLinear(rgb.r);
+  const gl = srgbToLinear(rgb.g);
+  const bl = srgbToLinear(rgb.b);
+  const l_ = 0.4122214708 * rl + 0.5363325363 * gl + 0.0514459929 * bl;
+  const m_ = 0.2119034982 * rl + 0.6806995451 * gl + 0.1073969566 * bl;
+  const s_ = 0.0883024619 * rl + 0.2817188376 * gl + 0.6299787005 * bl;
+  const lCbrt = Math.cbrt(l_);
+  const mCbrt = Math.cbrt(m_);
+  const sCbrt = Math.cbrt(s_);
+  const L = 0.2104542553 * lCbrt + 0.7936177850 * mCbrt - 0.0040720468 * sCbrt;
+  const a = 1.9779984951 * lCbrt - 2.4285922050 * mCbrt + 0.4505937099 * sCbrt;
+  const b_ = 0.0259040371 * lCbrt + 0.7827717662 * mCbrt - 0.8086757660 * sCbrt;
+  return { l: L * 100, c: Math.sqrt(a * a + b_ * b_), h: (Math.atan2(b_, a) * 180) / Math.PI };
 }
 
 function darken(color: string, amount: number): string {
   const p = parseOklch(color);
-  if (!p) return color;
+  if (!p) return `color-mix(in srgb, ${color}, black 15%)`;
   return `oklch(${Math.max(0, p.l - amount)}% ${p.c} ${p.h})`;
 }
 
-function makeSubtle(color: string): string {
+function makeSubtle(color: string, dark?: boolean): string {
   const p = parseOklch(color);
-  if (!p) return color;
-  const subtleL = Math.min(100, p.l + 42);
+  if (!p) return `color-mix(in srgb, ${color} 20%, ${dark ? '#1a1a1a' : '#f5f5f5'})`;
+  const isLight = p.l > 60;
+  const subtleL = dark || isLight ? Math.max(5, p.l - 35) : Math.min(100, p.l + 42);
   const subtleC = Math.max(0.05, p.c * 0.3);
   return `oklch(${subtleL}% ${subtleC} ${p.h})`;
 }
@@ -107,17 +139,19 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     setCSSVar('--azimuth-space-3xl', spaces['3xl']);
     setCSSVar('--azimuth-space-4xl', spaces['4xl']);
 
-    setCSSVar('--azimuth-accent', c.accentColor);
-    setCSSVar('--azimuth-color-primary', c.primaryColor);
-    setCSSVar('--azimuth-color-primary-hover', darken(c.primaryColor, 5));
-    setCSSVar('--azimuth-color-primary-subtle', makeSubtle(c.primaryColor));
-    setCSSVar('--azimuth-color-accent-hover', darken(c.accentColor, 5));
-    setCSSVar('--azimuth-color-accent-subtle', makeSubtle(c.accentColor));
     setCSSVar('--azimuth-font-display', c.fontDisplay);
     setCSSVar('--azimuth-font-body', c.fontBody);
 
     setCSSVar('--azimuth-ease', ease);
     setCSSVar('--azimuth-animations', c.animations ? '' : 'none');
+
+    setCSSVar('--azimuth-fs-sm', '0.875rem');
+    setCSSVar('--azimuth-fs-base', '1rem');
+    setCSSVar('--azimuth-fs-lg', '1.125rem');
+    setCSSVar('--azimuth-lh-base', '1.5');
+    setCSSVar('--azimuth-lh-heading', '1.25');
+    setCSSVar('--azimuth-transition-fast', '150ms ease');
+    setCSSVar('--azimuth-transition-base', '200ms ease');
 
     const elevation = c.flat ? 'flat' : c.elevation;
     const shadows = SHADOW_MAP[elevation];
@@ -125,6 +159,59 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     setCSSVar('--azimuth-shadow-md', shadows.md);
     setCSSVar('--azimuth-shadow-lg', shadows.lg);
     setCSSVar('--azimuth-shadows', elevation === 'flat' ? 'none' : '');
+
+    const savedMode = (localStorage.getItem('azimuth-theme-mode') as ColorMode) || null;
+    const effectiveMode = savedMode || c.mode;
+
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function applyMode(mode: ColorMode) {
+      const isDark = mode === 'dark' || (mode === 'system' && prefersDark.matches);
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    }
+
+    applyMode(effectiveMode);
+
+    if (effectiveMode === 'system') {
+      const handler = (e: MediaQueryListEvent) => {
+        document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+      };
+      prefersDark.addEventListener('change', handler);
+    }
+
+    function injectStyle(id: string, content: string) {
+      const existing = document.head.querySelector(`style[data-azimuth-${id}]`);
+      if (existing) existing.remove();
+      const style = document.createElement('style');
+      style.setAttribute(`data-azimuth-${id}`, '');
+      style.textContent = content;
+      document.head.appendChild(style);
+    }
+
+    const darkPrimary = c.darkPrimaryColor || c.primaryColor;
+    const darkAccent = c.darkAccentColor || c.accentColor;
+
+    injectStyle('light', `
+      [data-theme="light"], :root {
+        --azimuth-accent: ${c.accentColor};
+        --azimuth-color-primary: ${c.primaryColor};
+        --azimuth-color-primary-hover: ${darken(c.primaryColor, 5)};
+        --azimuth-color-primary-subtle: ${makeSubtle(c.primaryColor, false)};
+        --azimuth-color-accent-hover: ${darken(c.accentColor, 5)};
+        --azimuth-color-accent-subtle: ${makeSubtle(c.accentColor, false)};
+      }
+    `);
+
+    injectStyle('dark', `
+      [data-theme="dark"] {
+        --azimuth-accent: ${darkAccent};
+        --azimuth-color-primary: ${darkPrimary};
+        --azimuth-color-primary-hover: ${darken(darkPrimary, 5)};
+        --azimuth-color-accent-hover: ${darken(darkAccent, 5)};
+        --azimuth-color-primary-subtle: ${makeSubtle(darkPrimary, true)};
+        --azimuth-color-accent-subtle: ${makeSubtle(darkAccent, true)};
+      }
+    `);
 
     mounted.current = true;
   }, [config]);

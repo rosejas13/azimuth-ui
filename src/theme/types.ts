@@ -11,6 +11,8 @@ export type ColorMode = 'light' | 'dark' | 'system';
 export interface ThemeConfig {
   accentColor?: string;
   primaryColor?: string;
+  darkPrimaryColor?: string;
+  darkAccentColor?: string;
   borderRadius?: BorderRadius;
   flat?: boolean;
   elevation?: Elevation;
@@ -36,8 +38,10 @@ export interface ThemeTokens {
 }
 
 export const DEFAULT_THEME: Required<ThemeConfig> = {
-  accentColor: '#e8734a',
-  primaryColor: '#2e9e8e',
+  accentColor: 'oklch(60% 0.15 30)',
+  primaryColor: 'oklch(50% 0.10 185)',
+  darkPrimaryColor: 'oklch(68% 0.08 185)',
+  darkAccentColor: 'oklch(72% 0.12 30)',
   borderRadius: 'md',
   flat: false,
   elevation: 'raised',
@@ -45,6 +49,6 @@ export const DEFAULT_THEME: Required<ThemeConfig> = {
   animations: true,
   motion: 'snappy',
   mode: 'system',
-  fontDisplay: 'Sora, system-ui, sans-serif',
-  fontBody: 'Onest, system-ui, sans-serif',
+  fontDisplay: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  fontBody: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
 };
