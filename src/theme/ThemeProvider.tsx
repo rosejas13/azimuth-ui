@@ -18,7 +18,7 @@ const RADIUS_MAP = {
   sm: '4px',
   md: '8px',
   lg: '12px',
-  full: '9999px',
+  full: '14px',
 } as const;
 
 const SPACING_MAP = {
@@ -33,10 +33,36 @@ const MOTION_MAP = {
   reduced: 'ease',
 } as const;
 
+const SHADOW_MAP = {
+  flat: { sm: 'none', md: 'none', lg: 'none' },
+  raised: { sm: '0 1px 2px 0 rgb(0 0 0 / 0.04)', md: '0 2px 8px 0 rgb(0 0 0 / 0.06)', lg: '0 4px 16px 0 rgb(0 0 0 / 0.08)' },
+  floating: { sm: '0 2px 8px 0 rgb(0 0 0 / 0.10)', md: '0 6px 24px 0 rgb(0 0 0 / 0.12)', lg: '0 12px 48px 0 rgb(0 0 0 / 0.15)' },
+} as const;
+
 function setCSSVar(name: string, value: string) {
   if (typeof document !== 'undefined') {
     document.documentElement.style.setProperty(name, value);
   }
+}
+
+function parseOklch(color: string): { l: number; c: number; h: number } | null {
+  const match = color.match(/^oklch\(\s*([\d.]+)%?\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*[\d.]+)?\s*\)$/);
+  if (!match) return null;
+  return { l: parseFloat(match[1]), c: parseFloat(match[2]), h: parseFloat(match[3]) };
+}
+
+function darken(color: string, amount: number): string {
+  const p = parseOklch(color);
+  if (!p) return color;
+  return `oklch(${Math.max(0, p.l - amount)}% ${p.c} ${p.h})`;
+}
+
+function makeSubtle(color: string): string {
+  const p = parseOklch(color);
+  if (!p) return color;
+  const subtleL = Math.min(100, p.l + 42);
+  const subtleC = Math.max(0.05, p.c * 0.3);
+  return `oklch(${subtleL}% ${subtleC} ${p.h})`;
 }
 
 export function ThemeProvider({ config, children }: ThemeProviderProps) {
@@ -49,6 +75,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
       accentColor: c.accentColor,
       borderRadius: c.borderRadius,
       flat: c.flat,
+      elevation: c.elevation,
       spacing: c.spacing,
       animations: c.animations,
       motion: c.motion,
@@ -82,12 +109,22 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
 
     setCSSVar('--azimuth-accent', c.accentColor);
     setCSSVar('--azimuth-color-primary', c.primaryColor);
+    setCSSVar('--azimuth-color-primary-hover', darken(c.primaryColor, 5));
+    setCSSVar('--azimuth-color-primary-subtle', makeSubtle(c.primaryColor));
+    setCSSVar('--azimuth-color-accent-hover', darken(c.accentColor, 5));
+    setCSSVar('--azimuth-color-accent-subtle', makeSubtle(c.accentColor));
     setCSSVar('--azimuth-font-display', c.fontDisplay);
     setCSSVar('--azimuth-font-body', c.fontBody);
 
     setCSSVar('--azimuth-ease', ease);
-    setCSSVar('--azimuth-shadows', c.flat ? 'none' : '');
     setCSSVar('--azimuth-animations', c.animations ? '' : 'none');
+
+    const elevation = c.flat ? 'flat' : c.elevation;
+    const shadows = SHADOW_MAP[elevation];
+    setCSSVar('--azimuth-shadow-sm', shadows.sm);
+    setCSSVar('--azimuth-shadow-md', shadows.md);
+    setCSSVar('--azimuth-shadow-lg', shadows.lg);
+    setCSSVar('--azimuth-shadows', elevation === 'flat' ? 'none' : '');
 
     mounted.current = true;
   }, [config]);

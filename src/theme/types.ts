@@ -4,6 +4,8 @@ export type Spacing = 'compact' | 'normal' | 'spacious';
 
 export type Motion = 'snappy' | 'smooth' | 'reduced';
 
+export type Elevation = 'flat' | 'raised' | 'floating';
+
 export type ColorMode = 'light' | 'dark' | 'system';
 
 export interface ThemeConfig {
@@ -11,6 +13,7 @@ export interface ThemeConfig {
   primaryColor?: string;
   borderRadius?: BorderRadius;
   flat?: boolean;
+  elevation?: Elevation;
   spacing?: Spacing;
   animations?: boolean;
   motion?: Motion;
@@ -23,6 +26,7 @@ export interface ThemeTokens {
   accentColor: string;
   borderRadius: string;
   flat: boolean;
+  elevation: Elevation;
   spacing: Spacing;
   animations: boolean;
   motion: Motion;
@@ -36,6 +40,7 @@ export const DEFAULT_THEME: Required<ThemeConfig> = {
   primaryColor: '#2e9e8e',
   borderRadius: 'md',
   flat: false,
+  elevation: 'raised',
   spacing: 'normal',
   animations: true,
   motion: 'snappy',

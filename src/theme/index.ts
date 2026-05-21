@@ -12,5 +12,6 @@ export type {
   BorderRadius,
   Spacing,
   Motion,
+  Elevation,
   ColorMode,
 } from './types';
