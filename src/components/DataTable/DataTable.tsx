@@ -7,6 +7,8 @@ import {
   useCallback,
   useMemo,
   useId,
+  useRef,
+  useEffect,
 } from 'react';
 import { cn } from '@/utils/cn';
 import { Loader } from '@/components/Loader';
@@ -98,7 +100,9 @@ function DataTableInner<T>(
   const id = useId();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchColumnFilter, setSearchColumnFilter] = useState<string>('all');
+  const [selectedSearchColumns, setSelectedSearchColumns] = useState<Set<string>>(new Set(['all']));
+  const [showColumnDropdown, setShowColumnDropdown] = useState(false);
+  const columnDropdownRef = useRef<HTMLDivElement>(null);
   const [sortState, setSortState] = useState<SortState | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -115,11 +119,9 @@ function DataTableInner<T>(
 
   const searchableCols = useMemo(() => {
     if (onSearch) return [];
-    if (searchColumnFilter === 'all') return allSearchableCols;
-    const col = columns.find((c) => c.key === searchColumnFilter);
-    if (col && (col.searchable ?? true)) return [searchColumnFilter];
-    return [];
-  }, [onSearch, searchColumnFilter, allSearchableCols, columns]);
+    if (selectedSearchColumns.has('all')) return allSearchableCols;
+    return allSearchableCols.filter((c) => selectedSearchColumns.has(c));
+  }, [onSearch, selectedSearchColumns, allSearchableCols]);
 
   const allRows: IndexedRow<T>[] = useMemo(
     () => data.map((row, i) => ({ row, index: i })),
@@ -222,6 +224,38 @@ function DataTableInner<T>(
   const showColumnSelector = searchColumnSelector && showSearch && !onSearch;
   const hasHeader = !!(title || showSearch || actions);
 
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (columnDropdownRef.current && !columnDropdownRef.current.contains(e.target as Node)) {
+        setShowColumnDropdown(false);
+      }
+    }
+    if (showColumnDropdown) {
+      document.addEventListener('mousedown', handleClick);
+      return () => document.removeEventListener('mousedown', handleClick);
+    }
+  }, [showColumnDropdown]);
+
+  function toggleSearchColumn(columnKey: string) {
+    setSelectedSearchColumns((prev) => {
+      const next = new Set(prev);
+      if (columnKey === 'all') {
+        if (next.has('all')) {
+          next.clear();
+        } else {
+          next.clear();
+          next.add('all');
+        }
+      } else {
+        next.delete('all');
+        if (next.has(columnKey)) next.delete(columnKey);
+        else next.add(columnKey);
+        if (next.size === 0) next.add('all');
+      }
+      return next;
+    });
+  }
+
   const pageNumbers = useMemo(() => {
     const pages: number[] = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -250,13 +284,9 @@ function DataTableInner<T>(
                     aria-label="Search"
                   />
                   {showColumnSelector && (
-                    <select
-                      className={styles.columnSelect}
-                      disabled
-                      aria-label="Select column to search"
-                    >
-                      <option value="all">All</option>
-                    </select>
+                    <button className={cn(styles.columnSelectBtn)} disabled aria-label="Search columns">
+                      All columns ▼
+                    </button>
                   )}
                 </>
               )}
@@ -288,13 +318,9 @@ function DataTableInner<T>(
                     aria-label="Search"
                   />
                   {showColumnSelector && (
-                    <select
-                      className={styles.columnSelect}
-                      disabled
-                      aria-label="Select column to search"
-                    >
-                      <option value="all">All</option>
-                    </select>
+                    <button className={cn(styles.columnSelectBtn)} disabled aria-label="Search columns">
+                      All columns ▼
+                    </button>
                   )}
                 </>
               )}
@@ -326,22 +352,32 @@ function DataTableInner<T>(
                     aria-label="Search"
                   />
                   {showColumnSelector && (
-                    <select
-                      className={styles.columnSelect}
-                      value={searchColumnFilter}
-                      onChange={(e) => {
-                        setSearchColumnFilter(e.target.value);
-                        setCurrentPage(1);
-                      }}
-                      aria-label="Select column to search"
-                    >
-                      <option value="all">All</option>
-                      {columns.map((col) => (
-                        <option key={col.key} value={col.key}>
-                          {col.title}
-                        </option>
-                      ))}
-                    </select>
+                    <div ref={columnDropdownRef} className={styles.columnDropdown}>
+                      <button
+                        className={cn(styles.columnSelectBtn, showColumnDropdown && styles.columnSelectOpen)}
+                        onClick={() => setShowColumnDropdown(!showColumnDropdown)}
+                        aria-label="Select columns to search"
+                      >
+                        {selectedSearchColumns.has('all') ? 'All columns' : `${selectedSearchColumns.size} column(s)`} ▼
+                      </button>
+                      {showColumnDropdown && (
+                        <div className={styles.columnDropdownMenu}>
+                          <label className={styles.columnOption}>
+                            <input type="checkbox" checked={selectedSearchColumns.has('all')} onChange={() => toggleSearchColumn('all')} />
+                            All
+                          </label>
+                          {allSearchableCols.map((key) => {
+                            const col = columns.find((c) => c.key === key);
+                            return (
+                              <label key={key} className={styles.columnOption}>
+                                <input type="checkbox" checked={selectedSearchColumns.has(key)} onChange={() => toggleSearchColumn(key)} />
+                                {col?.title ?? key}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </>
               )}
