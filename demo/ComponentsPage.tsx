@@ -359,7 +359,9 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       </Grid>
     ),
     Container: (
-      <Container><Text size="sm" color="secondary">Centered content container with max-width constraint.</Text></Container>
+      <div style={{ border: '1px dashed var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-sm)', padding: 'var(--azimuth-space-sm)' }}>
+        <Container><Text size="sm" color="secondary">Content constrained by Container max-width. Resize the browser to see the effect.</Text></Container>
+      </div>
     ),
     Divider: (
       <Stack spacing="sm">
@@ -448,7 +450,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       </div>
     ),
     DateTimePicker: (
-      <DateTimePicker onChange={() => {}} showTime={false} />
+      <DateTimePicker onChange={() => {}} showTime={true} minuteStep={15} />
     ),
     DateRangePicker: (
       <DateRangePicker label="Range" onChange={() => {}} />
