@@ -8,7 +8,25 @@ export interface ComponentDoc {
   cssVars: Array<{ name: string; description: string }>;
 }
 
-export const COMPONENT_DATA: ComponentDoc[] = [
+export const COMPONENT_DATA: ComponentDoc[
+{
+    name: 'Accordion',
+    description: 'A grouped set of collapsible sections where only one is open at a time.',
+    category: 'composite',
+    features: ['Single open section at a time', 'Smooth expand animation', 'Chevron rotate indicator', 'Bordered and default variants', 'Disabled section support'],
+    variants: ['default', 'bordered'],
+    props: [
+      { name: 'items', type: 'AccordionItem[]', description: 'Accordion section items.' },
+      { name: 'defaultOpen', type: 'string', description: 'ID of the initially open item.' },
+      { name: 'onToggle', type: '(id: string) => void', description: 'Callback when a section is toggled.' },
+      { name: 'variant', type: "'default' | 'bordered'", default: "'default'", description: 'Visual variant.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-border', description: 'Section borders.' },
+      { name: '--azimuth-color-primary', description: 'Active/expanded header color.' },
+    ],
+  },
+] = [
   {
     name: 'Alert',
     description: 'A contextual notification banner with multiple severity levels, dismissible support, and auto-dismiss.',
@@ -31,7 +49,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-text-secondary', description: 'Alert body text color' },
     ],
   },
-  {
+{
     name: 'Avatar',
     description: 'An image avatar with automatic initials fallback on load failure.',
     category: 'composite',
@@ -49,7 +67,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-primary-subtle', description: 'Avatar background color' },
     ],
   },
-  {
+{
     name: 'Badge',
     description: 'A small status indicator label used to highlight counts or states.',
     category: 'composite',
@@ -64,7 +82,24 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-fs-xs', description: 'Badge font size' },
     ],
   },
-  {
+{
+    name: 'BreadcrumbPageHeader',
+    description: 'Combines breadcrumbs, page title, description, and action buttons in one component.',
+    category: 'composite',
+    features: ['Breadcrumb navigation', 'Title + actions row', 'Optional description', 'Slot for additional content'],
+    variants: [],
+    props: [
+      { name: 'title', type: 'string', description: 'Page title text.' },
+      { name: 'description', type: 'string', description: 'Optional description below the title.' },
+      { name: 'breadcrumbs', type: 'Array<{ label: string; href?: string }>', description: 'Breadcrumb trail items.' },
+      { name: 'actions', type: 'ReactNode', description: 'Action buttons rendered on the right of the title.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-fs-h2', description: 'Title font size.' },
+      { name: '--azimuth-color-text-secondary', description: 'Description text color.' },
+    ],
+  },
+{
     name: 'Breadcrumbs',
     description: 'A navigation trail showing the current page location within the site hierarchy.',
     category: 'composite',
@@ -82,7 +117,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-text-secondary', description: 'Inactive item color' },
     ],
   },
-  {
+{
     name: 'Button',
     description: 'A styled button component with multiple visual variants and size options.',
     category: 'primitive',
@@ -105,7 +140,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-radius-md', description: 'Button border radius' },
     ],
   },
-  {
+{
     name: 'Calendar',
     description: 'A full month-view date picker with navigation and keyboard support.',
     category: 'composite',
@@ -126,7 +161,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-surface-hover', description: 'Day hover background' },
     ],
   },
-  {
+{
     name: 'Card',
     description: 'A content container with optional header, footer, and expandable body.',
     category: 'composite',
@@ -146,7 +181,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-radius-md', description: 'Card border radius' },
     ],
   },
-  {
+{
     name: 'Carousel',
     description: 'A slideshow component with auto-play, dot indicators, and arrow controls.',
     category: 'composite',
@@ -166,7 +201,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-radius-full', description: 'Dot border radius' },
     ],
   },
-  {
+{
     name: 'Chat',
     description: 'A chat conversation widget with message bubbles, auto-scroll, and a send interface.',
     category: 'composite',
@@ -184,7 +219,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Chat border colors' },
     ],
   },
-  {
+{
     name: 'Checkbox',
     description: 'A checkbox input component with label and indeterminate state support.',
     category: 'primitive',
@@ -202,7 +237,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-surface', description: 'Unchecked background' },
     ],
   },
-  {
+{
     name: 'Chip',
     description: 'A compact element representing an input, filter, or selection with optional delete and avatar.',
     category: 'composite',
@@ -224,7 +259,25 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-text', description: 'Chip text color' },
     ],
   },
-  {
+{
+    name: 'Clock',
+    description: 'A live clock, countdown timer, or stopwatch display.',
+    category: 'composite',
+    features: ['Live clock with seconds', 'Countdown to target date', 'Stopwatch with start/stop/reset', '12h and 24h formats', 'Keyboard accessible stopwatch'],
+    variants: [],
+    props: [
+      { name: 'mode', type: "'clock' | 'countdown' | 'stopwatch'", default: "'clock'", description: 'Display mode.' },
+      { name: 'format', type: "'12h' | '24h'", default: "'24h'", description: 'Time format.' },
+      { name: 'targetDate', type: 'Date', description: 'Target date for countdown mode.' },
+      { name: 'autoStart', type: 'boolean', default: 'true', description: 'Auto-start stopwatch.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Display size.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-fs-base', description: 'Font size reference.' },
+      { name: '--azimuth-font-mono', description: 'Monospace font for digits.' },
+    ],
+  },
+{
     name: 'CodeBlock',
     description: 'A syntax-highlighted code display block with copy button and line numbers.',
     category: 'composite',
@@ -244,7 +297,63 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Code block border' },
     ],
   },
-  {
+{
+    name: 'ColorPicker',
+    description: 'A color picker with preset swatches and custom CSS color input.',
+    category: 'composite',
+    features: ['Preset swatch grid', 'Custom color input', 'Keyboard accessible swatches', 'Validates CSS color strings'],
+    variants: [],
+    props: [
+      { name: 'value', type: 'string', description: 'Current color value.' },
+      { name: 'onChange', type: '(color: string) => void', description: 'Callback when color changes.' },
+      { name: 'presets', type: 'string[]', description: 'Array of preset CSS color values.' },
+      { name: 'showInput', type: 'boolean', default: 'true', description: 'Show custom color input field.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-radius-full', description: 'Swatch border radius (circular).' },
+    ],
+  },
+{
+    name: 'Combobox',
+    description: 'An autocomplete input with filtered dropdown list following WAI-ARIA combobox pattern.',
+    category: 'composite',
+    features: ['Text input with real-time filtering', 'Keyboard navigation (arrows, enter, escape)', 'ARIA combobox pattern', 'Custom empty state message'],
+    variants: [],
+    props: [
+      { name: 'value', type: 'string', description: 'Controlled input value.' },
+      { name: 'onChange', type: '(value: string) => void', description: 'Callback when input text changes.' },
+      { name: 'options', type: 'ComboboxOption[]', description: 'Available options for filtering.' },
+      { name: 'onSelect', type: '(value: string) => void', description: 'Callback when an option is selected.' },
+      { name: 'label', type: 'string', description: 'Label text for the input.' },
+      { name: 'placeholder', type: 'string', default: "'Type to search...'", description: 'Input placeholder.' },
+      { name: 'disabled', type: 'boolean', description: 'Whether the input is disabled.' },
+      { name: 'error', type: 'string', description: 'Error message displayed below the input.' },
+      { name: 'emptyMessage', type: 'string', default: "'No results found'", description: 'Text shown when no options match.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-primary', description: 'Selected/highlighted option color.' },
+      { name: '--azimuth-color-border', description: 'Dropdown border.' },
+    ],
+  },
+{
+    name: 'CommandPalette',
+    description: 'A ⌘K-style command palette modal with fuzzy search and keyboard navigation.',
+    category: 'composite',
+    features: ['Portal-based modal overlay', 'Grouped results with search filtering', 'Full keyboard navigation', 'Shortcut display in results'],
+    variants: [],
+    props: [
+      { name: 'open', type: 'boolean', description: 'Whether the palette is visible.' },
+      { name: 'onClose', type: '() => void', description: 'Callback when the palette requests close.' },
+      { name: 'groups', type: 'CommandGroup[]', description: 'Grouped command items.' },
+      { name: 'onSelect', type: '(item: CommandItem) => void', description: 'Callback when a command is selected.' },
+      { name: 'placeholder', type: 'string', default: "'Search commands...'", description: 'Search input placeholder.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-primary-subtle', description: 'Active item background.' },
+      { name: '--azimuth-color-overlay', description: 'Backdrop overlay color.' },
+    ],
+  },
+{
     name: 'Container',
     description: 'A centered content container with max-width constraint.',
     category: 'layout',
@@ -257,7 +366,18 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-space-xl', description: 'Container max-width' },
     ],
   },
-  {
+{
+    name: 'Cursor',
+    description: 'Sets the CSS cursor on child elements. Also provides a useCursor hook for global cursor control.',
+    category: 'composite',
+    features: ['16 cursor values', 'useCursor hook for global cursor', 'Inline style for cursor property'],
+    variants: ['pointer', 'default', 'not-allowed', 'text', 'move', 'wait', 'grab', 'grabbing', 'crosshair', 'help', 'none', 'col-resize', 'row-resize'],
+    props: [
+      { name: 'cursor', type: "CursorValue", default: "'default'", description: 'CSS cursor value to apply.' },
+    ],
+    cssVars: [],
+  },
+{
     name: 'DataTable',
     description: 'A feature-rich data table with sorting, searching, pagination, and editable rows.',
     category: 'composite',
@@ -280,7 +400,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-text', description: 'Table text color' },
     ],
   },
-  {
+{
     name: 'DateRangePicker',
     description: 'A date range selector with start/end inputs and inline calendar popups.',
     category: 'composite',
@@ -301,7 +421,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-surface', description: 'Popup background' },
     ],
   },
-  {
+{
     name: 'DateTimePicker',
     description: 'A combined date and time picker with a calendar and time selectors.',
     category: 'composite',
@@ -322,7 +442,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-fs-sm', description: 'Label font size' },
     ],
   },
-  {
+{
     name: 'Dialog',
     description: 'A modal confirmation dialog with title, description, variant styling, and action buttons.',
     category: 'composite',
@@ -346,7 +466,26 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-primary', description: 'Confirm button background' },
     ],
   },
-  {
+{
+    name: 'DiffViewer',
+    description: 'A line-by-line code diff viewer with unified and split view modes.',
+    category: 'composite',
+    features: ['Unified and split view modes', 'Green/red highlighting for additions/removals', 'Line numbers', 'Change statistics header'],
+    variants: [],
+    props: [
+      { name: 'oldCode', type: 'string', description: 'Original source code.' },
+      { name: 'newCode', type: 'string', description: 'Modified source code.' },
+      { name: 'language', type: 'string', description: 'Language label displayed in the header.' },
+      { name: 'showLineNumbers', type: 'boolean', default: 'true', description: 'Show line numbers.' },
+      { name: 'splitView', type: 'boolean', default: 'false', description: 'Side-by-side view mode.' },
+      { name: 'maxHeight', type: 'string', description: 'Max height of the diff area.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-success-bg', description: 'Added line background.' },
+      { name: '--azimuth-color-error-bg', description: 'Removed line background.' },
+    ],
+  },
+{
     name: 'Divider',
     description: 'A horizontal or vertical separator line.',
     category: 'layout',
@@ -359,7 +498,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Divider line color' },
     ],
   },
-  {
+{
     name: 'Drawer',
     description: 'A slide-in panel from the left or right side of the screen.',
     category: 'composite',
@@ -382,7 +521,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Drawer border' },
     ],
   },
-  {
+{
     name: 'DropdownList',
     description: 'A dropdown select component with search, multiple selection, and keyboard navigation.',
     category: 'composite',
@@ -406,7 +545,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-shadow-md', description: 'Panel shadow' },
     ],
   },
-  {
+{
     name: 'EmptyState',
     description: 'An empty state placeholder with icon, title, description, and optional action.',
     category: 'composite',
@@ -423,7 +562,26 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-text-muted', description: 'Description text color' },
     ],
   },
-  {
+{
+    name: 'ErrorPage',
+    description: 'A generic error/status page layout for 404, 500, maintenance, etc.',
+    category: 'composite',
+    features: ['Centered layout with status code', 'Customizable title and description', 'Action button/link slot', 'Responsive at all viewport sizes'],
+    variants: [],
+    props: [
+      { name: 'status', type: 'number', default: '404', description: 'HTTP status code.' },
+      { name: 'title', type: 'string', default: "'Page not found'", description: 'Error title.' },
+      { name: 'description', type: 'string', description: 'Error description text.' },
+      { name: 'action', type: 'ReactNode', description: 'Recovery action element (button/link).' },
+      { name: 'icon', type: 'ReactNode', description: 'Optional icon above status.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Layout size.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-primary', description: 'Status code color.' },
+      { name: '--azimuth-color-text-secondary', description: 'Description text color.' },
+    ],
+  },
+{
     name: 'FanMenu',
     description: 'An expandable radial menu that fans out options in a chosen direction.',
     category: 'composite',
@@ -441,7 +599,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-shadow-md', description: 'Option shadow' },
     ],
   },
-  {
+{
     name: 'FileUpload',
     description: 'A drag-and-drop file upload area with click-to-browse and paste support.',
     category: 'composite',
@@ -460,7 +618,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-surface', description: 'Upload area background' },
     ],
   },
-  {
+{
     name: 'Flyout',
     description: 'A hover-triggered popover with configurable delay and positioning.',
     category: 'composite',
@@ -479,7 +637,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Flyout border' },
     ],
   },
-  {
+{
     name: 'Form',
     description: 'A form wrapper with automatic form data collection and field components.',
     category: 'composite',
@@ -496,7 +654,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-fs-sm', description: 'Label font size' },
     ],
   },
-  {
+{
     name: 'Grid',
     description: 'A CSS Grid layout component with configurable columns, gap, and alignment.',
     category: 'layout',
@@ -513,7 +671,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-space-lg', description: 'Default grid gap' },
     ],
   },
-  {
+{
     name: 'Icon',
     description: 'A wrapper component for rendering icons with consistent sizing.',
     category: 'primitive',
@@ -525,7 +683,26 @@ export const COMPONENT_DATA: ComponentDoc[] = [
     ],
     cssVars: [],
   },
-  {
+{
+    name: 'ImageViewer',
+    description: 'A lightbox-style image viewer with modal overlay, navigation, and captions.',
+    category: 'composite',
+    features: ['Portal-based dark overlay', 'Previous/next navigation', 'Keyboard support (arrows, escape)', 'Image caption display', 'Loading and error states', 'Optional thumbnail strip'],
+    variants: [],
+    props: [
+      { name: 'images', type: 'ImageViewerImage[]', description: 'Array of images to display.' },
+      { name: 'open', type: 'boolean', description: 'Whether the viewer is open.' },
+      { name: 'onClose', type: '() => void', description: 'Callback when viewer closes.' },
+      { name: 'initialIndex', type: 'number', default: '0', description: 'Index of initially displayed image.' },
+      { name: 'showCaption', type: 'boolean', default: 'true', description: 'Show image caption.' },
+      { name: 'showThumbnails', type: 'boolean', default: 'false', description: 'Show thumbnail strip.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-overlay', description: 'Background overlay color.' },
+      { name: '--azimuth-color-surface', description: 'Thumbnail border color.' },
+    ],
+  },
+{
     name: 'Input',
     description: 'A text input component with label, validation, autocomplete, and stepper support.',
     category: 'primitive',
@@ -548,7 +725,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-text', description: 'Input text color' },
     ],
   },
-  {
+{
     name: 'InputGroup',
     description: 'A layout wrapper that groups related form inputs together.',
     category: 'composite',
@@ -561,7 +738,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-radius', description: 'Input group border radius' },
     ],
   },
-  {
+{
     name: 'Kbd',
     description: 'A keyboard shortcut indicator styled as a inline keycap element.',
     category: 'composite',
@@ -576,7 +753,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-font-mono', description: 'Keycap font' },
     ],
   },
-  {
+{
     name: 'List',
     description: 'An ordered or unordered list with configurable spacing and bullet markers.',
     category: 'composite',
@@ -593,7 +770,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-fs-sm', description: 'List font size' },
     ],
   },
-  {
+{
     name: 'Loader',
     description: 'A loading indicator with circular spinner or horizontal bar variants.',
     category: 'composite',
@@ -609,7 +786,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-fs-sm', description: 'Label font size' },
     ],
   },
-  {
+{
     name: 'LoginSignup',
     description: 'A complete authentication form with login, signup, and password reset views.',
     category: 'composite',
@@ -631,7 +808,46 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Input border colors' },
     ],
   },
-  {
+{
+    name: 'MapDisplay',
+    description: 'A map display with iframe embed support or styled placeholder grid.',
+    category: 'composite',
+    features: ['Iframe embed for real maps', 'CSS placeholder grid when no URL', 'Coordinate labels and compass rose', 'Pin marker positions', 'Interactive toggle'],
+    variants: [],
+    props: [
+      { name: 'src', type: 'string', description: 'Iframe embed URL for real map service.' },
+      { name: 'title', type: 'string', default: "'Map'", description: 'Accessible title for the map.' },
+      { name: 'height', type: 'string', default: "'300px'", description: 'Map height.' },
+      { name: 'width', type: 'string', default: "'100%'", description: 'Map width.' },
+      { name: 'interactive', type: 'boolean', default: 'true', description: 'Allow pan/zoom interaction.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-border', description: 'Map border and grid line color.' },
+      { name: '--azimuth-color-accent', description: 'Pin marker color.' },
+    ],
+  },
+{
+    name: 'MediaPlayer',
+    description: 'A styled wrapper around HTML5 video and audio with custom controls.',
+    category: 'composite',
+    features: ['Custom play/pause, seek, volume controls', 'Playback speed selector', 'Fullscreen support (video)', 'Auto-hiding controls', 'Loading and error states'],
+    variants: [],
+    props: [
+      { name: 'src', type: 'string', description: 'Media source URL.' },
+      { name: 'type', type: "'video' | 'audio'", default: "'video'", description: 'Media type.' },
+      { name: 'poster', type: 'string', description: 'Video poster image URL.' },
+      { name: 'controls', type: 'boolean', default: 'true', description: 'Show custom controls.' },
+      { name: 'autoPlay', type: 'boolean', description: 'Auto-play on load.' },
+      { name: 'loop', type: 'boolean', description: 'Loop playback.' },
+      { name: 'muted', type: 'boolean', description: 'Start muted.' },
+      { name: 'title', type: 'string', description: 'Media title.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-primary', description: 'Seek bar accent color.' },
+      { name: '--azimuth-color-surface', description: 'Player background.' },
+    ],
+  },
+{
     name: 'Menu',
     description: 'A dropdown menu with keyboard navigation, icons, and destructive action styling.',
     category: 'composite',
@@ -649,7 +865,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Menu border' },
     ],
   },
-  {
+{
     name: 'Modal',
     description: 'A centered modal dialog with backdrop, title, subtitle, and footer slots.',
     category: 'composite',
@@ -673,7 +889,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Modal border' },
     ],
   },
-  {
+{
     name: 'Navbar',
     description: 'A responsive navigation bar with logo, links, actions, and mobile drawer.',
     category: 'composite',
@@ -693,7 +909,44 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-primary', description: 'Active link color' },
     ],
   },
-  {
+{
+    name: 'NotificationBadge',
+    description: 'A count badge positioned at the top-right of its child element.',
+    category: 'composite',
+    features: ['Count display with max overflow', 'Dot mode (small indicator)', 'Positioned at top-right of children', 'Multiple color variants'],
+    variants: ['danger', 'accent', 'neutral'],
+    props: [
+      { name: 'count', type: 'number', description: 'Number to display.' },
+      { name: 'max', type: 'number', default: '99', description: 'Maximum count before showing +N.' },
+      { name: 'dot', type: 'boolean', default: 'false', description: 'Show as small dot without count.' },
+      { name: 'size', type: "'sm' | 'md'", default: "'md'", description: 'Badge size.' },
+      { name: 'color', type: "'accent' | 'danger' | 'neutral'", default: "'danger'", description: 'Badge color variant.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-error-bg', description: 'Danger badge background.' },
+      { name: '--azimuth-radius-full', description: 'Badge border radius (pill).' },
+    ],
+  },
+{
+    name: 'OTPInput',
+    description: 'A one-time password input with auto-advancing digit boxes.',
+    category: 'composite',
+    features: ['Auto-advance to next digit on input', 'Paste support (fills all boxes)', 'Backspace to previous box', 'Arrow key navigation'],
+    variants: [],
+    props: [
+      { name: 'length', type: 'number', default: '4', description: 'Number of digit boxes.' },
+      { name: 'value', type: 'string', description: 'Controlled value (digits).' },
+      { name: 'onChange', type: '(value: string) => void', description: 'Callback when value changes.' },
+      { name: 'disabled', type: 'boolean', description: 'Whether the input is disabled.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size of digit boxes.' },
+      { name: 'error', type: 'boolean', description: 'Show error state.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-primary', description: 'Focused/filled box border color.' },
+      { name: '--azimuth-color-error-text', description: 'Error state border color.' },
+    ],
+  },
+{
     name: 'PageLayout',
     description: 'A full-page layout shell with top nav, sidebar, main content, and footer zones.',
     category: 'composite',
@@ -713,7 +966,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Sidebar border' },
     ],
   },
-  {
+{
     name: 'Pagination',
     description: 'A page navigation control with ellipsis collapsing and optional first/last buttons.',
     category: 'composite',
@@ -734,7 +987,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Button border color' },
     ],
   },
-  {
+{
     name: 'ProgressBar',
     description: 'A progress indicator bar with determinate and indeterminate modes.',
     category: 'composite',
@@ -752,7 +1005,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-radius-full', description: 'Progress bar border radius' },
     ],
   },
-  {
+{
     name: 'Radio',
     description: 'A radio button input component with label support.',
     category: 'primitive',
@@ -769,7 +1022,25 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-text', description: 'Label text color' },
     ],
   },
-  {
+{
+    name: 'Rating',
+    description: 'A star rating widget with keyboard navigation and hover preview.',
+    category: 'composite',
+    features: ['Click to rate', 'Hover preview', 'Keyboard navigation (arrows, enter)', 'Customizable max value', 'Disabled state'],
+    variants: [],
+    props: [
+      { name: 'value', type: 'number', default: '0', description: 'Current rating value.' },
+      { name: 'max', type: 'number', default: '5', description: 'Maximum rating value.' },
+      { name: 'onChange', type: '(value: number) => void', description: 'Callback when rating changes.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Star size.' },
+      { name: 'disabled', type: 'boolean', description: 'Whether the rating is disabled.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-accent', description: 'Filled star color.' },
+      { name: '--azimuth-color-text-muted', description: 'Empty star color.' },
+    ],
+  },
+{
     name: 'ResizablePanel',
     description: 'A split panel layout with draggable dividers for resizing child panels.',
     category: 'composite',
@@ -786,7 +1057,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-primary', description: 'Active divider color' },
     ],
   },
-  {
+{
     name: 'SearchBar',
     description: 'A search input with debounced search, suggestions dropdown, and clear button.',
     category: 'composite',
@@ -806,7 +1077,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-fs-base', description: 'Input font size' },
     ],
   },
-  {
+{
     name: 'SectionView',
     description: 'A collapsible section with a toggleable header and animated content reveal.',
     category: 'composite',
@@ -825,7 +1096,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-text', description: 'Section title color' },
     ],
   },
-  {
+{
     name: 'SegmentedButton',
     description: 'A segmented control group for mutually exclusive options with keyboard navigation.',
     category: 'composite',
@@ -845,7 +1116,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Segmented button border' },
     ],
   },
-  {
+{
     name: 'Select',
     description: 'A select dropdown component with label, validation, and custom options.',
     category: 'primitive',
@@ -866,7 +1137,49 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-text', description: 'Select text color' },
     ],
   },
-  {
+{
+    name: 'Sidebar',
+    description: 'A collapsible vertical navigation sidebar with nested items.',
+    category: 'composite',
+    features: ['Collapsed/expanded modes (60px/240px)', 'Hover to expand in collapsed mode', 'Nested expandable sections', 'Active item highlighting', 'Badge counts on items'],
+    variants: [],
+    props: [
+      { name: 'items', type: 'SidebarItem[]', description: 'Navigation items.' },
+      { name: 'activeKey', type: 'string', description: 'Key of the currently active item.' },
+      { name: 'onSelect', type: '(key: string) => void', description: 'Callback when an item is selected.' },
+      { name: 'collapsed', type: 'boolean', description: 'Whether the sidebar is collapsed.' },
+      { name: 'onToggle', type: '() => void', description: 'Callback to toggle collapsed state.' },
+      { name: 'header', type: 'ReactNode', description: 'Brand/logo area at the top.' },
+      { name: 'footer', type: 'ReactNode', description: 'Content at the bottom.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-primary-subtle', description: 'Active item background.' },
+      { name: '--azimuth-color-primary', description: 'Active item text color.' },
+    ],
+  },
+{
+    name: 'SimpleChart',
+    description: 'SVG-based chart component for bar, line, and pie charts without external dependencies.',
+    category: 'composite',
+    features: ['Bar chart (vertical and horizontal)', 'Line chart with area fill', 'Pie chart with percentage labels', 'Grid lines and axis labels', 'Responsive SVG viewBox'],
+    variants: ['bar', 'line', 'pie'],
+    props: [
+      { name: 'type', type: "'bar' | 'line' | 'pie'", default: "'bar'", description: 'Chart type.' },
+      { name: 'data', type: 'ChartDataPoint[]', description: 'Chart data points.' },
+      { name: 'width', type: 'number', default: '400', description: 'SVG viewBox width.' },
+      { name: 'height', type: 'number', default: '250', description: 'SVG viewBox height.' },
+      { name: 'xLabel', type: 'string', description: 'X-axis label.' },
+      { name: 'yLabel', type: 'string', description: 'Y-axis label.' },
+      { name: 'showLegend', type: 'boolean', default: 'true', description: 'Show legend.' },
+      { name: 'showGrid', type: 'boolean', default: 'true', description: 'Show grid lines.' },
+      { name: 'horizontal', type: 'boolean', description: 'Horizontal bar chart.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-primary', description: 'Default chart color.' },
+      { name: '--azimuth-color-accent', description: 'Secondary chart color.' },
+    ],
+  },
+{
     name: 'Skeleton',
     description: 'A loading placeholder component with text, circle, and rectangle variants.',
     category: 'composite',
@@ -883,7 +1196,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-radius', description: 'Skeleton border radius' },
     ],
   },
-  {
+{
     name: 'Slider',
     description: 'A range slider input with horizontal/vertical orientation and value display.',
     category: 'composite',
@@ -905,7 +1218,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-radius-full', description: 'Thumb border radius' },
     ],
   },
-  {
+{
     name: 'SlideSheet',
     description: 'A slide-in panel from any side of the screen with configurable size and snap points.',
     category: 'composite',
@@ -927,7 +1240,27 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-shadow-lg', description: 'Sheet shadow' },
     ],
   },
-  {
+{
+    name: 'SplitButton',
+    description: 'A primary action button with a connected dropdown of alternative actions.',
+    category: 'composite',
+    features: ['Main action with dropdown toggle', 'Dropdown with danger/disabled options', 'Direction support (bottom/top)', 'Variant and size options'],
+    variants: ['primary', 'secondary'],
+    props: [
+      { name: 'label', type: 'string', description: 'Main button label.' },
+      { name: 'onClick', type: '() => void', description: 'Callback for the main action.' },
+      { name: 'options', type: 'SplitButtonOption[]', description: 'Dropdown menu options.' },
+      { name: 'variant', type: "'primary' | 'secondary'", default: "'primary'", description: 'Button variant.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Button size.' },
+      { name: 'disabled', type: 'boolean', description: 'Whether the button is disabled.' },
+      { name: 'direction', type: "'bottom' | 'top'", default: "'bottom'", description: 'Dropdown open direction.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-primary', description: 'Primary variant background.' },
+      { name: '--azimuth-color-border', description: 'Button border.' },
+    ],
+  },
+{
     name: 'Stack',
     description: 'A flexbox layout component for stacking elements with configurable direction and spacing.',
     category: 'layout',
@@ -950,7 +1283,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-space-2xl', description: '2x extra large gap' },
     ],
   },
-  {
+{
     name: 'Table',
     description: 'A styled HTML table component with striped, bordered, and hoverable variants.',
     category: 'composite',
@@ -969,7 +1302,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-surface-hover', description: 'Hover row background' },
     ],
   },
-  {
+{
     name: 'Tabs',
     description: 'A tabbed content switcher with underline, pills, and button variants.',
     category: 'composite',
@@ -988,7 +1321,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-text', description: 'Tab text color' },
     ],
   },
-  {
+{
     name: 'Tag',
     description: 'A small label tag with color variants and optional remove button.',
     category: 'composite',
@@ -1005,7 +1338,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-fs-xs', description: 'Tag font size' },
     ],
   },
-  {
+{
     name: 'Text',
     description: 'A typography component with size, weight, color, and variant options.',
     category: 'primitive',
@@ -1029,7 +1362,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-text-secondary', description: 'Secondary text color' },
     ],
   },
-  {
+{
     name: 'TextArea',
     description: 'A multi-line text input with label, validation, and character count.',
     category: 'composite',
@@ -1051,7 +1384,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-shadow-focus', description: 'Focus ring shadow' },
     ],
   },
-  {
+{
     name: 'TextBox',
     description: 'A styled read-only text display container with plain and code variants.',
     category: 'composite',
@@ -1067,252 +1400,7 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-font-mono', description: 'Code variant font' },
     ],
   },
-  {
-    name: 'Toggle',
-    description: 'A toggle switch component with label and size options.',
-    category: 'primitive',
-    features: ['Switch/checkbox appearance with role="switch"', 'Label support', 'Three sizes (sm, md, lg)', 'Controlled or uncontrolled checked state', 'Disabled state'],
-    variants: [],
-    props: [
-      { name: 'label', type: 'string', description: 'The label text displayed next to the toggle' },
-      { name: 'size', type: 'string', default: 'md', description: 'The size of the toggle switch' },
-      { name: 'disabled', type: 'boolean', description: 'Whether the toggle is disabled' },
-      { name: 'checked', type: 'boolean', description: 'Controlled checked state' },
-      { name: 'defaultChecked', type: 'boolean', description: 'Default checked state (uncontrolled)' },
-      { name: 'onChange', type: '(e: ChangeEvent<HTMLInputElement>) => void', description: 'Callback fired when the toggle value changes' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-primary', description: 'Checked track color' },
-      { name: '--azimuth-color-surface', description: 'Unchecked track color' },
-      { name: '--azimuth-color-border-strong', description: 'Track border' },
-    ],
-  },
-  {
-    name: 'Tooltip',
-    description: 'A hover-triggered tooltip with configurable position and delay.',
-    category: 'composite',
-    features: ['Four position options (top, bottom, left, right)', 'Configurable show delay', 'Arrow indicator', 'Focus trigger for keyboard users', 'Unique ID for aria-describedby'],
-    variants: [],
-    props: [
-      { name: 'content', type: 'ReactNode', description: 'Content displayed inside the tooltip' },
-      { name: 'position', type: 'string', default: 'top', description: 'Position of the tooltip relative to the trigger' },
-      { name: 'delay', type: 'number', default: '300', description: 'Delay in milliseconds before the tooltip appears' },
-      { name: 'children', type: 'ReactNode', description: 'The content of the component' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-bg', description: 'Tooltip background' },
-      { name: '--azimuth-color-text', description: 'Tooltip text color' },
-      { name: '--azimuth-fs-xs', description: 'Tooltip font size' },
-    ],
-  },
-  {
-    name: 'TreeList',
-    description: 'A hierarchical tree view with expand/collapse, selection, and keyboard navigation.',
-    category: 'composite',
-    features: ['Nested node expansion/collapse', 'Node selection with controlled mode', 'Keyboard navigation (arrows, home, end)', 'Icon support per node', 'Connecting line display', 'Disabled nodes'],
-    variants: [],
-    props: [
-      { name: 'data', type: 'TreeNode[]', description: 'Array of root-level tree nodes' },
-      { name: 'defaultExpanded', type: 'string[]', description: 'IDs of nodes expanded by default' },
-      { name: 'selectedId', type: 'string', description: 'ID of the currently selected node (controlled)' },
-      { name: 'onSelect', type: '(node: TreeNode) => void', description: 'Callback fired when a node is selected' },
-      { name: 'onToggle', type: '(node: TreeNode, expanded: boolean) => void', description: 'Callback fired when a node is expanded or collapsed' },
-      { name: 'showLines', type: 'boolean', default: 'false', description: 'Whether to show connecting lines between nodes' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-primary', description: 'Selected node color' },
-      { name: '--azimuth-color-primary-subtle', description: 'Selected node background' },
-      { name: '--azimuth-color-border', description: 'Connecting line color' },
-    ],
-  },
-  {
-    name: 'BreadcrumbPageHeader',
-    description: 'Combines breadcrumbs, page title, description, and action buttons in one component.',
-    category: 'composite',
-    features: ['Breadcrumb navigation', 'Title + actions row', 'Optional description', 'Slot for additional content'],
-    variants: [],
-    props: [
-      { name: 'title', type: 'string', description: 'Page title text.' },
-      { name: 'description', type: 'string', description: 'Optional description below the title.' },
-      { name: 'breadcrumbs', type: 'Array<{ label: string; href?: string }>', description: 'Breadcrumb trail items.' },
-      { name: 'actions', type: 'ReactNode', description: 'Action buttons rendered on the right of the title.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-fs-h2', description: 'Title font size.' },
-      { name: '--azimuth-color-text-secondary', description: 'Description text color.' },
-    ],
-  },
-  {
-    name: 'ColorPicker',
-    description: 'A color picker with preset swatches and custom CSS color input.',
-    category: 'composite',
-    features: ['Preset swatch grid', 'Custom color input', 'Keyboard accessible swatches', 'Validates CSS color strings'],
-    variants: [],
-    props: [
-      { name: 'value', type: 'string', description: 'Current color value.' },
-      { name: 'onChange', type: '(color: string) => void', description: 'Callback when color changes.' },
-      { name: 'presets', type: 'string[]', description: 'Array of preset CSS color values.' },
-      { name: 'showInput', type: 'boolean', default: 'true', description: 'Show custom color input field.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-radius-full', description: 'Swatch border radius (circular).' },
-    ],
-  },
-  {
-    name: 'Combobox',
-    description: 'An autocomplete input with filtered dropdown list following WAI-ARIA combobox pattern.',
-    category: 'composite',
-    features: ['Text input with real-time filtering', 'Keyboard navigation (arrows, enter, escape)', 'ARIA combobox pattern', 'Custom empty state message'],
-    variants: [],
-    props: [
-      { name: 'value', type: 'string', description: 'Controlled input value.' },
-      { name: 'onChange', type: '(value: string) => void', description: 'Callback when input text changes.' },
-      { name: 'options', type: 'ComboboxOption[]', description: 'Available options for filtering.' },
-      { name: 'onSelect', type: '(value: string) => void', description: 'Callback when an option is selected.' },
-      { name: 'label', type: 'string', description: 'Label text for the input.' },
-      { name: 'placeholder', type: 'string', default: "'Type to search...'", description: 'Input placeholder.' },
-      { name: 'disabled', type: 'boolean', description: 'Whether the input is disabled.' },
-      { name: 'error', type: 'string', description: 'Error message displayed below the input.' },
-      { name: 'emptyMessage', type: 'string', default: "'No results found'", description: 'Text shown when no options match.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-primary', description: 'Selected/highlighted option color.' },
-      { name: '--azimuth-color-border', description: 'Dropdown border.' },
-    ],
-  },
-  {
-    name: 'CommandPalette',
-    description: 'A ⌘K-style command palette modal with fuzzy search and keyboard navigation.',
-    category: 'composite',
-    features: ['Portal-based modal overlay', 'Grouped results with search filtering', 'Full keyboard navigation', 'Shortcut display in results'],
-    variants: [],
-    props: [
-      { name: 'open', type: 'boolean', description: 'Whether the palette is visible.' },
-      { name: 'onClose', type: '() => void', description: 'Callback when the palette requests close.' },
-      { name: 'groups', type: 'CommandGroup[]', description: 'Grouped command items.' },
-      { name: 'onSelect', type: '(item: CommandItem) => void', description: 'Callback when a command is selected.' },
-      { name: 'placeholder', type: 'string', default: "'Search commands...'", description: 'Search input placeholder.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-primary-subtle', description: 'Active item background.' },
-      { name: '--azimuth-color-overlay', description: 'Backdrop overlay color.' },
-    ],
-  },
-  {
-    name: 'DiffViewer',
-    description: 'A line-by-line code diff viewer with unified and split view modes.',
-    category: 'composite',
-    features: ['Unified and split view modes', 'Green/red highlighting for additions/removals', 'Line numbers', 'Change statistics header'],
-    variants: [],
-    props: [
-      { name: 'oldCode', type: 'string', description: 'Original source code.' },
-      { name: 'newCode', type: 'string', description: 'Modified source code.' },
-      { name: 'language', type: 'string', description: 'Language label displayed in the header.' },
-      { name: 'showLineNumbers', type: 'boolean', default: 'true', description: 'Show line numbers.' },
-      { name: 'splitView', type: 'boolean', default: 'false', description: 'Side-by-side view mode.' },
-      { name: 'maxHeight', type: 'string', description: 'Max height of the diff area.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-success-bg', description: 'Added line background.' },
-      { name: '--azimuth-color-error-bg', description: 'Removed line background.' },
-    ],
-  },
-  {
-    name: 'NotificationBadge',
-    description: 'A count badge positioned at the top-right of its child element.',
-    category: 'composite',
-    features: ['Count display with max overflow', 'Dot mode (small indicator)', 'Positioned at top-right of children', 'Multiple color variants'],
-    variants: ['danger', 'accent', 'neutral'],
-    props: [
-      { name: 'count', type: 'number', description: 'Number to display.' },
-      { name: 'max', type: 'number', default: '99', description: 'Maximum count before showing +N.' },
-      { name: 'dot', type: 'boolean', default: 'false', description: 'Show as small dot without count.' },
-      { name: 'size', type: "'sm' | 'md'", default: "'md'", description: 'Badge size.' },
-      { name: 'color', type: "'accent' | 'danger' | 'neutral'", default: "'danger'", description: 'Badge color variant.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-error-bg', description: 'Danger badge background.' },
-      { name: '--azimuth-radius-full', description: 'Badge border radius (pill).' },
-    ],
-  },
-  {
-    name: 'OTPInput',
-    description: 'A one-time password input with auto-advancing digit boxes.',
-    category: 'composite',
-    features: ['Auto-advance to next digit on input', 'Paste support (fills all boxes)', 'Backspace to previous box', 'Arrow key navigation'],
-    variants: [],
-    props: [
-      { name: 'length', type: 'number', default: '4', description: 'Number of digit boxes.' },
-      { name: 'value', type: 'string', description: 'Controlled value (digits).' },
-      { name: 'onChange', type: '(value: string) => void', description: 'Callback when value changes.' },
-      { name: 'disabled', type: 'boolean', description: 'Whether the input is disabled.' },
-      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size of digit boxes.' },
-      { name: 'error', type: 'boolean', description: 'Show error state.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-primary', description: 'Focused/filled box border color.' },
-      { name: '--azimuth-color-error-text', description: 'Error state border color.' },
-    ],
-  },
-  {
-    name: 'Rating',
-    description: 'A star rating widget with keyboard navigation and hover preview.',
-    category: 'composite',
-    features: ['Click to rate', 'Hover preview', 'Keyboard navigation (arrows, enter)', 'Customizable max value', 'Disabled state'],
-    variants: [],
-    props: [
-      { name: 'value', type: 'number', default: '0', description: 'Current rating value.' },
-      { name: 'max', type: 'number', default: '5', description: 'Maximum rating value.' },
-      { name: 'onChange', type: '(value: number) => void', description: 'Callback when rating changes.' },
-      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Star size.' },
-      { name: 'disabled', type: 'boolean', description: 'Whether the rating is disabled.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-accent', description: 'Filled star color.' },
-      { name: '--azimuth-color-text-muted', description: 'Empty star color.' },
-    ],
-  },
-  {
-    name: 'Sidebar',
-    description: 'A collapsible vertical navigation sidebar with nested items.',
-    category: 'composite',
-    features: ['Collapsed/expanded modes (60px/240px)', 'Hover to expand in collapsed mode', 'Nested expandable sections', 'Active item highlighting', 'Badge counts on items'],
-    variants: [],
-    props: [
-      { name: 'items', type: 'SidebarItem[]', description: 'Navigation items.' },
-      { name: 'activeKey', type: 'string', description: 'Key of the currently active item.' },
-      { name: 'onSelect', type: '(key: string) => void', description: 'Callback when an item is selected.' },
-      { name: 'collapsed', type: 'boolean', description: 'Whether the sidebar is collapsed.' },
-      { name: 'onToggle', type: '() => void', description: 'Callback to toggle collapsed state.' },
-      { name: 'header', type: 'ReactNode', description: 'Brand/logo area at the top.' },
-      { name: 'footer', type: 'ReactNode', description: 'Content at the bottom.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-primary-subtle', description: 'Active item background.' },
-      { name: '--azimuth-color-primary', description: 'Active item text color.' },
-    ],
-  },
-  {
-    name: 'SplitButton',
-    description: 'A primary action button with a connected dropdown of alternative actions.',
-    category: 'composite',
-    features: ['Main action with dropdown toggle', 'Dropdown with danger/disabled options', 'Direction support (bottom/top)', 'Variant and size options'],
-    variants: ['primary', 'secondary'],
-    props: [
-      { name: 'label', type: 'string', description: 'Main button label.' },
-      { name: 'onClick', type: '() => void', description: 'Callback for the main action.' },
-      { name: 'options', type: 'SplitButtonOption[]', description: 'Dropdown menu options.' },
-      { name: 'variant', type: "'primary' | 'secondary'", default: "'primary'", description: 'Button variant.' },
-      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Button size.' },
-      { name: 'disabled', type: 'boolean', description: 'Whether the button is disabled.' },
-      { name: 'direction', type: "'bottom' | 'top'", default: "'bottom'", description: 'Dropdown open direction.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-primary', description: 'Primary variant background.' },
-      { name: '--azimuth-color-border', description: 'Button border.' },
-    ],
-  },
-  {
+{
     name: 'Timeline',
     description: 'A vertical chronological list of events with dots and connecting lines.',
     category: 'composite',
@@ -1326,155 +1414,8 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-border', description: 'Connecting line color.' },
       { name: '--azimuth-color-accent', description: 'Dot and icon color.' },
     ],
-  },
-,
+  },,
 {
-    name: 'Accordion',
-    description: 'A grouped set of collapsible sections where only one is open at a time.',
-    category: 'composite',
-    features: ['Single open section at a time', 'Smooth expand animation', 'Chevron rotate indicator', 'Bordered and default variants', 'Disabled section support'],
-    variants: ['default', 'bordered'],
-    props: [
-      { name: 'items', type: 'AccordionItem[]', description: 'Accordion section items.' },
-      { name: 'defaultOpen', type: 'string', description: 'ID of the initially open item.' },
-      { name: 'onToggle', type: '(id: string) => void', description: 'Callback when a section is toggled.' },
-      { name: 'variant', type: "'default' | 'bordered'", default: "'default'", description: 'Visual variant.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-border', description: 'Section borders.' },
-      { name: '--azimuth-color-primary', description: 'Active/expanded header color.' },
-    ],
-  },
-  {
-    name: 'Clock',
-    description: 'A live clock, countdown timer, or stopwatch display.',
-    category: 'composite',
-    features: ['Live clock with seconds', 'Countdown to target date', 'Stopwatch with start/stop/reset', '12h and 24h formats', 'Keyboard accessible stopwatch'],
-    variants: [],
-    props: [
-      { name: 'mode', type: "'clock' | 'countdown' | 'stopwatch'", default: "'clock'", description: 'Display mode.' },
-      { name: 'format', type: "'12h' | '24h'", default: "'24h'", description: 'Time format.' },
-      { name: 'targetDate', type: 'Date', description: 'Target date for countdown mode.' },
-      { name: 'autoStart', type: 'boolean', default: 'true', description: 'Auto-start stopwatch.' },
-      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Display size.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-fs-base', description: 'Font size reference.' },
-      { name: '--azimuth-font-mono', description: 'Monospace font for digits.' },
-    ],
-  },
-  {
-    name: 'ErrorPage',
-    description: 'A generic error/status page layout for 404, 500, maintenance, etc.',
-    category: 'composite',
-    features: ['Centered layout with status code', 'Customizable title and description', 'Action button/link slot', 'Responsive at all viewport sizes'],
-    variants: [],
-    props: [
-      { name: 'status', type: 'number', default: '404', description: 'HTTP status code.' },
-      { name: 'title', type: 'string', default: "'Page not found'", description: 'Error title.' },
-      { name: 'description', type: 'string', description: 'Error description text.' },
-      { name: 'action', type: 'ReactNode', description: 'Recovery action element (button/link).' },
-      { name: 'icon', type: 'ReactNode', description: 'Optional icon above status.' },
-      { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Layout size.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-primary', description: 'Status code color.' },
-      { name: '--azimuth-color-text-secondary', description: 'Description text color.' },
-    ],
-  },
-  {
-    name: 'ImageViewer',
-    description: 'A lightbox-style image viewer with modal overlay, navigation, and captions.',
-    category: 'composite',
-    features: ['Portal-based dark overlay', 'Previous/next navigation', 'Keyboard support (arrows, escape)', 'Image caption display', 'Loading and error states', 'Optional thumbnail strip'],
-    variants: [],
-    props: [
-      { name: 'images', type: 'ImageViewerImage[]', description: 'Array of images to display.' },
-      { name: 'open', type: 'boolean', description: 'Whether the viewer is open.' },
-      { name: 'onClose', type: '() => void', description: 'Callback when viewer closes.' },
-      { name: 'initialIndex', type: 'number', default: '0', description: 'Index of initially displayed image.' },
-      { name: 'showCaption', type: 'boolean', default: 'true', description: 'Show image caption.' },
-      { name: 'showThumbnails', type: 'boolean', default: 'false', description: 'Show thumbnail strip.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-overlay', description: 'Background overlay color.' },
-      { name: '--azimuth-color-surface', description: 'Thumbnail border color.' },
-    ],
-  },
-  {
-    name: 'MapDisplay',
-    description: 'A map display with iframe embed support or styled placeholder grid.',
-    category: 'composite',
-    features: ['Iframe embed for real maps', 'CSS placeholder grid when no URL', 'Coordinate labels and compass rose', 'Pin marker positions', 'Interactive toggle'],
-    variants: [],
-    props: [
-      { name: 'src', type: 'string', description: 'Iframe embed URL for real map service.' },
-      { name: 'title', type: 'string', default: "'Map'", description: 'Accessible title for the map.' },
-      { name: 'height', type: 'string', default: "'300px'", description: 'Map height.' },
-      { name: 'width', type: 'string', default: "'100%'", description: 'Map width.' },
-      { name: 'interactive', type: 'boolean', default: 'true', description: 'Allow pan/zoom interaction.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-border', description: 'Map border and grid line color.' },
-      { name: '--azimuth-color-accent', description: 'Pin marker color.' },
-    ],
-  },
-  {
-    name: 'MediaPlayer',
-    description: 'A styled wrapper around HTML5 video and audio with custom controls.',
-    category: 'composite',
-    features: ['Custom play/pause, seek, volume controls', 'Playback speed selector', 'Fullscreen support (video)', 'Auto-hiding controls', 'Loading and error states'],
-    variants: [],
-    props: [
-      { name: 'src', type: 'string', description: 'Media source URL.' },
-      { name: 'type', type: "'video' | 'audio'", default: "'video'", description: 'Media type.' },
-      { name: 'poster', type: 'string', description: 'Video poster image URL.' },
-      { name: 'controls', type: 'boolean', default: 'true', description: 'Show custom controls.' },
-      { name: 'autoPlay', type: 'boolean', description: 'Auto-play on load.' },
-      { name: 'loop', type: 'boolean', description: 'Loop playback.' },
-      { name: 'muted', type: 'boolean', description: 'Start muted.' },
-      { name: 'title', type: 'string', description: 'Media title.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-primary', description: 'Seek bar accent color.' },
-      { name: '--azimuth-color-surface', description: 'Player background.' },
-    ],
-  },
-  {
-    name: 'SimpleChart',
-    description: 'SVG-based chart component for bar, line, and pie charts without external dependencies.',
-    category: 'composite',
-    features: ['Bar chart (vertical and horizontal)', 'Line chart with area fill', 'Pie chart with percentage labels', 'Grid lines and axis labels', 'Responsive SVG viewBox'],
-    variants: ['bar', 'line', 'pie'],
-    props: [
-      { name: 'type', type: "'bar' | 'line' | 'pie'", default: "'bar'", description: 'Chart type.' },
-      { name: 'data', type: 'ChartDataPoint[]', description: 'Chart data points.' },
-      { name: 'width', type: 'number', default: '400', description: 'SVG viewBox width.' },
-      { name: 'height', type: 'number', default: '250', description: 'SVG viewBox height.' },
-      { name: 'xLabel', type: 'string', description: 'X-axis label.' },
-      { name: 'yLabel', type: 'string', description: 'Y-axis label.' },
-      { name: 'showLegend', type: 'boolean', default: 'true', description: 'Show legend.' },
-      { name: 'showGrid', type: 'boolean', default: 'true', description: 'Show grid lines.' },
-      { name: 'horizontal', type: 'boolean', description: 'Horizontal bar chart.' },
-    ],
-    cssVars: [
-      { name: '--azimuth-color-primary', description: 'Default chart color.' },
-      { name: '--azimuth-color-accent', description: 'Secondary chart color.' },
-    ],
-  },
-
-  {
-    name: 'Cursor',
-    description: 'Sets the CSS cursor on child elements. Also provides a useCursor hook for global cursor control.',
-    category: 'composite',
-    features: ['16 cursor values', 'useCursor hook for global cursor', 'Inline style for cursor property'],
-    variants: ['pointer', 'default', 'not-allowed', 'text', 'move', 'wait', 'grab', 'grabbing', 'crosshair', 'help', 'none', 'col-resize', 'row-resize'],
-    props: [
-      { name: 'cursor', type: "CursorValue", default: "'default'", description: 'CSS cursor value to apply.' },
-    ],
-    cssVars: [],
-  },
-  {
     name: 'Toast',
     description: 'A notification toast with multiple variants, auto-dismiss, and expandable body.',
     category: 'composite',
@@ -1494,7 +1435,65 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-error-bg', description: 'Error background.' },
     ],
   },
-  {
+{
+    name: 'Toggle',
+    description: 'A toggle switch component with label and size options.',
+    category: 'primitive',
+    features: ['Switch/checkbox appearance with role="switch"', 'Label support', 'Three sizes (sm, md, lg)', 'Controlled or uncontrolled checked state', 'Disabled state'],
+    variants: [],
+    props: [
+      { name: 'label', type: 'string', description: 'The label text displayed next to the toggle' },
+      { name: 'size', type: 'string', default: 'md', description: 'The size of the toggle switch' },
+      { name: 'disabled', type: 'boolean', description: 'Whether the toggle is disabled' },
+      { name: 'checked', type: 'boolean', description: 'Controlled checked state' },
+      { name: 'defaultChecked', type: 'boolean', description: 'Default checked state (uncontrolled)' },
+      { name: 'onChange', type: '(e: ChangeEvent<HTMLInputElement>) => void', description: 'Callback fired when the toggle value changes' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-primary', description: 'Checked track color' },
+      { name: '--azimuth-color-surface', description: 'Unchecked track color' },
+      { name: '--azimuth-color-border-strong', description: 'Track border' },
+    ],
+  },
+{
+    name: 'Tooltip',
+    description: 'A hover-triggered tooltip with configurable position and delay.',
+    category: 'composite',
+    features: ['Four position options (top, bottom, left, right)', 'Configurable show delay', 'Arrow indicator', 'Focus trigger for keyboard users', 'Unique ID for aria-describedby'],
+    variants: [],
+    props: [
+      { name: 'content', type: 'ReactNode', description: 'Content displayed inside the tooltip' },
+      { name: 'position', type: 'string', default: 'top', description: 'Position of the tooltip relative to the trigger' },
+      { name: 'delay', type: 'number', default: '300', description: 'Delay in milliseconds before the tooltip appears' },
+      { name: 'children', type: 'ReactNode', description: 'The content of the component' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-bg', description: 'Tooltip background' },
+      { name: '--azimuth-color-text', description: 'Tooltip text color' },
+      { name: '--azimuth-fs-xs', description: 'Tooltip font size' },
+    ],
+  },
+{
+    name: 'TreeList',
+    description: 'A hierarchical tree view with expand/collapse, selection, and keyboard navigation.',
+    category: 'composite',
+    features: ['Nested node expansion/collapse', 'Node selection with controlled mode', 'Keyboard navigation (arrows, home, end)', 'Icon support per node', 'Connecting line display', 'Disabled nodes'],
+    variants: [],
+    props: [
+      { name: 'data', type: 'TreeNode[]', description: 'Array of root-level tree nodes' },
+      { name: 'defaultExpanded', type: 'string[]', description: 'IDs of nodes expanded by default' },
+      { name: 'selectedId', type: 'string', description: 'ID of the currently selected node (controlled)' },
+      { name: 'onSelect', type: '(node: TreeNode) => void', description: 'Callback fired when a node is selected' },
+      { name: 'onToggle', type: '(node: TreeNode, expanded: boolean) => void', description: 'Callback fired when a node is expanded or collapsed' },
+      { name: 'showLines', type: 'boolean', default: 'false', description: 'Whether to show connecting lines between nodes' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-primary', description: 'Selected node color' },
+      { name: '--azimuth-color-primary-subtle', description: 'Selected node background' },
+      { name: '--azimuth-color-border', description: 'Connecting line color' },
+    ],
+  },
+{
     name: 'VisuallyHidden',
     description: 'Hides content visually while keeping it accessible to screen readers.',
     category: 'composite',
@@ -1503,4 +1502,3 @@ export const COMPONENT_DATA: ComponentDoc[] = [
     props: [],
     cssVars: [],
   },
-];
