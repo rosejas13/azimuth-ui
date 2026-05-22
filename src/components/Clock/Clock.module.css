@@ -1,0 +1,111 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-sm);
+  font-family: var(--azimuth-font-mono);
+  font-weight: 600;
+  color: var(--azimuth-color-text);
+  user-select: none;
+}
+
+.sm {
+  font-size: 1rem;
+}
+
+.md {
+  font-size: 1.5rem;
+}
+
+.lg {
+  font-size: 2.5rem;
+}
+
+.segmentedDisplay {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-xs);
+}
+
+.segment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  background: var(--azimuth-color-surface-hover);
+  min-width: 1.2ch;
+  text-align: center;
+}
+
+.segmentSmall {
+  font-size: 0.6em;
+}
+
+.colon {
+  animation: azimuth-pulse 1s step-end infinite;
+  line-height: 1;
+  margin: 0 1px;
+}
+
+.colonStatic {
+  animation: none;
+}
+
+.ampm {
+  font-size: 0.5em;
+  font-family: var(--azimuth-font-body);
+  font-weight: 500;
+  color: var(--azimuth-color-text-secondary);
+  margin-left: var(--azimuth-space-xs);
+}
+
+.countdownDisplay {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-sm);
+}
+
+.countdownUnit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--azimuth-space-xs);
+}
+
+.segmentPair {
+  display: flex;
+  gap: 2px;
+}
+
+.countdownLabel {
+  font-size: 0.5em;
+  font-family: var(--azimuth-font-body);
+  font-weight: 500;
+  color: var(--azimuth-color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.countdownFinished {
+  font-family: var(--azimuth-font-body);
+  font-weight: 600;
+  color: var(--azimuth-color-primary);
+}
+
+.stopwatchHint {
+  font-size: 0.35em;
+  font-family: var(--azimuth-font-body);
+  font-weight: 400;
+  color: var(--azimuth-color-text-muted);
+  position: absolute;
+  bottom: -1.5em;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.root:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 4px;
+  border-radius: var(--azimuth-radius-md);
+}

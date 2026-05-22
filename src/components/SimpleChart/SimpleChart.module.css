@@ -1,0 +1,110 @@
+.container {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.bar {
+  transition: opacity var(--azimuth-transition-base);
+}
+
+.bar:hover {
+  opacity: 0.8;
+}
+
+.slice {
+  transition: opacity var(--azimuth-transition-base);
+  stroke: var(--azimuth-color-bg);
+  stroke-width: 1;
+}
+
+.slice:hover {
+  opacity: 0.8;
+}
+
+.sliceLabel {
+  pointer-events: none;
+  font-family: var(--azimuth-font-family-mono, monospace);
+}
+
+.line {
+  transition: opacity var(--azimuth-transition-base);
+}
+
+.point {
+  transition: r var(--azimuth-transition-base);
+  cursor: pointer;
+}
+
+.point:hover {
+  r: 5;
+}
+
+.area {
+  pointer-events: none;
+}
+
+.gridLine {
+  pointer-events: none;
+}
+
+.axisLabel {
+  fill: var(--azimuth-color-text-secondary);
+  font-family: var(--azimuth-font-family-mono, monospace);
+}
+
+.tooltip {
+  position: absolute;
+  background: var(--azimuth-color-surface);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-md);
+  padding: var(--azimuth-spacing-2) var(--azimuth-spacing-3);
+  font-size: var(--azimuth-font-size-xs);
+  box-shadow: var(--azimuth-shadow-lg);
+  pointer-events: none;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--azimuth-spacing-3);
+  padding: var(--azimuth-spacing-2) var(--azimuth-spacing-3);
+  justify-content: center;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-spacing-1);
+  font-size: var(--azimuth-font-size-xs);
+  color: var(--azimuth-color-text-secondary);
+}
+
+.legendSwatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--azimuth-radius-sm, 2px);
+  flex-shrink: 0;
+}
+
+.emptyOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyText {
+  font-size: var(--azimuth-font-size-sm);
+  color: var(--azimuth-color-text-secondary);
+}

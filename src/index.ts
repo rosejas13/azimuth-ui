@@ -60,6 +60,9 @@ export type { GridProps } from './layout/Grid';
 export { Stack } from './layout/Stack';
 export type { StackProps } from './layout/Stack';
 
+export { Accordion } from './components/Accordion';
+export type { AccordionProps, AccordionItem } from './components/Accordion';
+
 export { Alert } from './components/Alert';
 export type { AlertProps } from './components/Alert';
 
@@ -89,6 +92,9 @@ export type { ChatProps, ChatMessage } from './components/Chat';
 
 export { Chip } from './components/Chip';
 export type { ChipProps } from './components/Chip';
+
+export { Clock } from './components/Clock';
+export type { ClockProps } from './components/Clock';
 
 export { CodeBlock } from './components/CodeBlock';
 export type { CodeBlockProps } from './components/CodeBlock';
@@ -126,6 +132,9 @@ export type { DropdownListProps } from './components/DropdownList';
 export { EmptyState } from './components/EmptyState';
 export type { EmptyStateProps } from './components/EmptyState';
 
+export { ErrorPage } from './components/ErrorPage';
+export type { ErrorPageProps } from './components/ErrorPage';
+
 export { FanMenu } from './components/FanMenu';
 export type { FanMenuProps, FanMenuOption } from './components/FanMenu';
 
@@ -137,6 +146,9 @@ export type { FormProps, FormFieldProps } from './components/Form';
 
 export { InputGroup } from './components/InputGroup';
 export type { InputGroupProps } from './components/InputGroup';
+
+export { ImageViewer } from './components/ImageViewer';
+export type { ImageViewerProps, ImageViewerImage } from './components/ImageViewer';
 
 export { Kbd } from './components/Kbd';
 export type { KbdProps } from './components/Kbd';
@@ -236,6 +248,15 @@ export type { VisuallyHiddenProps } from './components/VisuallyHidden';
 
 export { CommandPalette } from './components/CommandPalette';
 export type { CommandPaletteProps, CommandGroup, CommandItem } from './components/CommandPalette';
+
+export { MapDisplay } from './components/MapDisplay';
+export type { MapDisplayProps, MapMarker } from './components/MapDisplay';
+
+export { MediaPlayer } from './components/MediaPlayer';
+export type { MediaPlayerProps } from './components/MediaPlayer';
+
+export { SimpleChart } from './components/SimpleChart';
+export type { SimpleChartProps, ChartDataPoint } from './components/SimpleChart';
 
 export { DiffViewer } from './components/DiffViewer';
 export type { DiffViewerProps } from './components/DiffViewer';
