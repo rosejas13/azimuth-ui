@@ -28,6 +28,8 @@ export interface NavbarProps extends Omit<ComponentPropsWithoutRef<'nav'>, 'chil
   actions?: React.ReactNode;
   /** @default 768 */
   mobileBreakpoint?: number;
+  /** @default 'top' */
+  mobilePosition?: 'top' | 'bottom';
   children?: React.ReactNode;
 }
 
@@ -40,6 +42,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(
       activeKey,
       actions,
       mobileBreakpoint = 768,
+      mobilePosition = 'top',
       className,
       children,
       ...props
@@ -72,7 +75,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(
     const closeMobile = useCallback(() => setMobileOpen(false), []);
 
     return (
-      <nav ref={ref} className={cn(styles.nav, className)} aria-label="Main navigation" {...props}>
+      <nav ref={ref} className={cn(styles.nav, className)} aria-label="Main navigation" data-mobile-position={mobilePosition} {...props}>
         {logo && (
           <a href={logoHref} className={styles.logo}>
             {logo}
@@ -199,6 +202,26 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(
               {actions && <div className={styles.mobileAction}>{actions}</div>}
             </div>
           </>
+        )}
+
+        {isMobile && mobilePosition === 'bottom' && items.length > 0 && (
+          <div className={styles.bottomBar}>
+            {items.slice(0, 5).map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                className={cn(styles.bottomItem, (activeKey === item.key || item.active) && styles.bottomItemActive)}
+                onClick={() => {
+                  item.onClick?.();
+                  closeMobile();
+                }}
+                aria-current={activeKey === item.key || item.active ? 'page' : undefined}
+              >
+                <span className={styles.bottomIcon}>{item.icon}</span>
+                <span className={styles.bottomLabel}>{item.label}</span>
+              </button>
+            ))}
+          </div>
         )}
       </nav>
     );

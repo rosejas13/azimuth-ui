@@ -48,9 +48,9 @@ function App() {
 
 `Container` `Divider` `Grid` `Stack`
 
-### Components (48)
+### Components (64)
 
-`Alert` `Avatar` `Badge` `Breadcrumbs` `Calendar` `Card` `Carousel` `Chat` `Chip` `CodeBlock` `Cursor` `DataTable` `DateRangePicker` `DateTimePicker` `Dialog` `Drawer` `DropdownList` `EmptyState` `FanMenu` `FileUpload` `Flyout` `Form` `InputGroup` `Kbd` `List` `Loader` `LoginSignup` `Menu` `Modal` `Navbar` `PageLayout` `Pagination` `ProgressBar` `ResizablePanel` `SearchBar` `SectionView` `SegmentedButton` `Skeleton` `Slider` `SlideSheet` `Table` `Tabs` `Tag` `TextArea` `TextBox` `Toast` `Tooltip` `TreeList` `VisuallyHidden`
+`Accordion` `Alert` `Avatar` `Badge` `BreadcrumbPageHeader` `Breadcrumbs` `Calendar` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `ColorPicker` `Combobox` `CommandPalette` `Cursor` `DataTable` `DateRangePicker` `DateTimePicker` `Dialog` `DiffViewer` `Drawer` `DropdownList` `EmptyState` `ErrorPage` `FanMenu` `FileUpload` `Flyout` `Form` `ImageViewer` `InputGroup` `Kbd` `List` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `Menu` `Modal` `Navbar` `NotificationBadge` `OTPInput` `PageLayout` `Pagination` `ProgressBar` `Rating` `ResizablePanel` `SearchBar` `SectionView` `SegmentedButton` `Select` `Sidebar` `Skeleton` `SlideSheet` `Slider` `SimpleChart` `SplitButton` `Stack` `Table` `Tabs` `Tag` `TextArea` `TextBox` `Timeline` `Toast` `Tooltip` `TreeList` `VisuallyHidden`
 
 ## Quick Start
 
