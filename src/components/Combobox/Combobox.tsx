@@ -54,6 +54,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
   ) => {
     const [open, setOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
+    const [listboxStyle, setListboxStyle] = useState<React.CSSProperties>({});
     const wrapperRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const listboxRef = useRef<HTMLUListElement>(null);
@@ -69,6 +70,18 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
       setHighlightedIndex(-1);
     }, []);
 
+    const updatePosition = useCallback(() => {
+      if (!inputRef.current) return;
+      const rect = inputRef.current.getBoundingClientRect();
+      setListboxStyle({
+        position: 'fixed',
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+        zIndex: 50,
+      });
+    }, []);
+
     useEffect(() => {
       function handleClickOutside(e: MouseEvent) {
         if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
@@ -77,9 +90,16 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
       }
       if (open) {
         document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        const positionHandler = () => updatePosition();
+        window.addEventListener('scroll', positionHandler, true);
+        window.addEventListener('resize', positionHandler);
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+          window.removeEventListener('scroll', positionHandler, true);
+          window.removeEventListener('resize', positionHandler);
+        };
       }
-    }, [open, close]);
+    }, [open, close, updatePosition]);
 
     useEffect(() => {
       if (open && highlightedIndex >= 0 && listboxRef.current) {
@@ -92,10 +112,11 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
     const handleInputChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
+        updatePosition();
         setOpen(true);
         setHighlightedIndex(0);
       },
-      [onChange],
+      [onChange, updatePosition],
     );
 
     const handleSelect = useCallback(
@@ -111,6 +132,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
         if (!open) {
           if (e.key === 'ArrowDown') {
             e.preventDefault();
+            updatePosition();
             setOpen(true);
             setHighlightedIndex(0);
           }
@@ -184,6 +206,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
             onKeyDown={handleKeyDown}
             onFocus={() => {
               if (value.length > 0) {
+                updatePosition();
                 setOpen(true);
               }
             }}
@@ -196,6 +219,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
               id={listboxId}
               role="listbox"
               className={styles.listbox}
+              style={listboxStyle}
             >
               {filteredOptions.length > 0 ? (
                 filteredOptions.map((opt, i) => (

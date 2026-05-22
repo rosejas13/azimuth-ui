@@ -52,6 +52,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
+    const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
     const wrapperRef = useRef<HTMLDivElement>(null);
     const listboxRef = useRef<HTMLUListElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
@@ -80,6 +81,19 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
       setHighlightedIndex(-1);
     }, []);
 
+    const updatePosition = useCallback(() => {
+      const trigger = wrapperRef.current?.querySelector('button');
+      if (!trigger) return;
+      const rect = trigger.getBoundingClientRect();
+      setPanelStyle({
+        position: 'fixed',
+        top: rect.bottom + 4,
+        left: rect.left,
+        minWidth: rect.width,
+        zIndex: 100,
+      });
+    }, []);
+
     useEffect(() => {
       function handleClickOutside(e: MouseEvent) {
         if (
@@ -91,10 +105,16 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
       }
       if (open) {
         document.addEventListener('mousedown', handleClickOutside);
-        return () =>
+        const positionHandler = () => updatePosition();
+        window.addEventListener('scroll', positionHandler, true);
+        window.addEventListener('resize', positionHandler);
+        return () => {
           document.removeEventListener('mousedown', handleClickOutside);
+          window.removeEventListener('scroll', positionHandler, true);
+          window.removeEventListener('resize', positionHandler);
+        };
       }
-    }, [open, close]);
+    }, [open, close, updatePosition]);
 
     useEffect(() => {
       if (open && searchable && searchInputRef.current) {
@@ -173,6 +193,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
         if (!prev) {
           setHighlightedIndex(-1);
           setSearch('');
+          updatePosition();
         }
         return !prev;
       });
@@ -230,6 +251,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
             </button>
 
             {open && (
+              <div style={panelStyle}>
               <div className={styles.panel} role="listbox" aria-multiselectable={multiple}>
               {searchable && (
                 <input
@@ -327,6 +349,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
                   <li className={styles.emptyMessage}>No results found</li>
                 )}
               </ul>
+            </div>
             </div>
           )}
           </div>

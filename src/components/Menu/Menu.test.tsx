@@ -234,7 +234,10 @@ describe('Menu', () => {
     render(<Menu items={sampleItems} side="right" />);
     await user.click(screen.getByLabelText('Open menu'));
     const menu = screen.getByRole('menu');
-    expect(menu).toHaveClass('panelRight');
+    const wrapper = menu.parentElement;
+    expect(wrapper).not.toBeNull();
+    expect(wrapper!.style.position).toBe('fixed');
+    expect(wrapper!.style.transform).toBe('translateX(-100%)');
   });
 
   it('displays correct displayName', () => {

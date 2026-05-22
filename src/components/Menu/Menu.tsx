@@ -42,6 +42,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
   ) => {
     const [open, setOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
     const containerRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
     const activeIndexRef = useRef(0);
@@ -54,6 +55,28 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
       setOpen(false);
       setActiveIndex(0);
     }, []);
+
+    const updatePosition = useCallback(() => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const gap = 4;
+      if (side === 'right') {
+        setPanelStyle({
+          position: 'fixed',
+          top: rect.bottom + gap,
+          left: rect.right,
+          transform: 'translateX(-100%)',
+          zIndex: 1200,
+        });
+      } else {
+        setPanelStyle({
+          position: 'fixed',
+          top: rect.bottom + gap,
+          left: rect.left,
+          zIndex: 1200,
+        });
+      }
+    }, [side]);
 
     const handleSelect = useCallback(
       (item: MenuItem) => {
@@ -154,22 +177,40 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
         }
       }, 0);
 
+      const positionHandler = () => updatePosition();
+      window.addEventListener('scroll', positionHandler, true);
+      window.addEventListener('resize', positionHandler);
+
       return () => {
         document.removeEventListener('mousedown', handleClickOutside);
         clearTimeout(timer);
+        window.removeEventListener('scroll', positionHandler, true);
+        window.removeEventListener('resize', positionHandler);
       };
-    }, [open, close, clickableItems]);
+    }, [open, close, clickableItems, updatePosition]);
+
+    const handleOpen = useCallback(() => {
+      updatePosition();
+      setOpen(true);
+    }, [updatePosition]);
+
+    const handleToggle = useCallback(() => {
+      if (!open) {
+        updatePosition();
+      }
+      setOpen((prev) => !prev);
+    }, [open, updatePosition]);
 
     const handleTriggerKeyDown = useCallback(
       (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
           e.preventDefault();
           if (!open) {
-            setOpen(true);
+            handleOpen();
           }
         }
       },
-      [open],
+      [open, handleOpen],
     );
 
     const handleItemMouseEnter = useCallback(
@@ -205,7 +246,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
             role="button"
             tabIndex={0}
             className={styles.trigger}
-            onClick={() => setOpen((prev) => !prev)}
+            onClick={handleToggle}
             onKeyDown={handleTriggerKeyDown}
             aria-haspopup="menu"
             aria-expanded={open}
@@ -216,7 +257,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
           <button
             type="button"
             className={styles.trigger}
-            onClick={() => setOpen((prev) => !prev)}
+            onClick={handleToggle}
             onKeyDown={handleTriggerKeyDown}
             aria-haspopup="menu"
             aria-expanded={open}
@@ -227,13 +268,8 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
         )}
 
         {open && (
-          <div
-            className={cn(
-              styles.panel,
-              side === 'right' && styles.panelRight,
-            )}
-            role="menu"
-          >
+          <div style={panelStyle}>
+            <div className={styles.panel} role="menu">
             {items.map((item) => {
               if (item.separator) {
                 return (
@@ -276,6 +312,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
                 </button>
               );
             })}
+            </div>
           </div>
         )}
       </div>

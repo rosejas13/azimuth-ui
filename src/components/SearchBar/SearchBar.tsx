@@ -47,7 +47,9 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
     );
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
+    const [suggestionsStyle, setSuggestionsStyle] = useState<React.CSSProperties>({});
     const wrapperRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const currentValue =
@@ -64,6 +66,30 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
         setLocalValue(controlledValue as string);
       }
     }, [controlledValue]);
+
+    const updatePosition = useCallback(() => {
+      if (!inputRef.current) return;
+      const rect = inputRef.current.getBoundingClientRect();
+      setSuggestionsStyle({
+        position: 'fixed',
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+        zIndex: 100,
+      });
+    }, []);
+
+    const setInputRef = useCallback(
+      (node: HTMLInputElement | null) => {
+        (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
+        }
+      },
+      [ref],
+    );
 
     const emitSearch = useCallback(
       (query: string) => {
@@ -93,10 +119,16 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
       }
       if (showSuggestions) {
         document.addEventListener('mousedown', handleClickOutside);
-        return () =>
+        const positionHandler = () => updatePosition();
+        window.addEventListener('scroll', positionHandler, true);
+        window.addEventListener('resize', positionHandler);
+        return () => {
           document.removeEventListener('mousedown', handleClickOutside);
+          window.removeEventListener('scroll', positionHandler, true);
+          window.removeEventListener('resize', positionHandler);
+        };
       }
-    }, [showSuggestions]);
+    }, [showSuggestions, updatePosition]);
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,12 +138,13 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
         }
         emitSearch(next);
         if (suggestions && next.length > 0) {
+          updatePosition();
           setShowSuggestions(true);
           setHighlightedIndex(-1);
         }
         onChange?.(e);
       },
-      [controlledValue, emitSearch, suggestions, onChange],
+      [controlledValue, emitSearch, suggestions, onChange, updatePosition],
     );
 
     const handleClear = useCallback(() => {
@@ -218,7 +251,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
             Search
           </span>
           <input
-            ref={ref}
+            ref={setInputRef}
             type="text"
             role="searchbox"
             aria-label={placeholder}
@@ -228,6 +261,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
             onKeyDown={handleKeyDown}
             onFocus={() => {
               if (suggestions && currentValue.length > 0) {
+                updatePosition();
                 setShowSuggestions(true);
               }
             }}
@@ -248,7 +282,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
         </div>
 
         {showSuggestions && filteredSuggestions.length > 0 && (
-          <div className={styles.suggestions} role="listbox">
+          <div className={styles.suggestions} role="listbox" style={suggestionsStyle}>
             {filteredSuggestions.map((suggestion, i) => (
               <button
                 key={suggestion}
