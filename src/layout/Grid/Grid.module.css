@@ -7,6 +7,8 @@
 .cols2 { grid-template-columns: repeat(2, 1fr); }
 .cols3 { grid-template-columns: repeat(3, 1fr); }
 .cols4 { grid-template-columns: repeat(4, 1fr); }
+.cols5 { grid-template-columns: repeat(5, 1fr); }
+.cols6 { grid-template-columns: repeat(6, 1fr); }
 .colsAuto { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
 
 /* Align */
@@ -21,4 +23,33 @@
 }
 .sidebar {
   grid-template-columns: 1fr 3fr;
+}
+
+/* Responsive */
+.responsive {
+  grid-template-columns: var(--grid-cols-base, repeat(1, 1fr));
+}
+
+@media (min-width: 640px) {
+  .responsive {
+    grid-template-columns: var(--grid-cols-sm, var(--grid-cols-base, repeat(1, 1fr)));
+  }
+}
+
+@media (min-width: 768px) {
+  .responsive {
+    grid-template-columns: var(--grid-cols-md, var(--grid-cols-sm, var(--grid-cols-base, repeat(1, 1fr))));
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive {
+    grid-template-columns: var(--grid-cols-lg, var(--grid-cols-md, var(--grid-cols-sm, var(--grid-cols-base, repeat(1, 1fr)))));
+  }
+}
+
+@media (min-width: 1280px) {
+  .responsive {
+    grid-template-columns: var(--grid-cols-xl, var(--grid-cols-lg, var(--grid-cols-md, var(--grid-cols-sm, var(--grid-cols-base, repeat(1, 1fr))))));
+  }
 }

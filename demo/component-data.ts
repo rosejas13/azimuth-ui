@@ -8,7 +8,7 @@ export interface ComponentDoc {
   cssVars: Array<{ name: string; description: string }>;
 }
 
-export const COMPONENT_DATA: ComponentDoc[] = [
+export const COMPONENT_DATA = [
   {
     name: 'Alert',
     description: 'A contextual notification banner with multiple severity levels, dismissible support, and auto-dismiss.',

@@ -4,20 +4,19 @@ import {
   Container, Grid, Stack, Divider, Badge, Tag, Chip, Avatar,
   Card, Modal, Drawer, Dialog, Alert, Tooltip, Flyout, Menu,
   Navbar, Tabs, Pagination, Breadcrumbs, DataTable, Table, List,
-  Form, SearchBar, Slider, ProgressBar, Loader, Skeleton, EmptyState,
+  SearchBar, Slider, ProgressBar, Loader, Skeleton, EmptyState,
   CodeBlock, Calendar, DateTimePicker, DateRangePicker, Carousel,
   SectionView, SegmentedButton, Kbd, TextArea, TextBox, PageLayout,
   ResizablePanel, TreeList, DropdownList, LoginSignup, Chat, FileUpload,
   SlideSheet, Icon, useToast,
   Rating, Timeline, NotificationBadge, OTPInput, SplitButton,
   BreadcrumbPageHeader, Combobox, Sidebar, ColorPicker,
-  CommandPalette, DiffViewer,
-  Clock, Accordion, ImageViewer, ErrorPage,
+  DiffViewer,
+  Clock, Accordion, ErrorPage,
   MediaPlayer, SimpleChart, MapDisplay,
 } from '../src';
 import { COMPONENT_DATA, type ComponentDoc } from './component-data';
 import { Playground } from './Playground';
-import { componentMap } from './componentMap';
 
 function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShowSheet, onShowToast, onShowAlert }: {
   doc: ComponentDoc;
@@ -482,12 +481,12 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
         <NotificationBadge count={120} max={99}>
           <Button variant="secondary" size="sm">Notifications</Button>
         </NotificationBadge>
-        <NotificationBadge dot>
+        <NotificationBadge count={0} dot>
           <Button variant="secondary" size="sm">Alerts</Button>
         </NotificationBadge>
       </Stack>
     ),
-    OTPInput: <OTPInput length={4} onChange={() => {}} />,
+    OTPInput: <OTPInput value="" length={4} onChange={() => {}} />,
     SplitButton: (
       <SplitButton
         label="Save"
@@ -508,6 +507,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Combobox: (
       <Combobox
+        value=""
         options={[
           { value: 'react', label: 'React' },
           { value: 'vue', label: 'Vue' },
@@ -527,6 +527,8 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
             { key: 'b', label: 'Settings', icon: <span>S</span>, badge: 3 },
           ]}
           activeKey="a"
+          collapsed={false}
+          onToggle={() => {}}
           onSelect={() => {}}
         />
       </div>
@@ -572,7 +574,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
 
   return (
     <div style={{ minHeight: '120px' }}>
-      {previews[doc.name] || <Text size="sm" color="muted">Preview not available for {doc.name}</Text>}
+      {doc && (previews[doc.name] || <Text size="sm" color="muted">Preview not available for {doc.name}</Text>)}
     </div>
   );
 }
@@ -589,7 +591,7 @@ export function ComponentsPage() {
   const [exitingAlerts, setExitingAlerts] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
-  const doc = COMPONENT_DATA.find(d => d.name === selected);
+  const doc = COMPONENT_DATA.find((d: any) => d.name === selected) as ComponentDoc | undefined;
   if (!doc) return <Text>Loading...</Text>;
 
   return (
@@ -608,7 +610,7 @@ export function ComponentsPage() {
             aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}>{sidebarCollapsed ? '>' : '<'}
           </Button>
         </Stack>
-        {COMPONENT_DATA.map(item => (
+        {COMPONENT_DATA.map((item: any) => (
           <button key={item.name}
             onClick={() => setSelected(item.name)}
             style={{

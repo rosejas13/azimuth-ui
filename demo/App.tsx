@@ -2,18 +2,19 @@ import '../src/styles/global.css';
 import { useState, useCallback } from 'react';
 import {
   Container, Grid, Stack, Divider,
-  Button, Text, Icon, Input, Checkbox, Radio, Select, Toggle,
-  Badge, Tag, Avatar, Loader, ProgressBar, Tooltip,
+  Button, Text, Input, Checkbox, Radio, Select, Toggle,
+  Badge, Tag, Avatar, ProgressBar, Tooltip,
   Alert, Card, Modal, Drawer, SlideSheet,
-  Breadcrumbs, Pagination, Tabs, DropdownList,
+  Breadcrumbs, Tabs, DropdownList,
   DataTable, Dialog, Menu, Navbar, SearchBar, Slider,
   Calendar, Carousel, Chip, CodeBlock, DateTimePicker, DateRangePicker,
-  EmptyState, Form, InputGroup, Kbd, List, PageLayout, SectionView,
-  SegmentedButton, Skeleton, Table, TextArea, TextBox,
-  FanMenu, Flyout, LoginSignup, ResizablePanel,
-  TreeList, Toast, useToast,
-  useThemeMode, type ColorMode,
+  Form, List, SectionView,
+  SegmentedButton, Table, TextArea,
+  LoginSignup, ResizablePanel,
+  TreeList, useToast,
+  useThemeMode,
   Chat, FileUpload, type ChatMessage,
+  InputGroup,
 } from '../src';
 import type { TreeNode } from '../src';
 import {
@@ -404,13 +405,14 @@ function ProductsPage({ onProductDetails }: { onProductDetails: (p: Product) => 
               label="Category"
               size="sm"
               value={category}
+              onChange={(e) => setCategory(e.target.value)}
               options={categories.map(c => ({ value: c, label: c.charAt(0).toUpperCase() + c.slice(1) }))}
             />
             <DropdownList
               label="Sort By"
-              size="sm"
               placeholder="Sort..."
               value={sortBy}
+              onChange={(v) => setSortBy(v as string)}
               options={[
                 { value: 'name', label: 'Name' },
                 { value: 'users', label: 'Popularity' },
@@ -460,10 +462,10 @@ function ProductsPage({ onProductDetails }: { onProductDetails: (p: Product) => 
                   columns={[
                     { key: 'name', title: 'Name', sortable: true },
                     { key: 'category', title: 'Category', sortable: true },
-                    { key: 'price', title: 'Price', sortable: true, render: (v) => v === 0 ? 'Free' : `$${v}/mo` },
+                    { key: 'price', title: 'Price', sortable: true, render: (v: any) => v === 0 ? 'Free' : `$${v}/mo` },
                     { key: 'version', title: 'Version' },
-                    { key: 'rating', title: 'Rating', sortable: true, render: (v) => `${v}/5` },
-                    { key: 'activeUsers', title: 'Users', sortable: true, render: (v) => v.toLocaleString() },
+                    { key: 'rating', title: 'Rating', sortable: true, render: (v: any) => `${v}/5` },
+                    { key: 'activeUsers', title: 'Users', sortable: true, render: (v: any) => v.toLocaleString() },
                   ]}
                   data={filtered as any}
                   searchable
@@ -646,7 +648,7 @@ function ContactPage() {
 
           <Card>
             <Form
-              onSubmit={(data) => {
+              onSubmit={(_data) => {
                 toast({ title: 'Message sent!', message: 'We will get back to you within 24 hours.', variant: 'success' });
               }}
             >
@@ -701,7 +703,7 @@ function ContactPage() {
               onLogin={(data) => {
                 toast({ title: 'Welcome back!', message: `Logged in as ${data.email}`, variant: 'success' });
               }}
-              onSignup={(data) => {
+              onSignup={(_data) => {
                 toast({ title: 'Account created!', message: 'Check your email to verify.', variant: 'success' });
               }}
               onResetPassword={(data) => {
@@ -719,7 +721,7 @@ function ContactPage() {
 
           <div style={{ marginTop: 'var(--azimuth-space-xl)' }}>
             <Card header={<Text weight="semibold">Office Hours</Text>}>
-              <Calendar onChange={(d) => {}} showWeekNumbers aria-label="Office hours calendar" />
+              <Calendar onChange={(_d) => {}} showWeekNumbers aria-label="Office hours calendar" />
             </Card>
           </div>
 
@@ -727,7 +729,7 @@ function ContactPage() {
             <Card header={<Text weight="semibold">Schedule a Meeting</Text>}>
               <Stack spacing="md">
                 <DateTimePicker
-                  onChange={(d) => {}}
+                  onChange={(_d) => {}}
                   showTime
                   showSeconds={false}
                   minuteStep={15}
@@ -735,7 +737,7 @@ function ContactPage() {
                 />
                 <DateRangePicker
                   label="Availability Window"
-                  onChange={(range) => {}}
+                  onChange={(_range) => {}}
                 />
               </Stack>
             </Card>
