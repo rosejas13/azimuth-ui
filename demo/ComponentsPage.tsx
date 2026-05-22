@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Button, Text, Input, Checkbox, Radio, Select, Toggle,
   Container, Grid, Stack, Divider, Badge, Tag, Chip, Avatar,
@@ -18,15 +18,6 @@ import {
 import { COMPONENT_DATA, type ComponentDoc } from './component-data';
 import { Playground } from './Playground';
 import { componentMap } from './componentMap';
-
-class PreviewErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: boolean }> {
-  state = { error: false };
-  static getDerivedStateFromError() { return { error: true }; }
-  render() {
-    if (this.state.error) return <Text size="sm" color="muted">Preview unavailable</Text>;
-    return this.props.children;
-  }
-}
 
 function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShowSheet, onShowToast, onShowAlert }: {
   doc: ComponentDoc;
@@ -651,33 +642,31 @@ export function ComponentsPage() {
                 id: 'preview', label: 'Preview',
                 content: (
                   <Card>
-                    <PreviewErrorBoundary>
-                      <ComponentPreview doc={doc}
-                        onShowModal={() => setModalOpen(true)}
-                        onShowDrawer={() => setDrawerOpen(true)}
-                        onShowDialog={() => setDialogOpen(true)}
-                        onShowSheet={() => setSheetOpen(true)}
-                        onShowToast={(v) => {
-                          toast({ title: `${v} notification`, message: 'This is a demonstration toast.', variant: v, duration: 4000 });
-                        }}
-                        onShowAlert={(v) => {
-                          const id = Date.now().toString();
-                          setAlerts(prev => [...prev, {
-                            id,
-                            variant: v,
-                            title: v.charAt(0).toUpperCase() + v.slice(1),
-                            message: `This is a ${v} alert demonstration. It shows how alerts appear on the page.`,
-                          }]);
+                    <ComponentPreview doc={doc}
+                      onShowModal={() => setModalOpen(true)}
+                      onShowDrawer={() => setDrawerOpen(true)}
+                      onShowDialog={() => setDialogOpen(true)}
+                      onShowSheet={() => setSheetOpen(true)}
+                      onShowToast={(v) => {
+                        toast({ title: `${v} notification`, message: 'This is a demonstration toast.', variant: v, duration: 4000 });
+                      }}
+                      onShowAlert={(v) => {
+                        const id = Date.now().toString();
+                        setAlerts(prev => [...prev, {
+                          id,
+                          variant: v,
+                          title: v.charAt(0).toUpperCase() + v.slice(1),
+                          message: `This is a ${v} alert demonstration. It shows how alerts appear on the page.`,
+                        }]);
+                        setTimeout(() => {
+                          setExitingAlerts(prev => new Set(prev).add(id));
                           setTimeout(() => {
-                            setExitingAlerts(prev => new Set(prev).add(id));
-                            setTimeout(() => {
-                              setAlerts(prev => prev.filter(a => a.id !== id));
-                              setExitingAlerts(prev => { const n = new Set(prev); n.delete(id); return n; });
-                            }, 300);
-                          }, 6000);
-                        }}
-                      />
-                    </PreviewErrorBoundary>
+                            setAlerts(prev => prev.filter(a => a.id !== id));
+                            setExitingAlerts(prev => { const n = new Set(prev); n.delete(id); return n; });
+                          }, 300);
+                        }, 6000);
+                      }}
+                    />
                   </Card>
                 ),
               },
