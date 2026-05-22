@@ -571,7 +571,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
 
   return (
     <div style={{ minHeight: '120px' }}>
-      {previews[doc.name] || <Text size="sm" color="muted">Preview not available for {doc.name}</Text>}
+      {(() => { try { return previews[doc.name] || <Text size="sm" color="muted">Preview not available for {doc.name}</Text>; } catch(e) { console.error(`Preview error for ${doc.name}:`, e); return <Text size="sm" color="muted">Preview error</Text>; } })()}
     </div>
   );
 }
