@@ -69,6 +69,9 @@ export type { AvatarProps } from './components/Avatar';
 export { Badge } from './components/Badge';
 export type { BadgeProps } from './components/Badge';
 
+export { BreadcrumbPageHeader } from './components/BreadcrumbPageHeader';
+export type { BreadcrumbPageHeaderProps, BreadcrumbItem } from './components/BreadcrumbPageHeader';
+
 export { Breadcrumbs } from './components/Breadcrumbs';
 export type { BreadcrumbsProps } from './components/Breadcrumbs';
 
@@ -89,6 +92,12 @@ export type { ChipProps } from './components/Chip';
 
 export { CodeBlock } from './components/CodeBlock';
 export type { CodeBlockProps } from './components/CodeBlock';
+
+export { ColorPicker } from './components/ColorPicker';
+export type { ColorPickerProps } from './components/ColorPicker';
+
+export { Combobox } from './components/Combobox';
+export type { ComboboxProps, ComboboxOption } from './components/Combobox';
 
 export { Cursor, useCursor } from './components/Cursor';
 export type { CursorProps } from './components/Cursor';
@@ -144,11 +153,17 @@ export type { LoginSignupProps, AuthView, AuthProvider } from './components/Logi
 export { Menu } from './components/Menu';
 export type { MenuProps, MenuItem } from './components/Menu';
 
+export { OTPInput } from './components/OTPInput';
+export type { OTPInputProps } from './components/OTPInput';
+
 export { Modal } from './components/Modal';
 export type { ModalProps } from './components/Modal';
 
 export { Navbar } from './components/Navbar';
 export type { NavbarProps, NavItem } from './components/Navbar';
+
+export { NotificationBadge } from './components/NotificationBadge';
+export type { NotificationBadgeProps } from './components/NotificationBadge';
 
 export { PageLayout } from './components/PageLayout';
 export type { PageLayoutProps } from './components/PageLayout';
@@ -158,6 +173,9 @@ export type { PaginationProps } from './components/Pagination';
 
 export { ProgressBar } from './components/ProgressBar';
 export type { ProgressBarProps } from './components/ProgressBar';
+
+export { Rating } from './components/Rating';
+export type { RatingProps } from './components/Rating';
 
 export { ResizablePanel } from './components/ResizablePanel';
 export type { ResizablePanelProps } from './components/ResizablePanel';
@@ -171,8 +189,14 @@ export type { SectionViewProps } from './components/SectionView';
 export { SegmentedButton } from './components/SegmentedButton';
 export type { SegmentedButtonProps, SegmentedButtonOption } from './components/SegmentedButton';
 
+export { Sidebar } from './components/Sidebar';
+export type { SidebarProps, SidebarItem } from './components/Sidebar';
+
 export { Skeleton } from './components/Skeleton';
 export type { SkeletonProps } from './components/Skeleton';
+
+export { SplitButton } from './components/SplitButton';
+export type { SplitButtonProps, SplitButtonOption } from './components/SplitButton';
 
 export { SlideSheet } from './components/SlideSheet';
 export type { SlideSheetProps } from './components/SlideSheet';
@@ -195,6 +219,9 @@ export type { TextAreaProps } from './components/TextArea';
 export { TextBox } from './components/TextBox';
 export type { TextBoxProps } from './components/TextBox';
 
+export { Timeline } from './components/Timeline';
+export type { TimelineProps, TimelineItem } from './components/Timeline';
+
 export { Toast, ToastProvider, useToast, ToastContext } from './components/Toast';
 export type { ToastProps, ToastOptions, ToastPosition } from './components/Toast';
 
@@ -206,6 +233,12 @@ export type { TreeListProps, TreeNode } from './components/TreeList';
 
 export { VisuallyHidden } from './components/VisuallyHidden';
 export type { VisuallyHiddenProps } from './components/VisuallyHidden';
+
+export { CommandPalette } from './components/CommandPalette';
+export type { CommandPaletteProps, CommandGroup, CommandItem } from './components/CommandPalette';
+
+export { DiffViewer } from './components/DiffViewer';
+export type { DiffViewerProps } from './components/DiffViewer';
 
 export {
   useDisclosure,

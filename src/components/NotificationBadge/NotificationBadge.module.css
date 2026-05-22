@@ -1,0 +1,53 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--azimuth-radius-full);
+  font-weight: 600;
+  line-height: 1;
+  min-width: 1lh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.sm { font-size: var(--azimuth-fs-xs); padding: 2px 5px; }
+.md { font-size: var(--azimuth-fs-xs); padding: 3px 6px; }
+
+.dotMode {
+  min-width: unset;
+  padding: 0;
+  border-radius: var(--azimuth-radius-full);
+}
+
+.sm.dotMode {
+  width: 8px;
+  height: 8px;
+}
+
+.md.dotMode {
+  width: 8px;
+  height: 8px;
+}
+
+.accent {
+  background: var(--azimuth-color-accent);
+  color: var(--azimuth-color-on-accent);
+}
+
+.danger {
+  background: var(--azimuth-color-error-text);
+  color: var(--azimuth-color-bg);
+}
+
+.neutral {
+  background: var(--azimuth-color-text-muted);
+  color: var(--azimuth-color-bg);
+}

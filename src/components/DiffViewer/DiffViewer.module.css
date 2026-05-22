@@ -1,0 +1,106 @@
+.root {
+  font-family: var(--azimuth-font-mono);
+  font-size: var(--azimuth-fs-xs);
+  line-height: var(--azimuth-lh-base);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-sm);
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  border-bottom: 1px solid var(--azimuth-color-border);
+  background: var(--azimuth-color-bg);
+  font-family: var(--azimuth-font-body);
+}
+
+.language {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+  margin-right: auto;
+}
+
+.additions {
+  font-size: var(--azimuth-fs-xs);
+  font-weight: 600;
+  color: var(--azimuth-color-success-text);
+}
+
+.deletions {
+  font-size: var(--azimuth-fs-xs);
+  font-weight: 600;
+  color: var(--azimuth-color-error-text);
+}
+
+.codeArea {
+  overflow-y: auto;
+}
+
+.line {
+  display: flex;
+  min-height: 1.6em;
+  line-height: 1.6;
+}
+
+.lineNum {
+  flex-shrink: 0;
+  min-width: 40px;
+  padding-right: var(--azimuth-space-sm);
+  text-align: right;
+  color: var(--azimuth-color-text-muted);
+  user-select: none;
+}
+
+.content {
+  padding-left: var(--azimuth-space-sm);
+  white-space: pre;
+  flex: 1;
+}
+
+.prefix {
+  user-select: none;
+  display: inline-block;
+  width: 1ch;
+}
+
+.added {
+  background: var(--azimuth-color-success-bg);
+  border-left: 3px solid var(--azimuth-color-success-text);
+}
+
+.removed {
+  background: var(--azimuth-color-error-bg);
+  border-left: 3px solid var(--azimuth-color-error-text);
+}
+
+.splitView {
+  display: flex;
+  overflow-x: auto;
+}
+
+.splitColumn {
+  width: 50%;
+  min-width: 0;
+}
+
+.splitColumn:first-child {
+  border-right: 1px solid var(--azimuth-color-border);
+}
+
+.columnHeader {
+  position: sticky;
+  top: 0;
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--azimuth-color-text-muted);
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  background: var(--azimuth-color-bg);
+  border-bottom: 1px solid var(--azimuth-color-border);
+  z-index: 1;
+}
