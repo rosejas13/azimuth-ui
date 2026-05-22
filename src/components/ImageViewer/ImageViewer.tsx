@@ -55,11 +55,11 @@ export const ImageViewer = forwardRef<HTMLDivElement, ImageViewerProps>(
     }, [open, index]);
 
     const goNext = useCallback(() => {
-      setIndex((i) => (i + 1) % images.length);
+      setIndex((i) => (i + 1) % ((images ?? []).length || 1));
     }, [images.length]);
 
     const goPrev = useCallback(() => {
-      setIndex((i) => (i - 1 + images.length) % images.length);
+      setIndex((i) => (i - 1 + ((images ?? []).length || 1)) % ((images ?? []).length || 1));
     }, [images.length]);
 
     const goTo = useCallback((i: number) => {
@@ -92,9 +92,9 @@ export const ImageViewer = forwardRef<HTMLDivElement, ImageViewerProps>(
       };
     }, [open]);
 
-    if (!open || images.length === 0) return null;
+    if (!open || (images ?? []).length === 0) return null;
 
-    const current = images[index];
+    const current = (images ?? [])[index];
 
     const handleImageLoad = () => setLoadState('loaded');
     const handleImageError = () => setLoadState('error');
@@ -124,7 +124,7 @@ export const ImageViewer = forwardRef<HTMLDivElement, ImageViewerProps>(
           {index + 1} / {images.length}
         </span>
 
-        {images.length > 1 && (
+        {(images ?? []).length > 1 && (
           <button
             type="button"
             className={cn(styles.navButton, styles.navPrev)}
@@ -165,7 +165,7 @@ export const ImageViewer = forwardRef<HTMLDivElement, ImageViewerProps>(
           </div>
         </div>
 
-        {images.length > 1 && (
+        {(images ?? []).length > 1 && (
           <button
             type="button"
             className={cn(styles.navButton, styles.navNext)}
@@ -176,7 +176,7 @@ export const ImageViewer = forwardRef<HTMLDivElement, ImageViewerProps>(
           </button>
         )}
 
-        {showThumbnails && images.length > 1 && (
+        {showThumbnails && (images ?? []).length > 1 && (
           <div className={styles.thumbnails}>
             {images.map((img, i) => (
               <button

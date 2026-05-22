@@ -187,7 +187,7 @@ export const SplitButton = forwardRef<HTMLDivElement, SplitButtonProps>(
             className={styles.menu}
             role="menu"
           >
-            {options.map((option) => (
+            {(options ?? []).map((option) => (
               <button
                 key={option.key}
                 type="button"

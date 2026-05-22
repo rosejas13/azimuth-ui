@@ -308,7 +308,7 @@ export const TreeList = forwardRef<HTMLDivElement, TreeListProps>(
         onKeyDown={handleKeyDown}
         {...props}
       >
-        {renderTree(data, 0)}
+        {renderTree(data ?? [], 0)}
       </div>
     );
   },

@@ -108,7 +108,7 @@ export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
               )}
               role="menu"
             >
-              {options.map((option, index) => (
+              {(options ?? []).map((option, index) => (
                 <button
                   key={option.key}
                   type="button"

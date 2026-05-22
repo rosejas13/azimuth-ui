@@ -46,7 +46,7 @@ export const SegmentedButton = forwardRef<HTMLDivElement, SegmentedButtonProps>(
   ) => {
     const isControlled = valueProp !== undefined;
     const [internalValue, setInternalValue] = useState(
-      defaultValue ?? options[0]?.value ?? '',
+      defaultValue ?? (options ?? [])[0]?.value ?? '',
     );
     const selectedValue = isControlled ? valueProp : internalValue;
     const buttonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
@@ -63,7 +63,7 @@ export const SegmentedButton = forwardRef<HTMLDivElement, SegmentedButtonProps>(
 
     const handleKeyDown = useCallback(
       (e: KeyboardEvent<HTMLDivElement>) => {
-        const enabledOptions = options.filter((o) => !o.disabled);
+        const enabledOptions = (options ?? []).filter((o) => !o.disabled);
         if (enabledOptions.length === 0) return;
 
         const currentIndex = enabledOptions.findIndex(
@@ -104,10 +104,10 @@ export const SegmentedButton = forwardRef<HTMLDivElement, SegmentedButtonProps>(
         onKeyDown={handleKeyDown}
         {...props}
       >
-        {options.map((option, index) => {
+        {(options ?? []).map((option, index) => {
           const isSelected = selectedValue === option.value;
           const isFirst = index === 0;
-          const isLast = index === options.length - 1;
+          const isLast = index === (options ?? []).length - 1;
 
           return (
             <button

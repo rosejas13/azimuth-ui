@@ -59,7 +59,7 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
     const filtered = useMemo(() => {
       if (!query.trim()) return groups;
       const q = query.toLowerCase();
-      return groups
+      return (groups ?? [])
         .map((g) => ({
           ...g,
           items: g.items.filter((item) => {

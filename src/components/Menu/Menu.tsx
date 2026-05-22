@@ -49,7 +49,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
 
     activeIndexRef.current = activeIndex;
 
-    const clickableItems = items.filter((item) => !item.separator);
+    const clickableItems = (items ?? []).filter((item) => !item.separator);
 
     const close = useCallback(() => {
       setOpen(false);
@@ -270,7 +270,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
         {open && (
           <div style={panelStyle}>
             <div className={styles.panel} role="menu">
-            {items.map((item) => {
+            {(items ?? []).map((item) => {
               if (item.separator) {
                 return (
                   <div

@@ -23,13 +23,14 @@ export const Breadcrumbs = forwardRef<HTMLElement, BreadcrumbsProps>(
     },
     ref,
   ) => {
+    const safeItems = items ?? [];
     let visibleItems: Array<{ label: string; href?: string } | null>;
 
-    if (maxItems > 0 && items.length > maxItems) {
+    if (maxItems > 0 && safeItems.length > maxItems) {
       const endCount = maxItems - 2;
-      visibleItems = [items[0], null, ...items.slice(items.length - endCount)];
+      visibleItems = [safeItems[0], null, ...safeItems.slice(safeItems.length - endCount)];
     } else {
-      visibleItems = [...items];
+      visibleItems = [...safeItems];
     }
 
     return (

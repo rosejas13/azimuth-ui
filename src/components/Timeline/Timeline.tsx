@@ -32,7 +32,7 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
         )}
         {...props}
       >
-        {items.map((item) => (
+        {(items ?? []).map((item) => (
           <div
             key={item.id}
             className={cn(
