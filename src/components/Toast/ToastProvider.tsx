@@ -83,6 +83,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         <div
           key={pos}
           className={cn(styles.toastContainer, styles[POSITION_TO_CLASS[pos]])}
+          aria-live="polite"
         >
           {grouped[pos].map((item) => {
             const animIn = getAnimIn(pos);

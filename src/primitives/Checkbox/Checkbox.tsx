@@ -46,6 +46,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           if (typeof ref === 'function') ref(el);
           else if (ref) ref.current = el;
           if (el) el.indeterminate = indeterminate;
+          // indeterminate is not settable via HTML attribute; must be set imperatively on the DOM element
         }}
       />
         {labelContent && <span className={styles.label}>{labelContent}</span>}

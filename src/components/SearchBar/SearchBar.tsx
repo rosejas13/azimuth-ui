@@ -221,6 +221,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
             ref={ref}
             type="text"
             role="searchbox"
+            aria-label="Search"
             className={styles.input}
             value={currentValue}
             onChange={handleChange}
