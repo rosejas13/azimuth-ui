@@ -132,7 +132,7 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
       }
 
       const weeks: Array<typeof cells> = [];
-      for (let i = firstWeekDay; i < cells.length; i += 7) {
+      for (let i = 0; i < cells.length; i += 7) {
         weeks.push(cells.slice(i, i + 7));
       }
       return weeks;
