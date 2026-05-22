@@ -82,7 +82,22 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
     const rangeValue = isControlled ? controlledValue : internalValue;
 
     const [openPicker, setOpenPicker] = useState<'start' | 'end' | null>(null);
+    const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
     const wrapperRef = useRef<HTMLDivElement>(null);
+    const startRef = useRef<HTMLInputElement>(null);
+    const endRef = useRef<HTMLInputElement>(null);
+
+    const updatePopupPosition = useCallback((which: 'start' | 'end') => {
+      const inputRef = which === 'start' ? startRef : endRef;
+      if (!inputRef.current) return;
+      const rect = inputRef.current.getBoundingClientRect();
+      setPopupStyle({
+        position: 'fixed',
+        top: rect.bottom + 4,
+        left: rect.left,
+        zIndex: 500,
+      });
+    }, []);
 
     const setRangeValue = useCallback(
       (range: DateRange) => {
@@ -93,6 +108,18 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
       },
       [isControlled, onChange],
     );
+
+    useEffect(() => {
+      if (!openPicker) return;
+      const which = openPicker;
+      function handler() { updatePopupPosition(which); }
+      window.addEventListener('scroll', handler, true);
+      window.addEventListener('resize', handler);
+      return () => {
+        window.removeEventListener('scroll', handler, true);
+        window.removeEventListener('resize', handler);
+      };
+    }, [openPicker, updatePopupPosition]);
 
     useEffect(() => {
       const handleClickOutside = (e: MouseEvent) => {
@@ -236,6 +263,7 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
       return (
         <div className={styles.field}>
           <input
+            ref={which === 'start' ? startRef : endRef}
             type="text"
             className={cn(
               styles.input,
@@ -244,11 +272,11 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
             )}
             value={formatDate(value, includeTime)}
             placeholder={placeholder}
-            onFocus={() => setOpenPicker(which)}
+            onFocus={() => { updatePopupPosition(which); setOpenPicker(which); }}
             readOnly
           />
           {openPicker === which && (
-            <div className={styles.popup}>
+            <div className={cn(styles.popup, styles.popupCalendar)} style={popupStyle}>
               <Calendar
                 value={value ?? undefined}
                 onChange={handleDateSelect(which)}
