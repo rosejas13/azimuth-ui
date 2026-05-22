@@ -9,6 +9,9 @@ import {
   SectionView, SegmentedButton, Kbd, TextArea, TextBox, PageLayout,
   ResizablePanel, TreeList, DropdownList, LoginSignup, Chat, FileUpload,
   SlideSheet, Icon, useToast,
+  Rating, Timeline, NotificationBadge, OTPInput, SplitButton,
+  BreadcrumbPageHeader, Combobox, Sidebar, ColorPicker,
+  CommandPalette, DiffViewer,
 } from '../src';
 import { COMPONENT_DATA, type ComponentDoc } from './component-data';
 import { Playground } from './Playground';
@@ -458,6 +461,85 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
         <Icon size="lg"><span>icon</span></Icon>
         <Icon size="xl"><span>icon</span></Icon>
       </Stack>
+    ),
+    Rating: <Rating onChange={() => {}} />,
+    Timeline: (
+      <Timeline
+        items={[
+          { id: '1', title: 'Event 1', date: '2026', description: 'First event.' },
+          { id: '2', title: 'Event 2', date: '2026', description: 'Second event.' },
+          { id: '3', title: 'Event 3', date: '2026', description: 'Third event.' },
+        ]}
+      />
+    ),
+    NotificationBadge: (
+      <Stack direction="horizontal" spacing="xl" align="center">
+        <NotificationBadge count={5}>
+          <Button variant="secondary" size="sm">Inbox</Button>
+        </NotificationBadge>
+        <NotificationBadge count={120} max={99}>
+          <Button variant="secondary" size="sm">Notifications</Button>
+        </NotificationBadge>
+        <NotificationBadge dot>
+          <Button variant="secondary" size="sm">Alerts</Button>
+        </NotificationBadge>
+      </Stack>
+    ),
+    OTPInput: <OTPInput length={4} onChange={() => {}} />,
+    SplitButton: (
+      <SplitButton
+        label="Save"
+        onClick={() => {}}
+        options={[
+          { key: 'save-as', label: 'Save As' },
+          { key: 'export', label: 'Export' },
+        ]}
+      />
+    ),
+    BreadcrumbPageHeader: (
+      <BreadcrumbPageHeader
+        title="Page Title"
+        description="Page description text."
+        breadcrumbs={[{ label: 'Home' }, { label: 'Section' }, { label: 'Current' }]}
+        actions={<Button size="sm">Action</Button>}
+      />
+    ),
+    Combobox: (
+      <Combobox
+        options={[
+          { value: 'react', label: 'React' },
+          { value: 'vue', label: 'Vue' },
+          { value: 'svelte', label: 'Svelte' },
+        ]}
+        onChange={() => {}}
+        onSelect={() => {}}
+        label="Framework"
+      />
+    ),
+    Sidebar: (
+      <div style={{ height: '200px', border: '1px solid var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-md)', overflow: 'hidden' }}>
+        <Sidebar
+          header={<Text weight="bold" size="sm" style={{ padding: 'var(--azimuth-space-sm)' }}>Logo</Text>}
+          items={[
+            { key: 'a', label: 'Home', icon: <span>H</span> },
+            { key: 'b', label: 'Settings', icon: <span>S</span>, badge: 3 },
+          ]}
+          activeKey="a"
+          onSelect={() => {}}
+        />
+      </div>
+    ),
+    ColorPicker: <ColorPicker value="#2563eb" presets={['#2563eb', '#e8734a', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']} onChange={() => {}} />,
+    CommandPalette: (
+      <Button variant="secondary" size="sm" onClick={() => {}}>Press Ctrl+K to open</Button>
+    ),
+    DiffViewer: (
+      <DiffViewer
+        oldCode="const x = 1;\nconst y = 2;"
+        newCode="const x = 2;\nconst y = 3;\nconst z = 4;"
+        language="js"
+        maxHeight="150px"
+      />
     ),
   };
 

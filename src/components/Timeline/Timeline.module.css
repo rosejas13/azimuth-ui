@@ -1,0 +1,113 @@
+.timeline {
+  position: relative;
+  padding-left: var(--azimuth-space-xl);
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--azimuth-color-border);
+}
+
+.item {
+  position: relative;
+  padding-bottom: var(--azimuth-space-lg);
+}
+
+.item:last-child {
+  padding-bottom: 0;
+}
+
+.dot {
+  position: absolute;
+  left: calc(-1 * var(--azimuth-space-xl) + 5px - 6px);
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--azimuth-radius-full);
+  background: var(--azimuth-color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--azimuth-color-on-accent);
+  font-size: var(--azimuth-fs-xs);
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--azimuth-space-sm);
+  margin-bottom: var(--azimuth-space-xs);
+}
+
+.title {
+  font-weight: 600;
+  font-size: var(--azimuth-fs-base);
+  color: var(--azimuth-color-text);
+}
+
+.date {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+  white-space: nowrap;
+}
+
+.description {
+  margin: 0;
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text-secondary);
+  line-height: var(--azimuth-lh-base);
+}
+
+.content {
+  padding-left: var(--azimuth-space-sm);
+}
+
+.alternating {
+  padding-left: 0;
+}
+
+.alternating::before {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.alternating .item {
+  width: 50%;
+  padding-left: var(--azimuth-space-xl);
+  padding-right: var(--azimuth-space-lg);
+}
+
+.alternating .item:nth-child(odd) {
+  margin-left: 0;
+}
+
+.alternating .item:nth-child(even) {
+  margin-left: 50%;
+  padding-left: var(--azimuth-space-lg);
+  padding-right: var(--azimuth-space-xl);
+}
+
+.alternating .dot {
+  left: -6px;
+}
+
+.alternating .item:nth-child(even) .dot {
+  left: auto;
+  right: -6px;
+}
+
+.alternating .item:nth-child(even)::before {
+  display: none;
+}
