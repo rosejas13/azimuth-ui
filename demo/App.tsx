@@ -467,6 +467,7 @@ function ProductsPage({ onProductDetails }: { onProductDetails: (p: Product) => 
                   ]}
                   data={filtered as any}
                   searchable
+                  searchColumnSelector
                   searchPlaceholder="Search table..."
                   pageSize={5}
                   pageSizeOptions={[3, 5, 10]}
