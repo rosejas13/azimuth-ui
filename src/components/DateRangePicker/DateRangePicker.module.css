@@ -78,15 +78,11 @@
 }
 
 .popup {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 50;
-  margin-top: var(--azimuth-space-xs);
-  box-shadow: var(--azimuth-shadow-lg);
-  border-radius: var(--azimuth-radius-md);
   background: var(--azimuth-color-surface);
   border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-md);
+  box-shadow: var(--azimuth-shadow-md);
+  min-width: 280px;
   overflow: hidden;
 }
 
