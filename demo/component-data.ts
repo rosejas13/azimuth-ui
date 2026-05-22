@@ -10,6 +10,7 @@ export interface ComponentDoc {
 
 export const COMPONENT_DATA: ComponentDoc[] = [
   {
+    name: 'Accordion',
     description: 'A grouped set of collapsible sections where only one is open at a time.',
     category: 'composite',
     features: ['Single open section at a time', 'Smooth expand animation', 'Chevron rotate indicator', 'Bordered and default variants', 'Disabled section support'],
