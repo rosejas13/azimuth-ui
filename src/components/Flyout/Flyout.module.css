@@ -10,7 +10,7 @@
 
 .panel {
   position: absolute;
-  z-index: 100;
+  z-index: 500;
   background: var(--azimuth-color-surface);
   border: 1px solid var(--azimuth-color-border);
   border-radius: var(--azimuth-radius);
