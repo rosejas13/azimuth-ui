@@ -1462,4 +1462,45 @@ export const COMPONENT_DATA: ComponentDoc[] = [
       { name: '--azimuth-color-accent', description: 'Secondary chart color.' },
     ],
   },
+
+  {
+    name: 'Cursor',
+    description: 'Sets the CSS cursor on child elements. Also provides a useCursor hook for global cursor control.',
+    category: 'composite',
+    features: ['16 cursor values', 'useCursor hook for global cursor', 'Inline style for cursor property'],
+    variants: ['pointer', 'default', 'not-allowed', 'text', 'move', 'wait', 'grab', 'grabbing', 'crosshair', 'help', 'none', 'col-resize', 'row-resize'],
+    props: [
+      { name: 'cursor', type: "CursorValue", default: "'default'", description: 'CSS cursor value to apply.' },
+    ],
+    cssVars: [],
+  },
+  {
+    name: 'Toast',
+    description: 'A notification toast with multiple variants, auto-dismiss, and expandable body.',
+    category: 'composite',
+    features: ['Multiple visual variants', 'Auto-dismiss with configurable timeout', 'Dismiss button', 'Expandable body', 'Used via ToastProvider + useToast'],
+    variants: ['info', 'success', 'warning', 'error'],
+    props: [
+      { name: 'variant', type: "'info' | 'success' | 'warning' | 'error'", default: "'info'", description: 'Color variant.' },
+      { name: 'title', type: 'string', description: 'Title text.' },
+      { name: 'message', type: 'string', description: 'Optional body text.' },
+      { name: 'dismissible', type: 'boolean', default: 'false', description: 'Show dismiss button.' },
+      { name: 'onDismiss', type: '() => void', description: 'Callback on dismiss.' },
+      { name: 'autoDismiss', type: 'number', description: 'Auto-dismiss delay in ms.' },
+      { name: 'expandable', type: 'boolean', default: 'false', description: 'Allow expandable content.' },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-success-bg', description: 'Success background.' },
+      { name: '--azimuth-color-error-bg', description: 'Error background.' },
+    ],
+  },
+  {
+    name: 'VisuallyHidden',
+    description: 'Hides content visually while keeping it accessible to screen readers.',
+    category: 'composite',
+    features: ['Screen-reader-only content', 'Visually hidden but in accessibility tree', 'Uses absolute positioning with clip pattern'],
+    variants: [],
+    props: [],
+    cssVars: [],
+  },
 ];

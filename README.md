@@ -48,9 +48,9 @@ function App() {
 
 `Container` `Divider` `Grid` `Stack`
 
-### Components (64)
+### Components (67)
 
-`Accordion` `Alert` `Avatar` `Badge` `BreadcrumbPageHeader` `Breadcrumbs` `Calendar` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `ColorPicker` `Combobox` `CommandPalette` `Cursor` `DataTable` `DateRangePicker` `DateTimePicker` `Dialog` `DiffViewer` `Drawer` `DropdownList` `EmptyState` `ErrorPage` `FanMenu` `FileUpload` `Flyout` `Form` `ImageViewer` `InputGroup` `Kbd` `List` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `Menu` `Modal` `Navbar` `NotificationBadge` `OTPInput` `PageLayout` `Pagination` `ProgressBar` `Rating` `ResizablePanel` `SearchBar` `SectionView` `SegmentedButton` `Select` `Sidebar` `Skeleton` `SlideSheet` `Slider` `SimpleChart` `SplitButton` `Stack` `Table` `Tabs` `Tag` `TextArea` `TextBox` `Timeline` `Toast` `Tooltip` `TreeList` `VisuallyHidden`
+`Accordion` `Alert` `Avatar` `Badge` `BreadcrumbPageHeader` `Breadcrumbs` `Calendar` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `ColorPicker` `Combobox` `CommandPalette` `Cursor` `DataTable` `DateRangePicker` `DateTimePicker` `Dialog` `DiffViewer` `Drawer` `DropdownList` `EmptyState` `ErrorPage` `FanMenu` `FileUpload` `Flyout` `Form` `ImageViewer` `InputGroup` `Kbd` `List` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `Menu` `Modal` `Navbar` `NotificationBadge` `OTPInput` `PageLayout` `Pagination` `ProgressBar` `Rating` `ResizablePanel` `SearchBar` `SectionView` `SegmentedButton` `Sidebar` `SimpleChart` `Skeleton` `SlideSheet` `Slider` `SplitButton` `Table` `Tabs` `Tag` `TextArea` `TextBox` `Timeline` `Toast` `Tooltip` `TreeList` `VisuallyHidden`
 
 ## Quick Start
 
