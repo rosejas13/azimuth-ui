@@ -39,6 +39,8 @@ export interface DataTableProps<T>
   /** @default 'Search...' */
   searchPlaceholder?: string;
   searchColumns?: string[];
+  /** @default false */
+  searchColumnSelector?: boolean;
   actions?: React.ReactNode;
   /** @default false */
   editable?: boolean;
@@ -80,6 +82,7 @@ function DataTableInner<T>(
     searchable = false,
     searchPlaceholder = 'Search...',
     searchColumns,
+    searchColumnSelector = false,
     actions,
     editable = false,
     onEdit,
@@ -95,6 +98,7 @@ function DataTableInner<T>(
   const id = useId();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchColumnFilter, setSearchColumnFilter] = useState<string>('all');
   const [sortState, setSortState] = useState<SortState | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -104,11 +108,18 @@ function DataTableInner<T>(
   );
   const currentPageSize = isPageSizeControlled ? controlledPageSize : internalPageSize;
 
-  const searchableCols = useMemo(() => {
-    if (onSearch) return [];
+  const allSearchableCols = useMemo(() => {
     if (searchColumns) return searchColumns;
     return columns.filter((c) => c.searchable !== false).map((c) => c.key);
-  }, [columns, searchColumns, onSearch]);
+  }, [columns, searchColumns]);
+
+  const searchableCols = useMemo(() => {
+    if (onSearch) return [];
+    if (searchColumnFilter === 'all') return allSearchableCols;
+    const col = columns.find((c) => c.key === searchColumnFilter);
+    if (col && (col.searchable ?? true)) return [searchColumnFilter];
+    return [];
+  }, [onSearch, searchColumnFilter, allSearchableCols, columns]);
 
   const allRows: IndexedRow<T>[] = useMemo(
     () => data.map((row, i) => ({ row, index: i })),
@@ -208,6 +219,7 @@ function DataTableInner<T>(
   );
 
   const showSearch = searchable || onSearch !== undefined;
+  const showColumnSelector = searchColumnSelector && showSearch && !onSearch;
   const hasHeader = !!(title || showSearch || actions);
 
   const pageNumbers = useMemo(() => {
@@ -229,13 +241,24 @@ function DataTableInner<T>(
             {title && <h3 className={styles.title}>{title}</h3>}
             <div className={styles.headerActions}>
               {showSearch && (
-                <input
-                  type="text"
-                  className={styles.search}
-                  placeholder={searchPlaceholder}
-                  disabled
-                  aria-label="Search"
-                />
+                <>
+                  <input
+                    type="text"
+                    className={styles.search}
+                    placeholder={searchPlaceholder}
+                    disabled
+                    aria-label="Search"
+                  />
+                  {showColumnSelector && (
+                    <select
+                      className={styles.columnSelect}
+                      disabled
+                      aria-label="Select column to search"
+                    >
+                      <option value="all">All</option>
+                    </select>
+                  )}
+                </>
               )}
               {actions}
             </div>
@@ -256,13 +279,24 @@ function DataTableInner<T>(
             {title && <h3 className={styles.title}>{title}</h3>}
             <div className={styles.headerActions}>
               {showSearch && (
-                <input
-                  type="text"
-                  className={styles.search}
-                  placeholder={searchPlaceholder}
-                  disabled
-                  aria-label="Search"
-                />
+                <>
+                  <input
+                    type="text"
+                    className={styles.search}
+                    placeholder={searchPlaceholder}
+                    disabled
+                    aria-label="Search"
+                  />
+                  {showColumnSelector && (
+                    <select
+                      className={styles.columnSelect}
+                      disabled
+                      aria-label="Select column to search"
+                    >
+                      <option value="all">All</option>
+                    </select>
+                  )}
+                </>
               )}
               {actions}
             </div>
@@ -280,19 +314,39 @@ function DataTableInner<T>(
       {hasHeader && (
         <div className={styles.header}>
           {title && <h3 className={styles.title}>{title}</h3>}
-          <div className={styles.headerActions}>
-            {showSearch && (
-              <input
-                type="text"
-                className={styles.search}
-                placeholder={searchPlaceholder}
-                value={searchQuery}
-                onChange={handleSearchChange}
-                aria-label="Search"
-              />
-            )}
-            {actions}
-          </div>
+            <div className={styles.headerActions}>
+              {showSearch && (
+                <>
+                  <input
+                    type="text"
+                    className={styles.search}
+                    placeholder={searchPlaceholder}
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    aria-label="Search"
+                  />
+                  {showColumnSelector && (
+                    <select
+                      className={styles.columnSelect}
+                      value={searchColumnFilter}
+                      onChange={(e) => {
+                        setSearchColumnFilter(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                      aria-label="Select column to search"
+                    >
+                      <option value="all">All</option>
+                      {columns.map((col) => (
+                        <option key={col.key} value={col.key}>
+                          {col.title}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </>
+              )}
+              {actions}
+            </div>
         </div>
       )}
 

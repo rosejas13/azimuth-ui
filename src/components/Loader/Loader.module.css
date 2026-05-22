@@ -1,9 +1,11 @@
 .loader {
-  display: inline-flex;
-  flex-direction: column;
+  display: flex;
   align-items: center;
-  justify-content: center;
   gap: var(--azimuth-space-sm);
+}
+
+.withLabel {
+  flex-direction: column;
 }
 
 .circle {

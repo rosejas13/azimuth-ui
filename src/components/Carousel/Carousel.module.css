@@ -75,12 +75,10 @@
 }
 
 .dots {
-  position: absolute;
-  bottom: var(--azimuth-space-md);
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
+  justify-content: center;
   gap: var(--azimuth-space-xs);
+  margin-top: var(--azimuth-space-md);
 }
 
 .dot {

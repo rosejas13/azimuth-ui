@@ -249,7 +249,13 @@ export const Clock = forwardRef<HTMLDivElement, ClockProps>(
     const [timePart, ampm] = format === '12h'
       ? [timeStr.slice(0, -3), timeStr.slice(-2)]
       : [timeStr, ''];
-    const [h1, h2, , m1, m2] = timePart.replace(':', '');
+    const [hoursStr, minutesStr = ''] = timePart.split(':');
+    const paddedHours = hoursStr.padStart(2, '0');
+    const paddedMinutes = minutesStr.padStart(2, '0');
+    const h1 = paddedHours[0];
+    const h2 = paddedHours[1];
+    const m1 = paddedMinutes[0];
+    const m2 = paddedMinutes[1];
 
     return (
       <div

@@ -1,15 +1,19 @@
 .skeleton {
   display: block;
   border-radius: var(--azimuth-radius-sm);
-  background: var(--azimuth-color-border);
-  background-image: linear-gradient(
+  background: linear-gradient(
     90deg,
-    transparent 0%,
-    rgb(255 255 255 / 0.3) 50%,
-    transparent 100%
+    var(--azimuth-color-surface-hover) 0%,
+    var(--azimuth-color-surface) 50%,
+    var(--azimuth-color-surface-hover) 100%
   );
-  background-size: 200% 100%;
-  animation: azimuth-shimmer 1.5s ease infinite;
+  background-size: 200px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
 }
 
 .text {

@@ -221,7 +221,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
             ref={ref}
             type="text"
             role="searchbox"
-            aria-label="Search"
+            aria-label={placeholder}
             className={styles.input}
             value={currentValue}
             onChange={handleChange}
@@ -231,9 +231,9 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
                 setShowSuggestions(true);
               }
             }}
-            placeholder={placeholder}
             disabled={disabled}
             {...props}
+            placeholder={placeholder}
           />
           {clearable && hasValue && !disabled && (
             <button
