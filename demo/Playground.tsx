@@ -1,14 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import {
-  Button, Text, Stack, Card, Alert, Toast,
+  Button, Text, Stack, Card,
 } from '../src';
 import { componentMap } from './componentMap';
 import type { ComponentDoc } from './component-data';
 
 function generateDefaultCode(componentName: string): string {
   const templates: Record<string, string> = {
-    Button: `// Try changing variant to 'secondary', 'danger', etc.
-return React.createElement(Button, { variant: 'primary', size: 'md' }, 'Click Me')`,
+    Button: `return React.createElement(Button, { variant: 'primary', size: 'md' }, 'Click Me')`,
     Text: `return React.createElement(Text, { size: 'h2', color: 'primary' }, 'Heading Text')`,
     Badge: `return React.createElement(Badge, { variant: 'accent' }, 'New')`,
     Tag: `return React.createElement(Tag, { variant: 'success' }, 'Approved')`,
@@ -22,54 +21,25 @@ return React.createElement(Button, { variant: 'primary', size: 'md' }, 'Click Me
     Loader: `return React.createElement(Loader, { variant: 'circle', size: 'md', label: 'Loading...' })`,
     Avatar: `return React.createElement(Avatar, { fallback: 'JD', size: 'lg' })`,
     Alert: `return React.createElement(Alert, { variant: 'info', title: 'Notice' }, 'This is an informational alert.')`,
-    Card: `return React.createElement(Card, { header: React.createElement(Text, { weight: 'semibold' }, 'Card Title') },
-  React.createElement(Text, { size: 'sm', color: 'secondary' }, 'Card body content here.')
-)`,
+    Card: `return React.createElement(Card, { header: React.createElement(Text, { weight: 'semibold' }, 'Card Title') }, React.createElement(Text, { size: 'sm', color: 'secondary' }, 'Card body content here.'))`,
     Kbd: `return React.createElement(Kbd, null, 'Ctrl + K')`,
     Skeleton: `return React.createElement(Skeleton, { width: '60%', height: '16px' })`,
     Toast: `return React.createElement(Toast, { title: 'Notification', message: 'This is a toast message.', variant: 'info' })`,
-    Dialog: `return React.createElement(Dialog, { open: true, onClose: () => {}, title: 'Confirm', description: 'Are you sure?', confirmLabel: 'Yes', cancelLabel: 'No' })`,
-    Tooltip: `return React.createElement(Tooltip, { content: 'Tooltip text', position: 'top' },
-  React.createElement(Button, { variant: 'secondary', size: 'sm' }, 'Hover me')
-)`,
-    Table: `return React.createElement(Table, { striped: true, size: 'sm' },
-  React.createElement(Table.Head, null,
-    React.createElement(Table.Row, null,
-      React.createElement(Table.HeadCell, null, 'Name'),
-      React.createElement(Table.HeadCell, null, 'Status')
-    )
-  ),
-  React.createElement(Table.Body, null,
-    React.createElement(Table.Row, null,
-      React.createElement(Table.Cell, null, 'Alice'),
-      React.createElement(Table.Cell, null, 'Active')
-    )
-  )
-)`,
-    List: `return React.createElement(List, { bulleted: true },
-  React.createElement(List.Item, null, 'First'),
-  React.createElement(List.Item, null, 'Second')
-)`,
-    Stack: `return React.createElement(Stack, { spacing: 'md' },
-  React.createElement(Badge, { variant: 'info' }, 'One'),
-  React.createElement(Badge, { variant: 'success' }, 'Two')
-)`,
-    Grid: `return React.createElement(Grid, { cols: 2, gap: 'sm' },
-  React.createElement(Card, null, React.createElement(Text, null, 'A')),
-  React.createElement(Card, null, React.createElement(Text, null, 'B'))
-)`,
+    Table: `return React.createElement(Table, { striped: true, size: 'sm' }, React.createElement(Table.Head, null, React.createElement(Table.Row, null, React.createElement(Table.HeadCell, null, 'Name'), React.createElement(Table.HeadCell, null, 'Status'))), React.createElement(Table.Body, null, React.createElement(Table.Row, null, React.createElement(Table.Cell, null, 'Alice'), React.createElement(Table.Cell, null, 'Active'))))`,
+    List: `return React.createElement(List, { bulleted: true }, React.createElement(List.Item, null, 'First'), React.createElement(List.Item, null, 'Second'))`,
+    Stack: `return React.createElement(Stack, { spacing: 'md' }, React.createElement(Badge, { variant: 'info' }, 'One'), React.createElement(Badge, { variant: 'success' }, 'Two'))`,
+    Grid: `return React.createElement(Grid, { cols: 2, gap: 'sm' }, React.createElement(Card, null, React.createElement(Text, null, 'A')), React.createElement(Card, null, React.createElement(Text, null, 'B')))`,
   };
-  return templates[componentName] || `// Edit this code to customize the component
-return React.createElement(${componentName}, {}, '${componentName} component')`;
+  return templates[componentName] || `return React.createElement(${componentName}, {}, '${componentName} component')`;
 }
 
 function evaluateCode(codeStr: string, componentName: string): { result: React.ReactNode; error: string | null } {
   const Comp = componentMap[componentName];
   if (!Comp) return { result: null, error: `Component "${componentName}" is not available in the sandbox.` };
   try {
-    const fn = new Function('React', ...Object.keys(componentMap), codeStr);
-    const allComponents = { ...componentMap };
-    const result = fn(React, ...Object.values(componentMap));
+    const createElement = (...args: any[]) => args;
+    const fn = new Function('React', componentName, codeStr);
+    const result = fn({ createElement }, Comp);
     return { result: result as React.ReactNode, error: null };
   } catch (e: any) {
     return { result: null, error: e.message || String(e) };
@@ -80,7 +50,7 @@ export function Playground({ doc }: { doc: ComponentDoc }) {
   const [code, setCode] = useState('');
   const [output, setOutput] = useState<React.ReactNode>(null);
   const [error, setError] = useState<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const defaultCode = generateDefaultCode(doc.name);
@@ -107,7 +77,6 @@ export function Playground({ doc }: { doc: ComponentDoc }) {
   };
 
   const importCode = `import { ${doc.name} } from '@azimuth/ui';`;
-  const allImports = `import { ${doc.name}, Button, Text, Card, Badge, Grid, Stack, Alert } from '@azimuth/ui';`;
 
   return (
     <Stack spacing="lg">
