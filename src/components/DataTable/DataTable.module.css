@@ -108,16 +108,6 @@
   accent-color: var(--azimuth-color-primary);
 }
 
-.columnSelect:focus {
-  outline: none;
-  border-color: var(--azimuth-color-primary);
-}
-
-.columnSelect:focus {
-  outline: none;
-  border-color: var(--azimuth-color-primary);
-}
-
 .scrollWrapper {
   width: 100%;
   overflow-x: auto;
@@ -158,14 +148,6 @@
 
 .trClickable {
   cursor: pointer;
-}
-
-.trClickable td {
-  transition: background var(--azimuth-transition-fast);
-}
-
-.trClickable:hover td {
-  background: var(--azimuth-color-surface-hover);
 }
 
 .trClickable:focus-visible {

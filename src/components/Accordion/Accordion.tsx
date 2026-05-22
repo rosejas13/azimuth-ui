@@ -74,7 +74,7 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
         className={cn(styles.root, styles[variant], className)}
         {...props}
       >
-        {items.map((item) => {
+        {(items ?? []).map((item) => {
           const isOpen = openIds.has(item.id);
           const headerId = `${baseId}-header-${item.id}`;
           const panelId = `${baseId}-panel-${item.id}`;
