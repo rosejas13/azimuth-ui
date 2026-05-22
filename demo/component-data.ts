@@ -8,8 +8,7 @@ export interface ComponentDoc {
   cssVars: Array<{ name: string; description: string }>;
 }
 
-export const COMPONENT_DATA = [
-  {
+export const COMPONENT_DATA = [{
     name: 'Alert',
     description: 'A contextual notification banner with multiple severity levels, dismissible support, and auto-dismiss.',
     category: 'composite',
@@ -1461,5 +1460,4 @@ export const COMPONENT_DATA = [
       { name: '--azimuth-color-primary', description: 'Default chart color.' },
       { name: '--azimuth-color-accent', description: 'Secondary chart color.' },
     ],
-  },
-];
+  },];

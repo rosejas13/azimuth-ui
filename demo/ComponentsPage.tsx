@@ -591,7 +591,7 @@ export function ComponentsPage() {
   const [exitingAlerts, setExitingAlerts] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
-  const doc = COMPONENT_DATA.find((d: any) => d.name === selected) as ComponentDoc | undefined;
+  const doc = COMPONENT_DATA.filter(Boolean).find((d: any) => d.name === selected) as ComponentDoc | undefined;
   if (!doc) return <Text>Loading...</Text>;
 
   return (
