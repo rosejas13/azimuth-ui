@@ -8,9 +8,8 @@ export interface ComponentDoc {
   cssVars: Array<{ name: string; description: string }>;
 }
 
-export const COMPONENT_DATA: ComponentDoc[
-{
-    name: 'Accordion',
+export const COMPONENT_DATA: ComponentDoc[] = [
+  {
     description: 'A grouped set of collapsible sections where only one is open at a time.',
     category: 'composite',
     features: ['Single open section at a time', 'Smooth expand animation', 'Chevron rotate indicator', 'Bordered and default variants', 'Disabled section support'],
@@ -26,7 +25,6 @@ export const COMPONENT_DATA: ComponentDoc[
       { name: '--azimuth-color-primary', description: 'Active/expanded header color.' },
     ],
   },
-] = [
   {
     name: 'Alert',
     description: 'A contextual notification banner with multiple severity levels, dismissible support, and auto-dismiss.',
@@ -1502,3 +1500,4 @@ export const COMPONENT_DATA: ComponentDoc[
     props: [],
     cssVars: [],
   },
+];
