@@ -39,8 +39,9 @@ export const OTPInput = forwardRef<HTMLDivElement, OTPInputProps>(
 
     const getDigits = useCallback(() => {
       const arr: string[] = [];
+      const v = value ?? '';
       for (let i = 0; i < length; i++) {
-        arr.push(value[i] ?? '');
+        arr.push(v[i] ?? '');
       }
       return arr;
     }, [value, length]);
@@ -78,13 +79,13 @@ export const OTPInput = forwardRef<HTMLDivElement, OTPInputProps>(
     const handleKeyDown = useCallback(
       (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Backspace') {
-          if (!value[index] && index > 0) {
-            const digits = value.split('');
+          if (!(value ?? '')[index] && index > 0) {
+            const digits = (value ?? '').split('');
             digits[index - 1] = '';
             onChange?.(digits.join(''));
             focusInput(index - 1);
           } else {
-            const digits = value.split('');
+            const digits = (value ?? '').split('');
             digits[index] = '';
             onChange?.(digits.join(''));
           }

@@ -43,7 +43,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
   ) => {
     const id = useId();
     const isControlled = controlledTab !== undefined;
-    const firstEnabledTab = tabs.find((t) => !t.disabled)?.id ?? tabs[0]?.id ?? '';
+    const firstEnabledTab = (tabs ?? []).find((t) => !t.disabled)?.id ?? (tabs ?? [])[0]?.id ?? '';
     const initialTab = controlledTab ?? defaultTab ?? firstEnabledTab;
 
     const [internalTab, setInternalTab] = useState(initialTab);
@@ -54,7 +54,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
 
     const selectTab = useCallback(
       (tabId: string) => {
-        const tab = tabs.find((t) => t.id === tabId);
+        const tab = (tabs ?? []).find((t) => t.id === tabId);
         if (!tab || tab.disabled) return;
 
         if (!isControlled) {
@@ -67,8 +67,8 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
 
     useEffect(() => {
       if (!isControlled) {
-        if (!tabs.some((t) => t.id === internalTab && !t.disabled)) {
-          const enabled = tabs.find((t) => !t.disabled);
+        if (!(tabs ?? []).some((t) => t.id === internalTab && !t.disabled)) {
+          const enabled = (tabs ?? []).find((t) => !t.disabled);
           if (enabled) {
             setInternalTab(enabled.id);
           }
@@ -78,7 +78,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
 
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent) => {
-        const enabledTabs = tabs.filter((t) => !t.disabled);
+        const enabledTabs = (tabs ?? []).filter((t) => !t.disabled);
         const currentIndex = enabledTabs.findIndex((t) => t.id === activeId);
 
         let nextIndex = -1;
@@ -113,7 +113,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
       [activeId, selectTab, tabs],
     );
 
-    const activeTabData = tabs.find((t) => t.id === activeId);
+    const activeTabData = (tabs ?? []).find((t) => t.id === activeId);
 
     return (
       <div
@@ -122,7 +122,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
         {...props}
       >
         <div role="tablist" className={styles.tabList}>
-          {tabs.map((tab) => {
+          {(tabs ?? []).map((tab) => {
             const isActive = tab.id === activeId;
             const tabId = `${id}-tab-${tab.id}`;
             const panelId = `${id}-panel-${tab.id}`;

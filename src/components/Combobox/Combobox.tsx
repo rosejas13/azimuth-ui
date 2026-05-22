@@ -61,8 +61,8 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
     const id = useId();
     const listboxId = `combobox-listbox-${id}`;
 
-    const filteredOptions = options.filter((opt) =>
-      opt.label.toLowerCase().includes(value.toLowerCase()),
+    const filteredOptions = (options ?? []).filter((opt) =>
+      (opt.label ?? '').toLowerCase().includes((value ?? '').toLowerCase()),
     );
 
     const close = useCallback(() => {
@@ -205,7 +205,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             onFocus={() => {
-              if (value.length > 0) {
+              if ((value ?? '').length > 0) {
                 updatePosition();
                 setOpen(true);
               }

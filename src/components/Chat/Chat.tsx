@@ -65,10 +65,10 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
           <span className={styles.headerTitle}>Chat</span>
         </div>
         <div ref={listRef} className={styles.list} aria-live="polite">
-          {messages.length === 0 && (
+          {(messages ?? []).length === 0 && (
             <div className={styles.empty}>No messages yet. Start the conversation!</div>
           )}
-          {messages.map((msg) => (
+          {(messages ?? []).map((msg) => (
             <div
               key={msg.id}
               className={cn(styles.bubble, msg.sender === 'user' ? styles.user : styles.other)}

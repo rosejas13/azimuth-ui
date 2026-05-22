@@ -59,11 +59,11 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
 
     const selectedValues = Array.isArray(value) ? value : value ? [value] : [];
 
-    const selectableOptions = options.filter((o) => !o.separator);
+    const selectableOptions = (options ?? []).filter((o) => !o.separator);
     const filteredOptions = searchable
-      ? options.filter((o) => {
+      ? (options ?? []).filter((o) => {
           if (o.separator) return false;
-          return o.label.toLowerCase().includes(search.toLowerCase());
+          return (o.label ?? '').toLowerCase().includes((search ?? '').toLowerCase());
         })
       : selectableOptions;
 
@@ -303,7 +303,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
                         </button>
                       </li>
                     ))
-                  : options.map((opt, i) => {
+                  : (options ?? []).map((opt, i) => {
                       if (opt.separator) {
                         return (
                           <li

@@ -130,7 +130,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
           </div>
         )}
         <div className={styles.nav}>
-          {items.map((item) => renderItem(item))}
+          {(items ?? []).map((item) => renderItem(item))}
         </div>
         <div className={styles.footer}>
           {footer}

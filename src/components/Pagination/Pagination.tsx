@@ -78,13 +78,16 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
     },
     ref,
   ) => {
+    const safeCurrent = currentPage ?? 1;
+    const safeTotal = totalPages ?? 1;
+
     const handleClick = useCallback(
       (page: number) => {
-        if (page >= 1 && page <= totalPages && page !== currentPage) {
+        if (page >= 1 && page <= safeTotal && page !== safeCurrent) {
           onPageChange(page);
         }
       },
-      [currentPage, totalPages, onPageChange],
+      [safeCurrent, safeTotal, onPageChange],
     );
 
     const handleKeyDown = useCallback(
@@ -97,10 +100,10 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
       [handleClick],
     );
 
-    const range = getPageRange(currentPage, totalPages, siblingCount);
+    const range = getPageRange(safeCurrent, safeTotal, siblingCount);
 
-    const isFirstDisabled = currentPage <= 1;
-    const isLastDisabled = currentPage >= totalPages;
+    const isFirstDisabled = safeCurrent <= 1;
+    const isLastDisabled = safeCurrent >= safeTotal;
 
     return (
       <nav
@@ -129,8 +132,8 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
               type="button"
               className={cn(styles.item, isFirstDisabled && styles.disabled)}
               disabled={isFirstDisabled}
-              onClick={() => handleClick(currentPage - 1)}
-              onKeyDown={(e) => handleKeyDown(e, currentPage - 1)}
+              onClick={() => handleClick(safeCurrent - 1)}
+              onKeyDown={(e) => handleKeyDown(e, safeCurrent - 1)}
               aria-label="Previous page"
             >
               ‹
@@ -146,7 +149,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
             }
 
             const page = item as number;
-            const isActive = page === currentPage;
+            const isActive = page === safeCurrent;
 
             return (
               <li key={page}>
@@ -171,8 +174,8 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
               type="button"
               className={cn(styles.item, isLastDisabled && styles.disabled)}
               disabled={isLastDisabled}
-              onClick={() => handleClick(currentPage + 1)}
-              onKeyDown={(e) => handleKeyDown(e, currentPage + 1)}
+              onClick={() => handleClick(safeCurrent + 1)}
+              onKeyDown={(e) => handleKeyDown(e, safeCurrent + 1)}
               aria-label="Next page"
             >
               ›
@@ -184,8 +187,8 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
                 type="button"
                 className={cn(styles.item, isLastDisabled && styles.disabled)}
                 disabled={isLastDisabled}
-                onClick={() => handleClick(totalPages)}
-                onKeyDown={(e) => handleKeyDown(e, totalPages)}
+                onClick={() => handleClick(safeTotal)}
+                onKeyDown={(e) => handleKeyDown(e, safeTotal)}
                 aria-label="Last page"
               >
                 »

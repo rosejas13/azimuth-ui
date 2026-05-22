@@ -28,13 +28,14 @@ export const NotificationBadge = forwardRef<HTMLSpanElement, NotificationBadgePr
     },
     ref,
   ) => {
-    const showDot = dot || count <= 0;
-    const displayCount = count > max ? `+${max}` : count;
+    const safeCount = count ?? 0;
+    const showDot = dot || safeCount <= 0;
+    const displayCount = safeCount > max ? `+${max}` : safeCount;
 
     return (
       <span ref={ref} className={cn(styles.wrapper, className)} {...props}>
         {children}
-        {(count > 0 || dot) && (
+        {(safeCount > 0 || dot) && (
           <span
             className={cn(
               styles.badge,
