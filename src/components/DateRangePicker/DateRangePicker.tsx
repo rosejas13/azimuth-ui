@@ -7,8 +7,6 @@ import {
   useRef,
   useEffect,
   useCallback,
-  useMemo,
-  useId,
 } from 'react';
 import { cn } from '@/utils/cn';
 import { Calendar } from '@/components/Calendar';
@@ -26,16 +24,21 @@ export interface DateRangePickerProps
   onChange?: (range: DateRange) => void;
   minDate?: Date;
   maxDate?: Date;
+  /** @default false */
   includeTime?: boolean;
   placeholder?: string;
 }
 
-function range(start: number, end: number, step = 1): number[] {
-  const result: number[] = [];
-  for (let i = start; i <= end; i += step) {
-    result.push(i);
-  }
-  return result;
+function stepWithWrap(
+  current: number,
+  delta: 1 | -1,
+  min: number,
+  max: number,
+): number {
+  const next = current + delta;
+  if (next > max) return min;
+  if (next < min) return max;
+  return next;
 }
 
 function formatDate(date: Date | null, includeTime: boolean): string {
@@ -81,11 +84,6 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
     const [openPicker, setOpenPicker] = useState<'start' | 'end' | null>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
 
-    const startHourId = useId();
-    const startMinuteId = useId();
-    const endHourId = useId();
-    const endMinuteId = useId();
-
     const setRangeValue = useCallback(
       (range: DateRange) => {
         if (!isControlled) {
@@ -129,17 +127,21 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
       [rangeValue, setRangeValue],
     );
 
-    const handleTimeChange = useCallback(
+    const handleTimeStep = useCallback(
       (which: 'start' | 'end') =>
-        (field: 'hours' | 'minutes', value: number) => {
+        (field: 'hours' | 'minutes', delta: 1 | -1) => {
           const current = rangeValue[which];
           if (!current) return;
 
           const newDate = new Date(current);
           if (field === 'hours') {
-            newDate.setHours(value);
+            newDate.setHours(
+              stepWithWrap(current.getHours(), delta, 0, 23),
+            );
           } else {
-            newDate.setMinutes(value);
+            newDate.setMinutes(
+              stepWithWrap(current.getMinutes(), delta, 0, 59),
+            );
           }
 
           const newRange = { ...rangeValue, [which]: newDate };
@@ -148,65 +150,115 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
       [rangeValue, setRangeValue],
     );
 
-    const hours = useMemo(() => range(0, 23), []);
-    const minutes = useMemo(() => range(0, 59), []);
-
     const isEndInvalid =
       rangeValue.start != null &&
       rangeValue.end != null &&
       rangeValue.end <= rangeValue.start;
 
-    const renderTimeSelectors = (which: 'start' | 'end') => {
+    const renderTimeSteppers = (
+      which: 'start' | 'end',
+    ) => {
       const date = rangeValue[which];
       if (!date) return null;
 
-      const hourId = which === 'start' ? startHourId : endHourId;
-      const minuteId = which === 'start' ? startMinuteId : endMinuteId;
+      const hour = date.getHours();
+      const minute = date.getMinutes();
+      const prefix = which === 'start' ? 'Start' : 'End';
 
       return (
-        <div className={styles.timeSection}>
-          <div className={styles.divider} />
-          <div className={styles.timeInputs}>
-            <div className={styles.timeField}>
-              <label className={styles.timeLabel} htmlFor={hourId}>
-                Hour
-              </label>
-              <select
-                id={hourId}
-                className={styles.select}
-                value={date.getHours()}
-                onChange={(e) =>
-                  handleTimeChange(which)('hours', Number(e.target.value))
-                }
-              >
-                {hours.map((h) => (
-                  <option key={h} value={h}>
-                    {String(h).padStart(2, '0')}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <span className={styles.timeSeparator}>:</span>
-            <div className={styles.timeField}>
-              <label className={styles.timeLabel} htmlFor={minuteId}>
-                Minute
-              </label>
-              <select
-                id={minuteId}
-                className={styles.select}
-                value={date.getMinutes()}
-                onChange={(e) =>
-                  handleTimeChange(which)('minutes', Number(e.target.value))
-                }
-              >
-                {minutes.map((m) => (
-                  <option key={m} value={m}>
-                    {String(m).padStart(2, '0')}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <div className={styles.timeSteppers}>
+          <div className={styles.timeField} role="group" aria-label={`${prefix} hour`}>
+            <button
+              type="button"
+              className={styles.stepperBtn}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTimeStep(which)('hours', 1);
+              }}
+              aria-label={`Increment ${prefix.toLowerCase()} hour`}
+              tabIndex={-1}
+            >
+              ▲
+            </button>
+            <span className={styles.stepperValue}>
+              {String(hour).padStart(2, '0')}
+            </span>
+            <button
+              type="button"
+              className={styles.stepperBtn}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTimeStep(which)('hours', -1);
+              }}
+              aria-label={`Decrement ${prefix.toLowerCase()} hour`}
+              tabIndex={-1}
+            >
+              ▼
+            </button>
           </div>
+          <span className={styles.timeSeparator}>:</span>
+          <div className={styles.timeField} role="group" aria-label={`${prefix} minute`}>
+            <button
+              type="button"
+              className={styles.stepperBtn}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTimeStep(which)('minutes', 1);
+              }}
+              aria-label={`Increment ${prefix.toLowerCase()} minute`}
+              tabIndex={-1}
+            >
+              ▲
+            </button>
+            <span className={styles.stepperValue}>
+              {String(minute).padStart(2, '0')}
+            </span>
+            <button
+              type="button"
+              className={styles.stepperBtn}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTimeStep(which)('minutes', -1);
+              }}
+              aria-label={`Decrement ${prefix.toLowerCase()} minute`}
+              tabIndex={-1}
+            >
+              ▼
+            </button>
+          </div>
+        </div>
+      );
+    };
+
+    const renderDateField = (which: 'start' | 'end') => {
+      const value = rangeValue[which];
+
+      return (
+        <div className={styles.field}>
+          <input
+            type="text"
+            className={cn(
+              styles.input,
+              openPicker === which && styles.inputFocused,
+              which === 'end' && isEndInvalid && styles.inputError,
+            )}
+            value={formatDate(value, includeTime)}
+            placeholder={placeholder}
+            onFocus={() => setOpenPicker(which)}
+            readOnly
+          />
+          {openPicker === which && (
+            <div className={styles.popup}>
+              <Calendar
+                value={value ?? undefined}
+                onChange={handleDateSelect(which)}
+                minDate={which === 'start' ? minDate : (rangeValue.start ?? minDate)}
+                maxDate={which === 'end' ? maxDate : (rangeValue.end ?? maxDate)}
+                className={styles.popupCalendar}
+              />
+              {includeTime && value != null && renderTimeSteppers(which)}
+            </div>
+          )}
         </div>
       );
     };
@@ -218,62 +270,29 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
         {...props}
       >
         {label && <span className={styles.label}>{label}</span>}
-        <div className={styles.inputRow} ref={wrapperRef}>
-          <div className={styles.field}>
-            <input
-              type="text"
-              className={cn(
-                styles.input,
-                openPicker === 'start' && styles.inputFocused,
-              )}
-              value={formatDate(rangeValue.start, includeTime)}
-              placeholder={placeholder}
-              onFocus={() => setOpenPicker('start')}
-              readOnly
-            />
-            {openPicker === 'start' && (
-              <div className={styles.popup}>
-                <Calendar
-                  value={rangeValue.start ?? undefined}
-                  onChange={handleDateSelect('start')}
-                  minDate={minDate}
-                  maxDate={rangeValue.end ?? maxDate}
-                />
-                {includeTime &&
-                  rangeValue.start != null &&
-                  renderTimeSelectors('start')}
-              </div>
-            )}
+        {includeTime ? (
+          <div
+            ref={wrapperRef}
+            className={styles.inputRowStacked}
+          >
+            <div className={styles.dateTimeRow}>
+              <span className={styles.rowLabel}>Start</span>
+              {renderDateField('start')}
+              {rangeValue.start != null && renderTimeSteppers('start')}
+            </div>
+            <div className={styles.dateTimeRow}>
+              <span className={styles.rowLabel}>End</span>
+              {renderDateField('end')}
+              {rangeValue.end != null && renderTimeSteppers('end')}
+            </div>
           </div>
-          <span className={styles.separator}>&rarr;</span>
-          <div className={styles.field}>
-            <input
-              type="text"
-              className={cn(
-                styles.input,
-                openPicker === 'end' && styles.inputFocused,
-                isEndInvalid && styles.inputError,
-              )}
-              value={formatDate(rangeValue.end, includeTime)}
-              placeholder={placeholder}
-              onFocus={() => setOpenPicker('end')}
-              readOnly
-            />
-            {openPicker === 'end' && (
-              <div className={styles.popup}>
-                <Calendar
-                  value={rangeValue.end ?? undefined}
-                  onChange={handleDateSelect('end')}
-                  minDate={rangeValue.start ?? minDate}
-                  maxDate={maxDate}
-                />
-                {includeTime &&
-                  rangeValue.end != null &&
-                  renderTimeSelectors('end')}
-              </div>
-            )}
+        ) : (
+          <div className={styles.inputRow} ref={wrapperRef}>
+            {renderDateField('start')}
+            <span className={styles.separator}>&rarr;</span>
+            {renderDateField('end')}
           </div>
-        </div>
+        )}
       </div>
     );
   },
