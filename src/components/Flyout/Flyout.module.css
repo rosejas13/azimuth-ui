@@ -1,5 +1,4 @@
 .flyout {
-  position: relative;
   display: inline-flex;
 }
 
@@ -9,8 +8,6 @@
 }
 
 .panel {
-  position: absolute;
-  z-index: 500;
   background: var(--azimuth-color-surface);
   border: 1px solid var(--azimuth-color-border);
   border-radius: var(--azimuth-radius);
@@ -21,28 +18,4 @@
   color: var(--azimuth-color-text);
   white-space: nowrap;
   animation: azimuth-fade-in var(--azimuth-transition-fast) forwards;
-}
-
-.bottom {
-  top: calc(100% + var(--azimuth-space-xs));
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.top {
-  bottom: calc(100% + var(--azimuth-space-xs));
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.left {
-  right: calc(100% + var(--azimuth-space-xs));
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.right {
-  left: calc(100% + var(--azimuth-space-xs));
-  top: 50%;
-  transform: translateY(-50%);
 }
