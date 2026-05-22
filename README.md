@@ -37,7 +37,7 @@ function App() {
 - **TypeScript**: Full type safety with strict mode
 - **Zero CSS runtime**: CSS Modules compiled to vanilla CSS
 - **Animation**: Snappy easing with `prefers-reduced-motion` support
-- **Dual-licensed**: AGPL v3 (free, open source) or Commercial (paid, proprietary)
+- **MIT licensed**: Free for personal and commercial use
 - **Playground**: Interactive code sandbox with `React.createElement` evaluation for every component
 - **Color presets**: 10 built-in color schemes (Ocean, Midnight, Forest, etc.)
 - **Style presets**: 8 style presets (Balanced, Minimal, Bold, etc.)
@@ -130,9 +130,4 @@ Contributions welcome. See `tasks/LESSONS.md` for project conventions, and the s
 
 ## License
 
-Dual-licensed: **AGPL v3** (free, with conditions) or **Commercial License** (paid, no restrictions).
-
-- **Personal / open-source projects**: Use under AGPL v3. Free, but your project must also be AGPL v3.
-- **Commercial / proprietary use**: Requires a commercial license. Contact licenses@azimuth.dev for pricing.
-
-See [LICENSE](LICENSE) for details.
+MIT — see [LICENSE](LICENSE) for details.
