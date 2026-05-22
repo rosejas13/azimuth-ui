@@ -350,9 +350,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       </Grid>
     ),
     Container: (
-      <div style={{ border: '1px dashed var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-sm)', padding: 'var(--azimuth-space-sm)' }}>
-        <Container><Text size="sm" color="secondary">Content constrained by Container max-width. Resize the browser to see the effect.</Text></Container>
-      </div>
+      <Container><Text size="sm" color="secondary">Centered content container with max-width constraint.</Text></Container>
     ),
     Divider: (
       <Stack spacing="sm">
@@ -379,7 +377,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       <Stack direction="horizontal" spacing="sm" wrap>
         {(['info', 'warning', 'danger'] as const).map(v => (
           <Button key={v} size="sm" variant={v === 'danger' ? 'danger' : 'secondary'} onClick={onShowDialog}>
-            {v === 'danger' ? 'Delete Dialog (danger)' : v === 'warning' ? 'Warning Dialog' : 'Info Dialog'}
+            {v === 'danger' ? 'Delete' : v === 'warning' ? 'Confirm' : 'Info'}
           </Button>
         ))}
       </Stack>
@@ -391,10 +389,16 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       </Stack>
     ),
     Drawer: (
-      <Button size="sm" onClick={onShowDrawer}>Open Drawer (right side)</Button>
+      <Stack direction="horizontal" spacing="sm">
+        <Button size="sm" onClick={onShowDrawer}>Open Drawer</Button>
+        <Button size="sm" variant="secondary">Right Side</Button>
+      </Stack>
     ),
     SlideSheet: (
-      <Button size="sm" onClick={onShowSheet}>Open Sheet</Button>
+      <Stack direction="horizontal" spacing="sm">
+        <Button size="sm" onClick={onShowSheet}>Open Sheet</Button>
+        <Button size="sm" variant="secondary">Bottom</Button>
+      </Stack>
     ),
     PageLayout: (
       <PageLayout
@@ -441,7 +445,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       </div>
     ),
     DateTimePicker: (
-      <DateTimePicker onChange={() => {}} showTime={true} minuteStep={15} />
+      <DateTimePicker onChange={() => {}} showTime={false} />
     ),
     DateRangePicker: (
       <DateRangePicker label="Range" onChange={() => {}} />
@@ -509,7 +513,6 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
           { value: 'vue', label: 'Vue' },
           { value: 'svelte', label: 'Svelte' },
         ]}
-        value=""
         onChange={() => {}}
         onSelect={() => {}}
         label="Framework"
@@ -550,7 +553,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
         ]}
       />
     ),
-    ImageViewer: <Button variant="secondary" size="sm" disabled>Requires images array</Button>,
+    ImageViewer: <Button variant="secondary" size="sm" onClick={() => {}}>Open Image Viewer</Button>,
     ErrorPage: (
       <ErrorPage status={404} title="Page not found"
         description="The page you are looking for does not exist."
@@ -565,13 +568,11 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       />
     ),
     MapDisplay: <MapDisplay title="Demo map" height="200px" />,
-    Cursor: <Text size="sm" color="secondary">The Cursor component sets cursor behavior on child elements. Use useCursor() hook to set a global cursor.</Text>,
-    VisuallyHidden: <div><Text size="sm">There is hidden text below this line:</Text><VisuallyHidden>This text is only visible to screen readers.</VisuallyHidden></div>,
   };
 
   return (
     <div style={{ minHeight: '120px' }}>
-      {(() => { try { return previews[doc.name] || <Text size="sm" color="muted">Preview not available for {doc.name}</Text>; } catch(e) { console.error(`Preview error for ${doc.name}:`, e); return <Text size="sm" color="muted">Preview error</Text>; } })()}
+      {previews[doc.name] || <Text size="sm" color="muted">Preview not available for {doc.name}</Text>}
     </div>
   );
 }
@@ -592,11 +593,10 @@ export function ComponentsPage() {
   if (!doc) return <Text>Loading...</Text>;
 
   return (
-    <div style={{ display: 'flex', gap: 0, height: 'calc(100vh - 180px)', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', gap: 0, minHeight: 'calc(100vh - 200px)', padding: 'var(--azimuth-space-xl) 0' }}>
       <div style={{
         width: sidebarCollapsed ? '48px' : '240px',
         minWidth: sidebarCollapsed ? '48px' : '240px',
-        height: '100%',
         borderRight: '1px solid var(--azimuth-color-border)',
         overflowY: 'auto',
         padding: sidebarCollapsed ? 'var(--azimuth-space-sm)' : 'var(--azimuth-space-md)',
@@ -626,7 +626,7 @@ export function ComponentsPage() {
         ))}
       </div>
 
-      <div style={{ flex: 1, padding: '0 var(--azimuth-space-xl)', overflowY: 'auto', height: '100%' }}>
+      <div style={{ flex: 1, padding: '0 var(--azimuth-space-xl)', overflowY: 'auto' }}>
         <Stack spacing="lg">
           <div>
             <Stack direction="horizontal" spacing="sm" align="center" style={{ marginBottom: 'var(--azimuth-space-xs)' }}>
