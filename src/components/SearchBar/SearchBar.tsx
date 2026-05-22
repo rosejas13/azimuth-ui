@@ -215,7 +215,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
       >
         <div className={styles.search}>
           <span className={styles.icon} aria-hidden="true">
-            🔍
+            Search
           </span>
           <input
             ref={ref}
