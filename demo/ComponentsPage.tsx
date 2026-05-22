@@ -12,6 +12,8 @@ import {
   Rating, Timeline, NotificationBadge, OTPInput, SplitButton,
   BreadcrumbPageHeader, Combobox, Sidebar, ColorPicker,
   CommandPalette, DiffViewer,
+  Clock, Accordion, ImageViewer, ErrorPage,
+  MediaPlayer, SimpleChart, MapDisplay,
 } from '../src';
 import { COMPONENT_DATA, type ComponentDoc } from './component-data';
 import { Playground } from './Playground';
@@ -541,6 +543,31 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
         maxHeight="150px"
       />
     ),
+    Clock: <Clock mode="clock" size="md" />,
+    Accordion: (
+      <Accordion
+        items={[
+          { id: '1', title: 'Section 1', content: <Text size="sm">First section content.</Text> },
+          { id: '2', title: 'Section 2', content: <Text size="sm">Second section content.</Text> },
+          { id: '3', title: 'Section 3', content: <Text size="sm">Third section content.</Text> },
+        ]}
+      />
+    ),
+    ImageViewer: <Button variant="secondary" size="sm" onClick={() => {}}>Open Image Viewer</Button>,
+    ErrorPage: (
+      <ErrorPage status={404} title="Page not found"
+        description="The page you are looking for does not exist."
+        action={<Button size="sm">Go Home</Button>}
+      />
+    ),
+    MediaPlayer: <MediaPlayer src="" title="Demo video" controls={false} />,
+    SimpleChart: (
+      <SimpleChart type="bar"
+        data={[{ label: 'A', value: 30 }, { label: 'B', value: 50 }, { label: 'C', value: 20 }]}
+        width={300} height={200}
+      />
+    ),
+    MapDisplay: <MapDisplay title="Demo map" height="200px" />,
   };
 
   return (
