@@ -80,11 +80,6 @@
 }
 
 .suggestions {
-  position: absolute;
-  z-index: 100;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
   padding: var(--azimuth-space-xs);
   border: 1px solid var(--azimuth-color-border-strong);
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));

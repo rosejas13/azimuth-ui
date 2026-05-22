@@ -1,6 +1,6 @@
 'use client';
 
-import { type ComponentPropsWithoutRef, forwardRef, useId, useState } from 'react';
+import { type ComponentPropsWithoutRef, forwardRef, useCallback, useEffect, useId, useRef, useState } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Tooltip.module.css';
 
@@ -26,9 +26,61 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     const [timeoutId, setTimeoutId] = useState<ReturnType<
       typeof setTimeout
     > | null>(null);
+    const [contentStyle, setContentStyle] = useState<React.CSSProperties>({});
+    const [arrowStyle, setArrowStyle] = useState<React.CSSProperties>({});
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    const updatePosition = useCallback(() => {
+      if (!wrapperRef.current) return;
+      const rect = wrapperRef.current.getBoundingClientRect();
+      const gap = 6;
+      const zIndex = 1200;
+      switch (position) {
+        case 'bottom':
+          setContentStyle({
+            position: 'fixed',
+            top: rect.bottom + gap,
+            left: rect.left + rect.width / 2,
+            transform: 'translateX(-50%)',
+            zIndex,
+          });
+          setArrowStyle({ top: -3, left: '50%', marginLeft: -3 });
+          break;
+        case 'top':
+          setContentStyle({
+            position: 'fixed',
+            bottom: window.innerHeight - rect.top + gap,
+            left: rect.left + rect.width / 2,
+            transform: 'translateX(-50%)',
+            zIndex,
+          });
+          setArrowStyle({ bottom: -3, left: '50%', marginLeft: -3 });
+          break;
+        case 'left':
+          setContentStyle({
+            position: 'fixed',
+            top: rect.top + rect.height / 2,
+            right: window.innerWidth - rect.left + gap,
+            transform: 'translateY(-50%)',
+            zIndex,
+          });
+          setArrowStyle({ right: -3, top: '50%', marginTop: -3 });
+          break;
+        case 'right':
+          setContentStyle({
+            position: 'fixed',
+            top: rect.top + rect.height / 2,
+            left: rect.right + gap,
+            transform: 'translateY(-50%)',
+            zIndex,
+          });
+          setArrowStyle({ left: -3, top: '50%', marginTop: -3 });
+          break;
+      }
+    }, [position]);
 
     const show = () => {
-      const id = setTimeout(() => setVisible(true), delay);
+      const id = setTimeout(() => { updatePosition(); setVisible(true); }, delay);
       setTimeoutId(id);
     };
 
@@ -38,9 +90,32 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       setTimeoutId(null);
     };
 
+    useEffect(() => {
+      if (!visible) return;
+      const handler = () => updatePosition();
+      window.addEventListener('scroll', handler, true);
+      window.addEventListener('resize', handler);
+      return () => {
+        window.removeEventListener('scroll', handler, true);
+        window.removeEventListener('resize', handler);
+      };
+    }, [visible, updatePosition]);
+
+    const setWrapperRef = useCallback(
+      (node: HTMLDivElement | null) => {
+        (wrapperRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        }
+      },
+      [ref],
+    );
+
     return (
       <div
-        ref={ref}
+        ref={setWrapperRef}
         className={cn(styles.tooltip, className)}
         onMouseEnter={show}
         onMouseLeave={hide}
@@ -58,11 +133,12 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
         {visible && (
           <div
             id={tooltipId}
-            className={cn(styles.content, styles[position])}
+            className={styles.content}
             role="tooltip"
+            style={contentStyle}
           >
             {content}
-            <div className={styles.arrow} />
+            <div className={styles.arrow} style={arrowStyle} />
           </div>
         )}
       </div>

@@ -49,11 +49,35 @@ export const SplitButton = forwardRef<HTMLDivElement, SplitButtonProps>(
     ref,
   ) => {
     const [open, setOpen] = useState(false);
+    const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
     const containerRef = useRef<HTMLDivElement>(null);
 
     const close = useCallback(() => {
       setOpen(false);
     }, []);
+
+    const updatePosition = useCallback(() => {
+      if (!containerRef.current) return;
+      const toggle = containerRef.current.querySelector('[aria-haspopup="menu"]');
+      if (!toggle) return;
+      const rect = toggle.getBoundingClientRect();
+      const gap = 4;
+      if (direction === 'top') {
+        setMenuStyle({
+          position: 'fixed',
+          bottom: window.innerHeight - rect.top + gap,
+          left: rect.left,
+          zIndex: 50,
+        });
+      } else {
+        setMenuStyle({
+          position: 'fixed',
+          top: rect.bottom + gap,
+          left: rect.left,
+          zIndex: 50,
+        });
+      }
+    }, [direction]);
 
     useEffect(() => {
       function handleClickOutside(e: MouseEvent) {
@@ -66,10 +90,16 @@ export const SplitButton = forwardRef<HTMLDivElement, SplitButtonProps>(
       }
       if (open) {
         document.addEventListener('mousedown', handleClickOutside);
-        return () =>
+        const positionHandler = () => updatePosition();
+        window.addEventListener('scroll', positionHandler, true);
+        window.addEventListener('resize', positionHandler);
+        return () => {
           document.removeEventListener('mousedown', handleClickOutside);
+          window.removeEventListener('scroll', positionHandler, true);
+          window.removeEventListener('resize', positionHandler);
+        };
       }
-    }, [open, close]);
+    }, [open, close, updatePosition]);
 
     useEffect(() => {
       function handleEscape(e: KeyboardEvent) {
@@ -135,7 +165,11 @@ export const SplitButton = forwardRef<HTMLDivElement, SplitButtonProps>(
               styles[size],
               open && styles.toggleOpen,
             )}
-            onClick={() => !disabled && setOpen((prev) => !prev)}
+            onClick={() => {
+              if (disabled) return;
+              if (!open) updatePosition();
+              setOpen((prev) => !prev);
+            }}
             disabled={disabled}
             aria-haspopup="menu"
             aria-expanded={open}
@@ -148,11 +182,9 @@ export const SplitButton = forwardRef<HTMLDivElement, SplitButtonProps>(
         </div>
 
         {open && (
+          <div style={menuStyle}>
           <div
-            className={cn(
-              styles.menu,
-              direction === 'top' && styles.menuTop,
-            )}
+            className={styles.menu}
             role="menu"
           >
             {options.map((option) => (
@@ -171,6 +203,7 @@ export const SplitButton = forwardRef<HTMLDivElement, SplitButtonProps>(
                 {option.label}
               </button>
             ))}
+          </div>
           </div>
         )}
       </div>

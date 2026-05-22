@@ -58,12 +58,6 @@
 }
 
 .listbox {
-  position: absolute;
-  z-index: 50;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: 4px;
   padding: var(--azimuth-space-xs);
   border: 1px solid var(--azimuth-color-border-strong);
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));

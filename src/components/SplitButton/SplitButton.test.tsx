@@ -258,7 +258,10 @@ describe('SplitButton', () => {
     await user.click(screen.getByLabelText('Show options'));
 
     const menu = screen.getByRole('menu');
-    expect(menu.className).toContain('menuTop');
+    const wrapper = menu.parentElement;
+    expect(wrapper).not.toBeNull();
+    expect(wrapper!.style.position).toBe('fixed');
+    expect(wrapper!.style.bottom).not.toBe('');
   });
 
   it('applies danger class to danger option', async () => {

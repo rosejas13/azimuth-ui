@@ -14,8 +14,6 @@
 }
 
 .content {
-  position: absolute;
-  z-index: 1200;
   padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
   background: var(--azimuth-color-text);
   color: var(--azimuth-color-bg);
@@ -35,52 +33,4 @@
   height: 6px;
   background: var(--azimuth-color-text);
   transform: rotate(45deg);
-}
-
-.top {
-  bottom: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.top .arrow {
-  bottom: -3px;
-  left: 50%;
-  margin-left: -3px;
-}
-
-.bottom {
-  top: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.bottom .arrow {
-  top: -3px;
-  left: 50%;
-  margin-left: -3px;
-}
-
-.left {
-  right: calc(100% + 6px);
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.left .arrow {
-  right: -3px;
-  top: 50%;
-  margin-top: -3px;
-}
-
-.right {
-  left: calc(100% + 6px);
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.right .arrow {
-  left: -3px;
-  top: 50%;
-  margin-top: -3px;
 }
