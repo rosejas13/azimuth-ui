@@ -445,7 +445,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       </div>
     ),
     DateTimePicker: (
-      <DateTimePicker onChange={() => {}} showTime={false} />
+      <DateTimePicker onChange={() => {}} showTime={true} showSeconds={false} minuteStep={15} />
     ),
     DateRangePicker: (
       <DateRangePicker label="Range" onChange={() => {}} />

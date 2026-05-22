@@ -33,7 +33,7 @@
 .panel {
   position: absolute;
   top: calc(100% + var(--azimuth-space-xs));
-  z-index: 100;
+  z-index: 1200;
   min-width: 180px;
   background: var(--azimuth-color-surface);
   border: 1px solid var(--azimuth-color-border);
