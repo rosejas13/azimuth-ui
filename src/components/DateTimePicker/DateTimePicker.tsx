@@ -6,7 +6,6 @@ import {
   useState,
   useCallback,
   useId,
-  useMemo,
 } from 'react';
 import { cn } from '@/utils/cn';
 import { Calendar } from '@/components/Calendar';
@@ -29,12 +28,20 @@ export interface DateTimePickerProps
   minuteStep?: number;
 }
 
-function range(start: number, end: number, step = 1): number[] {
-  const result: number[] = [];
-  for (let i = start; i <= end; i += step) {
-    result.push(i);
+function stepWithWrap(
+  current: number,
+  delta: 1 | -1,
+  min: number,
+  max: number,
+  step: number,
+): number {
+  const next = current + delta * step;
+  if (next > max) return min;
+  if (next < min) {
+    const lastValid = min + Math.floor((max - min) / step) * step;
+    return lastValid;
   }
-  return result;
+  return next;
 }
 
 export const DateTimePicker = forwardRef<HTMLDivElement, DateTimePickerProps>(
@@ -84,35 +91,35 @@ export const DateTimePicker = forwardRef<HTMLDivElement, DateTimePickerProps>(
     );
 
     const handleHourChange = useCallback(
-      (hour: number) => {
+      (delta: 1 | -1) => {
         const newDate = new Date(currentValue);
-        newDate.setHours(hour);
+        newDate.setHours(
+          stepWithWrap(currentValue.getHours(), delta, 0, 23, hourStep),
+        );
         setValue(newDate);
       },
-      [currentValue, setValue],
+      [currentValue, setValue, hourStep],
     );
 
     const handleMinuteChange = useCallback(
-      (minute: number) => {
+      (delta: 1 | -1) => {
         const newDate = new Date(currentValue);
-        newDate.setMinutes(minute);
+        newDate.setMinutes(
+          stepWithWrap(currentValue.getMinutes(), delta, 0, 59, minuteStep),
+        );
         setValue(newDate);
       },
-      [currentValue, setValue],
+      [currentValue, setValue, minuteStep],
     );
 
     const handleSecondChange = useCallback(
-      (second: number) => {
+      (delta: 1 | -1) => {
         const newDate = new Date(currentValue);
-        newDate.setSeconds(second);
+        newDate.setSeconds(stepWithWrap(currentValue.getSeconds(), delta, 0, 59, 1));
         setValue(newDate);
       },
       [currentValue, setValue],
     );
-
-    const hours = useMemo(() => range(0, 23, hourStep), [hourStep]);
-    const minutes = useMemo(() => range(0, 59, minuteStep), [minuteStep]);
-    const seconds = useMemo(() => range(0, 59, 1), []);
 
     const hour = currentValue.getHours();
     const minute = currentValue.getMinutes();
@@ -124,77 +131,93 @@ export const DateTimePicker = forwardRef<HTMLDivElement, DateTimePickerProps>(
         className={cn(styles.wrapper, className)}
         {...props}
       >
+        {showTime && (
+          <div className={styles.timeHeader}>
+            <div className={styles.timeField} role="group" aria-label="Hour">
+              <button
+                type="button"
+                className={styles.stepperBtn}
+                onClick={() => handleHourChange(1)}
+                aria-label="Increment hour"
+                tabIndex={-1}
+              >
+                ▲
+              </button>
+              <span className={styles.stepperValue} id={hourId}>
+                {String(hour).padStart(2, '0')}
+              </span>
+              <button
+                type="button"
+                className={styles.stepperBtn}
+                onClick={() => handleHourChange(-1)}
+                aria-label="Decrement hour"
+                tabIndex={-1}
+              >
+                ▼
+              </button>
+            </div>
+            <span className={styles.timeSeparator}>:</span>
+            <div className={styles.timeField} role="group" aria-label="Minute">
+              <button
+                type="button"
+                className={styles.stepperBtn}
+                onClick={() => handleMinuteChange(1)}
+                aria-label="Increment minute"
+                tabIndex={-1}
+              >
+                ▲
+              </button>
+              <span className={styles.stepperValue} id={minuteId}>
+                {String(minute).padStart(2, '0')}
+              </span>
+              <button
+                type="button"
+                className={styles.stepperBtn}
+                onClick={() => handleMinuteChange(-1)}
+                aria-label="Decrement minute"
+                tabIndex={-1}
+              >
+                ▼
+              </button>
+            </div>
+            {showSeconds && (
+              <>
+                <span className={styles.timeSeparator}>:</span>
+                <div className={styles.timeField} role="group" aria-label="Second">
+                  <button
+                    type="button"
+                    className={styles.stepperBtn}
+                    onClick={() => handleSecondChange(1)}
+                    aria-label="Increment second"
+                    tabIndex={-1}
+                  >
+                    ▲
+                  </button>
+                  <span className={styles.stepperValue} id={secondId}>
+                    {String(second).padStart(2, '0')}
+                  </span>
+                  <button
+                    type="button"
+                    className={styles.stepperBtn}
+                    onClick={() => handleSecondChange(-1)}
+                    aria-label="Decrement second"
+                    tabIndex={-1}
+                  >
+                    ▼
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
         <Calendar
           value={currentValue}
           onChange={handleDateChange}
           minDate={minDate}
           maxDate={maxDate}
+          className={styles.calendar}
         />
-
-        {showTime && (
-          <div className={styles.timeSection}>
-            <div className={styles.divider} />
-            <div className={styles.timeInputs}>
-              <div className={styles.timeField}>
-                <label className={styles.timeLabel} htmlFor={hourId}>
-                  Hour
-                </label>
-                <select
-                  id={hourId}
-                  className={styles.select}
-                  value={hour}
-                  onChange={(e) => handleHourChange(Number(e.target.value))}
-                >
-                  {hours.map((h) => (
-                    <option key={h} value={h}>
-                      {String(h).padStart(2, '0')}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <span className={styles.timeSeparator}>:</span>
-              <div className={styles.timeField}>
-                <label className={styles.timeLabel} htmlFor={minuteId}>
-                  Minute
-                </label>
-                <select
-                  id={minuteId}
-                  className={styles.select}
-                  value={minute}
-                  onChange={(e) => handleMinuteChange(Number(e.target.value))}
-                >
-                  {minutes.map((m) => (
-                    <option key={m} value={m}>
-                      {String(m).padStart(2, '0')}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {showSeconds && (
-                <>
-                  <span className={styles.timeSeparator}>:</span>
-                  <div className={styles.timeField}>
-                    <label className={styles.timeLabel} htmlFor={secondId}>
-                      Second
-                    </label>
-                    <select
-                      id={secondId}
-                      className={styles.select}
-                      value={second}
-                      onChange={(e) => handleSecondChange(Number(e.target.value))}
-                    >
-                      {seconds.map((s) => (
-                        <option key={s} value={s}>
-                          {String(s).padStart(2, '0')}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     );
   },
