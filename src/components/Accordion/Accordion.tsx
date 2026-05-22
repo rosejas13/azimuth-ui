@@ -22,6 +22,7 @@ export interface AccordionItem {
 export interface AccordionProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onToggle'> {
   items: AccordionItem[];
   defaultOpen?: string;
+  multiple?: boolean;
   onToggle?: (itemId: string) => void;
   variant?: 'default' | 'bordered';
 }
@@ -31,6 +32,7 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
     {
       items,
       defaultOpen,
+      multiple = false,
       onToggle,
       variant = 'default',
       className,
@@ -38,15 +40,32 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
     },
     ref,
   ) => {
-    const [openId, setOpenId] = useState<string | undefined>(defaultOpen);
+    const [openIds, setOpenIds] = useState<Set<string>>(
+      () => new Set<string>(defaultOpen ? [defaultOpen] : []),
+    );
     const baseId = useId();
 
     const handleToggle = useCallback(
       (id: string) => {
-        setOpenId((prev) => (prev === id ? undefined : id));
+        if (multiple) {
+          setOpenIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) {
+              next.delete(id);
+            } else {
+              next.add(id);
+            }
+            return next;
+          });
+        } else {
+          setOpenIds((prev) => {
+            if (prev.has(id)) return new Set();
+            return new Set([id]);
+          });
+        }
         onToggle?.(id);
       },
-      [onToggle],
+      [multiple, onToggle],
     );
 
     return (
@@ -56,7 +75,7 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
         {...props}
       >
         {items.map((item) => {
-          const isOpen = openId === item.id;
+          const isOpen = openIds.has(item.id);
           const headerId = `${baseId}-header-${item.id}`;
           const panelId = `${baseId}-panel-${item.id}`;
 

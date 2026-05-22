@@ -1,5 +1,12 @@
-.progress {
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-sm);
   width: 100%;
+}
+
+.progress {
+  flex: 1;
   height: 8px;
   background: var(--azimuth-color-border);
   border-radius: var(--azimuth-radius-full);
@@ -30,6 +37,14 @@
 @keyframes azimuth-progress-indeterminate {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(350%); }
+}
+
+.percentage {
+  font-family: var(--azimuth-font-mono, monospace);
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

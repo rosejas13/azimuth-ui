@@ -24,7 +24,7 @@ export const Loader = forwardRef<HTMLDivElement, LoaderProps>(
       return (
         <div
           ref={ref}
-          className={cn(styles.loader, className)}
+          className={cn(styles.loader, label && styles.withLabel, className)}
           role="status"
           aria-label={label || 'Loading'}
           {...props}
@@ -45,7 +45,7 @@ export const Loader = forwardRef<HTMLDivElement, LoaderProps>(
     return (
       <div
         ref={ref}
-        className={cn(styles.loader, className)}
+        className={cn(styles.loader, label && styles.withLabel, className)}
         role="status"
         aria-label={label || 'Loading'}
         {...props}

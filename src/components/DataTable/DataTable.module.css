@@ -45,6 +45,23 @@
   border-color: var(--azimuth-color-primary);
 }
 
+.columnSelect {
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  font-size: var(--azimuth-fs-sm);
+  font-family: var(--azimuth-font-body);
+  cursor: pointer;
+  transition: border-color var(--azimuth-transition-fast);
+}
+
+.columnSelect:focus {
+  outline: none;
+  border-color: var(--azimuth-color-primary);
+}
+
 .scrollWrapper {
   width: 100%;
   overflow-x: auto;

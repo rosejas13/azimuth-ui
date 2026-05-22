@@ -17,6 +17,8 @@ export interface ProgressBarProps
   color?: ProgressBarColor;
   /** @default 'md' */
   size?: ProgressBarSize;
+  /** @default false */
+  showPercentage?: boolean;
 }
 
 export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
@@ -27,36 +29,42 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
       indeterminate = false,
       color = 'primary',
       size = 'md',
+      showPercentage = false,
       className,
       ...props
     },
     ref,
   ) => {
     const pct = indeterminate ? 0 : Math.min(100, Math.max(0, (value / max) * 100));
+    const displayPct = Math.round(pct);
 
     return (
-      <div
-        ref={ref}
-        className={cn(
-          styles.progress,
-          styles[size],
-          indeterminate && styles.indeterminate,
-          styles[color],
-          className,
-        )}
-        {...props}
-        role="progressbar"
-        aria-valuenow={indeterminate ? undefined : value}
-        aria-valuemin={0}
-        aria-valuemax={max}
-        aria-valuetext={
-          indeterminate ? undefined : `${Math.round(pct)}%`
-        }
-      >
+      <div className={styles.wrapper} {...props}>
         <div
-          className={styles.fill}
-          style={{ width: `${pct}%` }}
-        />
+          ref={ref}
+          className={cn(
+            styles.progress,
+            styles[size],
+            indeterminate && styles.indeterminate,
+            styles[color],
+            className,
+          )}
+          role="progressbar"
+          aria-valuenow={indeterminate ? undefined : value}
+          aria-valuemin={0}
+          aria-valuemax={max}
+          aria-valuetext={
+            indeterminate ? undefined : `${displayPct}%`
+          }
+        >
+          <div
+            className={styles.fill}
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+        {showPercentage && (
+          <span className={styles.percentage}>{displayPct}%</span>
+        )}
       </div>
     );
   },

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Button, Text, Input, Checkbox, Radio, Select, Toggle,
   Container, Grid, Stack, Divider, Badge, Tag, Chip, Avatar,
@@ -18,6 +18,15 @@ import {
 import { COMPONENT_DATA, type ComponentDoc } from './component-data';
 import { Playground } from './Playground';
 import { componentMap } from './componentMap';
+
+class PreviewErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: boolean }> {
+  state = { error: false };
+  static getDerivedStateFromError() { return { error: true }; }
+  render() {
+    if (this.state.error) return <Text size="sm" color="muted">Preview unavailable</Text>;
+    return this.props.children;
+  }
+}
 
 function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShowSheet, onShowToast, onShowAlert }: {
   doc: ComponentDoc;
@@ -377,7 +386,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       <Stack direction="horizontal" spacing="sm" wrap>
         {(['info', 'warning', 'danger'] as const).map(v => (
           <Button key={v} size="sm" variant={v === 'danger' ? 'danger' : 'secondary'} onClick={onShowDialog}>
-            {v === 'danger' ? 'Delete' : v === 'warning' ? 'Confirm' : 'Info'}
+            {v === 'danger' ? 'Delete Dialog (danger)' : v === 'warning' ? 'Warning Dialog' : 'Info Dialog'}
           </Button>
         ))}
       </Stack>
@@ -389,16 +398,10 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       </Stack>
     ),
     Drawer: (
-      <Stack direction="horizontal" spacing="sm">
-        <Button size="sm" onClick={onShowDrawer}>Open Drawer</Button>
-        <Button size="sm" variant="secondary">Right Side</Button>
-      </Stack>
+      <Button size="sm" onClick={onShowDrawer}>Open Drawer (right side)</Button>
     ),
     SlideSheet: (
-      <Stack direction="horizontal" spacing="sm">
-        <Button size="sm" onClick={onShowSheet}>Open Sheet</Button>
-        <Button size="sm" variant="secondary">Bottom</Button>
-      </Stack>
+      <Button size="sm" onClick={onShowSheet}>Open Sheet</Button>
     ),
     PageLayout: (
       <PageLayout
@@ -513,6 +516,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
           { value: 'vue', label: 'Vue' },
           { value: 'svelte', label: 'Svelte' },
         ]}
+        value=""
         onChange={() => {}}
         onSelect={() => {}}
         label="Framework"
@@ -553,7 +557,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
         ]}
       />
     ),
-    ImageViewer: <Button variant="secondary" size="sm" onClick={() => {}}>Open Image Viewer</Button>,
+    ImageViewer: <Button variant="secondary" size="sm" disabled>Requires images array</Button>,
     ErrorPage: (
       <ErrorPage status={404} title="Page not found"
         description="The page you are looking for does not exist."
@@ -568,6 +572,8 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       />
     ),
     MapDisplay: <MapDisplay title="Demo map" height="200px" />,
+    Cursor: <Text size="sm" color="secondary">The Cursor component sets cursor behavior on child elements. Use useCursor() hook to set a global cursor.</Text>,
+    VisuallyHidden: <div><Text size="sm">There is hidden text below this line:</Text><VisuallyHidden>This text is only visible to screen readers.</VisuallyHidden></div>,
   };
 
   return (
@@ -593,10 +599,11 @@ export function ComponentsPage() {
   if (!doc) return <Text>Loading...</Text>;
 
   return (
-    <div style={{ display: 'flex', gap: 0, minHeight: 'calc(100vh - 200px)', padding: 'var(--azimuth-space-xl) 0' }}>
+    <div style={{ display: 'flex', gap: 0, height: 'calc(100vh - 180px)', overflow: 'hidden' }}>
       <div style={{
         width: sidebarCollapsed ? '48px' : '240px',
         minWidth: sidebarCollapsed ? '48px' : '240px',
+        height: '100%',
         borderRight: '1px solid var(--azimuth-color-border)',
         overflowY: 'auto',
         padding: sidebarCollapsed ? 'var(--azimuth-space-sm)' : 'var(--azimuth-space-md)',
@@ -626,7 +633,7 @@ export function ComponentsPage() {
         ))}
       </div>
 
-      <div style={{ flex: 1, padding: '0 var(--azimuth-space-xl)', overflowY: 'auto' }}>
+      <div style={{ flex: 1, padding: '0 var(--azimuth-space-xl)', overflowY: 'auto', height: '100%' }}>
         <Stack spacing="lg">
           <div>
             <Stack direction="horizontal" spacing="sm" align="center" style={{ marginBottom: 'var(--azimuth-space-xs)' }}>
@@ -642,31 +649,33 @@ export function ComponentsPage() {
                 id: 'preview', label: 'Preview',
                 content: (
                   <Card>
-                    <ComponentPreview doc={doc}
-                      onShowModal={() => setModalOpen(true)}
-                      onShowDrawer={() => setDrawerOpen(true)}
-                      onShowDialog={() => setDialogOpen(true)}
-                      onShowSheet={() => setSheetOpen(true)}
-                      onShowToast={(v) => {
-                        toast({ title: `${v} notification`, message: 'This is a demonstration toast.', variant: v, duration: 4000 });
-                      }}
-                      onShowAlert={(v) => {
-                        const id = Date.now().toString();
-                        setAlerts(prev => [...prev, {
-                          id,
-                          variant: v,
-                          title: v.charAt(0).toUpperCase() + v.slice(1),
-                          message: `This is a ${v} alert demonstration. It shows how alerts appear on the page.`,
-                        }]);
-                        setTimeout(() => {
-                          setExitingAlerts(prev => new Set(prev).add(id));
+                    <PreviewErrorBoundary>
+                      <ComponentPreview doc={doc}
+                        onShowModal={() => setModalOpen(true)}
+                        onShowDrawer={() => setDrawerOpen(true)}
+                        onShowDialog={() => setDialogOpen(true)}
+                        onShowSheet={() => setSheetOpen(true)}
+                        onShowToast={(v) => {
+                          toast({ title: `${v} notification`, message: 'This is a demonstration toast.', variant: v, duration: 4000 });
+                        }}
+                        onShowAlert={(v) => {
+                          const id = Date.now().toString();
+                          setAlerts(prev => [...prev, {
+                            id,
+                            variant: v,
+                            title: v.charAt(0).toUpperCase() + v.slice(1),
+                            message: `This is a ${v} alert demonstration. It shows how alerts appear on the page.`,
+                          }]);
                           setTimeout(() => {
-                            setAlerts(prev => prev.filter(a => a.id !== id));
-                            setExitingAlerts(prev => { const n = new Set(prev); n.delete(id); return n; });
-                          }, 300);
-                        }, 6000);
-                      }}
-                    />
+                            setExitingAlerts(prev => new Set(prev).add(id));
+                            setTimeout(() => {
+                              setAlerts(prev => prev.filter(a => a.id !== id));
+                              setExitingAlerts(prev => { const n = new Set(prev); n.delete(id); return n; });
+                            }, 300);
+                          }, 6000);
+                        }}
+                      />
+                    </PreviewErrorBoundary>
                   </Card>
                 ),
               },
