@@ -29,12 +29,17 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
   ({ messages, onSend, placeholder = 'Type a message...', className, ...props }, ref) => {
     const [input, setInput] = useState('');
     const listRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
       if (listRef.current) {
         listRef.current.scrollTop = listRef.current.scrollHeight;
       }
     }, [messages]);
+
+    useEffect(() => {
+      inputRef.current?.focus();
+    }, []);
 
     function handleSend() {
       const text = input.trim();
@@ -77,6 +82,7 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
         </div>
         <div className={styles.inputRow}>
           <input
+            ref={inputRef}
             className={styles.input}
             type="text"
             value={input}

@@ -730,6 +730,7 @@ function ContactPage() {
                   showTime
                   showSeconds={false}
                   minuteStep={15}
+                  aria-label="Schedule a meeting date"
                 />
                 <DateRangePicker
                   label="Availability Window"

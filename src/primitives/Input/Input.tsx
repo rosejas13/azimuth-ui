@@ -201,6 +201,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 ? `${generatedId}-subtitle`
                 : undefined
           }
+          aria-autocomplete={autocompleteOptions ? 'list' : undefined}
+          aria-controls={autocompleteOptions && showSuggestions ? `${generatedId}-suggestions` : undefined}
+          autoComplete={autocompleteOptions ? 'off' : undefined}
           {...props}
         />
 
@@ -230,7 +233,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
 
         {showSuggestions && filteredSuggestions.length > 0 && (
-          <div ref={suggestionsRef} className={styles.suggestions} role="listbox">
+          <div ref={suggestionsRef} className={styles.suggestions} role="listbox" id={`${generatedId}-suggestions`}>
             {filteredSuggestions.map((suggestion, i) => (
               <button
                 key={suggestion}

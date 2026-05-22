@@ -94,6 +94,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         );
         firstFocusable?.focus();
       }, 50);
+      // Timeout waits for portal content to render in DOM before focusing
 
       return () => clearTimeout(timer);
     }, [open]);
