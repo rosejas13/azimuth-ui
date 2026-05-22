@@ -1,6 +1,6 @@
 'use client';
 
-import {
+import React, {
   type ComponentPropsWithoutRef,
   forwardRef,
   useState,
@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { cn } from '@/utils/cn';
 import { Loader } from '@/components/Loader';
+import { Badge } from '@/components/Badge';
 import { Table } from '@/components/Table';
 import styles from './DataTable.module.css';
 
@@ -23,12 +24,36 @@ export interface Column<T> {
   /** @default true */
   searchable?: boolean;
   render?: (value: unknown, row: T, index: number) => React.ReactNode;
+  /** Optional function to extract searchable text for this column. Falls back to cell value if not provided. */
+  searchValue?: (row: T) => string;
 }
 
+/**
+ * A feature-rich data table component built on Azimuth's Table primitives.
+ *
+ * Supports sorting, search (with optional column selector), pagination,
+ * custom cell rendering, inline editing, and row click handlers.
+ *
+ * **Columns auto-detection:** When `columns` is not provided, columns are
+ * generated automatically from the keys of the first data object. Each key becomes
+ * a column with the title derived from the key (capitalized). Auto-generated
+ * columns are searchable and sortable by default.
+ *
+ * **Smart cell formatting:** When a column's `render` is not specified, cell
+ * values are auto-formatted:
+ * - `string` → displayed as-is
+ * - `number` → displayed with `toLocaleString()`
+ * - `boolean` → displayed as a "Yes" / "No" Badge
+ * - React element → displayed as-is
+ * - `object` with `id` field → displays the `id` value
+ * - `null` / `undefined` → empty cell
+ * - All other types → `String(value)`
+ */
 export interface DataTableProps<T>
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
   title?: string;
-  columns: Column<T>[];
+  /** When omitted, columns are auto-detected from the first data object's keys. */
+  columns?: Column<T>[];
   data: T[];
   /** @default 'No data available' */
   emptyMessage?: string;
@@ -72,6 +97,28 @@ function getCellValue(row: unknown, key: string): string {
   return String(value);
 }
 
+function formatCellValue(value: unknown): React.ReactNode {
+  if (value === null || value === undefined) return '';
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number') return value.toLocaleString();
+  if (typeof value === 'boolean') {
+    return (
+      <Badge variant={value ? 'success' : 'neutral'} size="sm">
+        {value ? 'Yes' : 'No'}
+      </Badge>
+    );
+  }
+  if (typeof value === 'object') {
+    if (React.isValidElement(value)) return value;
+    if ('id' in (value as Record<string, unknown>)) {
+      const id = (value as Record<string, unknown>).id;
+      return id != null ? String(id) : '';
+    }
+    return String(value);
+  }
+  return String(value);
+}
+
 function DataTableInner<T>(
   {
     title,
@@ -112,10 +159,21 @@ function DataTableInner<T>(
   );
   const currentPageSize = isPageSizeControlled ? controlledPageSize : internalPageSize;
 
+  const resolvedColumns: Column<T>[] = useMemo(() => {
+    if (columns) return columns;
+    if (!data || data.length === 0) return [];
+    return Object.keys(data[0] as Record<string, unknown>).map((key) => ({
+      key,
+      title: key.charAt(0).toUpperCase() + key.slice(1),
+      sortable: true,
+      searchable: true,
+    }));
+  }, [columns, data]);
+
   const allSearchableCols = useMemo(() => {
     if (searchColumns) return searchColumns;
-    return columns.filter((c) => c.searchable !== false).map((c) => c.key);
-  }, [columns, searchColumns]);
+    return resolvedColumns.filter((c) => c.searchable !== false).map((c) => c.key);
+  }, [resolvedColumns, searchColumns]);
 
   const searchableCols = useMemo(() => {
     if (onSearch) return [];
@@ -124,7 +182,7 @@ function DataTableInner<T>(
   }, [onSearch, selectedSearchColumns, allSearchableCols]);
 
   const allRows: IndexedRow<T>[] = useMemo(
-    () => data.map((row, i) => ({ row, index: i })),
+    () => (data ?? []).map((row, i) => ({ row, index: i })),
     [data],
   );
 
@@ -134,11 +192,12 @@ function DataTableInner<T>(
     const q = searchQuery.toLowerCase();
     return allRows.filter(({ row }) =>
       searchableCols.some((key) => {
-        const val = getCellValue(row, key).toLowerCase();
-        return val.includes(q);
+        const col = resolvedColumns.find((c) => c.key === key);
+        const searchText = col?.searchValue?.(row) ?? getCellValue(row, key);
+        return searchText.toLowerCase().includes(q);
       }),
     );
-  }, [allRows, searchQuery, searchableCols, onSearch]);
+  }, [allRows, searchQuery, searchableCols, onSearch, resolvedColumns]);
 
   const sortedRows = useMemo(() => {
     if (!sortState) return filteredRows;
@@ -265,7 +324,7 @@ function DataTableInner<T>(
   }, [totalPages]);
 
   const showPagination =
-    totalPages > 1 || (pageSizeOptions && pageSizeOptions.length > 0);
+    totalPages > 1 || ((pageSizeOptions ?? []).length > 0);
 
   if (loading) {
     return (
@@ -367,7 +426,7 @@ function DataTableInner<T>(
                             All
                           </label>
                           {allSearchableCols.map((key) => {
-                            const col = columns.find((c) => c.key === key);
+                            const col = resolvedColumns.find((c) => c.key === key);
                             return (
                               <label key={key} className={styles.columnOption}>
                                 <input type="checkbox" checked={selectedSearchColumns.has(key)} onChange={() => toggleSearchColumn(key)} />
@@ -392,7 +451,7 @@ function DataTableInner<T>(
             <Table striped hoverable={!!onRowClick}>
               <Table.Head>
                 <Table.Row>
-                  {columns.map((col) => {
+                  {resolvedColumns.map((col) => {
                     const isSortable = col.sortable ?? false;
                     const isActive = sortState?.key === col.key;
                     return (
@@ -473,11 +532,11 @@ function DataTableInner<T>(
                     tabIndex={onRowClick ? 0 : undefined}
                     role={onRowClick ? 'button' : undefined}
                   >
-                    {columns.map((col) => (
+                    {resolvedColumns.map((col) => (
                       <Table.Cell key={col.key}>
                         {col.render
                           ? col.render((row as Record<string, unknown>)[col.key], row, index)
-                          : getCellValue(row, col.key)}
+                          : formatCellValue((row as Record<string, unknown>)[col.key])}
                       </Table.Cell>
                     ))}
                     {editable && (
@@ -509,7 +568,7 @@ function DataTableInner<T>(
               </div>
 
               <div className={styles.paginationControls}>
-                {pageSizeOptions && pageSizeOptions.length > 0 && (
+                {(pageSizeOptions ?? []).length > 0 && (
                   <div className={styles.pageSizeSelector}>
                     <label
                       className={styles.pageSizeLabel}
@@ -523,7 +582,7 @@ function DataTableInner<T>(
                       value={currentPageSize}
                       onChange={handlePageSizeChange}
                     >
-                      {pageSizeOptions.map((size) => (
+                      {(pageSizeOptions ?? []).map((size) => (
                         <option key={size} value={size}>
                           {size}
                         </option>
