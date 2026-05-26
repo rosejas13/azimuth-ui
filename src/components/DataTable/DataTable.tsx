@@ -49,8 +49,10 @@ export interface Column<T> {
  * - `null` / `undefined` → empty cell
  * - All other types → `String(value)`
  */
-export interface DataTableProps<T>
-  extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+export interface DataTableProps<T> extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'onChange'
+> {
   title?: string;
   /** When omitted, columns are auto-detected from the first data object's keys. */
   columns?: Column<T>[];
@@ -77,6 +79,14 @@ export interface DataTableProps<T>
   /** @default false */
   loading?: boolean;
   error?: string;
+  /** Enable virtualized scrolling for large datasets. */
+  virtualized?: boolean;
+  /** Estimated row height in px. Used for virtualization scroll calculations. @default 52 */
+  virtualizedRowHeight?: number;
+  /** Auto-enable virtualized mode when data exceeds this count. @default 100 */
+  virtualizedThreshold?: number;
+  /** Container max-height in px when virtualized. @default 400 */
+  virtualizedMaxHeight?: number;
 }
 
 type SortDirection = 'asc' | 'desc';
@@ -139,6 +149,10 @@ function DataTableInner<T>(
     onSearch,
     loading = false,
     error,
+    virtualized = false,
+    virtualizedRowHeight = 52,
+    virtualizedThreshold = 100,
+    virtualizedMaxHeight = 400,
     className,
     ...props
   }: DataTableProps<T>,
@@ -147,17 +161,23 @@ function DataTableInner<T>(
   const id = useId();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSearchColumns, setSelectedSearchColumns] = useState<Set<string>>(new Set(['all']));
+  const [selectedSearchColumns, setSelectedSearchColumns] = useState<
+    Set<string>
+  >(new Set(['all']));
   const [showColumnDropdown, setShowColumnDropdown] = useState(false);
   const columnDropdownRef = useRef<HTMLDivElement>(null);
   const [sortState, setSortState] = useState<SortState | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const virtScrollRef = useRef<HTMLDivElement>(null);
+  const [virtScrollTop, setVirtScrollTop] = useState(0);
 
   const isPageSizeControlled = controlledPageSize !== undefined;
   const [internalPageSize, setInternalPageSize] = useState(
     controlledPageSize ?? defaultPageSize,
   );
-  const currentPageSize = isPageSizeControlled ? controlledPageSize : internalPageSize;
+  const currentPageSize = isPageSizeControlled
+    ? controlledPageSize
+    : internalPageSize;
 
   const resolvedColumns: Column<T>[] = useMemo(() => {
     if (columns) return columns;
@@ -172,7 +192,9 @@ function DataTableInner<T>(
 
   const allSearchableCols = useMemo(() => {
     if (searchColumns) return searchColumns;
-    return resolvedColumns.filter((c) => c.searchable !== false).map((c) => c.key);
+    return resolvedColumns
+      .filter((c) => c.searchable !== false)
+      .map((c) => c.key);
   }, [resolvedColumns, searchColumns]);
 
   const searchableCols = useMemo(() => {
@@ -209,7 +231,13 @@ function DataTableInner<T>(
     });
   }, [filteredRows, sortState]);
 
-  const totalPages = Math.max(1, Math.ceil(sortedRows.length / currentPageSize));
+  const useVirtualized =
+    virtualized && sortedRows.length > virtualizedThreshold;
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(sortedRows.length / currentPageSize),
+  );
   const safeCurrentPage = Math.min(currentPage, totalPages);
 
   const paginatedRows = useMemo(() => {
@@ -217,24 +245,52 @@ function DataTableInner<T>(
     return sortedRows.slice(start, start + currentPageSize);
   }, [sortedRows, safeCurrentPage, currentPageSize]);
 
-  const startIndex = sortedRows.length === 0 ? 0 : (safeCurrentPage - 1) * currentPageSize + 1;
-  const endIndex = Math.min(safeCurrentPage * currentPageSize, sortedRows.length);
-
-  const handleSort = useCallback(
-    (key: string) => {
-      setSortState((prev) => {
-        if (!prev || prev.key !== key) {
-          return { key, direction: 'asc' as const };
-        }
-        if (prev.direction === 'asc') {
-          return { key, direction: 'desc' as const };
-        }
-        return null;
-      });
-      setCurrentPage(1);
-    },
-    [],
+  const overscan = 5;
+  const virtStartIndex = useMemo(() => {
+    if (!useVirtualized) return 0;
+    return Math.max(
+      0,
+      Math.floor(virtScrollTop / virtualizedRowHeight) - overscan,
+    );
+  }, [useVirtualized, virtScrollTop, virtualizedRowHeight]);
+  const virtEndIndex = useMemo(() => {
+    if (!useVirtualized) return 0;
+    return Math.min(
+      sortedRows.length,
+      Math.ceil((virtScrollTop + virtualizedMaxHeight) / virtualizedRowHeight) +
+        overscan,
+    );
+  }, [
+    useVirtualized,
+    virtScrollTop,
+    virtualizedMaxHeight,
+    virtualizedRowHeight,
+    sortedRows.length,
+  ]);
+  const virtualizedRows = useMemo(
+    () => sortedRows.slice(virtStartIndex, virtEndIndex),
+    [sortedRows, virtStartIndex, virtEndIndex],
   );
+
+  const startIndex =
+    sortedRows.length === 0 ? 0 : (safeCurrentPage - 1) * currentPageSize + 1;
+  const endIndex = Math.min(
+    safeCurrentPage * currentPageSize,
+    sortedRows.length,
+  );
+
+  const handleSort = useCallback((key: string) => {
+    setSortState((prev) => {
+      if (!prev || prev.key !== key) {
+        return { key, direction: 'asc' as const };
+      }
+      if (prev.direction === 'asc') {
+        return { key, direction: 'desc' as const };
+      }
+      return null;
+    });
+    setCurrentPage(1);
+  }, []);
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -264,19 +320,27 @@ function DataTableInner<T>(
   const handleRowClick = useCallback(
     (rowIndex: number) => {
       if (!onRowClick) return;
-      const { row, index } = paginatedRows[rowIndex];
+      const entry = useVirtualized
+        ? sortedRows[rowIndex]
+        : paginatedRows[rowIndex];
+      if (!entry) return;
+      const { row, index } = entry;
       onRowClick(row, index);
     },
-    [onRowClick, paginatedRows],
+    [onRowClick, paginatedRows, sortedRows, useVirtualized],
   );
 
   const handleEdit = useCallback(
     (rowIndex: number) => {
       if (!onEdit) return;
-      const { row, index } = paginatedRows[rowIndex];
+      const entry = useVirtualized
+        ? sortedRows[rowIndex]
+        : paginatedRows[rowIndex];
+      if (!entry) return;
+      const { row, index } = entry;
       onEdit(row, index);
     },
-    [onEdit, paginatedRows],
+    [onEdit, paginatedRows, sortedRows, useVirtualized],
   );
 
   const showSearch = searchable || onSearch !== undefined;
@@ -285,7 +349,10 @@ function DataTableInner<T>(
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (columnDropdownRef.current && !columnDropdownRef.current.contains(e.target as Node)) {
+      if (
+        columnDropdownRef.current &&
+        !columnDropdownRef.current.contains(e.target as Node)
+      ) {
         setShowColumnDropdown(false);
       }
     }
@@ -323,8 +390,7 @@ function DataTableInner<T>(
     return pages;
   }, [totalPages]);
 
-  const showPagination =
-    totalPages > 1 || ((pageSizeOptions ?? []).length > 0);
+  const showPagination = totalPages > 1 || (pageSizeOptions ?? []).length > 0;
 
   if (loading) {
     return (
@@ -343,7 +409,11 @@ function DataTableInner<T>(
                     aria-label="Search"
                   />
                   {showColumnSelector && (
-                    <button className={cn(styles.columnSelectBtn)} disabled aria-label="Search columns">
+                    <button
+                      className={cn(styles.columnSelectBtn)}
+                      disabled
+                      aria-label="Search columns"
+                    >
                       All columns ▼
                     </button>
                   )}
@@ -353,7 +423,11 @@ function DataTableInner<T>(
             </div>
           </div>
         )}
-        <div className={styles.loadingState} role="status" aria-label="Loading data">
+        <div
+          className={styles.loadingState}
+          role="status"
+          aria-label="Loading data"
+        >
           <Loader />
         </div>
       </div>
@@ -377,7 +451,11 @@ function DataTableInner<T>(
                     aria-label="Search"
                   />
                   {showColumnSelector && (
-                    <button className={cn(styles.columnSelectBtn)} disabled aria-label="Search columns">
+                    <button
+                      className={cn(styles.columnSelectBtn)}
+                      disabled
+                      aria-label="Search columns"
+                    >
                       All columns ▼
                     </button>
                   )}
@@ -399,55 +477,91 @@ function DataTableInner<T>(
       {hasHeader && (
         <div className={styles.header}>
           {title && <h3 className={styles.title}>{title}</h3>}
-            <div className={styles.headerActions}>
-              {showSearch && (
-                <>
-                  <input
-                    type="text"
-                    className={styles.search}
-                    placeholder={searchPlaceholder}
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    aria-label="Search"
-                  />
-                  {showColumnSelector && (
-                    <div ref={columnDropdownRef} className={styles.columnDropdown}>
-                      <button
-                        className={cn(styles.columnSelectBtn, showColumnDropdown && styles.columnSelectOpen)}
-                        onClick={() => setShowColumnDropdown(!showColumnDropdown)}
-                        aria-label="Select columns to search"
-                      >
-                        {selectedSearchColumns.has('all') ? 'All columns' : `${selectedSearchColumns.size} column(s)`} ▼
-                      </button>
-                      {showColumnDropdown && (
-                        <div className={styles.columnDropdownMenu}>
-                          <label className={styles.columnOption}>
-                            <input type="checkbox" checked={selectedSearchColumns.has('all')} onChange={() => toggleSearchColumn('all')} />
-                            All
-                          </label>
-                          {allSearchableCols.map((key) => {
-                            const col = resolvedColumns.find((c) => c.key === key);
-                            return (
-                              <label key={key} className={styles.columnOption}>
-                                <input type="checkbox" checked={selectedSearchColumns.has(key)} onChange={() => toggleSearchColumn(key)} />
-                                {col?.title ?? key}
-                              </label>
-                            );
-                          })}
-                        </div>
+          <div className={styles.headerActions}>
+            {showSearch && (
+              <>
+                <input
+                  type="text"
+                  className={styles.search}
+                  placeholder={searchPlaceholder}
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  aria-label="Search"
+                />
+                {showColumnSelector && (
+                  <div
+                    ref={columnDropdownRef}
+                    className={styles.columnDropdown}
+                  >
+                    <button
+                      className={cn(
+                        styles.columnSelectBtn,
+                        showColumnDropdown && styles.columnSelectOpen,
                       )}
-                    </div>
-                  )}
-                </>
-              )}
-              {actions}
-            </div>
+                      onClick={() => setShowColumnDropdown(!showColumnDropdown)}
+                      aria-label="Select columns to search"
+                    >
+                      {selectedSearchColumns.has('all')
+                        ? 'All columns'
+                        : `${selectedSearchColumns.size} column(s)`}{' '}
+                      ▼
+                    </button>
+                    {showColumnDropdown && (
+                      <div className={styles.columnDropdownMenu}>
+                        <label className={styles.columnOption}>
+                          <input
+                            type="checkbox"
+                            checked={selectedSearchColumns.has('all')}
+                            onChange={() => toggleSearchColumn('all')}
+                          />
+                          All
+                        </label>
+                        {allSearchableCols.map((key) => {
+                          const col = resolvedColumns.find(
+                            (c) => c.key === key,
+                          );
+                          return (
+                            <label key={key} className={styles.columnOption}>
+                              <input
+                                type="checkbox"
+                                checked={selectedSearchColumns.has(key)}
+                                onChange={() => toggleSearchColumn(key)}
+                              />
+                              {col?.title ?? key}
+                            </label>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+            {actions}
+          </div>
         </div>
       )}
 
-      {paginatedRows.length > 0 ? (
+      {sortedRows.length > 0 ? (
         <>
-          <div className={styles.scrollWrapper}>
+          <div
+            ref={virtScrollRef}
+            className={styles.scrollWrapper}
+            style={
+              useVirtualized
+                ? { maxHeight: virtualizedMaxHeight, overflowY: 'auto' }
+                : undefined
+            }
+            onScroll={
+              useVirtualized
+                ? () => {
+                    if (virtScrollRef.current) {
+                      setVirtScrollTop(virtScrollRef.current.scrollTop);
+                    }
+                  }
+                : undefined
+            }
+          >
             <Table striped hoverable={!!onRowClick}>
               <Table.Head>
                 <Table.Row>
@@ -507,55 +621,65 @@ function DataTableInner<T>(
                   )}
                 </Table.Row>
               </Table.Head>
-              <Table.Body>
-                {paginatedRows.map(({ row, index }, rowIndex) => (
-                  <Table.Row
-                    key={index}
-                    className={cn(
-                      onRowClick && styles.trClickable,
-                    )}
-                    onClick={
-                      onRowClick
-                        ? () => handleRowClick(rowIndex)
-                        : undefined
-                    }
-                    onKeyDown={
-                      onRowClick
-                        ? (e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              e.preventDefault();
-                              handleRowClick(rowIndex);
+              <Table.Body
+                style={
+                  useVirtualized
+                    ? { paddingTop: virtStartIndex * virtualizedRowHeight }
+                    : undefined
+                }
+              >
+                {(useVirtualized ? virtualizedRows : paginatedRows).map(
+                  ({ row, index }, rowIndex) => (
+                    <Table.Row
+                      key={index}
+                      className={cn(onRowClick && styles.trClickable)}
+                      onClick={
+                        onRowClick ? () => handleRowClick(rowIndex) : undefined
+                      }
+                      onKeyDown={
+                        onRowClick
+                          ? (e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                handleRowClick(rowIndex);
+                              }
                             }
-                          }
-                        : undefined
-                    }
-                    tabIndex={onRowClick ? 0 : undefined}
-                    role={onRowClick ? 'button' : undefined}
-                  >
-                    {resolvedColumns.map((col) => (
-                      <Table.Cell key={col.key}>
-                        {col.render
-                          ? col.render((row as Record<string, unknown>)[col.key], row, index)
-                          : formatCellValue((row as Record<string, unknown>)[col.key])}
-                      </Table.Cell>
-                    ))}
-                    {editable && (
-                      <Table.Cell>
-                        <button
-                          type="button"
-                          className={styles.editBtn}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEdit(rowIndex);
-                          }}
-                          aria-label={`Edit row ${index + 1}`}
-                        >
-                          {'\u270E'}
-                        </button>
-                      </Table.Cell>
-                    )}
-                  </Table.Row>
-                ))}
+                          : undefined
+                      }
+                      tabIndex={onRowClick ? 0 : undefined}
+                      role={onRowClick ? 'button' : undefined}
+                    >
+                      {resolvedColumns.map((col) => (
+                        <Table.Cell key={col.key}>
+                          {col.render
+                            ? col.render(
+                                (row as Record<string, unknown>)[col.key],
+                                row,
+                                index,
+                              )
+                            : formatCellValue(
+                                (row as Record<string, unknown>)[col.key],
+                              )}
+                        </Table.Cell>
+                      ))}
+                      {editable && (
+                        <Table.Cell>
+                          <button
+                            type="button"
+                            className={styles.editBtn}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEdit(rowIndex);
+                            }}
+                            aria-label={`Edit row ${index + 1}`}
+                          >
+                            {'\u270E'}
+                          </button>
+                        </Table.Cell>
+                      )}
+                    </Table.Row>
+                  ),
+                )}
               </Table.Body>
             </Table>
           </div>

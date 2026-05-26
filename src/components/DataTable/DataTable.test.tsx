@@ -433,6 +433,59 @@ describe('DataTable', () => {
     );
   });
 
+  describe('virtualized', () => {
+    it('renders all data when virtualized with small dataset', () => {
+      const data = Array.from({ length: 50 }, (_, i) => ({
+        id: i + 1,
+        name: `User ${i + 1}`,
+        email: `user${i + 1}@example.com`,
+      }));
+      render(<DataTable columns={DEFAULT_COLUMNS} data={data} virtualized />);
+      expect(screen.getByText('User 1')).toBeInTheDocument();
+      expect(screen.getByText('User 10')).toBeInTheDocument();
+    });
+
+    it('shows total result count', () => {
+      const data = Array.from({ length: 150 }, (_, i) => ({
+        id: i + 1,
+        name: `User ${i + 1}`,
+        email: `user${i + 1}@example.com`,
+      }));
+      render(<DataTable columns={DEFAULT_COLUMNS} data={data} virtualized />);
+      expect(screen.getByText(/150 results/)).toBeInTheDocument();
+    });
+
+    it('does not enable virtualization when virtualizedThreshold not exceeded', () => {
+      const data = Array.from({ length: 50 }, (_, i) => ({
+        id: i + 1,
+        name: `User ${i + 1}`,
+        email: `user${i + 1}@example.com`,
+      }));
+      render(
+        <DataTable
+          columns={DEFAULT_COLUMNS}
+          data={data}
+          virtualized
+          virtualizedThreshold={200}
+        />,
+      );
+      expect(screen.getByText(/Showing/)).toBeInTheDocument();
+    });
+
+    it('sorts data correctly while virtualized', async () => {
+      const user = userEvent.setup();
+      const data = Array.from({ length: 150 }, (_, i) => ({
+        id: i + 1,
+        name: `User ${String(150 - i).padStart(3, '0')}`,
+        email: `user${i + 1}@example.com`,
+      }));
+      render(<DataTable columns={DEFAULT_COLUMNS} data={data} virtualized />);
+      const nameHeader = screen.getByRole('columnheader', { name: /Name/ });
+      await user.click(nameHeader);
+      expect(nameHeader).toHaveAttribute('aria-sort', 'ascending');
+    });
+  });
+
   it('preserves correct original index in onRowClick after sorting', async () => {
     const onRowClick = vi.fn();
     const user = userEvent.setup();
