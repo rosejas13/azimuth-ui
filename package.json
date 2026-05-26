@@ -1,6 +1,6 @@
 {
   "name": "azimuth-ui",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A configurable, accessible React component library. Theme-driven via a single ThemeProvider with CSS custom properties. Built with TypeScript and CSS Modules.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -82,5 +82,8 @@
   "homepage": "https://github.com/rosejas13/azimuth-ui#readme",
   "bugs": {
     "url": "https://github.com/rosejas13/azimuth-ui/issues"
+  },
+  "dependencies": {
+    "@tanstack/react-virtual": "^3.13.26"
   }
 }

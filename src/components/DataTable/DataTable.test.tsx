@@ -433,8 +433,8 @@ describe('DataTable', () => {
     );
   });
 
-  describe('virtualizedRowHeight', () => {
-    it('uses custom row height', () => {
+  describe('virtualized', () => {
+    it('uses custom virtualizedMaxHeight', () => {
       const data = Array.from({ length: 150 }, (_, i) => ({
         id: i + 1,
         name: `User ${i + 1}`,
@@ -445,11 +445,11 @@ describe('DataTable', () => {
           columns={DEFAULT_COLUMNS}
           data={data}
           virtualized
-          virtualizedRowHeight={80}
+          virtualizedMaxHeight={800}
         />,
       );
-      const tbody = container.querySelector('tbody');
-      expect(tbody).toHaveStyle({ paddingTop: '0px' });
+      const wrapper = container.querySelector('[class*="scrollWrapper"]');
+      expect(wrapper).toHaveStyle({ maxHeight: '800px' });
     });
   });
 

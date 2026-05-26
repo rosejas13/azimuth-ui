@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2 (2026-05-25)
+
+### Changes
+- **DataTable**: Virtualization now uses `@tanstack/react-virtual` for variable row heights. Auto-enabled by default. Removed `virtualizedRowHeight` prop (measured automatically).
+
 ## 0.3.1 (2026-05-25)
 
 ### Changes

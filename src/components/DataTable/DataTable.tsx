@@ -10,6 +10,7 @@ import React, {
   useRef,
   useEffect,
 } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { cn } from '@/utils/cn';
 import { Loader } from '@/components/Loader';
 import { Badge } from '@/components/Badge';
@@ -81,8 +82,6 @@ export interface DataTableProps<T> extends Omit<
   error?: string;
   /** Force-disable virtualized scrolling. Auto-enabled when data exceeds threshold. */
   virtualized?: boolean;
-  /** Estimated row height in px. Used for virtualization scroll calculations. @default 52 */
-  virtualizedRowHeight?: number;
   /** Auto-enable virtualized mode when data exceeds this count. @default 100 */
   virtualizedThreshold?: number;
   /** Container max-height in px when virtualized. @default 400 */
@@ -150,7 +149,6 @@ function DataTableInner<T>(
     loading = false,
     error,
     virtualized,
-    virtualizedRowHeight = 52,
     virtualizedThreshold = 100,
     virtualizedMaxHeight = 400,
     className,
@@ -169,7 +167,6 @@ function DataTableInner<T>(
   const [sortState, setSortState] = useState<SortState | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const virtScrollRef = useRef<HTMLDivElement>(null);
-  const [virtScrollTop, setVirtScrollTop] = useState(0);
 
   const isPageSizeControlled = controlledPageSize !== undefined;
   const [internalPageSize, setInternalPageSize] = useState(
@@ -234,6 +231,14 @@ function DataTableInner<T>(
   const useVirtualized =
     virtualized !== false && sortedRows.length > virtualizedThreshold;
 
+  const virtualizer = useVirtualizer({
+    count: useVirtualized ? sortedRows.length : 0,
+    getScrollElement: () => virtScrollRef.current,
+    estimateSize: () => 52,
+    overscan: 5,
+    enabled: useVirtualized,
+  });
+
   const totalPages = Math.max(
     1,
     Math.ceil(sortedRows.length / currentPageSize),
@@ -244,33 +249,6 @@ function DataTableInner<T>(
     const start = (safeCurrentPage - 1) * currentPageSize;
     return sortedRows.slice(start, start + currentPageSize);
   }, [sortedRows, safeCurrentPage, currentPageSize]);
-
-  const overscan = 5;
-  const virtStartIndex = useMemo(() => {
-    if (!useVirtualized) return 0;
-    return Math.max(
-      0,
-      Math.floor(virtScrollTop / virtualizedRowHeight) - overscan,
-    );
-  }, [useVirtualized, virtScrollTop, virtualizedRowHeight]);
-  const virtEndIndex = useMemo(() => {
-    if (!useVirtualized) return 0;
-    return Math.min(
-      sortedRows.length,
-      Math.ceil((virtScrollTop + virtualizedMaxHeight) / virtualizedRowHeight) +
-        overscan,
-    );
-  }, [
-    useVirtualized,
-    virtScrollTop,
-    virtualizedMaxHeight,
-    virtualizedRowHeight,
-    sortedRows.length,
-  ]);
-  const virtualizedRows = useMemo(
-    () => sortedRows.slice(virtStartIndex, virtEndIndex),
-    [sortedRows, virtStartIndex, virtEndIndex],
-  );
 
   const startIndex =
     sortedRows.length === 0 ? 0 : (safeCurrentPage - 1) * currentPageSize + 1;
@@ -552,15 +530,6 @@ function DataTableInner<T>(
                 ? { maxHeight: virtualizedMaxHeight, overflowY: 'auto' }
                 : undefined
             }
-            onScroll={
-              useVirtualized
-                ? () => {
-                    if (virtScrollRef.current) {
-                      setVirtScrollTop(virtScrollRef.current.scrollTop);
-                    }
-                  }
-                : undefined
-            }
           >
             <Table striped hoverable={!!onRowClick}>
               <Table.Head>
@@ -621,15 +590,101 @@ function DataTableInner<T>(
                   )}
                 </Table.Row>
               </Table.Head>
-              <Table.Body
-                style={
-                  useVirtualized
-                    ? { paddingTop: virtStartIndex * virtualizedRowHeight }
-                    : undefined
-                }
-              >
-                {(useVirtualized ? virtualizedRows : paginatedRows).map(
-                  ({ row, index }, rowIndex) => (
+              <Table.Body>
+                {useVirtualized
+                  ? (() => {
+                      const virtualItems = virtualizer.getVirtualItems();
+                      const padTop = virtualItems[0]?.start ?? 0;
+                      const padBottom =
+                        virtualizer.getTotalSize() -
+                        (virtualItems.at(-1)?.end ?? 0);
+                      return (
+                        <>
+                          {padTop > 0 && (
+                            <tr
+                              style={{
+                                height: padTop,
+                                display: 'table-row',
+                              }}
+                            />
+                          )}
+                          {virtualItems.map((item) => {
+                            const { row, index } = sortedRows[item.index];
+                            const virtRowIndex = item.index;
+                            return (
+                              <Table.Row
+                                key={item.key}
+                                data-index={item.index}
+                                ref={virtualizer.measureElement}
+                                className={cn(onRowClick && styles.trClickable)}
+                                onClick={
+                                  onRowClick
+                                    ? () => handleRowClick(virtRowIndex)
+                                    : undefined
+                                }
+                                onKeyDown={
+                                  onRowClick
+                                    ? (e) => {
+                                        if (
+                                          e.key === 'Enter' ||
+                                          e.key === ' '
+                                        ) {
+                                          e.preventDefault();
+                                          handleRowClick(virtRowIndex);
+                                        }
+                                      }
+                                    : undefined
+                                }
+                                tabIndex={onRowClick ? 0 : undefined}
+                                role={onRowClick ? 'button' : undefined}
+                              >
+                                {resolvedColumns.map((col) => (
+                                  <Table.Cell key={col.key}>
+                                    {col.render
+                                      ? col.render(
+                                          (row as Record<string, unknown>)[
+                                            col.key
+                                          ],
+                                          row,
+                                          index,
+                                        )
+                                      : formatCellValue(
+                                          (row as Record<string, unknown>)[
+                                            col.key
+                                          ],
+                                        )}
+                                  </Table.Cell>
+                                ))}
+                                {editable && (
+                                  <Table.Cell>
+                                    <button
+                                      type="button"
+                                      className={styles.editBtn}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleEdit(virtRowIndex);
+                                      }}
+                                      aria-label={`Edit row ${index + 1}`}
+                                    >
+                                      {'\u270E'}
+                                    </button>
+                                  </Table.Cell>
+                                )}
+                              </Table.Row>
+                            );
+                          })}
+                          {padBottom > 0 && (
+                            <tr
+                              style={{
+                                height: padBottom,
+                                display: 'table-row',
+                              }}
+                            />
+                          )}
+                        </>
+                      );
+                    })()
+                  : paginatedRows.map(({ row, index }, rowIndex) => (
                     <Table.Row
                       key={index}
                       className={cn(onRowClick && styles.trClickable)}
