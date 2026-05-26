@@ -28,7 +28,8 @@ function App() {
 
 ## Features
 
-- **79 components**: 8 primitives, 4 layout utilities, 67 full-featured composite components
+- **80 components**: 9 primitives, 4 layout utilities, 67 full-featured composite components
+- **860 SVG icons**: Tree-shakeable React icon components (Font Awesome subset, regular + brands)
 - **ThemeProvider**: Single config controls every component's appearance
 - **CSS custom properties**: All styling via `--azimuth-*` tokens
 - **Dark mode**: Built-in light/dark/system mode with `useThemeMode()` hook
@@ -46,9 +47,28 @@ function App() {
 
 ## Components
 
-### Primitives (8)
+### Primitives (9)
 
-`Button` `Checkbox` `Icon` `Input` `Radio` `Select` `Text` `Toggle`
+`Button` `Checkbox` `Icon` `IconButton` `Input` `Radio` `Select` `Text` `Toggle`
+
+## Icons
+
+Azimuth UI ships 860 tree-shakeable SVG icons (273 regular + 587 brands) as typed React components. Each icon is a `forwardRef` SVG element that inherits `currentColor` and accepts all standard SVG attributes.
+
+```tsx
+import { SearchIcon, BellIcon, GithubIcon } from '@azimuth/ui';
+
+// With Icon wrapper
+<Icon size="lg"><SearchIcon width={20} height={20} /></Icon>
+
+// With IconButton
+<IconButton icon={<BellIcon width={16} height={16} />} aria-label="Notifications" />
+
+// Direct use
+<SearchIcon width={24} height={24} className="my-icon" />
+```
+
+Icons are auto-generated from Font Awesome Free SVGs via `scripts/generate-icons.mjs`.
 
 ### Layout (4)
 
@@ -114,9 +134,10 @@ import { ThemeProvider, COLOR_PRESETS } from '@azimuth/ui';
 git clone https://github.com/rosejas13/azimuth-ui.git
 cd azimuth-ui
 npm install
-npm run test          # 962 tests
+npm run test          # 990+ tests
 npm run typecheck     # Strict TypeScript
 npm run demo          # Component showcase with live playground
+npm run lint          # ESLint (zero-error)
 ```
 
 ## Contributing
