@@ -11,3 +11,8 @@ coverage/
 .DS_Store
 tasks/LICENSING_TODO.md
 .vscode/
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key

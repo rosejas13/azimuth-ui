@@ -142,9 +142,12 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     setCSSVar('--azimuth-ease', ease);
     setCSSVar('--azimuth-animations', c.animations ? '' : 'none');
 
+    setCSSVar('--azimuth-fs-xs', '0.75rem');
     setCSSVar('--azimuth-fs-sm', '0.875rem');
     setCSSVar('--azimuth-fs-base', '1rem');
     setCSSVar('--azimuth-fs-lg', '1.125rem');
+    setCSSVar('--azimuth-fs-xl', '1.25rem');
+    setCSSVar('--azimuth-fs-2xl', '1.5rem');
     setCSSVar('--azimuth-lh-base', '1.5');
     setCSSVar('--azimuth-lh-heading', '1.25');
     setCSSVar('--azimuth-transition-fast', '150ms ease');
@@ -196,6 +199,27 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
         --azimuth-color-primary-subtle: ${makeSubtle(c.primaryColor, false)};
         --azimuth-color-accent-hover: ${darken(c.accentColor, 5)};
         --azimuth-color-accent-subtle: ${makeSubtle(c.accentColor, false)};
+        --azimuth-color-bg: oklch(98.5% 0.005 85);
+        --azimuth-color-surface: oklch(99% 0.003 85);
+        --azimuth-color-surface-hover: oklch(97% 0.005 85);
+        --azimuth-color-text: oklch(20% 0.01 85);
+        --azimuth-color-text-secondary: oklch(45% 0.01 85);
+        --azimuth-color-text-muted: oklch(55% 0.008 85);
+        --azimuth-color-border: oklch(78% 0.008 85);
+        --azimuth-color-border-strong: oklch(70% 0.01 85);
+        --azimuth-color-on-primary: oklch(99% 0 0);
+        --azimuth-color-on-accent: oklch(99% 0 0);
+        --azimuth-color-overlay: rgb(0 0 0 / 0.5);
+        --azimuth-color-danger: oklch(45% 0.12 30);
+        --azimuth-color-primary-ring: oklch(92% 0.04 195);
+        --azimuth-color-error-bg: oklch(92% 0.05 30);
+        --azimuth-color-error-text: oklch(40% 0.08 30);
+        --azimuth-color-success-bg: oklch(92% 0.04 145);
+        --azimuth-color-success-text: oklch(35% 0.06 145);
+        --azimuth-color-warning-bg: oklch(94% 0.05 85);
+        --azimuth-color-warning-text: oklch(45% 0.08 85);
+        --azimuth-color-info-bg: oklch(92% 0.04 250);
+        --azimuth-color-info-text: oklch(35% 0.06 250);
       }
     `);
 
@@ -207,6 +231,27 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
         --azimuth-color-accent-hover: ${darken(darkAccent, 5)};
         --azimuth-color-primary-subtle: ${makeSubtle(darkPrimary, true)};
         --azimuth-color-accent-subtle: ${makeSubtle(darkAccent, true)};
+        --azimuth-color-bg: oklch(14% 0.008 220);
+        --azimuth-color-surface: oklch(19% 0.01 220);
+        --azimuth-color-surface-hover: oklch(22% 0.01 220);
+        --azimuth-color-text: oklch(90% 0.005 85);
+        --azimuth-color-text-secondary: oklch(65% 0.005 85);
+        --azimuth-color-text-muted: oklch(45% 0.005 85);
+        --azimuth-color-border: oklch(28% 0.01 220);
+        --azimuth-color-border-strong: oklch(35% 0.01 220);
+        --azimuth-color-on-primary: oklch(14% 0.008 220);
+        --azimuth-color-on-accent: oklch(14% 0.008 220);
+        --azimuth-color-overlay: rgb(0 0 0 / 0.5);
+        --azimuth-color-danger: oklch(65% 0.12 30);
+        --azimuth-color-primary-ring: oklch(25% 0.04 195);
+        --azimuth-color-error-bg: oklch(22% 0.05 30);
+        --azimuth-color-error-text: oklch(65% 0.08 30);
+        --azimuth-color-success-bg: oklch(22% 0.04 145);
+        --azimuth-color-success-text: oklch(65% 0.06 145);
+        --azimuth-color-warning-bg: oklch(25% 0.05 85);
+        --azimuth-color-warning-text: oklch(70% 0.08 85);
+        --azimuth-color-info-bg: oklch(22% 0.04 250);
+        --azimuth-color-info-text: oklch(65% 0.06 250);
       }
     `);
 

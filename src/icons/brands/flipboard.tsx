@@ -1,0 +1,10 @@
+import { type SVGAttributes, forwardRef } from 'react';
+
+export const FlipboardIcon = forwardRef<SVGSVGElement, SVGAttributes<SVGSVGElement>>(
+  ({ className, ...props }, ref) => (
+    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className={className} {...props}>
+      <path fill="currentColor" d="M96 96L96 544L544 544L544 96L96 96zM454.4 275.2L364.8 275.2L364.8 364.8L275.2 364.8L275.2 454.4L185.6 454.4L185.6 185.6L454.4 185.6L454.4 275.2z"/>
+    </svg>
+  ),
+);
+FlipboardIcon.displayName = 'FlipboardIcon';

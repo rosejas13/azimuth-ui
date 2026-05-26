@@ -118,15 +118,17 @@ describe('Alert', () => {
 
   it('shows icon by default', () => {
     render(<Alert variant="success">Done</Alert>);
-    expect(screen.getByText('✓')).toBeInTheDocument();
+    const icon = document.querySelector('[class*="icon"]');
+    expect(icon?.querySelector('svg')).toBeInTheDocument();
   });
 
-  it('hides icon when icon=false', () => {
+  it('hides icon when icon=null', () => {
     render(
-      <Alert variant="success" icon={false}>
+      <Alert variant="success" icon={null}>
         Done
       </Alert>,
     );
-    expect(screen.queryByText('✓')).not.toBeInTheDocument();
+    const icon = document.querySelector('[class*="icon"]');
+    expect(icon).not.toBeInTheDocument();
   });
 });

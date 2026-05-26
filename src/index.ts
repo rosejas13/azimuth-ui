@@ -33,6 +33,9 @@ export type { CheckboxProps } from './primitives/Checkbox';
 export { Icon } from './primitives/Icon';
 export type { IconProps } from './primitives/Icon';
 
+export { IconButton } from './primitives/IconButton';
+export type { IconButtonProps } from './primitives/IconButton';
+
 export { Input } from './primitives/Input';
 export type { InputProps } from './primitives/Input';
 
@@ -149,6 +152,9 @@ export type { InputGroupProps } from './components/InputGroup';
 
 export { ImageViewer } from './components/ImageViewer';
 export type { ImageViewerProps, ImageViewerImage } from './components/ImageViewer';
+
+export { InfoButton } from './components/InfoButton';
+export type { InfoButtonProps } from './components/InfoButton';
 
 export { Kbd } from './components/Kbd';
 export type { KbdProps } from './components/Kbd';
