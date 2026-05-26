@@ -1,0 +1,10 @@
+import { type SVGAttributes, forwardRef } from 'react';
+
+export const HouzzIcon = forwardRef<SVGSVGElement, SVGAttributes<SVGSVGElement>>(
+  ({ className, ...props }, ref) => (
+    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className={className} {...props}>
+      <path fill="currentColor" d="M372 394.7L267.4 394.7L267.4 544L113.1 544L113.1 96L222.6 96L222.6 200.5L527.7 286.1L527.7 544L372 544L372 394.7z"/>
+    </svg>
+  ),
+);
+HouzzIcon.displayName = 'HouzzIcon';

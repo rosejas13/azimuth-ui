@@ -2,12 +2,20 @@
 
 import {
   type ComponentPropsWithoutRef,
+  type ReactNode,
   forwardRef,
   useEffect,
   useRef,
   useState,
 } from 'react';
 import { cn } from '@/utils/cn';
+import {
+  BellIcon,
+  CheckCircleIcon,
+  CircleDotIcon,
+  CircleQuestionIcon,
+  CircleXmarkIcon,
+} from '@/icons';
 
 const EXIT_ANIMATION_DURATION = 200;
 import styles from './Alert.module.css';
@@ -20,13 +28,13 @@ type AlertVariant =
   | 'info'
   | 'notification';
 
-const ICONS: Record<AlertVariant, string> = {
-  warning: '⚠',
-  caution: '⚡',
-  alert: '✕',
-  success: '✓',
-  info: 'ℹ',
-  notification: '🔔',
+const ICONS: Record<AlertVariant, ReactNode> = {
+  warning: <CircleXmarkIcon width={16} height={16} />,
+  caution: <CircleQuestionIcon width={16} height={16} />,
+  alert: <CircleXmarkIcon width={16} height={16} />,
+  success: <CheckCircleIcon width={16} height={16} />,
+  info: <CircleDotIcon width={16} height={16} />,
+  notification: <BellIcon width={16} height={16} />,
 };
 
 const VARIANT_CLASS: Record<AlertVariant, string> = {
@@ -47,8 +55,8 @@ export interface AlertProps extends ComponentPropsWithoutRef<'div'> {
   onDismiss?: () => void;
   /** Time in milliseconds before auto-dismissal. */
   autoDismiss?: number;
-  /** @default true */
-  icon?: boolean;
+  /** Show a default icon  */
+  icon?: ReactNode;
   children?: React.ReactNode;
 }
 
@@ -60,7 +68,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
       dismissible = false,
       onDismiss,
       autoDismiss,
-      icon = true,
+      icon,
       className,
       children,
       ...props
@@ -108,9 +116,9 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
         aria-live={ariaLive}
         {...props}
       >
-        {icon && (
+        {icon !== null && (
           <span className={styles.icon} aria-hidden="true">
-            {ICONS[variant]}
+            {icon ?? ICONS[variant]}
           </span>
         )}
         <div className={styles.content}>

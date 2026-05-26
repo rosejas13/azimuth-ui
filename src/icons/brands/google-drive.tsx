@@ -1,0 +1,10 @@
+import { type SVGAttributes, forwardRef } from 'react';
+
+export const GoogleDriveIcon = forwardRef<SVGSVGElement, SVGAttributes<SVGSVGElement>>(
+  ({ className, ...props }, ref) => (
+    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className={className} {...props}>
+      <path fill="currentColor" d="M403 378.9L239.4 96L400.6 96L564.2 378.9L403 378.9zM265.5 402.5L184.9 544L495.4 544L576 402.5L265.5 402.5zM218.1 131.4L64 402.5L144.6 544L301 272.8L218.1 131.4z"/>
+    </svg>
+  ),
+);
+GoogleDriveIcon.displayName = 'GoogleDriveIcon';

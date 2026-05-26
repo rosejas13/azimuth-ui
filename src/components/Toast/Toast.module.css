@@ -16,6 +16,13 @@
   animation: azimuth-slide-in-right var(--azimuth-transition-base) var(--azimuth-ease) forwards;
 }
 
+.icon {
+  flex-shrink: 0;
+  font-size: var(--azimuth-fs-base);
+  line-height: 1;
+  margin-top: 1px;
+}
+
 .content {
   flex: 1;
   min-width: 0;
