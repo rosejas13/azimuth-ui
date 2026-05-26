@@ -1,6 +1,6 @@
 {
   "name": "azimuth-ui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A configurable, accessible React component library. Theme-driven via a single ThemeProvider with CSS custom properties. Built with TypeScript and CSS Modules.",
   "type": "module",
   "main": "./dist/index.cjs",
