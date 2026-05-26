@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 (2026-05-25)
+
+### Changes
+- **DataTable**: Virtualization now auto-enabled by default when data exceeds threshold. Set `virtualized={false}` to force-off.
+
 ## 0.3.0 (2026-05-25)
 
 ### Features

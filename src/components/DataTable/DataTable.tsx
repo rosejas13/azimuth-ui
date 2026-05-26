@@ -79,7 +79,7 @@ export interface DataTableProps<T> extends Omit<
   /** @default false */
   loading?: boolean;
   error?: string;
-  /** Enable virtualized scrolling for large datasets. */
+  /** Force-disable virtualized scrolling. Auto-enabled when data exceeds threshold. */
   virtualized?: boolean;
   /** Estimated row height in px. Used for virtualization scroll calculations. @default 52 */
   virtualizedRowHeight?: number;
@@ -149,7 +149,7 @@ function DataTableInner<T>(
     onSearch,
     loading = false,
     error,
-    virtualized = false,
+    virtualized,
     virtualizedRowHeight = 52,
     virtualizedThreshold = 100,
     virtualizedMaxHeight = 400,
@@ -232,7 +232,7 @@ function DataTableInner<T>(
   }, [filteredRows, sortState]);
 
   const useVirtualized =
-    virtualized && sortedRows.length > virtualizedThreshold;
+    virtualized !== false && sortedRows.length > virtualizedThreshold;
 
   const totalPages = Math.max(
     1,
