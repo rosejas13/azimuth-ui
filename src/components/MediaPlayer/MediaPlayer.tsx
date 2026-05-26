@@ -295,7 +295,7 @@ export const MediaPlayer = forwardRef<HTMLDivElement, MediaPlayerProps>(
                 <button
                   type="button"
                   className={styles.controlButton}
-                  onClick={toggleFullscreen}
+                  onClick={() => void toggleFullscreen()}
                   aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
                 >
                   {isFullscreen ? '\u{1F5D5}' : '\u26F6'}

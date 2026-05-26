@@ -65,7 +65,7 @@ describe('DiffViewer', () => {
 
   it('shows deletion count in header', () => {
     render(<DiffViewer oldCode={oldCode} newCode={newCode} />);
-    const el = screen.getByText(/^\-\d+$/);
+    const el = screen.getByText(/^-\d+$/);
     expect(el).toBeInTheDocument();
   });
 
