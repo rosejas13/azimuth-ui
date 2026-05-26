@@ -153,6 +153,9 @@ export type { InputGroupProps } from './components/InputGroup';
 export { ImageViewer } from './components/ImageViewer';
 export type { ImageViewerProps, ImageViewerImage } from './components/ImageViewer';
 
+export { InfoButton } from './components/InfoButton';
+export type { InfoButtonProps } from './components/InfoButton';
+
 export { Kbd } from './components/Kbd';
 export type { KbdProps } from './components/Kbd';
 

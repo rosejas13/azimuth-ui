@@ -28,7 +28,7 @@ function App() {
 
 ## Features
 
-- **80 components**: 9 primitives, 4 layout utilities, 67 full-featured composite components
+- **81 components**: 9 primitives, 4 layout utilities, 68 full-featured composite components
 - **860 SVG icons**: Tree-shakeable React icon components (Font Awesome subset, regular + brands)
 - **ThemeProvider**: Single config controls every component's appearance
 - **CSS custom properties**: All styling via `--azimuth-*` tokens
@@ -74,9 +74,9 @@ Icons are auto-generated from Font Awesome Free SVGs via `scripts/generate-icons
 
 `Container` `Divider` `Grid` `Stack`
 
-### Components (67)
+### Components (68)
 
-`Accordion` `Alert` `Avatar` `Badge` `BreadcrumbPageHeader` `Breadcrumbs` `Calendar` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `ColorPicker` `Combobox` `CommandPalette` `Cursor` `DataTable` `DateRangePicker` `DateTimePicker` `Dialog` `DiffViewer` `Drawer` `DropdownList` `EmptyState` `ErrorPage` `FanMenu` `FileUpload` `Flyout` `Form` `ImageViewer` `InputGroup` `Kbd` `List` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `Menu` `Modal` `Navbar` `NotificationBadge` `OTPInput` `PageLayout` `Pagination` `ProgressBar` `Rating` `ResizablePanel` `SearchBar` `SectionView` `SegmentedButton` `Sidebar` `SimpleChart` `Skeleton` `SlideSheet` `Slider` `SplitButton` `Table` `Tabs` `Tag` `TextArea` `TextBox` `Timeline` `Toast` `Tooltip` `TreeList` `VisuallyHidden`
+`Accordion` `Alert` `Avatar` `Badge` `BreadcrumbPageHeader` `Breadcrumbs` `Calendar` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `ColorPicker` `Combobox` `CommandPalette` `Cursor` `DataTable` `DateRangePicker` `DateTimePicker` `Dialog` `DiffViewer` `Drawer` `DropdownList` `EmptyState` `ErrorPage` `FanMenu` `FileUpload` `Flyout` `Form` `InfoButton` `ImageViewer` `InputGroup` `Kbd` `List` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `Menu` `Modal` `Navbar` `NotificationBadge` `OTPInput` `PageLayout` `Pagination` `ProgressBar` `Rating` `ResizablePanel` `SearchBar` `SectionView` `SegmentedButton` `Sidebar` `SimpleChart` `Skeleton` `SlideSheet` `Slider` `SplitButton` `Table` `Tabs` `Tag` `TextArea` `TextBox` `Timeline` `Toast` `Tooltip` `TreeList` `VisuallyHidden`
 
 ## Quick Start
 
