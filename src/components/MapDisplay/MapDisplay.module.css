@@ -45,8 +45,8 @@
 
 .compassRose {
   position: absolute;
-  top: var(--azimuth-spacing-3);
-  right: var(--azimuth-spacing-3);
+  top: var(--azimuth-space-md);
+  right: var(--azimuth-space-md);
   width: 40px;
   height: 40px;
   z-index: 2;
@@ -110,11 +110,11 @@
 
 .coordLabelLat {
   position: absolute;
-  left: var(--azimuth-spacing-1);
+  left: var(--azimuth-space-xs);
   transform: translateY(-50%);
   font-size: 9px;
   color: var(--azimuth-color-text-secondary);
-  font-family: var(--azimuth-font-family-mono, monospace);
+  font-family: var(--azimuth-font-mono, monospace);
   white-space: nowrap;
   pointer-events: none;
   z-index: 1;
@@ -122,11 +122,11 @@
 
 .coordLabelLng {
   position: absolute;
-  bottom: var(--azimuth-spacing-1);
+  bottom: var(--azimuth-space-xs);
   transform: translateX(-50%);
   font-size: 9px;
   color: var(--azimuth-color-text-secondary);
-  font-family: var(--azimuth-font-family-mono, monospace);
+  font-family: var(--azimuth-font-mono, monospace);
   white-space: nowrap;
   pointer-events: none;
   z-index: 1;
