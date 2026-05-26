@@ -82,4 +82,66 @@ describe('Button', () => {
     const btn = screen.getByTestId('btn');
     expect(btn).toHaveAttribute('type', 'submit');
   });
+
+  describe('asChild', () => {
+    it('renders child element instead of button', () => {
+      render(
+        <Button asChild>
+          <a href="/test">Link</a>
+        </Button>,
+      );
+      expect(screen.getByRole('link', { name: 'Link' })).toBeInTheDocument();
+      expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    });
+
+    it('applies Button className to child', () => {
+      render(
+        <Button asChild variant="primary">
+          <a href="/test">Link</a>
+        </Button>,
+      );
+      const link = screen.getByRole('link');
+      expect(link.className).toContain('button');
+      expect(link.className).toContain('primary');
+    });
+
+    it('merges child className with Button className', () => {
+      render(
+        <Button asChild className="btn-custom">
+          <a href="/test" className="link-custom">Link</a>
+        </Button>,
+      );
+      const link = screen.getByRole('link');
+      expect(link.className).toContain('btn-custom');
+      expect(link.className).toContain('link-custom');
+    });
+
+    it('fires both Button and child onClick', async () => {
+      const user = userEvent.setup();
+      const buttonClick = vi.fn();
+      const childClick = vi.fn();
+      render(
+        <Button asChild onClick={buttonClick}>
+          <a href="/test" onClick={childClick}>Link</a>
+        </Button>,
+      );
+      await user.click(screen.getByRole('link'));
+      expect(buttonClick).toHaveBeenCalledOnce();
+      expect(childClick).toHaveBeenCalledOnce();
+    });
+
+    it('does not render icon wrapper in asChild mode', () => {
+      render(
+        <Button asChild>
+          <a href="/test">Link</a>
+        </Button>,
+      );
+      expect(screen.getByRole('link')).toBeInTheDocument();
+    });
+
+    it('returns null when asChild with no children', () => {
+      const { container } = render(<Button asChild />);
+      expect(container.innerHTML).toBe('');
+    });
+  });
 });
