@@ -2,14 +2,27 @@
 
 import {
   type ComponentPropsWithoutRef,
+  type ReactNode,
   forwardRef,
   useState,
   useEffect,
 } from 'react';
 import { cn } from '@/utils/cn';
+import {
+  CheckCircleIcon,
+  CircleDotIcon,
+  CircleXmarkIcon,
+} from '@/icons';
 import styles from './Toast.module.css';
 
 type ToastVariant = 'warning' | 'success' | 'error' | 'info';
+
+const ICONS: Record<ToastVariant, ReactNode> = {
+  warning: <CircleXmarkIcon width={16} height={16} />,
+  success: <CheckCircleIcon width={16} height={16} />,
+  error: <CircleXmarkIcon width={16} height={16} />,
+  info: <CircleDotIcon width={16} height={16} />,
+};
 
 export interface ToastProps extends ComponentPropsWithoutRef<'div'> {
   /** @default 'info' */
@@ -23,6 +36,8 @@ export interface ToastProps extends ComponentPropsWithoutRef<'div'> {
   expandable?: boolean;
   /** Milliseconds after which the toast automatically dismisses. */
   autoDismiss?: number;
+  /** Show a default icon */
+  icon?: ReactNode;
   children?: React.ReactNode;
 }
 
@@ -33,6 +48,7 @@ export const Toast = forwardRef<HTMLDivElement, ToastProps>(
       title,
       message,
       dismissible = false,
+      icon,
       onDismiss,
       autoDismiss,
       expandable = false,
@@ -59,6 +75,11 @@ export const Toast = forwardRef<HTMLDivElement, ToastProps>(
         aria-live="polite"
         {...props}
       >
+        {icon !== null && (
+          <span className={styles.icon} aria-hidden="true">
+            {icon ?? ICONS[variant]}
+          </span>
+        )}
         <div className={styles.content}>
           <strong className={styles.title}>{title}</strong>
           {message && <p className={styles.message}>{message}</p>}

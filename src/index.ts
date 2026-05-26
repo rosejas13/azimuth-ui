@@ -33,6 +33,9 @@ export type { CheckboxProps } from './primitives/Checkbox';
 export { Icon } from './primitives/Icon';
 export type { IconProps } from './primitives/Icon';
 
+export { IconButton } from './primitives/IconButton';
+export type { IconButtonProps } from './primitives/IconButton';
+
 export { Input } from './primitives/Input';
 export type { InputProps } from './primitives/Input';
 
