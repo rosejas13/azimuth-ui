@@ -1,7 +1,6 @@
 'use client';
 import { useCallback, useSyncExternalStore } from 'react';
-
-type ColorMode = 'light' | 'dark' | 'system';
+import type { ColorMode } from './types';
 
 function getMode(): ColorMode {
   if (typeof window === 'undefined') return 'system';

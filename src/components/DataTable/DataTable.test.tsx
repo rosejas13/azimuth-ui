@@ -433,6 +433,26 @@ describe('DataTable', () => {
     );
   });
 
+  describe('virtualizedRowHeight', () => {
+    it('uses custom row height', () => {
+      const data = Array.from({ length: 150 }, (_, i) => ({
+        id: i + 1,
+        name: `User ${i + 1}`,
+        email: `user${i + 1}@example.com`,
+      }));
+      const { container } = render(
+        <DataTable
+          columns={DEFAULT_COLUMNS}
+          data={data}
+          virtualized
+          virtualizedRowHeight={80}
+        />,
+      );
+      const tbody = container.querySelector('tbody');
+      expect(tbody).toHaveStyle({ paddingTop: '0px' });
+    });
+  });
+
   describe('virtualized', () => {
     it('renders all data when virtualized with small dataset', () => {
       const data = Array.from({ length: 50 }, (_, i) => ({
