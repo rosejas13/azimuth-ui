@@ -63,7 +63,7 @@
 
 .errorText {
   color: var(--azimuth-color-error-text, #ef4444);
-  font-size: var(--azimuth-font-size-sm);
+  font-size: var(--azimuth-fs-sm);
 }
 
 .controls {
@@ -71,11 +71,11 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: var(--azimuth-spacing-3);
+  padding: var(--azimuth-space-md);
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
   display: flex;
   align-items: center;
-  gap: var(--azimuth-spacing-2);
+  gap: var(--azimuth-space-sm);
   opacity: 0;
   transition: opacity var(--azimuth-transition-base);
   pointer-events: none;
@@ -94,7 +94,7 @@
   border: none;
   color: var(--azimuth-color-text-inverse, #fff);
   cursor: pointer;
-  font-size: var(--azimuth-font-size-base);
+  font-size: var(--azimuth-fs-base);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,9 +107,9 @@
 }
 
 .timeDisplay {
-  font-size: var(--azimuth-font-size-xs);
+  font-size: var(--azimuth-fs-xs);
   color: var(--azimuth-color-text-inverse, #fff);
-  font-family: var(--azimuth-font-family-mono, monospace);
+  font-family: var(--azimuth-font-mono, monospace);
   min-width: 40px;
   text-align: center;
   white-space: nowrap;
@@ -125,7 +125,7 @@
 .volumeGroup {
   display: flex;
   align-items: center;
-  gap: var(--azimuth-spacing-1);
+  gap: var(--azimuth-space-xs);
 }
 
 .volumeSlider {
@@ -138,9 +138,9 @@
   background: transparent;
   color: var(--azimuth-color-text-inverse, #fff);
   border: none;
-  font-size: var(--azimuth-font-size-xs);
+  font-size: var(--azimuth-fs-xs);
   cursor: pointer;
-  padding: var(--azimuth-spacing-1);
+  padding: var(--azimuth-space-xs);
 }
 
 .speedSelect option {
