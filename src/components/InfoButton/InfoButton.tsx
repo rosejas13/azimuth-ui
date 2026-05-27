@@ -22,6 +22,8 @@ export interface InfoButtonProps
   title?: string;
   /** @default 'bottom' */
   placement?: InfoPlacement;
+  /** @default false */
+  showOnHover?: boolean;
   children?: ReactNode;
 }
 
@@ -73,6 +75,7 @@ export const InfoButton = forwardRef<HTMLDivElement, InfoButtonProps>(
       content,
       title,
       placement = 'bottom',
+      showOnHover = false,
       className,
       children,
       ...props
@@ -83,13 +86,58 @@ export const InfoButton = forwardRef<HTMLDivElement, InfoButtonProps>(
     const popoverId = `info-popover-${generatedId}`;
     const [open, setOpen] = useState(false);
     const [popoverStyle, setPopoverStyle] = useState<React.CSSProperties>({});
+    const [arrowStyle, setArrowStyle] = useState<React.CSSProperties>({});
     const buttonRef = useRef<HTMLButtonElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const hoverRef = useRef(false);
+    const hideTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
     const updatePosition = useCallback(() => {
       if (!buttonRef.current) return;
-      setPopoverStyle(placementStyle(placement, buttonRef.current.getBoundingClientRect()));
+      const rect = buttonRef.current.getBoundingClientRect();
+      setPopoverStyle(placementStyle(placement, rect));
+      switch (placement) {
+        case 'bottom':
+          setArrowStyle({ top: -5, left: '50%', marginLeft: -4 });
+          break;
+        case 'top':
+          setArrowStyle({ bottom: -5, left: '50%', marginLeft: -4 });
+          break;
+        case 'left':
+          setArrowStyle({ right: -5, top: '50%', marginTop: -4 });
+          break;
+        case 'right':
+          setArrowStyle({ left: -5, top: '50%', marginTop: -4 });
+          break;
+      }
     }, [placement]);
+
+    const clearHideTimer = useCallback(() => {
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    }, []);
+
+    const scheduleHide = useCallback(() => {
+      clearHideTimer();
+      hideTimerRef.current = setTimeout(() => {
+        if (!hoverRef.current) setOpen(false);
+      }, 300);
+    }, [clearHideTimer]);
+
+    const handleHoverEnter = useCallback(() => {
+      if (!showOnHover) return;
+      hoverRef.current = true;
+      clearHideTimer();
+      if (!open) {
+        updatePosition();
+        setOpen(true);
+      }
+    }, [showOnHover, clearHideTimer, open, updatePosition]);
+
+    const handleHoverLeave = useCallback(() => {
+      if (!showOnHover) return;
+      hoverRef.current = false;
+      scheduleHide();
+    }, [showOnHover, scheduleHide]);
 
     const toggle = useCallback(() => {
       setOpen((prev) => {
@@ -98,7 +146,10 @@ export const InfoButton = forwardRef<HTMLDivElement, InfoButtonProps>(
       });
     }, [updatePosition]);
 
-    const close = useCallback(() => setOpen(false), []);
+    const close = useCallback(() => {
+      setOpen(false);
+      clearHideTimer();
+    }, [clearHideTimer]);
 
     useEffect(() => {
       if (!open) return;
@@ -137,6 +188,8 @@ export const InfoButton = forwardRef<HTMLDivElement, InfoButtonProps>(
           type="button"
           className={styles.trigger}
           onClick={toggle}
+          onMouseEnter={handleHoverEnter}
+          onMouseLeave={handleHoverLeave}
           aria-expanded={open}
           aria-controls={popoverId}
           aria-label="More information"
@@ -158,7 +211,10 @@ export const InfoButton = forwardRef<HTMLDivElement, InfoButtonProps>(
             aria-label={title ?? 'More information'}
             className={styles.popover}
             style={popoverStyle}
+            onMouseEnter={handleHoverEnter}
+            onMouseLeave={handleHoverLeave}
           >
+            <div className={styles.arrow} style={arrowStyle} />
             {title && <div className={styles.title}>{title}</div>}
             <div className={styles.body}>{content}</div>
           </div>

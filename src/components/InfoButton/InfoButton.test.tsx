@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { InfoButton } from './InfoButton';
 
 describe('InfoButton', () => {
@@ -65,5 +65,36 @@ describe('InfoButton', () => {
     expect(screen.getByText('Dismiss me')).toBeInTheDocument();
     await user.keyboard('{Escape}');
     expect(screen.queryByText('Dismiss me')).not.toBeInTheDocument();
+  });
+
+  describe('showOnHover', () => {
+    it('shows popover on mouse enter', async () => {
+      const user = userEvent.setup();
+      render(<InfoButton content="Hover content" showOnHover />);
+      await user.hover(screen.getByRole('button'));
+      expect(screen.getByText('Hover content')).toBeInTheDocument();
+    });
+
+    it('hides popover on mouse leave after 300ms delay', () => {
+      vi.useFakeTimers();
+      render(<InfoButton content="Hover content" showOnHover />);
+      const btn = screen.getByRole('button');
+      act(() => { fireEvent.mouseOver(btn); });
+      expect(screen.getByText('Hover content')).toBeInTheDocument();
+      act(() => {
+        fireEvent.mouseOut(btn);
+        vi.advanceTimersByTime(300);
+      });
+      expect(screen.queryByText('Hover content')).not.toBeInTheDocument();
+      vi.useRealTimers();
+    });
+
+    it('click still toggles when showOnHover is true', () => {
+      render(<InfoButton content="Toggle me" showOnHover />);
+      fireEvent.click(screen.getByRole('button'));
+      expect(screen.getByText('Toggle me')).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button'));
+      expect(screen.queryByText('Toggle me')).not.toBeInTheDocument();
+    });
   });
 });

@@ -20,11 +20,10 @@
   border-radius: var(--azimuth-radius-md);
   font-size: var(--azimuth-fs-sm);
   line-height: 1.4;
-  white-space: nowrap;
+  white-space: pre-line;
   pointer-events: none;
   animation: azimuth-fade-in var(--azimuth-transition-fast) forwards;
   max-width: 240px;
-  white-space: normal;
 }
 
 .arrow {

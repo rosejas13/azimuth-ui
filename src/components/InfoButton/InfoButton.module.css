@@ -59,3 +59,13 @@
 .body {
   color: var(--azimuth-color-text-secondary);
 }
+
+.arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--azimuth-color-surface);
+  border: 1px solid var(--azimuth-color-border);
+  transform: rotate(45deg);
+  z-index: -1;
+}

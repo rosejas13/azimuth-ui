@@ -58,4 +58,16 @@ describe('Tooltip', () => {
     await user.hover(screen.getByText('Hover me'));
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
   });
+
+  it('renders multi-line content with newlines', async () => {
+    const user = userEvent.setup();
+    render(<Tooltip content={"Line 1\nLine 2"} delay={0}>Hover me</Tooltip>);
+    await user.hover(screen.getByText('Hover me'));
+    await waitFor(() => {
+      expect(screen.getByText(/Line 1/)).toBeInTheDocument();
+    });
+    const tooltip = screen.getByRole('tooltip');
+    expect(tooltip).toHaveTextContent(/Line 1/);
+    expect(tooltip).toHaveTextContent(/Line 2/);
+  });
 });
