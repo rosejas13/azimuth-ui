@@ -36,6 +36,13 @@ function getAnimOut(position: ToastPosition): string {
   return 'slideOutRight';
 }
 
+/**
+ * Provides a toast notification context and renders a toast container.
+ *
+ * **Note on `dismissible`:** The provider context defaults `dismissible` to `true`
+ * (line 109), which differs from the standalone `Toast` component where the
+ * default is `false`.
+ */
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<ToastEntry[]>([]);
   const [exiting, setExiting] = useState<Set<string>>(new Set());

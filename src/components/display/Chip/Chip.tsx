@@ -6,6 +6,7 @@ import styles from './Chip.module.css';
 
 type ChipVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
 
+/** A compact chip/tag element with optional delete, selection, click, and avatar. */
 export interface ChipProps extends ComponentPropsWithoutRef<'span'> {
   /** @default 'neutral' */
   variant?: ChipVariant;
@@ -13,14 +14,19 @@ export interface ChipProps extends ComponentPropsWithoutRef<'span'> {
   size?: 'sm' | 'md';
   /** @default false */
   deletable?: boolean;
+  /** Callback fired when the delete button is clicked. */
   onDelete?: () => void;
   /** @default false */
   selected?: boolean;
+  /** Callback fired when the chip is clicked. When set, the chip becomes keyboard-focusable with a button role. */
   onClick?: () => void;
+  /** Optional avatar element rendered before the label. */
   avatar?: React.ReactNode;
+  /** Chip label content. */
   children?: React.ReactNode;
 }
 
+/** A compact chip with optional delete, selection state, click handling, and avatar. */
 export const Chip = forwardRef<HTMLSpanElement, ChipProps>(
   (
     {

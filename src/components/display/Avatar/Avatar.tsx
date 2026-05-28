@@ -6,9 +6,13 @@ import styles from './Avatar.module.css';
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
+/** A user avatar displaying an image or fallback initials. */
 export interface AvatarProps extends ComponentPropsWithoutRef<'div'> {
+  /** Image source URL. */
   src?: string;
+  /** @default '' */
   alt?: string;
+  /** Text used to generate fallback initials when the image fails to load. */
   fallback?: string;
   /** @default 'md' */
   size?: AvatarSize;
@@ -16,6 +20,7 @@ export interface AvatarProps extends ComponentPropsWithoutRef<'div'> {
   square?: boolean;
 }
 
+/** An avatar component that shows an image or auto-generated initials as fallback. */
 export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
   (
     {

@@ -9,18 +9,24 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './OTPInput.module.css';
 
+/** Props for the OTPInput component. */
 export interface OTPInputProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
   /** @default 4 */
   length?: number;
+  /** The current OTP value string. */
   value: string;
+  /** Callback fired when the OTP value changes. */
   onChange?: (value: string) => void;
+  /** @default false */
   disabled?: boolean;
   /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
+  /** @default false */
   error?: boolean;
 }
 
+/** A one-time password input with individual digit fields, keyboard navigation, and paste support. */
 export const OTPInput = forwardRef<HTMLDivElement, OTPInputProps>(
   (
     {

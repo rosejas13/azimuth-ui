@@ -12,22 +12,35 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Accordion.module.css';
 
+/** A single item within an accordion. */
 export interface AccordionItem {
+  /** Unique identifier for the item. */
   id: string;
+  /** Title displayed in the accordion trigger. */
   title: string;
+  /** Content revealed when the item is expanded. */
   content: ReactNode;
+  /** Whether the item is disabled. */
   disabled?: boolean;
+  /** Optional icon rendered next to the title. */
   icon?: ReactNode;
 }
 
+/** A vertically stacked set of expandable sections. */
 export interface AccordionProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onToggle'> {
+  /** Array of items to render in the accordion. */
   items: AccordionItem[];
+  /** ID of the item to open by default. */
   defaultOpen?: string;
+  /** @default false */
   multiple?: boolean;
+  /** Callback fired when an item is toggled. Receives the toggled item's ID. */
   onToggle?: (itemId: string) => void;
+  /** @default 'default' */
   variant?: 'default' | 'bordered';
 }
 
+/** A vertically stacked set of expandable sections. */
 export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
   (
     {

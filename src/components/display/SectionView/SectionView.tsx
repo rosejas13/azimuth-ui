@@ -11,16 +11,22 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './SectionView.module.css';
 
+/** A collapsible section with a toggle trigger and animated content reveal. Supports controlled and uncontrolled modes. */
 export interface SectionViewProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onToggle'> {
+  /** Section title displayed in the toggle trigger. */
   title: string;
   /** @default false */
   defaultExpanded?: boolean;
+  /** Controlled expanded state. When provided, the component becomes controlled. */
   expanded?: boolean;
+  /** Callback fired when the section is toggled. */
   onToggle?: (expanded: boolean) => void;
+  /** Content revealed when expanded. */
   children?: React.ReactNode;
 }
 
+/** A collapsible section view with a toggle button and animated content. */
 export const SectionView = forwardRef<HTMLDivElement, SectionViewProps>(
   (
     {

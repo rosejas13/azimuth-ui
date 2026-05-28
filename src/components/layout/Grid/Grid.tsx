@@ -8,6 +8,7 @@ type GridCols = GridColsValue | Partial<Record<GridBreakpoint, GridColsValue>>;
 type GridAlign = 'start' | 'center' | 'end' | 'stretch';
 type GridVariant = 'auto' | 'highlight' | 'sidebar';
 
+/** Props for the Grid layout component. */
 export interface GridProps extends ComponentPropsWithoutRef<'div'> {
   /** @default 'auto' */
   cols?: GridCols;
@@ -20,6 +21,7 @@ export interface GridProps extends ComponentPropsWithoutRef<'div'> {
 
 const BREAKPOINTS: Record<GridBreakpoint, number> = { base: 0, sm: 640, md: 768, lg: 1024, xl: 1280 };
 
+/** A responsive CSS grid layout component with configurable columns, alignment, and variant presets. */
 export const Grid = forwardRef<HTMLDivElement, GridProps>(
   ({ cols = 'auto', align, variant = 'auto', gap, className, style, children, ...props }, ref) => {
     const buildGridClass = () => {

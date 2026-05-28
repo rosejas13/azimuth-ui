@@ -12,13 +12,15 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Carousel.module.css';
 
+/** A rotating carousel/slider for cycling through child elements. */
 export interface CarouselProps extends ComponentPropsWithoutRef<'div'> {
+  /** Slide elements to display. */
   children: React.ReactNode;
   /** @default false */
   autoPlay?: boolean;
-  /** @default 5000 */
+  /** Interval in milliseconds between auto-advance slides. Only applies when `autoPlay` is true (and `autoRotate` is not set). @default 5000 */
   interval?: number;
-  /** Milliseconds between automatic rotations. Enables auto-advance with this interval. */
+  /** Milliseconds between automatic rotations. When set, enables auto-advance with this interval and takes precedence over `interval`. */
   autoRotate?: number;
   /** @default true */
   showDots?: boolean;
@@ -28,6 +30,7 @@ export interface CarouselProps extends ComponentPropsWithoutRef<'div'> {
   loop?: boolean;
 }
 
+/** A carousel that cycles through slides with auto-play, dots, arrows, and keyboard navigation. */
 export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
   (
     {

@@ -5,6 +5,7 @@ import styles from './ProgressBar.module.css';
 type ProgressBarColor = 'primary' | 'accent' | 'success' | 'warning' | 'danger';
 type ProgressBarSize = 'sm' | 'md' | 'lg';
 
+/** A horizontal progress bar with optional percentage display and indeterminate state. */
 export interface ProgressBarProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
   /** @default 0 */
@@ -21,6 +22,7 @@ export interface ProgressBarProps
   showPercentage?: boolean;
 }
 
+/** A horizontal progress bar with fill, indeterminate animation, and optional percentage label. */
 export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
   (
     {

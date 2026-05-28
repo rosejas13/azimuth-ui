@@ -16,14 +16,18 @@ import styles from './InfoButton.module.css';
 
 type InfoPlacement = 'top' | 'bottom' | 'left' | 'right';
 
+/** An info button that reveals a popover with additional content. */
 export interface InfoButtonProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'content' | 'title'> {
+  /** Content displayed inside the popover. */
   content: ReactNode;
+  /** Optional title shown at the top of the popover. */
   title?: string;
   /** @default 'bottom' */
   placement?: InfoPlacement;
   /** @default false */
   showOnHover?: boolean;
+  /** Custom trigger content. Defaults to a circled "i" icon. */
   children?: ReactNode;
 }
 
@@ -69,6 +73,7 @@ function placementStyle(
   }
 }
 
+/** A button that toggles an informational popover with title, content, and arrow. */
 export const InfoButton = forwardRef<HTMLDivElement, InfoButtonProps>(
   (
     {

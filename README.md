@@ -28,7 +28,7 @@ function App() {
 
 ## Features
 
-- **81 components**: 9 primitives, 4 layout utilities, 68 full-featured composite components
+- **81 components**: 12 data, 35 display, 17 input, 4 layout, 5 navigation, 8 overlay
 - **860 SVG icons**: Tree-shakeable React icon components (Font Awesome subset, regular + brands)
 - **ThemeProvider**: Single config controls every component's appearance
 - **CSS custom properties**: All styling via `--azimuth-*` tokens
@@ -47,16 +47,39 @@ function App() {
 
 ## Components
 
-### Primitives (9)
+All 81 components live under `src/components/` grouped by category.
 
-`Button` `Checkbox` `Icon` `IconButton` `Input` `Radio` `Select` `Text` `Toggle`
+### Input (17)
+
+`Button` `Checkbox` `Combobox` `DropdownList` `FileUpload` `Form` `Input` `InputGroup` `OTPInput` `Radio` `Rating` `SearchBar` `Select` `Slider` `TextArea` `TextBox` `Toggle`
+
+### Display (35)
+
+`Accordion` `Alert` `Avatar` `Badge` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `Cursor` `EmptyState` `ErrorPage` `FanMenu` `Icon` `IconButton` `ImageViewer` `InfoButton` `Kbd` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `NotificationBadge` `PageLayout` `ProgressBar` `ResizablePanel` `SectionView` `SegmentedButton` `Skeleton` `SplitButton` `Tag` `Text` `Toast` `VisuallyHidden`
+
+### Data (12)
+
+`Calendar` `ColorPicker` `DataTable` `DateRangePicker` `DateTimePicker` `DiffViewer` `List` `Pagination` `SimpleChart` `Table` `Timeline` `TreeList`
+
+### Layout (4)
+
+`Container` `Divider` `Grid` `Stack`
+
+### Navigation (5)
+
+`BreadcrumbPageHeader` `Breadcrumbs` `Menu` `Navbar` `Tabs`
+
+### Overlay (8)
+
+`CommandPalette` `Dialog` `Drawer` `Flyout` `Modal` `Sidebar` `SlideSheet` `Tooltip`
 
 ## Icons
 
 Azimuth UI ships 860 tree-shakeable SVG icons (273 regular + 587 brands) as typed React components. Each icon is a `forwardRef` SVG element that inherits `currentColor` and accepts all standard SVG attributes.
 
 ```tsx
-import { SearchIcon, BellIcon, GithubIcon } from '@azimuth/ui';
+import { Icon } from '@azimuth/ui';
+import { SearchIcon, BellIcon, GithubIcon } from '@azimuth/ui/icons';
 
 // With Icon wrapper
 <Icon size="lg"><SearchIcon width={20} height={20} /></Icon>
@@ -69,14 +92,6 @@ import { SearchIcon, BellIcon, GithubIcon } from '@azimuth/ui';
 ```
 
 Icons are auto-generated from Font Awesome Free SVGs via `scripts/generate-icons.mjs`.
-
-### Layout (4)
-
-`Container` `Divider` `Grid` `Stack`
-
-### Components (68)
-
-`Accordion` `Alert` `Avatar` `Badge` `BreadcrumbPageHeader` `Breadcrumbs` `Calendar` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `ColorPicker` `Combobox` `CommandPalette` `Cursor` `DataTable` `DateRangePicker` `DateTimePicker` `Dialog` `DiffViewer` `Drawer` `DropdownList` `EmptyState` `ErrorPage` `FanMenu` `FileUpload` `Flyout` `Form` `InfoButton` `ImageViewer` `InputGroup` `Kbd` `List` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `Menu` `Modal` `Navbar` `NotificationBadge` `OTPInput` `PageLayout` `Pagination` `ProgressBar` `Rating` `ResizablePanel` `SearchBar` `SectionView` `SegmentedButton` `Sidebar` `SimpleChart` `Skeleton` `SlideSheet` `Slider` `SplitButton` `Table` `Tabs` `Tag` `TextArea` `TextBox` `Timeline` `Toast` `Tooltip` `TreeList` `VisuallyHidden`
 
 ## Quick Start
 
@@ -134,7 +149,7 @@ import { ThemeProvider, COLOR_PRESETS } from '@azimuth/ui';
 git clone https://github.com/rosejas13/azimuth-ui.git
 cd azimuth-ui
 npm install
-npm run test          # 990+ tests
+npm run test          # 1038 tests across 87 files
 npm run typecheck     # Strict TypeScript
 npm run demo          # Component showcase with live playground
 npm run lint          # ESLint (zero-error)

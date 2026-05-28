@@ -4,6 +4,7 @@ import { type ComponentPropsWithoutRef, forwardRef, useState, useId } from 'reac
 import { cn } from '@/utils/cn';
 import styles from './Card.module.css';
 
+/** A flexible card container with header, collapsible body, footer, title, description, and content sub-components. */
 export interface CardProps extends ComponentPropsWithoutRef<'div'> {
   header?: React.ReactNode;
   footer?: React.ReactNode;
@@ -11,6 +12,7 @@ export interface CardProps extends ComponentPropsWithoutRef<'div'> {
   expandable?: boolean;
   /** @default true */
   defaultExpanded?: boolean;
+  /** Body content of the card. */
   children?: React.ReactNode;
 }
 
@@ -62,6 +64,7 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
 
 CardRoot.displayName = 'Card';
 
+/** Header area of a card. */
 export interface CardHeaderProps extends ComponentPropsWithoutRef<'div'> {
   children?: React.ReactNode;
 }
@@ -78,6 +81,7 @@ const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
 
 CardHeader.displayName = 'Card.Header';
 
+/** Footer area of a card. */
 export interface CardFooterProps extends ComponentPropsWithoutRef<'div'> {
   children?: React.ReactNode;
 }
@@ -94,6 +98,7 @@ const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
 
 CardFooter.displayName = 'Card.Footer';
 
+/** Title heading within a card. */
 export interface CardTitleProps extends ComponentPropsWithoutRef<'h3'> {
   children?: React.ReactNode;
 }
@@ -110,6 +115,7 @@ const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
 
 CardTitle.displayName = 'Card.Title';
 
+/** Description text within a card. */
 export interface CardDescriptionProps extends ComponentPropsWithoutRef<'p'> {
   children?: React.ReactNode;
 }
@@ -126,6 +132,7 @@ const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionProps>(
 
 CardDescription.displayName = 'Card.Description';
 
+/** Body content area of a card. */
 export interface CardContentProps extends ComponentPropsWithoutRef<'div'> {
   children?: React.ReactNode;
 }

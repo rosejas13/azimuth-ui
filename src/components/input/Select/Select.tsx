@@ -4,6 +4,7 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Select.module.css';
 
+/** Props for the Select component. */
 export interface SelectProps
   extends Omit<ComponentPropsWithoutRef<'select'>, 'size'> {
   label?: {
@@ -19,6 +20,7 @@ export interface SelectProps
   options: Array<{ value: string; label: string; disabled?: boolean }>;
 }
 
+/** A native select element wrapper with label, validation, and custom chevron styling. */
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   (
     {

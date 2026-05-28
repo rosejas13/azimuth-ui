@@ -12,11 +12,13 @@ import { cn } from '@/utils/cn';
 import { Calendar } from '@/components/data/Calendar';
 import styles from './DateRangePicker.module.css';
 
+/** A date range with optional start and end dates. */
 export interface DateRange {
   start: Date | null;
   end: Date | null;
 }
 
+/** Props for the DateRangePicker component. */
 export interface DateRangePickerProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'defaultValue'> {
   label?: string;
@@ -58,6 +60,12 @@ function formatDate(date: Date | null, includeTime: boolean): string {
   return day;
 }
 
+/**
+ * A date range picker component with start/end date selection.
+ *
+ * Supports controlled and uncontrolled usage, min/max date constraints,
+ * optional time selection with steppers, and popup positioning.
+ */
 export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
   (
     {

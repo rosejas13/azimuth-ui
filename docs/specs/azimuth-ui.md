@@ -43,7 +43,7 @@ Build a production-quality React component library (`azimuth-ui`) with a configu
 npm run dev            # Storybook + watch mode
 npm run build          # tsup (ESM + CJS + CSS + .d.ts)
 npm run typecheck      # tsc --noEmit
-npm run lint           # eslint src/
+npm run lint           # stylelint 'src/**/*.css' && eslint src/
 npm run format         # prettier --write src/
 npm run test           # vitest run
 npm run test:watch     # vitest
@@ -69,14 +69,13 @@ Azimuth/
 ├── src/
 │   ├── index.ts              # Public API barrel export
 │   ├── theme/
-│   │   ├── ThemeProvider.tsx  # React context + CSS var injection
-│   │   ├── ThemeContext.ts    # React.createContext
-│   │   ├── useTheme.ts        # Hook for consuming theme
-│   │   └── types.ts           # ThemeConfig, ThemeTokens
-│   ├── tokens/
-│   │   ├── colors.ts          # OKLCH color generation
-│   │   ├── typography.ts      # Font scale definitions
-│   │   ├── spacing.ts         # Spacing scale
+│   │   ├── color-presets.ts   # Predefined color schemes
+│   │   ├── style-presets.ts   # Predefined style presets
+│   │   ├── ThemeContext.ts     # React.createContext
+│   │   ├── ThemeProvider.tsx   # React context + CSS var injection
+│   │   ├── types.ts            # ThemeConfig, ThemeTokens
+│   │   ├── useTheme.ts         # Hook for consuming theme
+│   │   ├── useThemeMode.ts     # Hook for theme mode toggling
 │   │   └── index.ts
 │   ├── styles/
 │   │   ├── tokens.css         # CSS custom properties (generated/injected)
@@ -84,67 +83,115 @@ Azimuth/
 │   │   ├── animations.css     # Shared keyframes + transitions
 │   │   └── global.css         # Barrel import
 │   ├── hooks/
-│   │   ├── useAnimation.ts    # Snappy/bouncy animation hook
-│   │   ├── useDebounce.ts
 │   │   ├── useClickOutside.ts
-│   │   ├── useAutoComplete.ts # Fuzzy filter logic
+│   │   ├── useControllableState.ts
+│   │   ├── useDisclosure.ts
+│   │   ├── useMediaQuery.ts
 │   │   └── index.ts
 │   ├── utils/
 │   │   ├── cn.ts              # clsx + className merger
-│   │   ├── matchScore.ts      # String similarity for autocomplete
-│   │   ├── types.ts           # Shared utility types
+│   │   ├── Slot.tsx           # Slot component for composition
 │   │   └── index.ts
-│   ├── primitives/            # Phase 1
-│   │   ├── Button/
-│   │   ├── Text/
-│   │   ├── Icon/
-│   │   ├── Input/
-│   │   ├── Checkbox/
-│   │   ├── Radio/
-│   │   ├── Select/
-│   │   ├── Toggle/
-│   │   └── index.ts
-│   ├── layout/                # Phase 2
-│   │   ├── Container/
-│   │   ├── Grid/
-│   │   ├── Stack/
-│   │   ├── Divider/
-│   │   └── index.ts
-│   └── components/            # Phase 3+
-│       ├── Card/
-│       ├── Alert/
-│       ├── Toast/
-│       ├── Modal/
-│       ├── Form/
-│       ├── DataTable/
-│       ├── Badge/
-│       ├── Tag/
-│       ├── Chip/
-│       ├── Avatar/
-│       ├── Tooltip/
-│       ├── DropdownList/
-│       ├── Tabs/
-│       ├── Navbar/
-│       ├── Breadcrumbs/
-│       ├── Pagination/
-│       ├── Drawer/
-│       ├── Slider/
-│       ├── Loader/
-│       ├── ProgressBar/
-│       ├── SearchBar/
-│       ├── Calendar/
-│       ├── DateTimePicker/
-│       ├── TreeList/
-│       ├── Carousel/
-│       ├── Menu/
-│       ├── Flyout/
-│       ├── FanMenu/
-│       ├── SegmentedButton/
-│       ├── SlideSheet/
-│       ├── Dialog/
-│       ├── SectionView/
-│       ├── LoginSignup/
-│       └── index.ts
+│   ├── icons/
+│   │   └── ...
+│   ├── types/
+│   │   └── ...
+│   ├── test/
+│   │   └── ...
+│   └── components/
+│       ├── display/
+│       │   ├── Accordion/
+│       │   ├── Alert/
+│       │   ├── Avatar/
+│       │   ├── Badge/
+│       │   ├── Card/
+│       │   ├── Carousel/
+│       │   ├── Chat/
+│       │   ├── Chip/
+│       │   ├── Clock/
+│       │   ├── CodeBlock/
+│       │   ├── Cursor/
+│       │   ├── EmptyState/
+│       │   ├── ErrorPage/
+│       │   ├── FanMenu/
+│       │   ├── Icon/
+│       │   ├── IconButton/
+│       │   ├── ImageViewer/
+│       │   ├── InfoButton/
+│       │   ├── Kbd/
+│       │   ├── Loader/
+│       │   ├── LoginSignup/
+│       │   ├── MapDisplay/
+│       │   ├── MediaPlayer/
+│       │   ├── NotificationBadge/
+│       │   ├── PageLayout/
+│       │   ├── ProgressBar/
+│       │   ├── ResizablePanel/
+│       │   ├── SectionView/
+│       │   ├── SegmentedButton/
+│       │   ├── Skeleton/
+│       │   ├── SplitButton/
+│       │   ├── Tag/
+│       │   ├── Text/
+│       │   ├── Toast/
+│       │   ├── VisuallyHidden/
+│       │   └── index.ts
+│       ├── input/
+│       │   ├── Button/
+│       │   ├── Checkbox/
+│       │   ├── Combobox/
+│       │   ├── DropdownList/
+│       │   ├── FileUpload/
+│       │   ├── Form/
+│       │   ├── Input/
+│       │   ├── InputGroup/
+│       │   ├── OTPInput/
+│       │   ├── Radio/
+│       │   ├── Rating/
+│       │   ├── SearchBar/
+│       │   ├── Select/
+│       │   ├── Slider/
+│       │   ├── TextArea/
+│       │   ├── TextBox/
+│       │   ├── Toggle/
+│       │   └── index.ts
+│       ├── data/
+│       │   ├── Calendar/
+│       │   ├── ColorPicker/
+│       │   ├── DataTable/
+│       │   ├── DateRangePicker/
+│       │   ├── DateTimePicker/
+│       │   ├── DiffViewer/
+│       │   ├── List/
+│       │   ├── Pagination/
+│       │   ├── SimpleChart/
+│       │   ├── Table/
+│       │   ├── Timeline/
+│       │   ├── TreeList/
+│       │   └── index.ts
+│       ├── navigation/
+│       │   ├── BreadcrumbPageHeader/
+│       │   ├── Breadcrumbs/
+│       │   ├── Menu/
+│       │   ├── Navbar/
+│       │   ├── Tabs/
+│       │   └── index.ts
+│       ├── overlay/
+│       │   ├── CommandPalette/
+│       │   ├── Dialog/
+│       │   ├── Drawer/
+│       │   ├── Flyout/
+│       │   ├── Modal/
+│       │   ├── Sidebar/
+│       │   ├── SlideSheet/
+│       │   ├── Tooltip/
+│       │   └── index.ts
+│       └── layout/
+│           ├── Container/
+│           ├── Divider/
+│           ├── Grid/
+│           ├── Stack/
+│           └── index.ts
 ├── docs/
 │   └── specs/
 │       └── azimuth-ui.md      # This file
@@ -160,7 +207,7 @@ Azimuth/
 Every component follows this structure:
 
 ```tsx
-// src/primitives/Button/Button.tsx
+// src/components/input/Button/Button.tsx
 'use client';
 
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';

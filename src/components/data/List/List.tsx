@@ -4,10 +4,12 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './List.module.css';
 
+/** Props for a single list item. */
 export interface ListItemProps extends ComponentPropsWithoutRef<'li'> {
   children?: React.ReactNode;
 }
 
+/** Props for the List container component. Supports ordered/unordered, spacing, and bulleted variants. */
 export interface ListProps extends Omit<ComponentPropsWithoutRef<'ul'>, 'type'> {
   /** @default false */
   ordered?: boolean;
@@ -18,6 +20,7 @@ export interface ListProps extends Omit<ComponentPropsWithoutRef<'ul'>, 'type'> 
   children?: React.ReactNode;
 }
 
+/** Renders a single `<li>` item within a List. */
 const ListItem = forwardRef<HTMLLIElement, ListItemProps>(
   ({ className, children, ...props }, ref) => {
     return (
@@ -30,6 +33,7 @@ const ListItem = forwardRef<HTMLLIElement, ListItemProps>(
 
 ListItem.displayName = 'List.Item';
 
+/** Renders an ordered (`<ol>`) or unordered (`<ul>`) list with configurable spacing and bullet style. */
 const ListRoot = forwardRef<HTMLUListElement | HTMLOListElement, ListProps>(
   (
     {

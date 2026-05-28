@@ -12,13 +12,15 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Combobox.module.css';
 
+/** An individual option in the combobox dropdown list. */
 export interface ComboboxOption {
   value: string;
   label: string;
 }
 
+/** Props for the Combobox component. */
 export interface ComboboxProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'onSelect'> {
-  data: { options: ComboboxOption[]; emptyMessage?: string };
+  data: { options: ComboboxOption[]; /** @default 'No results found' */ emptyMessage?: string };
   selection: { value: string; onChange: (value: string) => void; onSelect: (value: string) => void };
   label?: string;
   /** @default 'Type to search...' */
@@ -30,6 +32,7 @@ export interface ComboboxProps extends Omit<ComponentPropsWithoutRef<'div'>, 'on
   error?: string;
 }
 
+/** An autocomplete combobox with filtering, keyboard navigation, and ARIA support. */
 export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
   (
     {

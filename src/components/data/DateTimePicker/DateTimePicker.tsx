@@ -11,6 +11,7 @@ import { cn } from '@/utils/cn';
 import { Calendar } from '@/components/data/Calendar';
 import styles from './DateTimePicker.module.css';
 
+/** Props for the DateTimePicker component. */
 export interface DateTimePickerProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'defaultValue'> {
   value?: { value?: Date; defaultValue?: Date; onChange?: (date: Date) => void };
@@ -34,6 +35,12 @@ function stepWithWrap(
   return next;
 }
 
+/**
+ * A date and time picker component combining a calendar with time steppers.
+ *
+ * Supports hour/minute/second stepping, controlled and uncontrolled usage,
+ * and min/max date constraints.
+ */
 export const DateTimePicker = forwardRef<HTMLDivElement, DateTimePickerProps>(
   (
     {

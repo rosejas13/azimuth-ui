@@ -4,6 +4,7 @@ import { type ComponentPropsWithoutRef, forwardRef, useCallback } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Pagination.module.css';
 
+/** Props for the Pagination navigation component. */
 export interface PaginationProps extends ComponentPropsWithoutRef<'nav'> {
   currentPage: number;
   totalPages: number;
@@ -64,6 +65,7 @@ function getPageRange(
   ];
 }
 
+/** Renders a paginated navigation control with page buttons, optional first/last buttons, and ellipsis for large page ranges. */
 export const Pagination = forwardRef<HTMLElement, PaginationProps>(
   (
     {

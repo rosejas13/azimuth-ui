@@ -9,15 +9,21 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Rating.module.css';
 
+/** Props for the Rating component. */
 export interface RatingProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+  /** @default 0 */
   value?: number;
+  /** @default 5 */
   max?: number;
   onChange?: (value: number) => void;
+  /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
+  /** @default false */
   disabled?: boolean;
 }
 
+/** A star-based rating input with keyboard navigation and hover preview. */
 export const Rating = forwardRef<HTMLDivElement, RatingProps>(
   (
     {

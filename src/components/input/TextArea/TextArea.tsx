@@ -14,21 +14,28 @@ import styles from './TextArea.module.css';
 
 type TextAreaBaseProps = ComponentPropsWithoutRef<'textarea'>;
 
+/** Props for the TextArea component. */
 export interface TextAreaProps extends Omit<TextAreaBaseProps, 'size' | 'value' | 'onChange' | 'disabled' | 'maxLength'> {
   label?: {
+    /** The label text displayed above the textarea. */
     text?: string;
+    /** Subtitle text displayed below the label. */
     subtitle?: string;
+    /** Validation error message displayed below the textarea. */
     error?: string;
     /** @default false */
     required?: boolean;
   };
   value?: {
+    /** Controlled value of the textarea. */
     value?: string;
+    /** Change handler for the textarea. */
     onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
     /** @default false */
     disabled?: boolean;
   };
   charCount?: {
+    /** Maximum character length. Enforced on the native textarea element. */
     maxLength?: number;
     /** @default false */
     showCharCount?: boolean;
@@ -37,6 +44,7 @@ export interface TextAreaProps extends Omit<TextAreaBaseProps, 'size' | 'value' 
   size?: 'sm' | 'md' | 'lg';
 }
 
+/** A multi-line text input with label, character count, and error state support. */
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (
     {

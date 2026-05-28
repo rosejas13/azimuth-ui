@@ -12,6 +12,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Tabs.module.css';
 
+/** A single tab definition. */
 interface TabItem {
   id: string;
   label: string;
@@ -19,6 +20,7 @@ interface TabItem {
   disabled?: boolean;
 }
 
+/** Props for the Tabs component. */
 export interface TabsProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
   tabs: TabItem[];
   defaultTab?: string;
@@ -28,6 +30,7 @@ export interface TabsProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChan
   variant?: 'underline' | 'pills' | 'buttons';
 }
 
+/** A tabbed interface with keyboard navigation and controlled/uncontrolled modes. */
 export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
   (
     {

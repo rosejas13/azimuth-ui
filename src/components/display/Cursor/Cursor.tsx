@@ -8,12 +8,14 @@ type CursorValue =
   | 'pointer' | 'default' | 'not-allowed' | 'text' | 'move' | 'wait'
   | 'grab' | 'grabbing' | 'crosshair' | 'help' | 'none' | 'col-resize' | 'row-resize';
 
+/** A wrapper that applies a CSS cursor style to its children. */
 export interface CursorProps extends ComponentPropsWithoutRef<'span'> {
   /** @default 'default' */
   cursor?: CursorValue;
   children?: React.ReactNode;
 }
 
+/** Wraps content and applies a CSS cursor style. */
 export const Cursor = forwardRef<HTMLSpanElement, CursorProps>(
   ({ cursor = 'default', children, className, style, ...props }, ref) => {
     return (
@@ -31,6 +33,7 @@ export const Cursor = forwardRef<HTMLSpanElement, CursorProps>(
 
 Cursor.displayName = 'Cursor';
 
+/** Sets the body cursor to the given value while the component is mounted. Restores the previous cursor on unmount. */
 export function useCursor(cursor: CursorValue): void {
   const prevRef = useRef<string>('');
 

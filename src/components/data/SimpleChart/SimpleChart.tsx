@@ -4,12 +4,14 @@ import { type ComponentPropsWithoutRef, forwardRef, useMemo } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './SimpleChart.module.css';
 
+/** A single data point in a chart. */
 export interface ChartDataPoint {
   label: string;
   value: number;
   color?: string;
 }
 
+/** Props for the SimpleChart component. Supports bar, line, and pie chart types with configurable dimensions and display options. */
 export interface SimpleChartProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
   chart?: {
@@ -17,6 +19,7 @@ export interface SimpleChartProps
     type?: 'bar' | 'line' | 'pie';
     data: ChartDataPoint[];
     colors?: string[];
+    /** @default false */
     horizontal?: boolean;
   };
   dimensions?: {
@@ -86,6 +89,7 @@ function describeArc(
   ].join(' ');
 }
 
+/** Renders an SVG-based chart (bar, line, or pie) with axis labels, legend, and grid lines. */
 export const SimpleChart = forwardRef<HTMLDivElement, SimpleChartProps>(
   (
     {

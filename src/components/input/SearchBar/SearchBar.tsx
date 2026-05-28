@@ -11,10 +11,14 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './SearchBar.module.css';
 
+/** Props for the SearchBar component. */
 export interface SearchBarProps
   extends Omit<ComponentPropsWithoutRef<'input'>, 'onSubmit'> {
+  /** Callback fired on search (debounced). Receives the current query string. */
   onSearch?: (query: string) => void;
+  /** Array of suggestion strings shown below the input. */
   suggestions?: string[];
+  /** Callback fired when a suggestion is selected. */
   onSuggestionSelect?: (suggestion: string) => void;
   /** @default 300 */
   debounceMs?: number;
@@ -24,6 +28,7 @@ export interface SearchBarProps
   clearable?: boolean;
 }
 
+/** A search input with debounced callbacks, autocomplete suggestions, and a clear button. */
 export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
   (
     {

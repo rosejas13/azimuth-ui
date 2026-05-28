@@ -5,11 +5,13 @@ import styles from './Loader.module.css';
 type LoaderVariant = 'circle' | 'bar';
 type LoaderSize = 'sm' | 'md' | 'lg';
 
+/** A loading indicator in either circle or bar variant. */
 export interface LoaderProps extends ComponentPropsWithoutRef<'div'> {
   /** @default 'circle' */
   variant?: LoaderVariant;
   /** @default 'md' */
   size?: LoaderSize;
+  /** Accessible label for the loading indicator. */
   label?: string;
 }
 
@@ -18,6 +20,7 @@ const BORDER_COLORS = {
   borderTopColor: 'var(--azimuth-color-primary)',
 } as const;
 
+/** A loading spinner (circle) or animated bar. */
 export const Loader = forwardRef<HTMLDivElement, LoaderProps>(
   ({ variant = 'circle', size = 'md', label, className, ...props }, ref) => {
     if (variant === 'bar') {

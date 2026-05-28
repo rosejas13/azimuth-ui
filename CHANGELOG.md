@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.4.1 (2026-05-27)
+
+### Documentation
+- **JSDoc audit**: Added interface-level JSDoc to 71 component interfaces and 19 exported sub-types
+- **`@default` coverage**: Added 50+ missing `@default` annotations across all components
+- **Component function docs**: Added doc comments to 74 component functions
+- **Fixed stale docs**: 4 misleading descriptions (Alert icon, Toast dismissible, Dialog Escape, Carousel interval), DataTable grammar, ToastProvider inconsistency
+- **Spec rewrite**: `docs/specs/azimuth-ui.md` rebuilt to match current structure — no more `primitives/`, `tokens/`, or stale hook listings
+- **Housekeeping**: `.beads/README.md` repo links updated, `LICENSING_TODO.md` checkbox confirmed
+
+## 0.4.0 (2026-05-27)
+
+### Features
+- **Component restructuring**: Merged `src/primitives/` into `src/components/` — all components now live under one of 6 sub-categories: `input/`, `display/`, `data/`, `layout/`, `navigation/`, `overlay/`
+- **Prop consolidation**: Batch rename of flat prop names to grouped names across all components (e.g., `accentColor` → `color.accent`, `size` → `size.width`/`size.height`)
+- **Arrow key tests**: Added keyboard navigation tests for Combobox, DropdownList, Select, Tabs, Slider, and other arrow-key-interactive components
+- **CI setup**: GitHub Actions workflow — lint, typecheck, test, build on push and PR
+
+### Improvements
+- Barrel export (`src/index.ts`) simplified — imports now map directly to sub-category paths internally
+- Component directory cleanup — removed stale `src/primitives/` directory and updated all internal import paths
+
+### Quality
+- 1038 tests across 87 files, all passing
+- TypeScript strict, ESLint zero-error
+- Zero external dependencies
+
 ## 0.3.2 (2026-05-25)
 
 ### Changes
@@ -35,6 +62,6 @@
 - Dead CSS variable `--azimuth-transition-slow` removed
 
 ### Quality
-- 1017 tests across 87 files, all passing
+- 1038 tests across 87 files, all passing
 - TypeScript strict, ESLint zero-error
 - Zero external dependencies

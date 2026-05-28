@@ -3,11 +3,13 @@ import { cn } from '@/utils/cn';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 import styles from './BreadcrumbPageHeader.module.css';
 
+/** An item in the breadcrumb trail. */
 export interface BreadcrumbItem {
   label: string;
   href?: string;
 }
 
+/** Props for the BreadcrumbPageHeader component. */
 export interface BreadcrumbPageHeaderProps
   extends ComponentPropsWithoutRef<'header'> {
   title: string;
@@ -17,6 +19,7 @@ export interface BreadcrumbPageHeaderProps
   children?: React.ReactNode;
 }
 
+/** A page header with a breadcrumb trail, title, optional description, actions, and children. */
 export const BreadcrumbPageHeader = forwardRef<
   HTMLElement,
   BreadcrumbPageHeaderProps

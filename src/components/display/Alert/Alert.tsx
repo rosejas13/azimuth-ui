@@ -46,20 +46,25 @@ const VARIANT_CLASS: Record<AlertVariant, string> = {
   notification: styles.notification,
 };
 
+/** A contextual alert banner with variant styling, optional dismiss, and auto-dismiss. */
 export interface AlertProps extends ComponentPropsWithoutRef<'div'> {
   /** @default 'info' */
   variant?: AlertVariant;
+  /** Optional title displayed prominently at the top. */
   title?: string;
   /** @default false */
   dismissible?: boolean;
+  /** Callback fired when the alert is dismissed. */
   onDismiss?: () => void;
   /** Time in milliseconds before auto-dismissal. */
   autoDismiss?: number;
-  /** Show a default icon  */
+  /** Override the default variant icon. Pass `null` to hide the icon entirely. @default undefined (renders the variant's built-in icon) */
   icon?: ReactNode;
+  /** Body content of the alert. */
   children?: React.ReactNode;
 }
 
+/** A contextual alert banner for notifications, warnings, errors, and success messages. */
 export const Alert = forwardRef<HTMLDivElement, AlertProps>(
   (
     {

@@ -12,6 +12,7 @@ type StackJustify =
   | 'around';
 type StackSpacing = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/** Props for the Stack layout component. */
 export interface StackProps extends ComponentPropsWithoutRef<'div'> {
   /** @default 'vertical' */
   direction?: StackDirection;
@@ -24,6 +25,7 @@ export interface StackProps extends ComponentPropsWithoutRef<'div'> {
   children?: React.ReactNode;
 }
 
+/** A flexbox stack layout for arranging children vertically or horizontally with consistent spacing. */
 export const Stack = forwardRef<HTMLDivElement, StackProps>(
   (
     {

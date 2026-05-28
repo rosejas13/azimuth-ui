@@ -4,15 +4,19 @@ import styles from './Skeleton.module.css';
 
 type SkeletonVariant = 'text' | 'circle' | 'rect';
 
+/** A placeholder skeleton for loading states. */
 export interface SkeletonProps extends ComponentPropsWithoutRef<'div'> {
   /** @default 'text' */
   variant?: SkeletonVariant;
+  /** CSS width of the skeleton. */
   width?: string;
+  /** CSS height of the skeleton. */
   height?: string;
   /** @default 1 */
   count?: number;
 }
 
+/** A loading placeholder skeleton in text, circle, or rect variants. */
 export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
   (
     {

@@ -17,6 +17,7 @@ const MONTH_NAMES = [
 
 const DAY_NAMES_SUN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+/** Props for the Calendar component. */
 export interface CalendarProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'defaultValue'> {
   value?: Date;
@@ -55,6 +56,12 @@ function addMonths(date: Date, months: number): Date {
   return d;
 }
 
+/**
+ * A calendar date picker component.
+ *
+ * Supports controlled and uncontrolled usage, min/max date constraints,
+ * locale-based day names, week numbers, and keyboard navigation.
+ */
 export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
   (
     {

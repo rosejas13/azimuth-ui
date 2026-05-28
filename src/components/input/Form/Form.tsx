@@ -9,6 +9,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Form.module.css';
 
+/** Props for the Form root component. */
 export interface FormProps extends Omit<ComponentPropsWithoutRef<'form'>, 'onSubmit'> {
   onSubmit?: (data: Record<string, FormDataEntryValue>) => void;
   /** @default 'md' */
@@ -16,6 +17,7 @@ export interface FormProps extends Omit<ComponentPropsWithoutRef<'form'>, 'onSub
   children?: React.ReactNode;
 }
 
+/** A form wrapper that serializes submissions into a key-value record and prevents default browser validation. */
 const FormRoot = forwardRef<HTMLFormElement, FormProps>(
   (
     {
@@ -72,15 +74,20 @@ const FormRoot = forwardRef<HTMLFormElement, FormProps>(
 
 FormRoot.displayName = 'Form';
 
+/** Props for the Form.Field sub-component. */
 export interface FormFieldProps extends ComponentPropsWithoutRef<'div'> {
+  /** Label text rendered above the field. */
   label?: string;
   /** @default false */
   required?: boolean;
+  /** Validation error message displayed below the field. */
   error?: string;
+  /** Help text displayed below the field when there is no error. */
   helpText?: string;
   children?: React.ReactNode;
 }
 
+/** A labeled form field with validation error and help text support. */
 const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
   (
     {

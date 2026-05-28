@@ -10,6 +10,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Navbar.module.css';
 
+/** An item in the navigation bar. */
 export interface NavItem {
   key: string;
   label: string;
@@ -19,6 +20,7 @@ export interface NavItem {
   onClick?: () => void;
 }
 
+/** Props for the Navbar component. */
 export interface NavbarProps extends Omit<ComponentPropsWithoutRef<'nav'>, 'children'> {
   branding?: {
     logo?: React.ReactNode;
@@ -39,6 +41,7 @@ export interface NavbarProps extends Omit<ComponentPropsWithoutRef<'nav'>, 'chil
   children?: React.ReactNode;
 }
 
+/** A responsive navigation bar with mobile drawer, bottom bar, and branding support. */
 export const Navbar = forwardRef<HTMLElement, NavbarProps>(
   (
     {

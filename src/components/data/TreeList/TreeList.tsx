@@ -12,6 +12,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './TreeList.module.css';
 
+/** A node in the tree hierarchy. */
 export interface TreeNode {
   id: string;
   label: string;
@@ -20,6 +21,7 @@ export interface TreeNode {
   disabled?: boolean;
 }
 
+/** Props for the TreeList component. */
 export interface TreeListProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onSelect' | 'onToggle'> {
   data: TreeNode[];
   defaultExpanded?: string[];
@@ -58,6 +60,7 @@ function findNodeById(nodes: TreeNode[], id: string): TreeNode | null {
   return null;
 }
 
+/** Renders a keyboard-navigable tree list with expand/collapse, selection, and optional connection lines. */
 export const TreeList = forwardRef<HTMLDivElement, TreeListProps>(
   (
     {

@@ -11,6 +11,9 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Flyout.module.css';
 
+/**
+ * Props for the Flyout component.
+ */
 export interface FlyoutProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'content'> {
   trigger: React.ReactNode;
@@ -23,6 +26,12 @@ export interface FlyoutProps
   closeDelay?: number;
 }
 
+/**
+ * A hover-triggered popover that displays content adjacent to a trigger element.
+ *
+ * Supports four sides (top, bottom, left, right) with configurable open/close
+ * delays. Repositions on scroll and resize while open.
+ */
 export const Flyout = forwardRef<HTMLDivElement, FlyoutProps>(
   (
     {

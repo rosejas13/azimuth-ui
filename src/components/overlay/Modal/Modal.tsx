@@ -11,6 +11,9 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import styles from './Modal.module.css';
 
+/**
+ * Props for the Modal component.
+ */
 export interface ModalProps extends Omit<ComponentPropsWithoutRef<'div'>, 'content'> {
   visible?: {
     open: boolean;
@@ -30,6 +33,13 @@ export interface ModalProps extends Omit<ComponentPropsWithoutRef<'div'>, 'conte
   footer?: React.ReactNode;
 }
 
+/**
+ * A centered modal dialog with optional backdrop blur, title/subtitle, footer,
+ * and size variants.
+ *
+ * Renders via portal to `document.body`. Closes on Escape key or overlay click
+ * unless `persistent` is enabled.
+ */
 export const Modal = forwardRef<HTMLDivElement, ModalProps>(
   (
     {

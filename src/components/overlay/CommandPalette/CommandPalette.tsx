@@ -14,6 +14,7 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import styles from './CommandPalette.module.css';
 
+/** A single command item in the command palette. */
 export interface CommandItem {
   id: string;
   label: string;
@@ -23,21 +24,26 @@ export interface CommandItem {
   keywords?: string[];
 }
 
+/** A group of related command items, rendered with a group label. */
 export interface CommandGroup {
   id: string;
   label: string;
   items: CommandItem[];
 }
 
+/** Props for the CommandPalette component. */
 export interface CommandPaletteProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onSelect'> {
   open: boolean;
   onClose: () => void;
   groups: CommandGroup[];
   onSelect: (item: CommandItem) => void;
+  /** @default 'Search commands...' */
   placeholder?: string;
+  /** @default 'No results found' */
   emptyMessage?: string;
 }
 
+/** A modal command palette (⌘K-style) for searching and executing commands. */
 export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
   (
     {

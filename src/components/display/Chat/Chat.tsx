@@ -4,6 +4,7 @@ import { type ComponentPropsWithoutRef, type KeyboardEvent, forwardRef, useRef, 
 import { cn } from '@/utils/cn';
 import styles from './Chat.module.css';
 
+/** A single message within a chat conversation. */
 export interface ChatMessage {
   id: string;
   text: string;
@@ -11,6 +12,7 @@ export interface ChatMessage {
   timestamp?: Date;
 }
 
+/** A chat conversation widget with message bubbles, auto-scroll, and a send interface. */
 export interface ChatProps extends ComponentPropsWithoutRef<'div'> {
   messages: ChatMessage[];
   onSend: (text: string) => void;

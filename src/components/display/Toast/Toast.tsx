@@ -24,27 +24,31 @@ const ICONS: Record<ToastVariant, ReactNode> = {
   info: <CircleDotIcon width={16} height={16} />,
 };
 
+/** A toast notification with variant styling, dismissible option, auto-dismiss timer, and expandable content. */
 export interface ToastProps extends Omit<ComponentPropsWithoutRef<'div'>, 'content'> {
   content?: {
     /** @default 'info' */
     variant?: ToastVariant;
     title?: string;
     message?: string;
-    /** Show a default icon */
+    /** Override the default variant icon. Pass `null` to hide the icon entirely. @default undefined (renders the variant's built-in icon) */
     icon?: ReactNode;
   };
   dismiss?: {
-    /** @default false */
+    /** Whether the toast shows a dismiss (close) button. @default false */
     dismissible?: boolean;
+    /** Callback fired when the toast is dismissed. */
     onDismiss?: () => void;
     /** Milliseconds after which the toast automatically dismisses. */
     autoDismiss?: number;
   };
   /** @default false */
   expandable?: boolean;
+  /** Additional content revealed when the toast is expanded. */
   children?: React.ReactNode;
 }
 
+/** A toast notification message with variant icon, dismiss, auto-dismiss, and expandable content. */
 export const Toast = forwardRef<HTMLDivElement, ToastProps>(
   (
     {

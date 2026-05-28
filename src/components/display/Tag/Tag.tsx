@@ -6,15 +6,19 @@ import styles from './Tag.module.css';
 
 type TagVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
 
+/** A tag/label with variant styling and optional remove button. */
 export interface TagProps extends ComponentPropsWithoutRef<'span'> {
   /** @default 'neutral' */
   variant?: TagVariant;
   /** @default false */
   removable?: boolean;
+  /** Callback fired when the remove button is clicked. */
   onRemove?: () => void;
+  /** Tag label content. */
   children?: React.ReactNode;
 }
 
+/** A styled tag with optional remove functionality. */
 export const Tag = forwardRef<HTMLSpanElement, TagProps>(
   (
     {

@@ -11,15 +11,19 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './ResizablePanel.module.css';
 
+/** A container that splits space between children with draggable dividers. */
 export interface ResizablePanelProps extends ComponentPropsWithoutRef<'div'> {
   /** @default 'horizontal' */
   direction?: 'horizontal' | 'vertical';
+  /** Initial percentage sizes for each panel. Must match the number of children. */
   defaultSizes?: number[];
   /** @default 50 */
   minSize?: number;
+  /** Panel elements to distribute across the resizable space. */
   children: React.ReactNode;
 }
 
+/** A split-panel container with draggable dividers and keyboard-accessible resizing. */
 export const ResizablePanel = forwardRef<HTMLDivElement, ResizablePanelProps>(
   (
     {

@@ -19,30 +19,40 @@ export interface AuthProvider {
   color?: string;
 }
 
+/** A login/signup/reset-password form with tab navigation, social provider support, and loading state. */
 export interface LoginSignupProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onSubmit'> {
   /** @default 'login' */
   defaultView?: AuthView;
+  /** Authentication callbacks for login, signup, and password reset flows. */
   auth?: {
+    /** Callback fired on login form submission. */
     onLogin?: (data: {
       email: string;
       password: string;
       remember?: boolean;
     }) => void;
+    /** Callback fired on signup form submission. */
     onSignup?: (data: {
       name?: string;
       email: string;
       password: string;
     }) => void;
+    /** Callback fired on password reset form submission. */
     onResetPassword?: (data: { email: string }) => void;
   };
+  /** Social/OAuth provider configuration. */
   social?: {
+    /** Array of auth providers (e.g. Google, GitHub) to show as buttons. */
     providers?: AuthProvider[];
+    /** Callback fired when a social provider button is clicked. */
     onProviderAuth?: (providerId: string) => void;
   };
+  /** Form status state. */
   status?: {
     /** @default false */
     loading?: boolean;
+    /** Error message to display at the top of the form. */
     error?: string;
   };
 }
@@ -52,6 +62,7 @@ const VIEWS: { key: AuthView; label: string }[] = [
   { key: 'signup', label: 'Sign up' },
 ];
 
+/** A tabbed login/signup/password-reset form with social auth providers. */
 export const LoginSignup = forwardRef<HTMLDivElement, LoginSignupProps>(
   (
     {

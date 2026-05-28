@@ -10,6 +10,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './ColorPicker.module.css';
 
+/** Props for the ColorPicker component. */
 export interface ColorPickerProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
   value: string;
   onChange: (color: string) => void;
@@ -27,6 +28,12 @@ function isValidCSSColor(color: string): boolean {
   return el.style.color !== '';
 }
 
+/**
+ * A color picker component with preset swatches and a text input.
+ *
+ * Supports custom CSS color values, preset selection, and configurable
+ * input visibility and size.
+ */
 export const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
   (
     {

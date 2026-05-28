@@ -11,6 +11,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Slider.module.css';
 
+/** Props for the Slider component. */
 export interface SliderProps
   extends Omit<ComponentPropsWithoutRef<'input'>, 'type' | 'onChange' | 'size' | 'value' | 'min' | 'max' | 'step' | 'disabled' | 'aria-orientation'> {
   range?: {
@@ -38,6 +39,7 @@ export interface SliderProps
   };
 }
 
+/** A range slider with pointer drag, keyboard input, and customizable min/max/step/orientation. */
 export const Slider = forwardRef<HTMLInputElement, SliderProps>(
   (
     {

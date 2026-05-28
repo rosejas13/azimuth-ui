@@ -11,6 +11,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './DropdownList.module.css';
 
+/** Props for the DropdownList component. */
 export interface DropdownListProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
   data: {
     options: Array<{ value: string; label: string; disabled?: boolean; separator?: boolean }>;
@@ -34,6 +35,7 @@ export interface DropdownListProps extends Omit<ComponentPropsWithoutRef<'div'>,
 const dataDefault: DropdownListProps['data'] = { options: [] };
 const selectionDefault: DropdownListProps['selection'] = {};
 
+/** A dropdown select component with search, single/multiple selection, and keyboard navigation. */
 export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
   (
     {

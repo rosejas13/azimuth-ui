@@ -15,10 +15,10 @@ type InputBaseProps = ComponentPropsWithoutRef<'input'>;
 
 /** A text input component with label, validation, autocomplete, and stepper support. */
 export interface InputProps extends Omit<InputBaseProps, 'size' | 'value' | 'disabled' | 'min' | 'max' | 'step' | 'maxLength'> {
-  label?: { text?: string; subtitle?: string; error?: string; required?: boolean; position?: 'top' | 'left' | 'inner' };
+  label?: { text?: string; subtitle?: string; error?: string; /** @default false */ required?: boolean; /** @default 'top' */ position?: 'top' | 'left' | 'inner' };
   value?: { value?: string; onChange?: React.ChangeEventHandler<HTMLInputElement>; disabled?: boolean };
-  charCount?: { maxLength?: number; showCharCount?: boolean };
-  stepper?: { enabled?: boolean; min?: number; max?: number; step?: number };
+  charCount?: { maxLength?: number; /** @default false */ showCharCount?: boolean };
+  stepper?: { /** @default false */ enabled?: boolean; min?: number; max?: number; step?: number };
   autocomplete?: { options?: string[]; onSelect?: (value: string) => void };
   /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';

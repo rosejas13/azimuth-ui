@@ -20,6 +20,7 @@ export type ButtonVariant =
 
 type ButtonSize = 'sm' | 'md' | 'lg';
 
+/** Props for the Button component. */
 export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   /** @default 'primary' */
   variant?: ButtonVariant;
@@ -28,6 +29,7 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   icon?: React.ReactNode;
   /** @default 'left' */
   iconPosition?: 'left' | 'right';
+  /** @default false */
   fullWidth?: boolean;
   /** @default 'default' */
   shape?: 'default' | 'circle';
@@ -57,6 +59,7 @@ function buttonClassName(
   );
 }
 
+/** A button component with support for multiple variants, sizes, icons, and as-child rendering. */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {

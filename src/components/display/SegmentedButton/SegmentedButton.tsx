@@ -11,18 +11,28 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './SegmentedButton.module.css';
 
+/** A single option within a segmented button group. */
 export interface SegmentedButtonOption {
+  /** Value associated with this option. */
   value: string;
+  /** Display label. */
   label: string;
+  /** Optional icon element. */
   icon?: React.ReactNode;
+  /** Whether this option is disabled. */
   disabled?: boolean;
 }
 
+/** A group of segmented/toggle buttons where one option is selected at a time (radio group pattern). */
 export interface SegmentedButtonProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+  /** Array of options to display as segments. */
   options: SegmentedButtonOption[];
+  /** Controlled current value. */
   value?: string;
+  /** Default value for uncontrolled mode. */
   defaultValue?: string;
+  /** Callback fired when the selected value changes. */
   onChange?: (value: string) => void;
   /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
@@ -30,6 +40,7 @@ export interface SegmentedButtonProps
   fullWidth?: boolean;
 }
 
+/** A segmented button group (radio group) where one option is selected at a time. */
 export const SegmentedButton = forwardRef<HTMLDivElement, SegmentedButtonProps>(
   (
     {

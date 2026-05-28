@@ -11,28 +11,40 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './SplitButton.module.css';
 
+/** A single option within a split button dropdown menu. */
 export interface SplitButtonOption {
+  /** Unique key for the option. */
   key: string;
+  /** Display label. */
   label: string;
+  /** Callback fired when the option is selected. */
   onClick?: () => void;
+  /** Whether the option is disabled. */
   disabled?: boolean;
+  /** Whether the option should render in a danger style. */
   danger?: boolean;
 }
 
+/** A split button with a primary action and a dropdown of additional options. */
 export interface SplitButtonProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onClick'> {
+  /** Primary action label displayed on the main button. */
   label: string;
+  /** Callback fired when the primary action button is clicked. */
   onClick: () => void;
+  /** Dropdown menu options. */
   options: SplitButtonOption[];
   /** @default 'primary' */
   variant?: 'primary' | 'secondary';
   /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
+  /** @default false */
   disabled?: boolean;
   /** @default 'bottom' */
   direction?: 'bottom' | 'top';
 }
 
+/** A split button with a primary action and a dropdown menu of secondary options. */
 export const SplitButton = forwardRef<HTMLDivElement, SplitButtonProps>(
   (
     {

@@ -13,13 +13,16 @@ export interface TimelineItem {
   color?: string;
 }
 
+/** Props for the Timeline component. */
 export interface TimelineProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
   items: TimelineItem[];
+  /** @default 'default' */
   variant?: 'default' | 'alternating';
   children?: ReactNode;
 }
 
+/** Renders a vertical timeline of items with optional alternating layout. */
 export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
   ({ items, variant = 'default', className, ...props }, ref) => {
     return (

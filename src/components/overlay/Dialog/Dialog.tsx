@@ -11,10 +11,31 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import styles from './Dialog.module.css';
 
+/**
+ * Props for the Dialog component.
+ */
 export interface DialogProps extends Omit<ComponentPropsWithoutRef<'div'>, 'title' | 'content'> {
   visible: { open: boolean; onClose: () => void };
-  content?: { title?: string; description?: string; variant?: 'info' | 'warning' | 'danger' };
-  actions?: { confirm?: { label?: string; onConfirm?: () => void; loading?: boolean }; cancel?: { label?: string; onCancel?: () => void } };
+  content?: {
+    title?: string;
+    description?: string;
+    /** @default 'info' */
+    variant?: 'info' | 'warning' | 'danger';
+  };
+  actions?: {
+    confirm?: {
+      /** @default 'Confirm' */
+      label?: string;
+      onConfirm?: () => void;
+      /** @default false */
+      loading?: boolean;
+    };
+    cancel?: {
+      /** @default 'Cancel' */
+      label?: string;
+      onCancel?: () => void;
+    };
+  };
   children?: React.ReactNode;
 }
 
@@ -23,6 +44,9 @@ export interface DialogProps extends Omit<ComponentPropsWithoutRef<'div'>, 'titl
  *
  * Renders via portal to `document.body`. Supports info, warning, and danger variants.
  * Closable via the X button, Cancel button, Escape key, or overlay click.
+ *
+ * **Note:** Escape key does NOT close the dialog when `loading` is true
+ * (the Confirm button is in a loading/disabled state).
  */
 export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
   (

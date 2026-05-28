@@ -11,16 +11,25 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './FanMenu.module.css';
 
+/** A single option within a fan menu. */
 export interface FanMenuOption {
+  /** Unique key for the option. */
   key: string;
+  /** Display label. */
   label: string;
+  /** Optional icon element. */
   icon?: React.ReactNode;
+  /** Callback fired when the option is selected. */
   onClick?: () => void;
+  /** Whether the option is disabled. */
   disabled?: boolean;
 }
 
+/** A fan/spread menu that expands options in a radial-like layout around a trigger button. */
 export interface FanMenuProps extends ComponentPropsWithoutRef<'div'> {
+  /** Array of menu options to display when expanded. */
   options: FanMenuOption[];
+  /** Custom trigger element. Defaults to a "+" button. */
   trigger?: React.ReactNode;
   /** @default 'up' */
   direction?: 'up' | 'down' | 'left' | 'right';
@@ -28,6 +37,7 @@ export interface FanMenuProps extends ComponentPropsWithoutRef<'div'> {
   gap?: number;
 }
 
+/** A fan/spread menu that fans out options from a central trigger button. */
 export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
   (
     {

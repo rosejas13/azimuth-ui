@@ -4,6 +4,7 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Table.module.css';
 
+/** Props for the Table root component. Supports striped, bordered, hoverable, and size variants. */
 export interface TableProps extends ComponentPropsWithoutRef<'table'> {
   /** @default false */
   striped?: boolean;
@@ -16,6 +17,7 @@ export interface TableProps extends ComponentPropsWithoutRef<'table'> {
   children: React.ReactNode;
 }
 
+/** Renders a `<table>` element with optional striped, bordered, hoverable, and size styles. */
 const TableRoot = forwardRef<HTMLTableElement, TableProps>(
   (
     {
@@ -50,10 +52,12 @@ const TableRoot = forwardRef<HTMLTableElement, TableProps>(
 
 TableRoot.displayName = 'Table';
 
+/** Props for the Table header section. */
 interface TableHeadProps extends ComponentPropsWithoutRef<'thead'> {
   children?: React.ReactNode;
 }
 
+/** Renders a `<thead>` element styled as a table header. */
 const TableHead = forwardRef<HTMLTableSectionElement, TableHeadProps>(
   ({ className, children, ...props }, ref) => {
     return (
@@ -66,10 +70,12 @@ const TableHead = forwardRef<HTMLTableSectionElement, TableHeadProps>(
 
 TableHead.displayName = 'Table.Head';
 
+/** Props for the Table body section. */
 interface TableBodyProps extends ComponentPropsWithoutRef<'tbody'> {
   children?: React.ReactNode;
 }
 
+/** Renders a `<tbody>` element. */
 const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>(
   ({ className, children, ...props }, ref) => {
     return (
@@ -82,10 +88,12 @@ const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>(
 
 TableBody.displayName = 'Table.Body';
 
+/** Props for a Table row. */
 interface TableRowProps extends ComponentPropsWithoutRef<'tr'> {
   children?: React.ReactNode;
 }
 
+/** Renders a `<tr>` element. */
 const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
   ({ className, children, ...props }, ref) => {
     return (
@@ -98,10 +106,12 @@ const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
 
 TableRow.displayName = 'Table.Row';
 
+/** Props for a standard table cell (`<td>`). */
 interface TableCellProps extends ComponentPropsWithoutRef<'td'> {
   children?: React.ReactNode;
 }
 
+/** Renders a `<td>` element. */
 const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
   ({ className, children, ...props }, ref) => {
     return (
@@ -114,8 +124,10 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
 
 TableCell.displayName = 'Table.Cell';
 
+/** Props for a table header cell (`<th>`). */
 type TableHeadCellProps = ComponentPropsWithoutRef<'th'>;
 
+/** Renders a `<th>` element. */
 const TableHeadCell = forwardRef<HTMLTableCellElement, TableHeadCellProps>(
   ({ className, children, ...props }, ref) => {
     return (

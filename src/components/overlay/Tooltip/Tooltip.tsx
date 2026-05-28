@@ -6,6 +6,9 @@ import styles from './Tooltip.module.css';
 
 type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 
+/**
+ * Props for the Tooltip component.
+ */
 export interface TooltipProps extends Omit<ComponentPropsWithoutRef<'div'>, 'content'> {
   content: React.ReactNode;
   /** @default 'top' */
@@ -15,6 +18,13 @@ export interface TooltipProps extends Omit<ComponentPropsWithoutRef<'div'>, 'con
   children: React.ReactNode;
 }
 
+/**
+ * A hover/focus-triggered tooltip that displays contextual content near its
+ * child element.
+ *
+ * Supports four positions (top, bottom, left, right) with a configurable
+ * appearance delay. Repositions on scroll and resize while visible.
+ */
 export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
   (
     { content, position = 'top', delay = 300, className, children, ...props },

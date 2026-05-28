@@ -2,17 +2,23 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './PageLayout.module.css';
 
+/** A page layout shell with optional sidebar, top navigation, and footer. */
 export interface PageLayoutProps extends ComponentPropsWithoutRef<'div'> {
+  /** Sidebar content rendered in an aside element. */
   sidebar?: React.ReactNode;
   /** @default '260px' */
   sidebarWidth?: string;
   /** @default 'left' */
   sidebarPosition?: 'left' | 'right';
+  /** Top navigation bar content. */
   topNav?: React.ReactNode;
+  /** Footer content. */
   footer?: React.ReactNode;
+  /** Main page content. */
   children?: React.ReactNode;
 }
 
+/** A page layout shell providing sidebar, top nav, and footer regions. */
 export const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
   (
     {

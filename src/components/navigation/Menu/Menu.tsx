@@ -11,6 +11,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Menu.module.css';
 
+/** An item in the dropdown menu. */
 export interface MenuItem {
   key: string;
   label: string;
@@ -20,6 +21,7 @@ export interface MenuItem {
   separator?: boolean;
 }
 
+/** Props for the Menu component. */
 export interface MenuProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onSelect'> {
   items: MenuItem[];
   trigger?: React.ReactNode;
@@ -28,6 +30,7 @@ export interface MenuProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onSele
   side?: 'left' | 'right';
 }
 
+/** A dropdown menu triggered by a button or custom trigger element. Keyboard-navigable. */
 export const Menu = forwardRef<HTMLDivElement, MenuProps>(
   (
     {

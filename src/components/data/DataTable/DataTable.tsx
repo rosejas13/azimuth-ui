@@ -17,6 +17,7 @@ import { Badge } from '@/components/display/Badge';
 import { Table } from '@/components/data/Table';
 import styles from './DataTable.module.css';
 
+/** A single column definition for the DataTable component. */
 export interface Column<T> {
   key: string;
   title: string;
@@ -35,7 +36,7 @@ export interface Column<T> {
  * Supports sorting, search (with optional column selector), pagination,
  * custom cell rendering, inline editing, and row click handlers.
  *
- * **Columns auto-detection:** When `columns` is not provided, columns are
+ * **Column auto-detection:** When `columns` is not provided, columns are
  * generated automatically from the keys of the first data object. Each key becomes
  * a column with the title derived from the key (capitalized). Auto-generated
  * columns are searchable and sortable by default.
@@ -829,6 +830,10 @@ function DataTableInner<T>(
   );
 }
 
+/**
+ * A feature-rich data table with sorting, searching, pagination,
+ * virtual scrolling, and inline editing.
+ */
 export const DataTable = forwardRef(DataTableInner) as (<T>(
   props: DataTableProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> },
 ) => React.ReactElement) & { displayName?: string };

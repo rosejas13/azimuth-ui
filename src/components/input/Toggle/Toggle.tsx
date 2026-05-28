@@ -9,6 +9,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Toggle.module.css';
 
+/** Props for the Toggle component. */
 export interface ToggleProps
   extends Omit<ComponentPropsWithoutRef<'input'>, 'size' | 'type'> {
   label?: string;
@@ -16,6 +17,7 @@ export interface ToggleProps
   size?: 'sm' | 'md' | 'lg';
 }
 
+/** A toggle switch (checkbox role="switch") with label and size variants. */
 export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
   (
     {

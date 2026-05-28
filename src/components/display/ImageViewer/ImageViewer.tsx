@@ -11,23 +11,37 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import styles from './ImageViewer.module.css';
 
+/** A single image within an image viewer. */
 export interface ImageViewerImage {
+  /** Image source URL. */
   src: string;
+  /** Alt text for the image. */
   alt?: string;
+  /** Optional caption displayed below the image. */
   caption?: string;
+  /** Natural width of the image. */
   width?: number;
+  /** Natural height of the image. */
   height?: number;
 }
 
+/** A full-screen image viewer/gallery overlay with navigation, caption, and thumbnails. */
 export interface ImageViewerProps extends ComponentPropsWithoutRef<'div'> {
+  /** Array of images to display. */
   images: ImageViewerImage[];
+  /** Whether the viewer is open. */
   open: boolean;
+  /** Callback fired when the viewer is dismissed. */
   onClose: () => void;
+  /** @default 0 */
   initialIndex?: number;
+  /** @default true */
   showCaption?: boolean;
+  /** @default false */
   showThumbnails?: boolean;
 }
 
+/** A full-screen image viewer overlay with keyboard navigation, caption, and thumbnail strip. Renders via portal. */
 export const ImageViewer = forwardRef<HTMLDivElement, ImageViewerProps>(
   (
     {

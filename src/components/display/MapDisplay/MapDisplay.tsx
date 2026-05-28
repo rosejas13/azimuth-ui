@@ -4,12 +4,17 @@ import { type ComponentPropsWithoutRef, type ReactNode, forwardRef } from 'react
 import { cn } from '@/utils/cn';
 import styles from './MapDisplay.module.css';
 
+/** A marker on the placeholder map grid. */
 export interface MapMarker {
+  /** Geographic position. */
   position: { lat: number; lng: number };
+  /** Label displayed on the pin. */
   label?: string;
+  /** Pin color. @default 'var(--azimuth-color-primary)' */
   color?: string;
 }
 
+/** An embedded map via iframe or a placeholder grid with coordinate labels and markers. */
 export interface MapDisplayProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
   source?: {
@@ -30,6 +35,7 @@ export interface MapDisplayProps
     center?: { lat: number; lng: number };
     markers?: MapMarker[];
   };
+  /** Custom placeholder content rendered on top of the grid when no source is provided. */
   placeholder?: ReactNode;
 }
 
@@ -84,6 +90,7 @@ function formatLng(val: number): string {
   return `${deg}\u00B0${min}'${dir}`;
 }
 
+/** A map component that renders an iframe for interactive maps or a placeholder grid with coordinate labels and markers. */
 export const MapDisplay = forwardRef<HTMLDivElement, MapDisplayProps>(
   (
     {

@@ -2,6 +2,7 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Breadcrumbs.module.css';
 
+/** Props for the Breadcrumbs component. */
 export interface BreadcrumbsProps extends ComponentPropsWithoutRef<'nav'> {
   items: Array<{ label: string; href?: string }>;
   /** @default '/' */
@@ -11,6 +12,7 @@ export interface BreadcrumbsProps extends ComponentPropsWithoutRef<'nav'> {
   children?: React.ReactNode;
 }
 
+/** A breadcrumb navigation trail with optional collapsing when the number of items exceeds `maxItems`. */
 export const Breadcrumbs = forwardRef<HTMLElement, BreadcrumbsProps>(
   (
     {

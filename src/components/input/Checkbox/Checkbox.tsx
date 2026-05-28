@@ -4,13 +4,16 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Checkbox.module.css';
 
+/** Props for the Checkbox component. */
 export interface CheckboxProps
   extends Omit<ComponentPropsWithoutRef<'input'>, 'size' | 'type'> {
+  /** Text label displayed next to the checkbox. */
   label?: string;
   /** @default false */
   indeterminate?: boolean;
 }
 
+/** A checkbox input with an optional label and indeterminate state support. */
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (
     {

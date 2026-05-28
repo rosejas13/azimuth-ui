@@ -18,15 +18,19 @@ const AS_MAP: Record<string, ElementType> = {
   h5: 'h5',
 };
 
+/** A typography component for rendering text with size, weight, color, variant, and utility classes. */
 export interface TextProps extends ComponentPropsWithoutRef<'p'> {
   element?: {
+    /** HTML element to render. Auto-detected from size if not provided. */
     as?: ElementType;
     /** @default 'base' */
     size?: TextSize;
     /** @default 'body' */
     variant?: TextVariant;
   };
+  /** Font weight override. */
   weight?: TextWeight;
+  /** Text color preset. */
   color?: TextColor;
   /** @default false */
   uppercase?: boolean;
@@ -34,9 +38,11 @@ export interface TextProps extends ComponentPropsWithoutRef<'p'> {
   truncate?: boolean;
   /** @default false */
   nowrap?: boolean;
+  /** Text content. */
   children?: React.ReactNode;
 }
 
+/** A typography component with predefined sizes, weights, colors, and text variants. */
 export const Text = forwardRef<HTMLElement, TextProps>(
   (
     {

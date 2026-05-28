@@ -8,6 +8,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './DiffViewer.module.css';
 
+/** A single line in a computed diff. */
 interface DiffLine {
   type: 'added' | 'removed' | 'unchanged';
   content: string;
@@ -77,6 +78,7 @@ function computeDiff(
   return result;
 }
 
+/** Props for the DiffViewer component. */
 export interface DiffViewerProps extends ComponentPropsWithoutRef<'div'> {
   oldCode: string;
   newCode: string;
@@ -88,6 +90,12 @@ export interface DiffViewerProps extends ComponentPropsWithoutRef<'div'> {
   maxHeight?: string;
 }
 
+/**
+ * A unified or split-view diff viewer component.
+ *
+ * Computes line-level diffs between two code strings and renders
+ * them with line numbers and addition/deletion stats.
+ */
 export const DiffViewer = forwardRef<HTMLDivElement, DiffViewerProps>(
   (
     {

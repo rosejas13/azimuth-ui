@@ -4,16 +4,24 @@ import { type ComponentPropsWithoutRef, type ReactNode, forwardRef } from 'react
 import { cn } from '@/utils/cn';
 import styles from './NotificationBadge.module.css';
 
+/** A badge that displays a notification count or dot indicator over child content. */
 export interface NotificationBadgeProps
   extends Omit<ComponentPropsWithoutRef<'span'>, 'color' | 'children'> {
+  /** Notification count to display. */
   count: number;
+  /** @default 99 */
   max?: number;
+  /** @default false */
   dot?: boolean;
+  /** The element the badge attaches to. */
   children: ReactNode;
+  /** @default 'md' */
   size?: 'sm' | 'md';
+  /** @default 'danger' */
   color?: 'accent' | 'danger' | 'neutral';
 }
 
+/** A badge overlay that shows a notification count or dot on its child element. */
 export const NotificationBadge = forwardRef<HTMLSpanElement, NotificationBadgeProps>(
   (
     {

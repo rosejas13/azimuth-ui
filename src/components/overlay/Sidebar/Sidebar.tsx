@@ -10,6 +10,9 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Sidebar.module.css';
 
+/**
+ * A single item in the sidebar navigation.
+ */
 export interface SidebarItem {
   key: string;
   label: string;
@@ -18,6 +21,9 @@ export interface SidebarItem {
   children?: SidebarItem[];
 }
 
+/**
+ * Props for the Sidebar component.
+ */
 export interface SidebarProps extends Omit<ComponentPropsWithoutRef<'nav'>, 'onSelect'> {
   items: SidebarItem[];
   activeKey: string;
@@ -28,6 +34,12 @@ export interface SidebarProps extends Omit<ComponentPropsWithoutRef<'nav'>, 'onS
   footer?: ReactNode;
 }
 
+/**
+ * A collapsible sidebar navigation with nested item support, expandable sections,
+ * and a toggle button.
+ *
+ * When collapsed, items show only icons; hovering temporarily expands the sidebar.
+ */
 export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
   (
     {

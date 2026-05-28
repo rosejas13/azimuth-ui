@@ -11,6 +11,9 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import styles from './SlideSheet.module.css';
 
+/**
+ * Props for the SlideSheet component.
+ */
 export interface SlideSheetProps extends ComponentPropsWithoutRef<'div'> {
   visible?: {
     open: boolean;
@@ -28,6 +31,13 @@ export interface SlideSheetProps extends ComponentPropsWithoutRef<'div'> {
   children?: React.ReactNode;
 }
 
+/**
+ * A slide-in panel that enters from any edge (top, bottom, left, right) with
+ * configurable snap points.
+ *
+ * Renders via portal to `document.body`. Closes on Escape or overlay click
+ * unless `persistent` is enabled. Bottom-sliding sheets include a drag handle.
+ */
 export const SlideSheet = forwardRef<HTMLDivElement, SlideSheetProps>(
   (
     {

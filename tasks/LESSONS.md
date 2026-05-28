@@ -137,6 +137,12 @@ Supported browsers: Chrome, Firefox, Safari, Edge (latest 2 versions each)
 - [ ] `appearance: none` used for custom form control styling
 - [ ] `user-select: none` used only where appropriate
 
+## Documentation Audit (2026-05-27)
+
+- **Prop consolidation**: Grouping props into typed interfaces per concern (styling, behavior, a11y) reduces cognitive load vs flat prop lists
+- **CSS is canonical source for tokens**: Theme values defined in CSS custom properties (`--azimuth-*`) are the single source of truth; TypeScript types mirror them, not vice versa
+- **JSDoc audit**: Zero stale/outdated JSDoc blocks found, but massive omission gaps — ~70% of component props lack any JSDoc at all. Priority: add `@default` annotations for optional props
+
 ## Known Gaps
 
 - **LoginSignup** uses raw `<input>` elements instead of Azimuth's `Input` — refactoring this changes its internal form contract. Deferred.

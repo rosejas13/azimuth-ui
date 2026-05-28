@@ -12,6 +12,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './MediaPlayer.module.css';
 
+/** A custom media player for video and audio with play/pause, seek, volume, playback speed, and fullscreen controls. */
 export interface MediaPlayerProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
   source: {
@@ -23,15 +24,22 @@ export interface MediaPlayerProps
   playback?: {
     /** @default true */
     controls?: boolean;
+    /** @default false */
     autoPlay?: boolean;
+    /** @default false */
     loop?: boolean;
+    /** @default false */
     muted?: boolean;
   };
   dimensions?: {
+    /** CSS width of the player. */
     width?: string;
+    /** CSS height of the player. */
     height?: string;
   };
+  /** Accessible title for the media player. */
   title?: string;
+  /** Fallback content rendered inside the media element (e.g. <source> or <track>). */
   children?: ReactNode;
 }
 
@@ -44,6 +52,7 @@ function formatTime(seconds: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
+/** A custom media player with full controls for video and audio playback. */
 export const MediaPlayer = forwardRef<HTMLDivElement, MediaPlayerProps>(
   (
     {

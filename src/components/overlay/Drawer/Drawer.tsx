@@ -11,6 +11,9 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import styles from './Drawer.module.css';
 
+/**
+ * Props for the Drawer component.
+ */
 export interface DrawerProps extends ComponentPropsWithoutRef<'div'> {
   visible: { open: boolean; onClose: () => void };
   config?: {
@@ -26,6 +29,12 @@ export interface DrawerProps extends ComponentPropsWithoutRef<'div'> {
   footer?: React.ReactNode;
 }
 
+/**
+ * A slide-in panel that opens from the left or right edge of the viewport.
+ *
+ * Renders via portal to `document.body`. Supports title, footer, and optional
+ * persistent mode that prevents overlay-click dismissal.
+ */
 export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
   (
     {

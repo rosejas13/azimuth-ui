@@ -15,11 +15,17 @@ type ClockMode = 'clock' | 'countdown' | 'stopwatch';
 type ClockFormat = '12h' | '24h';
 type ClockSize = 'sm' | 'md' | 'lg';
 
+/** A clock, countdown timer, or stopwatch with segmented display. */
 export interface ClockProps extends ComponentPropsWithoutRef<'div'> {
+  /** @default 'clock' */
   mode?: ClockMode;
+  /** @default '24h' */
   format?: ClockFormat;
+  /** Target date for countdown mode. */
   targetDate?: Date;
+  /** @default true */
   autoStart?: boolean;
+  /** @default 'md' */
   size?: ClockSize;
 }
 
@@ -46,6 +52,7 @@ function useInterval(callback: () => void, delay: number | null) {
   }, [delay]);
 }
 
+/** A real-time clock, countdown timer, or stopwatch with a retro segmented display style. */
 export const Clock = forwardRef<HTMLDivElement, ClockProps>(
   (
     {

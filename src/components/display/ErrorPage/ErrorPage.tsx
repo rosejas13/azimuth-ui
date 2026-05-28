@@ -10,15 +10,23 @@ import styles from './ErrorPage.module.css';
 
 type ErrorPageSize = 'sm' | 'md' | 'lg';
 
+/** A full-page error display with status code, title, description, and optional action. */
 export interface ErrorPageProps extends ComponentPropsWithoutRef<'div'> {
+  /** @default 404 */
   status?: number;
+  /** @default 'Page not found' */
   title?: string;
+  /** Additional explanation of the error. */
   description?: string;
+  /** Call-to-action element (typically a Button). */
   action?: ReactNode;
+  /** Optional icon displayed above the status. */
   icon?: ReactNode;
+  /** @default 'md' */
   size?: ErrorPageSize;
 }
 
+/** A full-page error display including status code, title, description, and action. */
 export const ErrorPage = forwardRef<HTMLDivElement, ErrorPageProps>(
   (
     {

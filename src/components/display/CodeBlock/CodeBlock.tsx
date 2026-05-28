@@ -5,18 +5,23 @@ import { cn } from '@/utils/cn';
 import { highlightCode } from './highlightCode';
 import styles from './CodeBlock.module.css';
 
+/** A syntax-highlighted code block with optional line numbers and copy button. */
 export interface CodeBlockProps extends Omit<ComponentPropsWithoutRef<'pre'>, 'children'> {
+  /** Source code string to display. */
   code: string;
+  /** Programming language for syntax highlighting. */
   language?: string;
   /** @default false */
   showLineNumbers?: boolean;
   /** @default false */
   showCopyButton?: boolean;
+  /** Maximum height of the code block before scrolling. */
   maxHeight?: string;
   /** @default true */
   highlight?: boolean;
 }
 
+/** A syntax-highlighted code block with optional line numbers and a copy-to-clipboard button. */
 export const CodeBlock = forwardRef<HTMLPreElement, CodeBlockProps>(
   (
     {
