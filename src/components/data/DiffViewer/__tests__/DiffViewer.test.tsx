@@ -15,6 +15,11 @@ function goodbye() {
 }`;
 
 describe('DiffViewer', () => {
+  it('has role="region" on root element', () => {
+    render(<DiffViewer oldCode={oldCode} newCode={newCode} />);
+    expect(screen.getByRole('region')).toBeInTheDocument();
+  });
+
   it('renders old and new code', () => {
     render(<DiffViewer oldCode={oldCode} newCode={newCode} />);
     expect(screen.getByText(/world/)).toBeInTheDocument();
@@ -74,5 +79,25 @@ describe('DiffViewer', () => {
       <DiffViewer oldCode={oldCode} newCode={newCode} language="JavaScript" />,
     );
     expect(screen.getByText('JavaScript')).toBeInTheDocument();
+  });
+
+  it('renders empty state when both strings are empty', () => {
+    render(<DiffViewer oldCode="" newCode="" />);
+    expect(document.querySelector('[class*="root"]')).toBeInTheDocument();
+  });
+
+  it('renders no diff lines when strings are identical', () => {
+    const code = 'hello\nworld';
+    render(<DiffViewer oldCode={code} newCode={code} />);
+    const addedLines = document.querySelectorAll('[class*="added"]');
+    const removedLines = document.querySelectorAll('[class*="removed"]');
+    expect(addedLines.length).toBe(0);
+    expect(removedLines.length).toBe(0);
+  });
+
+  it('hides line numbers when showLineNumbers is false', () => {
+    render(<DiffViewer oldCode={oldCode} newCode={newCode} showLineNumbers={false} />);
+    const lineNums = document.querySelectorAll('[class*="lineNum"]');
+    expect(lineNums.length).toBe(0);
   });
 });

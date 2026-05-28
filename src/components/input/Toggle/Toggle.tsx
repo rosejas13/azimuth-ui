@@ -72,6 +72,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
           checked={isChecked}
           onChange={handleChange}
           role="switch"
+          aria-checked={isChecked}
           {...props}
         />
         <div className={styles.track} data-state={isChecked ? 'checked' : 'unchecked'}>

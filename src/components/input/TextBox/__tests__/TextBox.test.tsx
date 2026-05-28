@@ -3,6 +3,11 @@ import { describe, it, expect } from 'vitest';
 import { TextBox } from '../TextBox';
 
 describe('TextBox', () => {
+  it('has region role', () => {
+    render(<TextBox>Content</TextBox>);
+    expect(screen.getByRole('region')).toBeInTheDocument();
+  });
+
   it('renders children', () => {
     render(<TextBox>Hello world</TextBox>);
     expect(screen.getByText('Hello world')).toBeInTheDocument();

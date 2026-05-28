@@ -134,6 +134,20 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
         )}
         onMouseEnter={() => { if (collapsed) setHovered(true); }}
         onMouseLeave={() => setHovered(false)}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            const focusable = (e.currentTarget as HTMLElement).querySelectorAll('button');
+            const currentIndex = Array.from(focusable).findIndex((el) => el === document.activeElement);
+            let nextIndex: number;
+            if (e.key === 'ArrowDown') {
+              nextIndex = currentIndex < focusable.length - 1 ? currentIndex + 1 : 0;
+            } else {
+              nextIndex = currentIndex > 0 ? currentIndex - 1 : focusable.length - 1;
+            }
+            (focusable[nextIndex] as HTMLElement).focus();
+          }
+        }}
         {...props}
       >
         {header && (

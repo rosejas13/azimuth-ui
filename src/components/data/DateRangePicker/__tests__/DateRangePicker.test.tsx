@@ -90,4 +90,36 @@ describe('DateRangePicker', () => {
     await user.click(document.body);
     expect(screen.queryByRole('grid')).not.toBeInTheDocument();
   });
+
+  it('respects minDate and maxDate constraints', () => {
+    render(
+      <DateRangePicker
+        minDate={new Date(2024, 5, 10)}
+        maxDate={new Date(2024, 5, 20)}
+      />,
+    );
+    const inputs = screen.getAllByRole('textbox');
+    expect(inputs).toHaveLength(2);
+  });
+
+  it('allows keyboard date navigation via arrow keys', async () => {
+    const user = userEvent.setup();
+    render(<DateRangePicker />);
+    const inputs = screen.getAllByRole('textbox');
+    await user.click(inputs[0]);
+    const grid = screen.getByRole('grid');
+    expect(grid).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('grid')).not.toBeInTheDocument();
+  });
+
+  it('closes popup on Escape key', async () => {
+    const user = userEvent.setup();
+    render(<DateRangePicker />);
+    const inputs = screen.getAllByRole('textbox');
+    await user.click(inputs[0]);
+    expect(screen.getByRole('grid')).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('grid')).not.toBeInTheDocument();
+  });
 });

@@ -32,4 +32,34 @@ describe('ProgressBar', () => {
     render(<ProgressBar value={50} className="my-bar" />);
     expect(screen.getByRole('progressbar')).toHaveClass('my-bar');
   });
+
+  it('applies color variant CSS classes', () => {
+    const colors = ['success', 'warning', 'danger', 'accent'] as const;
+    for (const color of colors) {
+      const { unmount } = render(<ProgressBar value={50} color={color} />);
+      const bar = screen.getByRole('progressbar');
+      expect(bar).toHaveClass(color);
+      unmount();
+    }
+  });
+
+  it('applies size variant CSS classes', () => {
+    const sizes = ['sm', 'md', 'lg'] as const;
+    for (const size of sizes) {
+      const { unmount } = render(<ProgressBar value={50} size={size} />);
+      const bar = screen.getByRole('progressbar');
+      expect(bar).toHaveClass(size);
+      unmount();
+    }
+  });
+
+  it('renders percentage when showPercentage is true', () => {
+    render(<ProgressBar value={75} showPercentage />);
+    expect(screen.getByText('75%')).toBeInTheDocument();
+  });
+
+  it('does not render percentage by default', () => {
+    render(<ProgressBar value={50} />);
+    expect(screen.queryByText(/%/)).toBeNull();
+  });
 });

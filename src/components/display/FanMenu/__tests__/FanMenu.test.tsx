@@ -101,4 +101,14 @@ describe('FanMenu', () => {
     await user.keyboard('{Enter}');
     expect(screen.getByRole('menu')).toBeInTheDocument();
   });
+
+  it('respects controlled open state', () => {
+    render(<FanMenu options={defaultOptions} open={true} onOpenChange={() => {}} />);
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+  });
+
+  it('respects controlled closed state', () => {
+    render(<FanMenu options={defaultOptions} open={false} onOpenChange={() => {}} />);
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
 });

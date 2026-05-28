@@ -90,6 +90,15 @@ function formatLng(val: number): string {
   return `${deg}\u00B0${min}'${dir}`;
 }
 
+function isValidMapUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
 /** A map component that renders an iframe for interactive maps or a placeholder grid with coordinate labels and markers. */
 export const MapDisplay = forwardRef<HTMLDivElement, MapDisplayProps>(
   (
@@ -121,6 +130,19 @@ export const MapDisplay = forwardRef<HTMLDivElement, MapDisplayProps>(
       minLng,
       maxLng,
     );
+
+    if (src && !isValidMapUrl(src)) {
+      return (
+        <div
+          ref={ref}
+          className={cn(styles.container, className)}
+          style={{ height, width, ...style }}
+          {...props}
+        >
+          Invalid map URL
+        </div>
+      );
+    }
 
     if (src && interactive) {
       return (

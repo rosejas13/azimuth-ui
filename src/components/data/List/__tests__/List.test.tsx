@@ -3,6 +3,15 @@ import { describe, it, expect } from 'vitest';
 import { List } from '../List';
 
 describe('List', () => {
+  it('has list role', () => {
+    render(
+      <List>
+        <List.Item>Item</List.Item>
+      </List>,
+    );
+    expect(screen.getByRole('list')).toBeInTheDocument();
+  });
+
   it('renders ul by default', () => {
     render(
       <List>

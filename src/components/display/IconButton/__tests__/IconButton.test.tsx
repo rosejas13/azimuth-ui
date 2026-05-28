@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
 import { IconButton } from '../IconButton';
 
 describe('IconButton', () => {
@@ -29,5 +30,49 @@ describe('IconButton', () => {
   it('can be disabled', () => {
     render(<IconButton icon={<span />} aria-label="Disabled" disabled />);
     expect(screen.getByRole('button')).toBeDisabled();
+  });
+
+  it('Enter key triggers click', async () => {
+    const onClick = vi.fn();
+    render(<IconButton icon={<span />} aria-label="Test" onClick={onClick} />);
+    const user = userEvent.setup();
+    screen.getByRole('button').focus();
+    await user.keyboard('{Enter}');
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('Space key triggers click', async () => {
+    const onClick = vi.fn();
+    render(<IconButton icon={<span />} aria-label="Test" onClick={onClick} />);
+    const user = userEvent.setup();
+    screen.getByRole('button').focus();
+    await user.keyboard(' ');
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('variant CSS class assertions', () => {
+    const { unmount: unmountPrimary } = render(<IconButton icon={<span />} aria-label="Primary" variant="primary" />);
+    expect(screen.getByRole('button').className).toContain('primary');
+    unmountPrimary();
+
+    const { unmount: unmountSecondary } = render(<IconButton icon={<span />} aria-label="Secondary" variant="secondary" />);
+    expect(screen.getByRole('button').className).toContain('secondary');
+    unmountSecondary();
+
+    render(<IconButton icon={<span />} aria-label="Tertiary" variant="tertiary" />);
+    expect(screen.getByRole('button').className).toContain('tertiary');
+  });
+
+  it('size CSS class assertions', () => {
+    const { unmount: unmountSm } = render(<IconButton icon={<span />} aria-label="Small" size="sm" />);
+    expect(screen.getByRole('button').className).toContain('sm');
+    unmountSm();
+
+    const { unmount: unmountMd } = render(<IconButton icon={<span />} aria-label="Medium" size="md" />);
+    expect(screen.getByRole('button').className).toContain('md');
+    unmountMd();
+
+    render(<IconButton icon={<span />} aria-label="Large" size="lg" />);
+    expect(screen.getByRole('button').className).toContain('lg');
   });
 });

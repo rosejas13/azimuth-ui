@@ -65,4 +65,27 @@ describe('SimpleChart', () => {
     render(<SimpleChart chart={{ type: 'bar', data, horizontal: true }} />);
     expect(screen.getByLabelText('Horizontal Bar chart')).toBeInTheDocument();
   });
+
+  it('renders empty state when data is empty', () => {
+    render(<SimpleChart chart={{ data: [] }} />);
+    expect(screen.getByText('No data')).toBeInTheDocument();
+  });
+
+  it('hides legend when showLegend is false', () => {
+    const { container } = render(<SimpleChart chart={{ data }} display={{ showLegend: false }} />);
+    expect(container.querySelector('[class*="legend"]')).toBeNull();
+  });
+
+  it('hides grid lines when showGrid is false', () => {
+    render(<SimpleChart chart={{ type: 'bar', data }} display={{ showGrid: false }} />);
+    const gridLines = document.querySelectorAll('[class*="gridLine"]');
+    expect(gridLines.length).toBe(0);
+  });
+
+  it('renders with custom colors', () => {
+    const customColors = ['#ff0000', '#00ff00', '#0000ff'];
+    render(<SimpleChart chart={{ data, colors: customColors }} />);
+    const bars = document.querySelectorAll('[class*="bar"]');
+    expect(bars.length).toBe(3);
+  });
 });

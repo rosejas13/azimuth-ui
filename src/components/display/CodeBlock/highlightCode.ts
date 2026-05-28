@@ -2,10 +2,11 @@ const HTML_ESCAPE: Record<string, string> = {
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
+  '"': '&quot;',
 };
 
 function escapeHtml(text: string): string {
-  return text.replace(/[&<>]/g, (ch) => HTML_ESCAPE[ch]!);
+  return text.replace(/[&<>"]/g, (ch) => HTML_ESCAPE[ch]!);
 }
 
 interface TokenRule {

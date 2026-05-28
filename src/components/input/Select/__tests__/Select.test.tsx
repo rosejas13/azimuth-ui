@@ -48,4 +48,18 @@ describe('Select', () => {
     render(<Select options={options} className="my-select" />);
     expect(screen.getByRole('combobox').className).toContain('my-select');
   });
+
+  it('respects controlled value prop', () => {
+    render(<Select options={options} value="2" onChange={() => {}} />);
+    expect(screen.getByRole('combobox')).toHaveValue('2');
+  });
+
+  it('calls onChange when controlled value changes', async () => {
+    const handleChange = vi.fn();
+    const user = userEvent.setup();
+    render(<Select options={options} value="1" onChange={handleChange} />);
+    await user.selectOptions(screen.getByRole('combobox'), '2');
+    expect(handleChange).toHaveBeenCalled();
+    expect(screen.getByRole('combobox')).toHaveValue('1');
+  });
 });

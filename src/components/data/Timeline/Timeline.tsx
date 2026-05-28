@@ -28,6 +28,7 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
     return (
       <div
         ref={ref}
+        role="list"
         className={cn(
           styles.timeline,
           variant === 'alternating' && styles.alternating,

@@ -82,24 +82,27 @@ describe('SlideSheet', () => {
     expect(screen.getByText('My Sheet')).toBeInTheDocument();
   });
 
-  it('renders children', () => {
+  it('renders children in body section', () => {
     render(
       <SlideSheet visible={{ open: true, onClose: () => {} }}>
         <p>Child content</p>
       </SlideSheet>,
     );
     expect(screen.getByText('Child content')).toBeInTheDocument();
+    const dialog = screen.getByRole('dialog');
+    const body = dialog.querySelector('[class*="body"]');
+    expect(body).toContainHTML('Child content');
   });
 
-  it('applies custom className', () => {
+  it('applies side and sheet CSS classes', () => {
     render(
-      <SlideSheet visible={{ open: true, onClose: () => {} }} className="my-sheet">
+      <SlideSheet visible={{ open: true, onClose: () => {} }} config={{ side: 'right' }}>
         <p>Content</p>
       </SlideSheet>,
     );
     const dialog = screen.getByRole('dialog');
-    const overlay = dialog.parentElement!;
-    expect(overlay).toHaveClass('my-sheet');
+    expect(dialog).toHaveClass('sheet');
+    expect(dialog).toHaveClass('right');
   });
 
   it('has correct accessibility attributes', () => {

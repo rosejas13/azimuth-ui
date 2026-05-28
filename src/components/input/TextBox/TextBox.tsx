@@ -18,6 +18,8 @@ export const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(
     return (
       <div
         ref={ref}
+        role="region"
+        aria-label="Text"
         className={cn(styles.root, styles[variant], className)}
         {...props}
       >

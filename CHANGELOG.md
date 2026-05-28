@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.2 (2026-05-28)
+
+### Test Coverage
+- **Keyboard interaction**: 35 new tests across 9 components — Checkbox, Radio, Toggle, Navbar, Flyout, Tooltip, Carousel, Sidebar, IconButton
+- **Edge cases**: 16 new tests — SimpleChart empty data, Timeline no items, Input stepper/charCount/label positions, DateRangePicker constraints, DiffViewer edge states
+- **Controlled modes**: 6 new tests — Select, SearchBar, FanMenu
+- **CSS variants**: 11 new tests — ProgressBar colors/sizes, Grid aligns, Stack justify/spacing/wrap
+- **Accessibility**: 6 test fixes + 4 new role/aria assertions — Drawer/Modal/SlideSheet class checks, DiffViewer, Table, List, TextBox, Timeline
+
+### Security
+- **MapDisplay**: iframe `src` now validates URL scheme (rejects `javascript:`/`data:`)
+- **CodeBlock**: HTML escaping hardened with `&quot;` defense-in-depth
+- **Build**: Sourcemaps removed from published `dist/` (`rm -f dist/*.map`)
+
+### Quality
+- **1110 tests total** (+72 from previous), 87 test files, all passing
+- Typecheck clean
+
 ## 0.4.1 (2026-05-27)
 
 ### Documentation

@@ -96,4 +96,60 @@ describe('Navbar', () => {
     );
     expect(container.firstChild).toHaveClass('my-nav');
   });
+
+  it('enter key opens mobile menu', async () => {
+    vi.stubGlobal('innerWidth', 400);
+    window.dispatchEvent(new Event('resize'));
+
+    const user = userEvent.setup();
+    render(<Navbar branding={{ logo: 'Azimuth' }} nav={{ items: ITEMS }} />);
+
+    const hamburger = screen.getByLabelText('Open menu');
+    hamburger.focus();
+    await user.keyboard('{Enter}');
+
+    expect(screen.getByLabelText('Close drawer')).toBeInTheDocument();
+  });
+
+  it('space key opens mobile menu', async () => {
+    vi.stubGlobal('innerWidth', 400);
+    window.dispatchEvent(new Event('resize'));
+
+    const user = userEvent.setup();
+    render(<Navbar branding={{ logo: 'Azimuth' }} nav={{ items: ITEMS }} />);
+
+    const hamburger = screen.getByLabelText('Open menu');
+    hamburger.focus();
+    await user.keyboard(' ');
+
+    expect(screen.getByLabelText('Close drawer')).toBeInTheDocument();
+  });
+
+  it('escape key closes mobile drawer', async () => {
+    vi.stubGlobal('innerWidth', 400);
+    window.dispatchEvent(new Event('resize'));
+
+    const user = userEvent.setup();
+    render(<Navbar branding={{ logo: 'Azimuth' }} nav={{ items: ITEMS }} />);
+
+    await user.click(screen.getByLabelText('Open menu'));
+    expect(screen.getByLabelText('Close drawer')).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+
+    expect(screen.getByLabelText('Open menu')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Close drawer')).not.toBeInTheDocument();
+  });
+
+  it('handles empty nav items', () => {
+    vi.stubGlobal('innerWidth', 400);
+    window.dispatchEvent(new Event('resize'));
+
+    const { container } = render(
+      <Navbar branding={{ logo: 'Azimuth' }} nav={{ items: [] }} />,
+    );
+
+    expect(screen.queryByLabelText('Open menu')).not.toBeInTheDocument();
+    expect(container.firstChild).toBeInTheDocument();
+  });
 });

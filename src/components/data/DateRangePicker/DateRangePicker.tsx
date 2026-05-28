@@ -281,6 +281,7 @@ export const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
             value={formatDate(value, includeTime)}
             placeholder={placeholder}
             onFocus={() => { updatePopupPosition(which); setOpenPicker(which); }}
+            onKeyDown={(e) => { if (e.key === 'Escape') setOpenPicker(null); }}
             readOnly
           />
           {openPicker === which && (

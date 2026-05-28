@@ -122,4 +122,53 @@ describe('Carousel', () => {
     );
     expect(screen.getByRole('tablist').parentElement).toHaveClass('test-class');
   });
+
+  describe('keyboard navigation', () => {
+    beforeEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('navigates to next slide on ArrowRight', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<Carousel>{renderSlides(3)}</Carousel>);
+      const wrapper = container.firstChild as HTMLElement;
+      wrapper.focus();
+      await user.keyboard('{ArrowRight}');
+      const dots = screen.getAllByRole('tab');
+      expect(dots[1]).toHaveAttribute('aria-selected', 'true');
+    });
+
+    it('navigates to previous slide on ArrowLeft', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<Carousel>{renderSlides(3)}</Carousel>);
+      const wrapper = container.firstChild as HTMLElement;
+      wrapper.focus();
+      await user.keyboard('{ArrowRight}');
+      await user.keyboard('{ArrowLeft}');
+      const dots = screen.getAllByRole('tab');
+      expect(dots[0]).toHaveAttribute('aria-selected', 'true');
+    });
+
+    it('wraps from first to last on ArrowLeft', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<Carousel>{renderSlides(3)}</Carousel>);
+      const wrapper = container.firstChild as HTMLElement;
+      wrapper.focus();
+      await user.keyboard('{ArrowLeft}');
+      const dots = screen.getAllByRole('tab');
+      expect(dots[2]).toHaveAttribute('aria-selected', 'true');
+    });
+
+    it('wraps from last to first on ArrowRight', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<Carousel>{renderSlides(3)}</Carousel>);
+      const wrapper = container.firstChild as HTMLElement;
+      wrapper.focus();
+      await user.keyboard('{ArrowRight}');
+      await user.keyboard('{ArrowRight}');
+      await user.keyboard('{ArrowRight}');
+      const dots = screen.getAllByRole('tab');
+      expect(dots[0]).toHaveAttribute('aria-selected', 'true');
+    });
+  });
 });

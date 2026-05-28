@@ -97,4 +97,38 @@ describe('Input', () => {
     await user.keyboard('{Enter}');
     expect(handleSelect).toHaveBeenCalledWith('Avocado');
   });
+
+  it('increments and decrements via stepper buttons', async () => {
+    const user = userEvent.setup();
+    render(<Input type="number" stepper={{ enabled: true, min: 0, max: 10, step: 1 }} />);
+    const input = screen.getByRole('spinbutton');
+    const incrementBtn = screen.getByLabelText('Increment');
+    const decrementBtn = screen.getByLabelText('Decrement');
+
+    await user.click(incrementBtn);
+    expect(input).toHaveValue(1);
+
+    await user.click(incrementBtn);
+    expect(input).toHaveValue(2);
+
+    await user.click(decrementBtn);
+    expect(input).toHaveValue(1);
+  });
+
+  it('displays character count when maxLength is set and showCharCount is true', () => {
+    render(<Input label={{ text: 'Name' }} charCount={{ maxLength: 10, showCharCount: true }} value={{ value: 'Hello' }} />);
+    expect(screen.getByText('5/10')).toBeInTheDocument();
+  });
+
+  it('renders label at left position', () => {
+    render(<Input label={{ text: 'Name', position: 'left' }} />);
+    const wrapper = screen.getByLabelText('Name').closest('[class*="wrapper"]');
+    expect(wrapper?.className).toContain('wrapperHorizontal');
+  });
+
+  it('renders label at inner position', () => {
+    render(<Input label={{ text: 'Name', position: 'inner' }} />);
+    const wrapper = screen.getByLabelText('Name').closest('[class*="wrapper"]');
+    expect(wrapper?.className).toContain('wrapperInnerLabel');
+  });
 });

@@ -92,6 +92,16 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
       <div
         ref={ref}
         className={cn(styles.wrapper, className)}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            goPrev();
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            goNext();
+          }
+        }}
         onMouseEnter={(e) => {
           setIsPaused(true);
           onMouseEnter?.(e);

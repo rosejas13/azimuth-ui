@@ -80,6 +80,16 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(
 
     const closeMobile = useCallback(() => setMobileOpen(false), []);
 
+    useEffect(() => {
+      function handleEscape(e: KeyboardEvent) {
+        if (e.key === 'Escape') closeMobile();
+      }
+      if (mobileOpen) {
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
+      }
+    }, [mobileOpen, closeMobile]);
+
     return (
       <nav ref={ref} className={cn(styles.nav, className)} aria-label="Main navigation" data-mobile-position={mobilePosition} {...props}>
         {logo && (

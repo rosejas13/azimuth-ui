@@ -70,4 +70,52 @@ describe('Tooltip', () => {
     expect(tooltip).toHaveTextContent(/Line 1/);
     expect(tooltip).toHaveTextContent(/Line 2/);
   });
+
+  it('shows tooltip on focus', async () => {
+    const user = userEvent.setup();
+    render(<Tooltip content="Tooltip content" delay={0}>Hover me</Tooltip>);
+    await user.tab();
+    await waitFor(() => {
+      expect(screen.getByRole('tooltip')).toBeInTheDocument();
+    });
+  });
+
+  it('hides tooltip on blur', async () => {
+    const user = userEvent.setup();
+    render(<Tooltip content="Tooltip content" delay={0}>Hover me</Tooltip>);
+    await user.tab();
+    await waitFor(() => {
+      expect(screen.getByRole('tooltip')).toBeInTheDocument();
+    });
+    screen.getByText('Hover me').blur();
+    await waitFor(() => {
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+    });
+  });
+
+  it('renders all 4 positions', () => {
+    const { unmount: unmountTop } = render(
+      <Tooltip content="Top" position="top">Top trigger</Tooltip>,
+    );
+    expect(screen.getByText('Top trigger')).toBeInTheDocument();
+    unmountTop();
+
+    const { unmount: unmountBottom } = render(
+      <Tooltip content="Bottom" position="bottom">Bottom trigger</Tooltip>,
+    );
+    expect(screen.getByText('Bottom trigger')).toBeInTheDocument();
+    unmountBottom();
+
+    const { unmount: unmountLeft } = render(
+      <Tooltip content="Left" position="left">Left trigger</Tooltip>,
+    );
+    expect(screen.getByText('Left trigger')).toBeInTheDocument();
+    unmountLeft();
+
+    const { unmount: unmountRight } = render(
+      <Tooltip content="Right" position="right">Right trigger</Tooltip>,
+    );
+    expect(screen.getByText('Right trigger')).toBeInTheDocument();
+    unmountRight();
+  });
 });

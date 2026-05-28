@@ -53,4 +53,34 @@ describe('Stack', () => {
       unmount();
     }
   });
+
+  it('applies justify variant CSS classes', () => {
+    const justifies = ['start', 'center', 'end', 'between', 'around'] as const;
+    for (const justify of justifies) {
+      const { container, unmount } = render(<Stack justify={justify}><span>A</span></Stack>);
+      const expectedClass = `justify${justify.charAt(0).toUpperCase() + justify.slice(1)}`;
+      expect(container.firstChild).toHaveClass(expectedClass);
+      unmount();
+    }
+  });
+
+  it('applies spacing variant CSS classes', () => {
+    const spacings = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const;
+    for (const spacing of spacings) {
+      const { container, unmount } = render(<Stack spacing={spacing}><span>A</span></Stack>);
+      const expectedClass = `gap${spacing.charAt(0).toUpperCase() + spacing.slice(1)}`;
+      expect(container.firstChild).toHaveClass(expectedClass);
+      unmount();
+    }
+  });
+
+  it('applies wrap class when wrap is true', () => {
+    const { container } = render(<Stack wrap><span>A</span><span>B</span></Stack>);
+    expect(container.firstChild).toHaveClass('wrap');
+  });
+
+  it('does not apply wrap class by default', () => {
+    const { container } = render(<Stack><span>A</span></Stack>);
+    expect(container.firstChild).not.toHaveClass('wrap');
+  });
 });

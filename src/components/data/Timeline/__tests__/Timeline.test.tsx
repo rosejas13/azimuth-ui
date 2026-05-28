@@ -69,4 +69,14 @@ describe('Timeline', () => {
     const timelineItems = screen.getAllByText(/Step/);
     expect(timelineItems).toHaveLength(3);
   });
+
+  it('renders empty state when items is empty', () => {
+    const { container } = render(<Timeline items={[]} />);
+    expect(container.firstElementChild?.children.length).toBe(0);
+  });
+
+  it('has role="list" on container', () => {
+    render(<Timeline items={items} />);
+    expect(screen.getByRole('list')).toBeInTheDocument();
+  });
 });

@@ -35,6 +35,10 @@ export interface FanMenuProps extends ComponentPropsWithoutRef<'div'> {
   direction?: 'up' | 'down' | 'left' | 'right';
   /** @default 8 */
   gap?: number;
+  /** @default false */
+  open?: boolean;
+  /** Callback when open state changes (for controlled usage). */
+  onOpenChange?: (open: boolean) => void;
 }
 
 /** A fan/spread menu that fans out options from a central trigger button. */
@@ -46,11 +50,22 @@ export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
       direction = 'up',
       gap = 8,
       className,
+      open: controlledOpen,
+      onOpenChange,
       ...props
     },
     ref,
   ) => {
-    const [open, setOpen] = useState(false);
+    const [internalOpen, setInternalOpen] = useState(false);
+    const isControlled = controlledOpen !== undefined;
+    const open = isControlled ? controlledOpen : internalOpen;
+
+    const toggle = () => {
+      const next = !open;
+      if (!isControlled) setInternalOpen(next);
+      onOpenChange?.(next);
+    };
+
     const containerRef = useRef<HTMLDivElement>(null);
 
     const handleClickOutside = useCallback(
@@ -59,10 +74,11 @@ export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
           containerRef.current &&
           !containerRef.current.contains(e.target as Node)
         ) {
-          setOpen(false);
+          if (!isControlled) setInternalOpen(false);
+          onOpenChange?.(false);
         }
       },
-      [],
+      [isControlled, onOpenChange],
     );
 
     useEffect(() => {
@@ -74,12 +90,14 @@ export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
     const handleOptionClick = (option: FanMenuOption) => {
       if (option.disabled) return;
       option.onClick?.();
-      setOpen(false);
+      if (!isControlled) setInternalOpen(false);
+      onOpenChange?.(false);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent, option?: FanMenuOption) => {
       if (e.key === 'Escape') {
-        setOpen(false);
+        if (!isControlled) setInternalOpen(false);
+        onOpenChange?.(false);
         return;
       }
       if (e.key === 'Enter' || e.key === ' ') {
@@ -87,7 +105,7 @@ export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
         if (option) {
           handleOptionClick(option);
         } else {
-          setOpen((prev) => !prev);
+          toggle();
         }
       }
     };
@@ -102,7 +120,7 @@ export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
           <button
             type="button"
             className={styles.trigger}
-            onClick={() => setOpen((prev) => !prev)}
+            onClick={toggle}
             onKeyDown={(e) => handleKeyDown(e)}
             aria-expanded={open}
             aria-haspopup="menu"

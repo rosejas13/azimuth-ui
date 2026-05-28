@@ -132,7 +132,9 @@ describe('Modal', () => {
         <p>Content</p>
       </Modal>,
     );
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    const dialog = screen.getByRole('dialog');
+    const content = dialog.firstElementChild;
+    expect(content).toHaveClass('lg');
   });
 
   it('maps blur prop to CSS class', () => {
@@ -141,6 +143,7 @@ describe('Modal', () => {
         <p>Content</p>
       </Modal>,
     );
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveClass('overlayBlurMd');
   });
 });

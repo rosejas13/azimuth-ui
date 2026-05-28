@@ -3,6 +3,19 @@ import { describe, it, expect } from 'vitest';
 import { Table } from '../Table';
 
 describe('Table', () => {
+  it('has table role', () => {
+    render(
+      <Table>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>Data</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>,
+    );
+    expect(screen.getByRole('table')).toBeInTheDocument();
+  });
+
   it('renders children', () => {
     render(
       <Table>

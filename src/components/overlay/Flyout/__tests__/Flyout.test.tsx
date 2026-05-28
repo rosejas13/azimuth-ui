@@ -1,5 +1,6 @@
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { Flyout } from '../Flyout';
 
 describe('Flyout', () => {
@@ -113,5 +114,57 @@ describe('Flyout', () => {
     fireEvent.mouseLeave(screen.getByText('Trigger'));
     act(() => vi.advanceTimersByTime(200));
     expect(screen.queryByText('Flyout content')).not.toBeInTheDocument();
+  });
+
+  describe('keyboard interaction', () => {
+    beforeEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('opens on Enter key', async () => {
+      const user = userEvent.setup();
+      render(
+        <Flyout trigger={<span>Trigger</span>} content="Flyout content" />,
+      );
+      const trigger = screen.getByRole('button');
+      trigger.focus();
+      await user.keyboard('{Enter}');
+      expect(screen.getByText('Flyout content')).toBeInTheDocument();
+    });
+
+    it('opens on Space key', async () => {
+      const user = userEvent.setup();
+      render(
+        <Flyout trigger={<span>Trigger</span>} content="Flyout content" />,
+      );
+      const trigger = screen.getByRole('button');
+      trigger.focus();
+      await user.keyboard(' ');
+      expect(screen.getByText('Flyout content')).toBeInTheDocument();
+    });
+
+    it('closes on Escape key', async () => {
+      const user = userEvent.setup();
+      render(
+        <Flyout trigger={<span>Trigger</span>} content="Flyout content" />,
+      );
+      const trigger = screen.getByRole('button');
+      trigger.focus();
+      await user.keyboard('{Enter}');
+      expect(screen.getByText('Flyout content')).toBeInTheDocument();
+      await user.keyboard('{Escape}');
+      expect(screen.queryByText('Flyout content')).not.toBeInTheDocument();
+    });
+
+    it('manages focus on open - trigger retains focus after opening', async () => {
+      const user = userEvent.setup();
+      render(
+        <Flyout trigger={<span>Trigger</span>} content="Flyout content" />,
+      );
+      const trigger = screen.getByRole('button');
+      trigger.focus();
+      await user.keyboard('{Enter}');
+      expect(trigger).toHaveFocus();
+    });
   });
 });

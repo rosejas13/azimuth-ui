@@ -163,6 +163,8 @@ export const DiffViewer = forwardRef<HTMLDivElement, DiffViewerProps>(
       return (
         <div
           ref={ref}
+          role="region"
+          aria-label="Code diff"
           className={cn(styles.root, className)}
           style={{ ...style, maxHeight }}
           {...props}
@@ -237,6 +239,8 @@ export const DiffViewer = forwardRef<HTMLDivElement, DiffViewerProps>(
     return (
       <div
         ref={ref}
+        role="region"
+        aria-label="Code diff"
         className={cn(styles.root, className)}
         style={{ ...style, maxHeight }}
         {...props}

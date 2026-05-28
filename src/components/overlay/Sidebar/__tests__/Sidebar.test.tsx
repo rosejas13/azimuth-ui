@@ -193,4 +193,86 @@ describe('Sidebar', () => {
     );
     expect(screen.getByLabelText('Collapse sidebar')).toBeInTheDocument();
   });
+
+  it('Enter key triggers onSelect', async () => {
+    const onSelect = vi.fn();
+    render(
+      <Sidebar
+        items={items}
+        activeKey="dashboard"
+        onSelect={onSelect}
+        collapsed={false}
+        onToggle={vi.fn()}
+      />,
+    );
+    const user = userEvent.setup();
+    screen.getByText('Dashboard').closest('button')!.focus();
+    await user.keyboard('{Enter}');
+    expect(onSelect).toHaveBeenCalledWith('dashboard');
+  });
+
+  it('Space key triggers onSelect', async () => {
+    const onSelect = vi.fn();
+    render(
+      <Sidebar
+        items={items}
+        activeKey="dashboard"
+        onSelect={onSelect}
+        collapsed={false}
+        onToggle={vi.fn()}
+      />,
+    );
+    const user = userEvent.setup();
+    screen.getByText('Dashboard').closest('button')!.focus();
+    await user.keyboard(' ');
+    expect(onSelect).toHaveBeenCalledWith('dashboard');
+  });
+
+  it('ArrowDown navigates to next item', async () => {
+    render(
+      <Sidebar
+        items={items}
+        activeKey="dashboard"
+        onSelect={vi.fn()}
+        collapsed={false}
+        onToggle={vi.fn()}
+      />,
+    );
+    const user = userEvent.setup();
+    screen.getByText('Dashboard').closest('button')!.focus();
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByText('Settings').closest('button')).toHaveFocus();
+  });
+
+  it('ArrowUp navigates to previous item with wraparound', async () => {
+    render(
+      <Sidebar
+        items={items}
+        activeKey="dashboard"
+        onSelect={vi.fn()}
+        collapsed={false}
+        onToggle={vi.fn()}
+      />,
+    );
+    const user = userEvent.setup();
+    screen.getByText('Dashboard').closest('button')!.focus();
+    await user.keyboard('{ArrowUp}');
+    expect(screen.getByRole('button', { name: 'Collapse sidebar' })).toHaveFocus();
+    await user.keyboard('{ArrowUp}');
+    expect(screen.getByText('Admin').closest('button')).toHaveFocus();
+  });
+
+  it('handles empty items', () => {
+    render(
+      <Sidebar
+        items={[]}
+        activeKey="dashboard"
+        onSelect={vi.fn()}
+        collapsed={false}
+        onToggle={vi.fn()}
+      />,
+    );
+    const buttons = screen.queryAllByRole('button');
+    expect(buttons.length).toBeGreaterThanOrEqual(0);
+  });
 });

@@ -131,6 +131,10 @@ describe('Drawer', () => {
         <p>Content</p>
       </Drawer>,
     );
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    const dialog = screen.getByRole('dialog');
+    const innerDrawer = dialog.firstElementChild;
+    expect(innerDrawer).toHaveClass('drawer');
+    expect(innerDrawer).toHaveClass('right');
+    expect(innerDrawer).toHaveClass('lg');
   });
 });

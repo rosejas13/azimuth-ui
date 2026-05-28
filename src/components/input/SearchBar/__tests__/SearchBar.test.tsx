@@ -130,4 +130,17 @@ describe('SearchBar', () => {
     expect(onSearch).toHaveBeenCalledTimes(1);
     expect(onSearch).toHaveBeenCalledWith('abc');
   });
+
+  it('respects controlled value prop', () => {
+    render(<SearchBar value="controlled text" onChange={() => {}} />);
+    expect(screen.getByRole('searchbox')).toHaveValue('controlled text');
+  });
+
+  it('does not update input when controlled value is set', async () => {
+    const user = userEvent.setup();
+    render(<SearchBar value="fixed" onChange={() => {}} />);
+    const input = screen.getByRole('searchbox');
+    await user.type(input, 'abc');
+    expect(input).toHaveValue('fixed');
+  });
 });

@@ -41,4 +41,30 @@ describe('Checkbox', () => {
     const { container } = render(<Checkbox className="my-checkbox" />);
     expect(container.firstChild).toHaveClass('my-checkbox');
   });
+
+  it('toggles with Space key', async () => {
+    const handleChange = vi.fn();
+    const user = userEvent.setup();
+    render(<Checkbox onChange={handleChange} />);
+    const checkbox = screen.getByRole('checkbox');
+    checkbox.focus();
+    await user.keyboard(' ');
+    expect(handleChange).toHaveBeenCalledOnce();
+    expect(checkbox).toBeChecked();
+  });
+
+  it('respects controlled checked prop', () => {
+    const handleChange = vi.fn();
+    const { rerender } = render(<Checkbox checked={false} onChange={handleChange} />);
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).not.toBeChecked();
+    rerender(<Checkbox checked onChange={handleChange} />);
+    expect(checkbox).toBeChecked();
+  });
+
+  it('supports indeterminate state', () => {
+    render(<Checkbox indeterminate />);
+    const checkbox = screen.getByRole('checkbox') as HTMLInputElement;
+    expect(checkbox.indeterminate).toBe(true);
+  });
 });
