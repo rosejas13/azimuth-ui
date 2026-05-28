@@ -1,0 +1,78 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--azimuth-space-xl);
+  font-family: var(--azimuth-font-body);
+}
+
+.sm {
+  min-height: 40vh;
+  padding: var(--azimuth-space-lg);
+}
+
+.md {
+  min-height: 60vh;
+}
+
+.lg {
+  min-height: 80vh;
+  padding: var(--azimuth-space-3xl);
+}
+
+.status {
+  font-size: 4rem;
+  font-weight: bold;
+  color: var(--azimuth-color-text-muted);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+@media (width >= 768px) {
+  .status {
+    font-size: 6rem;
+  }
+}
+
+.lg .status {
+  font-size: 5rem;
+}
+
+@media (width >= 768px) {
+  .lg .status {
+    font-size: 7rem;
+  }
+}
+
+.icon {
+  margin-bottom: var(--azimuth-space-md);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.title {
+  margin: var(--azimuth-space-md) 0 0;
+  font-size: var(--azimuth-fs-h3);
+  font-weight: 600;
+  color: var(--azimuth-color-text);
+}
+
+@media (width >= 768px) {
+  .title {
+    font-size: var(--azimuth-fs-h2);
+  }
+}
+
+.description {
+  max-width: 50ch;
+  margin: var(--azimuth-space-sm) 0 0;
+  color: var(--azimuth-color-text-secondary);
+  font-size: var(--azimuth-fs-base);
+  line-height: var(--azimuth-lh-base);
+}
+
+.action {
+  margin-top: var(--azimuth-space-lg);
+}

@@ -15,7 +15,7 @@ const RADIUS_MAP = {
   sm: '4px',
   md: '8px',
   lg: '12px',
-  full: '14px',
+  full: '9999px',
 } as const;
 
 const SPACING_MAP = {
@@ -27,7 +27,7 @@ const SPACING_MAP = {
 const MOTION_MAP = {
   snappy: 'cubic-bezier(0.16, 1, 0.3, 1)',
   smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
-  reduced: 'ease',
+  reduced: 'ease-in-out',
 } as const;
 
 const SHADOW_MAP = {
@@ -140,25 +140,12 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     setCSSVar('--azimuth-font-body', c.fontBody);
 
     setCSSVar('--azimuth-ease', ease);
-    setCSSVar('--azimuth-animations', c.animations ? '' : 'none');
-
-    setCSSVar('--azimuth-fs-xs', '0.75rem');
-    setCSSVar('--azimuth-fs-sm', '0.875rem');
-    setCSSVar('--azimuth-fs-base', '1rem');
-    setCSSVar('--azimuth-fs-lg', '1.125rem');
-    setCSSVar('--azimuth-fs-xl', '1.25rem');
-    setCSSVar('--azimuth-fs-2xl', '1.5rem');
-    setCSSVar('--azimuth-lh-base', '1.5');
-    setCSSVar('--azimuth-lh-heading', '1.25');
-    setCSSVar('--azimuth-transition-fast', '150ms ease');
-    setCSSVar('--azimuth-transition-base', '200ms ease');
 
     const elevation = c.flat ? 'flat' : c.elevation;
     const shadows = SHADOW_MAP[elevation];
     setCSSVar('--azimuth-shadow-sm', shadows.sm);
     setCSSVar('--azimuth-shadow-md', shadows.md);
     setCSSVar('--azimuth-shadow-lg', shadows.lg);
-    setCSSVar('--azimuth-shadows', elevation === 'flat' ? 'none' : '');
 
     const savedMode = (localStorage.getItem('azimuth-theme-mode') as ColorMode) || null;
     const effectiveMode = savedMode || c.mode;
@@ -206,7 +193,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
         --azimuth-color-text-secondary: oklch(45% 0.01 85);
         --azimuth-color-text-muted: oklch(55% 0.008 85);
         --azimuth-color-border: oklch(78% 0.008 85);
-        --azimuth-color-border-strong: oklch(70% 0.01 85);
+        --azimuth-color-border-strong: oklch(80% 0.01 85);
         --azimuth-color-on-primary: oklch(99% 0 0);
         --azimuth-color-on-accent: oklch(99% 0 0);
         --azimuth-color-overlay: rgb(0 0 0 / 0.5);
@@ -220,6 +207,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
         --azimuth-color-warning-text: oklch(45% 0.08 85);
         --azimuth-color-info-bg: oklch(92% 0.04 250);
         --azimuth-color-info-text: oklch(35% 0.06 250);
+        --azimuth-font-mono: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
       }
     `);
 
@@ -238,7 +226,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
         --azimuth-color-text-secondary: oklch(65% 0.005 85);
         --azimuth-color-text-muted: oklch(45% 0.005 85);
         --azimuth-color-border: oklch(28% 0.01 220);
-        --azimuth-color-border-strong: oklch(35% 0.01 220);
+        --azimuth-color-border-strong: oklch(40% 0.01 220);
         --azimuth-color-on-primary: oklch(14% 0.008 220);
         --azimuth-color-on-accent: oklch(14% 0.008 220);
         --azimuth-color-overlay: rgb(0 0 0 / 0.5);
@@ -252,6 +240,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
         --azimuth-color-warning-text: oklch(70% 0.08 85);
         --azimuth-color-info-bg: oklch(22% 0.04 250);
         --azimuth-color-info-text: oklch(65% 0.06 250);
+        --azimuth-font-mono: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
       }
     `);
 

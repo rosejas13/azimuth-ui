@@ -25,248 +25,248 @@ export type {
 
 export { cn } from './utils';
 
-export { Button } from './primitives/Button';
-export type { ButtonProps, ButtonVariant } from './primitives/Button';
+export { Button } from './components/input/Button';
+export type { ButtonProps, ButtonVariant } from './components/input/Button';
 
-export { Checkbox } from './primitives/Checkbox';
-export type { CheckboxProps } from './primitives/Checkbox';
+export { Checkbox } from './components/input/Checkbox';
+export type { CheckboxProps } from './components/input/Checkbox';
 
-export { Icon } from './primitives/Icon';
-export type { IconProps } from './primitives/Icon';
+export { Icon } from './components/display/Icon';
+export type { IconProps } from './components/display/Icon';
 
-export { IconButton } from './primitives/IconButton';
-export type { IconButtonProps } from './primitives/IconButton';
+export { IconButton } from './components/display/IconButton';
+export type { IconButtonProps } from './components/display/IconButton';
 
-export { Input } from './primitives/Input';
-export type { InputProps } from './primitives/Input';
+export { Input } from './components/input/Input';
+export type { InputProps } from './components/input/Input';
 
-export { Radio } from './primitives/Radio';
-export type { RadioProps } from './primitives/Radio';
+export { Radio } from './components/input/Radio';
+export type { RadioProps } from './components/input/Radio';
 
-export { Select } from './primitives/Select';
-export type { SelectProps } from './primitives/Select';
+export { Select } from './components/input/Select';
+export type { SelectProps } from './components/input/Select';
 
-export { Text } from './primitives/Text';
-export type { TextProps } from './primitives/Text';
+export { Text } from './components/display/Text';
+export type { TextProps } from './components/display/Text';
 
-export { Toggle } from './primitives/Toggle';
-export type { ToggleProps } from './primitives/Toggle';
+export { Toggle } from './components/input/Toggle';
+export type { ToggleProps } from './components/input/Toggle';
 
-export { Container } from './layout/Container';
-export type { ContainerProps } from './layout/Container';
+export { Container } from './components/layout/Container';
+export type { ContainerProps } from './components/layout/Container';
 
-export { Divider } from './layout/Divider';
-export type { DividerProps } from './layout/Divider';
+export { Divider } from './components/layout/Divider';
+export type { DividerProps } from './components/layout/Divider';
 
-export { Grid } from './layout/Grid';
-export type { GridProps } from './layout/Grid';
+export { Grid } from './components/layout/Grid';
+export type { GridProps } from './components/layout/Grid';
 
-export { Stack } from './layout/Stack';
-export type { StackProps } from './layout/Stack';
+export { Stack } from './components/layout/Stack';
+export type { StackProps } from './components/layout/Stack';
 
-export { Accordion } from './components/Accordion';
-export type { AccordionProps, AccordionItem } from './components/Accordion';
+export { Accordion } from './components/display/Accordion';
+export type { AccordionProps, AccordionItem } from './components/display/Accordion';
 
-export { Alert } from './components/Alert';
-export type { AlertProps } from './components/Alert';
+export { Alert } from './components/display/Alert';
+export type { AlertProps } from './components/display/Alert';
 
-export { Avatar } from './components/Avatar';
-export type { AvatarProps } from './components/Avatar';
+export { Avatar } from './components/display/Avatar';
+export type { AvatarProps } from './components/display/Avatar';
 
-export { Badge } from './components/Badge';
-export type { BadgeProps } from './components/Badge';
+export { Badge } from './components/display/Badge';
+export type { BadgeProps } from './components/display/Badge';
 
-export { BreadcrumbPageHeader } from './components/BreadcrumbPageHeader';
-export type { BreadcrumbPageHeaderProps, BreadcrumbItem } from './components/BreadcrumbPageHeader';
+export { BreadcrumbPageHeader } from './components/navigation/BreadcrumbPageHeader';
+export type { BreadcrumbPageHeaderProps, BreadcrumbItem } from './components/navigation/BreadcrumbPageHeader';
 
-export { Breadcrumbs } from './components/Breadcrumbs';
-export type { BreadcrumbsProps } from './components/Breadcrumbs';
+export { Breadcrumbs } from './components/navigation/Breadcrumbs';
+export type { BreadcrumbsProps } from './components/navigation/Breadcrumbs';
 
-export { Calendar } from './components/Calendar';
-export type { CalendarProps } from './components/Calendar';
+export { Calendar } from './components/data/Calendar';
+export type { CalendarProps } from './components/data/Calendar';
 
-export { Card } from './components/Card';
-export type { CardProps, CardHeaderProps, CardFooterProps } from './components/Card';
+export { Card } from './components/display/Card';
+export type { CardProps, CardHeaderProps, CardFooterProps } from './components/display/Card';
 
-export { Carousel } from './components/Carousel';
-export type { CarouselProps } from './components/Carousel';
+export { Carousel } from './components/display/Carousel';
+export type { CarouselProps } from './components/display/Carousel';
 
-export { Chat } from './components/Chat';
-export type { ChatProps, ChatMessage } from './components/Chat';
+export { Chat } from './components/display/Chat';
+export type { ChatProps, ChatMessage } from './components/display/Chat';
 
-export { Chip } from './components/Chip';
-export type { ChipProps } from './components/Chip';
+export { Chip } from './components/display/Chip';
+export type { ChipProps } from './components/display/Chip';
 
-export { Clock } from './components/Clock';
-export type { ClockProps } from './components/Clock';
+export { Clock } from './components/display/Clock';
+export type { ClockProps } from './components/display/Clock';
 
-export { CodeBlock } from './components/CodeBlock';
-export type { CodeBlockProps } from './components/CodeBlock';
+export { CodeBlock } from './components/display/CodeBlock';
+export type { CodeBlockProps } from './components/display/CodeBlock';
 
-export { ColorPicker } from './components/ColorPicker';
-export type { ColorPickerProps } from './components/ColorPicker';
+export { ColorPicker } from './components/data/ColorPicker';
+export type { ColorPickerProps } from './components/data/ColorPicker';
 
-export { Combobox } from './components/Combobox';
-export type { ComboboxProps, ComboboxOption } from './components/Combobox';
+export { Combobox } from './components/input/Combobox';
+export type { ComboboxProps, ComboboxOption } from './components/input/Combobox';
 
-export { Cursor, useCursor } from './components/Cursor';
-export type { CursorProps } from './components/Cursor';
+export { Cursor, useCursor } from './components/display/Cursor';
+export type { CursorProps } from './components/display/Cursor';
 
-export { DataTable } from './components/DataTable';
-export type { DataTableProps, Column } from './components/DataTable';
+export { DataTable } from './components/data/DataTable';
+export type { DataTableProps, Column } from './components/data/DataTable';
 
-export { DateTimePicker } from './components/DateTimePicker';
-export type { DateTimePickerProps } from './components/DateTimePicker';
+export { DateTimePicker } from './components/data/DateTimePicker';
+export type { DateTimePickerProps } from './components/data/DateTimePicker';
 
-export { DateRangePicker } from './components/DateRangePicker';
-export type { DateRangePickerProps, DateRange } from './components/DateRangePicker';
+export { DateRangePicker } from './components/data/DateRangePicker';
+export type { DateRangePickerProps, DateRange } from './components/data/DateRangePicker';
 
-export { FileUpload } from './components/FileUpload';
-export type { FileUploadProps } from './components/FileUpload';
+export { FileUpload } from './components/input/FileUpload';
+export type { FileUploadProps } from './components/input/FileUpload';
 
-export { Dialog } from './components/Dialog';
-export type { DialogProps } from './components/Dialog';
+export { Dialog } from './components/overlay/Dialog';
+export type { DialogProps } from './components/overlay/Dialog';
 
-export { Drawer } from './components/Drawer';
-export type { DrawerProps } from './components/Drawer';
+export { Drawer } from './components/overlay/Drawer';
+export type { DrawerProps } from './components/overlay/Drawer';
 
-export { DropdownList } from './components/DropdownList';
-export type { DropdownListProps } from './components/DropdownList';
+export { DropdownList } from './components/input/DropdownList';
+export type { DropdownListProps } from './components/input/DropdownList';
 
-export { EmptyState } from './components/EmptyState';
-export type { EmptyStateProps } from './components/EmptyState';
+export { EmptyState } from './components/display/EmptyState';
+export type { EmptyStateProps } from './components/display/EmptyState';
 
-export { ErrorPage } from './components/ErrorPage';
-export type { ErrorPageProps } from './components/ErrorPage';
+export { ErrorPage } from './components/display/ErrorPage';
+export type { ErrorPageProps } from './components/display/ErrorPage';
 
-export { FanMenu } from './components/FanMenu';
-export type { FanMenuProps, FanMenuOption } from './components/FanMenu';
+export { FanMenu } from './components/display/FanMenu';
+export type { FanMenuProps, FanMenuOption } from './components/display/FanMenu';
 
-export { Flyout } from './components/Flyout';
-export type { FlyoutProps } from './components/Flyout';
+export { Flyout } from './components/overlay/Flyout';
+export type { FlyoutProps } from './components/overlay/Flyout';
 
-export { Form } from './components/Form';
-export type { FormProps, FormFieldProps } from './components/Form';
+export { Form } from './components/input/Form';
+export type { FormProps, FormFieldProps } from './components/input/Form';
 
-export { InputGroup } from './components/InputGroup';
-export type { InputGroupProps } from './components/InputGroup';
+export { InputGroup } from './components/input/InputGroup';
+export type { InputGroupProps } from './components/input/InputGroup';
 
-export { ImageViewer } from './components/ImageViewer';
-export type { ImageViewerProps, ImageViewerImage } from './components/ImageViewer';
+export { ImageViewer } from './components/display/ImageViewer';
+export type { ImageViewerProps, ImageViewerImage } from './components/display/ImageViewer';
 
-export { InfoButton } from './components/InfoButton';
-export type { InfoButtonProps } from './components/InfoButton';
+export { InfoButton } from './components/display/InfoButton';
+export type { InfoButtonProps } from './components/display/InfoButton';
 
-export { Kbd } from './components/Kbd';
-export type { KbdProps } from './components/Kbd';
+export { Kbd } from './components/display/Kbd';
+export type { KbdProps } from './components/display/Kbd';
 
-export { List } from './components/List';
-export type { ListProps, ListItemProps } from './components/List';
+export { List } from './components/data/List';
+export type { ListProps, ListItemProps } from './components/data/List';
 
-export { Loader } from './components/Loader';
-export type { LoaderProps } from './components/Loader';
+export { Loader } from './components/display/Loader';
+export type { LoaderProps } from './components/display/Loader';
 
-export { LoginSignup } from './components/LoginSignup';
-export type { LoginSignupProps, AuthView, AuthProvider } from './components/LoginSignup';
+export { LoginSignup } from './components/display/LoginSignup';
+export type { LoginSignupProps, AuthView, AuthProvider } from './components/display/LoginSignup';
 
-export { Menu } from './components/Menu';
-export type { MenuProps, MenuItem } from './components/Menu';
+export { Menu } from './components/navigation/Menu';
+export type { MenuProps, MenuItem } from './components/navigation/Menu';
 
-export { OTPInput } from './components/OTPInput';
-export type { OTPInputProps } from './components/OTPInput';
+export { OTPInput } from './components/input/OTPInput';
+export type { OTPInputProps } from './components/input/OTPInput';
 
-export { Modal } from './components/Modal';
-export type { ModalProps } from './components/Modal';
+export { Modal } from './components/overlay/Modal';
+export type { ModalProps } from './components/overlay/Modal';
 
-export { Navbar } from './components/Navbar';
-export type { NavbarProps, NavItem } from './components/Navbar';
+export { Navbar } from './components/navigation/Navbar';
+export type { NavbarProps, NavItem } from './components/navigation/Navbar';
 
-export { NotificationBadge } from './components/NotificationBadge';
-export type { NotificationBadgeProps } from './components/NotificationBadge';
+export { NotificationBadge } from './components/display/NotificationBadge';
+export type { NotificationBadgeProps } from './components/display/NotificationBadge';
 
-export { PageLayout } from './components/PageLayout';
-export type { PageLayoutProps } from './components/PageLayout';
+export { PageLayout } from './components/display/PageLayout';
+export type { PageLayoutProps } from './components/display/PageLayout';
 
-export { Pagination } from './components/Pagination';
-export type { PaginationProps } from './components/Pagination';
+export { Pagination } from './components/data/Pagination';
+export type { PaginationProps } from './components/data/Pagination';
 
-export { ProgressBar } from './components/ProgressBar';
-export type { ProgressBarProps } from './components/ProgressBar';
+export { ProgressBar } from './components/display/ProgressBar';
+export type { ProgressBarProps } from './components/display/ProgressBar';
 
-export { Rating } from './components/Rating';
-export type { RatingProps } from './components/Rating';
+export { Rating } from './components/input/Rating';
+export type { RatingProps } from './components/input/Rating';
 
-export { ResizablePanel } from './components/ResizablePanel';
-export type { ResizablePanelProps } from './components/ResizablePanel';
+export { ResizablePanel } from './components/display/ResizablePanel';
+export type { ResizablePanelProps } from './components/display/ResizablePanel';
 
-export { SearchBar } from './components/SearchBar';
-export type { SearchBarProps } from './components/SearchBar';
+export { SearchBar } from './components/input/SearchBar';
+export type { SearchBarProps } from './components/input/SearchBar';
 
-export { SectionView } from './components/SectionView';
-export type { SectionViewProps } from './components/SectionView';
+export { SectionView } from './components/display/SectionView';
+export type { SectionViewProps } from './components/display/SectionView';
 
-export { SegmentedButton } from './components/SegmentedButton';
-export type { SegmentedButtonProps, SegmentedButtonOption } from './components/SegmentedButton';
+export { SegmentedButton } from './components/display/SegmentedButton';
+export type { SegmentedButtonProps, SegmentedButtonOption } from './components/display/SegmentedButton';
 
-export { Sidebar } from './components/Sidebar';
-export type { SidebarProps, SidebarItem } from './components/Sidebar';
+export { Sidebar } from './components/overlay/Sidebar';
+export type { SidebarProps, SidebarItem } from './components/overlay/Sidebar';
 
-export { Skeleton } from './components/Skeleton';
-export type { SkeletonProps } from './components/Skeleton';
+export { Skeleton } from './components/display/Skeleton';
+export type { SkeletonProps } from './components/display/Skeleton';
 
-export { SplitButton } from './components/SplitButton';
-export type { SplitButtonProps, SplitButtonOption } from './components/SplitButton';
+export { SplitButton } from './components/display/SplitButton';
+export type { SplitButtonProps, SplitButtonOption } from './components/display/SplitButton';
 
-export { SlideSheet } from './components/SlideSheet';
-export type { SlideSheetProps } from './components/SlideSheet';
+export { SlideSheet } from './components/overlay/SlideSheet';
+export type { SlideSheetProps } from './components/overlay/SlideSheet';
 
-export { Slider } from './components/Slider';
-export type { SliderProps } from './components/Slider';
+export { Slider } from './components/input/Slider';
+export type { SliderProps } from './components/input/Slider';
 
-export { Table } from './components/Table';
-export type { TableProps } from './components/Table';
+export { Table } from './components/data/Table';
+export type { TableProps } from './components/data/Table';
 
-export { Tabs } from './components/Tabs';
-export type { TabsProps } from './components/Tabs';
+export { Tabs } from './components/navigation/Tabs';
+export type { TabsProps } from './components/navigation/Tabs';
 
-export { Tag } from './components/Tag';
-export type { TagProps } from './components/Tag';
+export { Tag } from './components/display/Tag';
+export type { TagProps } from './components/display/Tag';
 
-export { TextArea } from './components/TextArea';
-export type { TextAreaProps } from './components/TextArea';
+export { TextArea } from './components/input/TextArea';
+export type { TextAreaProps } from './components/input/TextArea';
 
-export { TextBox } from './components/TextBox';
-export type { TextBoxProps } from './components/TextBox';
+export { TextBox } from './components/input/TextBox';
+export type { TextBoxProps } from './components/input/TextBox';
 
-export { Timeline } from './components/Timeline';
-export type { TimelineProps, TimelineItem } from './components/Timeline';
+export { Timeline } from './components/data/Timeline';
+export type { TimelineProps, TimelineItem } from './components/data/Timeline';
 
-export { Toast, ToastProvider, useToast, ToastContext } from './components/Toast';
-export type { ToastProps, ToastOptions, ToastPosition } from './components/Toast';
+export { Toast, ToastProvider, useToast, ToastContext } from './components/display/Toast';
+export type { ToastProps, ToastOptions, ToastPosition } from './components/display/Toast';
 
-export { Tooltip } from './components/Tooltip';
-export type { TooltipProps } from './components/Tooltip';
+export { Tooltip } from './components/overlay/Tooltip';
+export type { TooltipProps } from './components/overlay/Tooltip';
 
-export { TreeList } from './components/TreeList';
-export type { TreeListProps, TreeNode } from './components/TreeList';
+export { TreeList } from './components/data/TreeList';
+export type { TreeListProps, TreeNode } from './components/data/TreeList';
 
-export { VisuallyHidden } from './components/VisuallyHidden';
-export type { VisuallyHiddenProps } from './components/VisuallyHidden';
+export { VisuallyHidden } from './components/display/VisuallyHidden';
+export type { VisuallyHiddenProps } from './components/display/VisuallyHidden';
 
-export { CommandPalette } from './components/CommandPalette';
-export type { CommandPaletteProps, CommandGroup, CommandItem } from './components/CommandPalette';
+export { CommandPalette } from './components/overlay/CommandPalette';
+export type { CommandPaletteProps, CommandGroup, CommandItem } from './components/overlay/CommandPalette';
 
-export { MapDisplay } from './components/MapDisplay';
-export type { MapDisplayProps, MapMarker } from './components/MapDisplay';
+export { MapDisplay } from './components/display/MapDisplay';
+export type { MapDisplayProps, MapMarker } from './components/display/MapDisplay';
 
-export { MediaPlayer } from './components/MediaPlayer';
-export type { MediaPlayerProps } from './components/MediaPlayer';
+export { MediaPlayer } from './components/display/MediaPlayer';
+export type { MediaPlayerProps } from './components/display/MediaPlayer';
 
-export { SimpleChart } from './components/SimpleChart';
-export type { SimpleChartProps, ChartDataPoint } from './components/SimpleChart';
+export { SimpleChart } from './components/data/SimpleChart';
+export type { SimpleChartProps, ChartDataPoint } from './components/data/SimpleChart';
 
-export { DiffViewer } from './components/DiffViewer';
-export type { DiffViewerProps } from './components/DiffViewer';
+export { DiffViewer } from './components/data/DiffViewer';
+export type { DiffViewerProps } from './components/data/DiffViewer';
 
 export {
   useDisclosure,

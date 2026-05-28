@@ -39,10 +39,10 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Text: (
       <Stack spacing="sm">
-        <Text size="h1">Heading 1</Text>
-        <Text size="h2">Heading 2</Text>
-        <Text size="base">Body text</Text>
-        <Text size="sm" color="secondary">Secondary small text</Text>
+        <Text element={{ size: "h1" }}>Heading 1</Text>
+        <Text element={{ size: "h2" }}>Heading 2</Text>
+        <Text element={{ size: "base" }}>Body text</Text>
+        <Text element={{ size: "sm" }} color="secondary">Secondary small text</Text>
       </Stack>
     ),
     Badge: (
@@ -70,11 +70,11 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     Card: (
       <Grid cols={2} gap="md">
         <Card header={<Text weight="semibold">Basic Card</Text>}>
-          <Text size="sm" color="secondary">Card body content with description text.</Text>
+          <Text element={{ size: "sm" }} color="secondary">Card body content with description text.</Text>
         </Card>
         <Card header={<Text weight="semibold">With Footer</Text>}
           footer={<Button size="sm" fullWidth>Action</Button>}>
-          <Text size="sm" color="secondary">Card with a footer action button.</Text>
+          <Text element={{ size: "sm" }} color="secondary">Card with a footer action button.</Text>
         </Card>
       </Grid>
     ),
@@ -100,8 +100,8 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Slider: (
       <div style={{ padding: 'var(--azimuth-space-md)' }}>
-        <Slider defaultValue={50} showValue />
-        <Slider defaultValue={30} orientation="vertical" size="sm" />
+        <Slider value={{ defaultValue: 50 }} display={{ showValue: true }} />
+        <Slider value={{ defaultValue: 30 }} display={{ orientation: 'vertical', size: 'sm' }} />
       </div>
     ),
     ProgressBar: (
@@ -130,7 +130,7 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
             </Button>
           ))}
         </Stack>
-        <Text size="xs" color="muted">Click a button above to see the alert appear on the page.</Text>
+        <Text element={{ size: "xs" }} color="muted">Click a button above to see the alert appear on the page.</Text>
       </Stack>
     ),
     Tooltip: (
@@ -158,9 +158,9 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Kbd: (
       <Stack direction="horizontal" spacing="sm" align="center">
-        <Kbd>Ctrl</Kbd> <Text size="sm">+</Text> <Kbd>C</Kbd>
-        <Text size="sm" style={{ margin: '0 var(--azimuth-space-sm)' }}>|</Text>
-        <Kbd>Cmd</Kbd> <Text size="sm">+</Text> <Kbd>Shift</Kbd> <Text size="sm">+</Text> <Kbd>Z</Kbd>
+        <Kbd>Ctrl</Kbd> <Text element={{ size: "sm" }}>+</Text> <Kbd>C</Kbd>
+        <Text element={{ size: "sm" }} style={{ margin: '0 var(--azimuth-space-sm)' }}>|</Text>
+        <Kbd>Cmd</Kbd> <Text element={{ size: "sm" }}>+</Text> <Kbd>Shift</Kbd> <Text element={{ size: "sm" }}>+</Text> <Kbd>Z</Kbd>
       </Stack>
     ),
     Skeleton: (
@@ -187,9 +187,9 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     Tabs: (
       <Tabs
         tabs={[
-          { id: 'a', label: 'Tab A', content: <Text size="sm">Content A</Text> },
-          { id: 'b', label: 'Tab B', content: <Text size="sm">Content B</Text> },
-          { id: 'c', label: 'Tab C', disabled: true, content: <Text size="sm">Content C</Text> },
+          { id: 'a', label: 'Tab A', content: <Text element={{ size: "sm" }}>Content A</Text> },
+          { id: 'b', label: 'Tab B', content: <Text element={{ size: "sm" }}>Content B</Text> },
+          { id: 'c', label: 'Tab C', disabled: true, content: <Text element={{ size: "sm" }}>Content C</Text> },
         ]}
         variant="underline"
       />
@@ -207,10 +207,10 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     List: (
       <Grid cols={2} gap="md">
-        <Card header={<Text weight="semibold" size="sm">Bulleted</Text>}>
+        <Card header={<Text weight="semibold" element={{ size: "sm" }}>Bulleted</Text>}>
           <List bulleted><List.Item>Item one</List.Item><List.Item>Item two</List.Item></List>
         </Card>
-        <Card header={<Text weight="semibold" size="sm">Ordered</Text>}>
+        <Card header={<Text weight="semibold" element={{ size: "sm" }}>Ordered</Text>}>
           <List ordered><List.Item>First</List.Item><List.Item>Second</List.Item></List>
         </Card>
       </Grid>
@@ -228,21 +228,21 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Input: (
       <Stack spacing="sm">
-        <Input label="Email" type="email" placeholder="you@example.com" size="sm" />
-        <Input label="Password" type="password" placeholder="Enter password" size="sm" />
-        <Input label="With Error" error="Invalid value" size="sm" />
-        <Input label="Number" type="number" showSteppers min={0} max={100} size="sm" />
+        <Input label={{ text: 'Email' }} type="email" placeholder="you@example.com" size="sm" />
+        <Input label={{ text: 'Password' }} type="password" placeholder="Enter password" size="sm" />
+        <Input label={{ text: 'With Error', error: 'Invalid value' }} size="sm" />
+        <Input label={{ text: 'Number' }} type="number" stepper={{ enabled: true, min: 0, max: 100 }} size="sm" />
       </Stack>
     ),
     Select: (
       <Select
-        label="Framework" placeholder="Choose..."
+        label={{ text: 'Framework' }} placeholder="Choose..."
         options={[{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }, { value: 'svelte', label: 'Svelte' }]}
         size="sm"
       />
     ),
     TextArea: (
-      <TextArea label="Message" placeholder="Type your message..." rows={3} size="sm" />
+      <TextArea label={{ text: 'Message' }} placeholder="Type your message..." rows={3} size="sm" />
     ),
     SearchBar: (
       <SearchBar placeholder="Search..." onSearch={() => {}} clearable />
@@ -280,48 +280,52 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     Carousel: (
       <Carousel showArrows showDots>
         <div style={{ padding: 'var(--azimuth-space-lg)', textAlign: 'center', background: 'var(--azimuth-color-surface-hover)', borderRadius: 'var(--azimuth-radius-md)' }}>
-          <Text size="h4">Slide 1</Text><Text size="sm" color="secondary">First slide content</Text>
+          <Text element={{ size: "h4" }}>Slide 1</Text><Text element={{ size: "sm" }} color="secondary">First slide content</Text>
         </div>
         <div style={{ padding: 'var(--azimuth-space-lg)', textAlign: 'center', background: 'var(--azimuth-color-surface-hover)', borderRadius: 'var(--azimuth-radius-md)' }}>
-          <Text size="h4">Slide 2</Text><Text size="sm" color="secondary">Second slide content</Text>
+          <Text element={{ size: "h4" }}>Slide 2</Text><Text element={{ size: "sm" }} color="secondary">Second slide content</Text>
         </div>
         <div style={{ padding: 'var(--azimuth-space-lg)', textAlign: 'center', background: 'var(--azimuth-color-surface-hover)', borderRadius: 'var(--azimuth-radius-md)' }}>
-          <Text size="h4">Slide 3</Text><Text size="sm" color="secondary">Third slide content</Text>
+          <Text element={{ size: "h4" }}>Slide 3</Text><Text element={{ size: "sm" }} color="secondary">Third slide content</Text>
         </div>
       </Carousel>
     ),
     DataTable: (
       <DataTable
-        title="Sample" searchable
-        columns={[
-          { key: 'name', title: 'Name', sortable: true },
-          { key: 'value', title: 'Value', sortable: true },
-          { key: 'status', title: 'Status' },
-        ]}
-        data={[
-          { name: 'Alpha', value: 10, status: 'Active' },
-          { name: 'Beta', value: 20, status: 'Active' },
-          { name: 'Gamma', value: 15, status: 'Inactive' },
-        ]}
-        pageSize={5}
+        title="Sample"
+        data={{
+          columns: [
+            { key: 'name', title: 'Name', sortable: true },
+            { key: 'value', title: 'Value', sortable: true },
+            { key: 'status', title: 'Status' },
+          ],
+          data: [
+            { name: 'Alpha', value: 10, status: 'Active' },
+            { name: 'Beta', value: 20, status: 'Active' },
+            { name: 'Gamma', value: 15, status: 'Inactive' },
+          ],
+        }}
+        search={{ enabled: true }}
+        pagination={{ pageSize: 5 }}
         actions={<Button size="sm" variant="secondary">Export</Button>}
       />
     ),
     DropdownList: (
-      <DropdownList label="Choose" placeholder="Select..."
-        options={[{ value: 'a', label: 'Option A' }, { value: 'b', label: 'Option B' }, { value: 'c', label: 'Option C', disabled: true }]}
+      <DropdownList label="Choose"
+        data={{ options: [{ value: 'a', label: 'Option A' }, { value: 'b', label: 'Option B' }, { value: 'c', label: 'Option C', disabled: true }], placeholder: 'Select...' }}
+        selection={{}}
       />
     ),
     SectionView: (
       <SectionView title="Click to expand">
-        <Text size="sm" color="secondary">This content is collapsible with smooth animation.</Text>
+        <Text element={{ size: "sm" }} color="secondary">This content is collapsible with smooth animation.</Text>
       </SectionView>
     ),
     ResizablePanel: (
       <div style={{ height: '100px' }}>
         <ResizablePanel direction="horizontal" minSize={30}>
-          <div style={{ padding: 'var(--azimuth-space-sm)' }}><Text size="sm">Left panel</Text></div>
-          <div style={{ padding: 'var(--azimuth-space-sm)' }}><Text size="sm">Right panel</Text></div>
+          <div style={{ padding: 'var(--azimuth-space-sm)' }}><Text element={{ size: "sm" }}>Left panel</Text></div>
+          <div style={{ padding: 'var(--azimuth-space-sm)' }}><Text element={{ size: "sm" }}>Right panel</Text></div>
         </ResizablePanel>
       </div>
     ),
@@ -343,23 +347,23 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Grid: (
       <Grid cols={3} gap="sm">
-        <Card><Text size="sm">A</Text></Card>
-        <Card><Text size="sm">B</Text></Card>
-        <Card><Text size="sm">C</Text></Card>
+        <Card><Text element={{ size: "sm" }}>A</Text></Card>
+        <Card><Text element={{ size: "sm" }}>B</Text></Card>
+        <Card><Text element={{ size: "sm" }}>C</Text></Card>
       </Grid>
     ),
     Container: (
-      <Container><Text size="sm" color="secondary">Centered content container with max-width constraint.</Text></Container>
+      <Container><Text element={{ size: "sm" }} color="secondary">Centered content container with max-width constraint.</Text></Container>
     ),
     Divider: (
       <Stack spacing="sm">
-        <Text size="sm">Above</Text>
+        <Text element={{ size: "sm" }}>Above</Text>
         <Divider />
-        <Text size="sm">Below</Text>
+        <Text element={{ size: "sm" }}>Below</Text>
         <Stack direction="horizontal" spacing="sm" align="center">
-          <Text size="sm">Left</Text>
+          <Text element={{ size: "sm" }}>Left</Text>
           <Divider orientation="vertical" />
-          <Text size="sm">Right</Text>
+          <Text element={{ size: "sm" }}>Right</Text>
         </Stack>
       </Stack>
     ),
@@ -387,6 +391,22 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
         <Button size="sm" variant="secondary">Default</Button>
       </Stack>
     ),
+    LoginSignup: (
+      <div style={{ maxWidth: '320px' }}>
+        <LoginSignup defaultView="login"
+          social={{ providers: [{ id: 'github', label: 'GitHub' }, { id: 'google', label: 'Google' }] }}
+        />
+      </div>
+    ),
+    Navbar: (
+      <div style={{ border: '1px solid var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-md)' }}>
+        <Navbar
+          branding={{ logo: <Text weight="bold" element={{ size: "sm" }}>Logo</Text> }}
+          nav={{ items: [{ key: 'a', label: 'Home' }, { key: 'b', label: 'About' }] }}
+          actions={<Button size="sm">Action</Button>}
+        />
+      </div>
+    ),
     Drawer: (
       <Stack direction="horizontal" spacing="sm">
         <Button size="sm" onClick={onShowDrawer}>Open Drawer</Button>
@@ -401,17 +421,17 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     PageLayout: (
       <PageLayout
-        sidebar={<div style={{ padding: 'var(--azimuth-space-sm)' }}><Text size="sm">Sidebar</Text></div>}
+        sidebar={<div style={{ padding: 'var(--azimuth-space-sm)' }}><Text element={{ size: "sm" }}>Sidebar</Text></div>}
       >
-        <Text size="sm">Main content area with sidebar layout.</Text>
+        <Text element={{ size: "sm" }}>Main content area with sidebar layout.</Text>
       </PageLayout>
     ),
     Flyout: (
       <Stack direction="horizontal" spacing="md">
         <Flyout trigger={<Button variant="secondary" size="sm">Hover me</Button>}
-          content={<div style={{ padding: 'var(--azimuth-space-md)' }}><Text size="sm">Flyout content here</Text></div>} />
+          content={<div style={{ padding: 'var(--azimuth-space-md)' }}><Text element={{ size: "sm" }}>Flyout content here</Text></div>} />
         <Flyout trigger={<Button variant="secondary" size="sm">Top</Button>} side="top"
-          content={<div style={{ padding: 'var(--azimuth-space-md)' }}><Text size="sm">Top flyout</Text></div>} />
+          content={<div style={{ padding: 'var(--azimuth-space-md)' }}><Text element={{ size: "sm" }}>Top flyout</Text></div>} />
       </Stack>
     ),
     Menu: (
@@ -427,24 +447,18 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
         />
       </Stack>
     ),
-    Navbar: (
+    Navbar2: (
       <div style={{ border: '1px solid var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-md)' }}>
         <Navbar
-          logo={<Text weight="bold" size="sm">Logo</Text>}
-          items={[{ key: 'a', label: 'Home' }, { key: 'b', label: 'About' }]}
+          branding={{ logo: <Text weight="bold" element={{ size: "sm" }}>Logo</Text> }}
+          nav={{ items: [{ key: 'a', label: 'Home' }, { key: 'b', label: 'About' }] }}
           actions={<Button size="sm">Action</Button>}
         />
       </div>
     ),
-    LoginSignup: (
-      <div style={{ maxWidth: '320px' }}>
-        <LoginSignup defaultView="login"
-          providers={[{ id: 'github', label: 'GitHub' }, { id: 'google', label: 'Google' }]}
-        />
-      </div>
-    ),
+
     DateTimePicker: (
-      <DateTimePicker onChange={() => {}} showTime={true} showSeconds={false} minuteStep={15} />
+      <DateTimePicker value={{ onChange: () => {} }} display={{ showTime: true, showSeconds: false }} constraints={{ minuteStep: 15 }} />
     ),
     DateRangePicker: (
       <DateRangePicker label="Range" onChange={() => {}} />
@@ -507,21 +521,19 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Combobox: (
       <Combobox
-        value=""
-        options={[
+        data={{ options: [
           { value: 'react', label: 'React' },
           { value: 'vue', label: 'Vue' },
           { value: 'svelte', label: 'Svelte' },
-        ]}
-        onChange={() => {}}
-        onSelect={() => {}}
+        ]}}
+        selection={{ value: '', onChange: () => {}, onSelect: () => {} }}
         label="Framework"
       />
     ),
     Sidebar: (
       <div style={{ height: '200px', border: '1px solid var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-md)', overflow: 'hidden' }}>
         <Sidebar
-          header={<Text weight="bold" size="sm" style={{ padding: 'var(--azimuth-space-sm)' }}>Logo</Text>}
+          header={<Text weight="bold" element={{ size: "sm" }} style={{ padding: 'var(--azimuth-space-sm)' }}>Logo</Text>}
           items={[
             { key: 'a', label: 'Home', icon: <span>H</span> },
             { key: 'b', label: 'Settings', icon: <span>S</span>, badge: 3 },
@@ -549,9 +561,9 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     Accordion: (
       <Accordion
         items={[
-          { id: '1', title: 'Section 1', content: <Text size="sm">First section content.</Text> },
-          { id: '2', title: 'Section 2', content: <Text size="sm">Second section content.</Text> },
-          { id: '3', title: 'Section 3', content: <Text size="sm">Third section content.</Text> },
+          { id: '1', title: 'Section 1', content: <Text element={{ size: "sm" }}>First section content.</Text> },
+          { id: '2', title: 'Section 2', content: <Text element={{ size: "sm" }}>Second section content.</Text> },
+          { id: '3', title: 'Section 3', content: <Text element={{ size: "sm" }}>Third section content.</Text> },
         ]}
       />
     ),
@@ -562,19 +574,19 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
         action={<Button size="sm">Go Home</Button>}
       />
     ),
-    MediaPlayer: <MediaPlayer src="" title="Demo video" controls={false} />,
+    MediaPlayer: <MediaPlayer source={{ src: '' }} title="Demo video" playback={{ controls: false }} />,
     SimpleChart: (
-      <SimpleChart type="bar"
-        data={[{ label: 'A', value: 30 }, { label: 'B', value: 50 }, { label: 'C', value: 20 }]}
-        width={300} height={200}
+      <SimpleChart
+        chart={{ type: 'bar', data: [{ label: 'A', value: 30 }, { label: 'B', value: 50 }, { label: 'C', value: 20 }] }}
+        dimensions={{ width: 300, height: 200 }}
       />
     ),
-    MapDisplay: <MapDisplay title="Demo map" height="200px" />,
+    MapDisplay: <MapDisplay source={{ title: 'Demo map' }} dimensions={{ height: '200px' }} />,
   };
 
   return (
     <div style={{ minHeight: '120px' }}>
-      {doc && (previews[doc.name] || <Text size="sm" color="muted">Preview not available for {doc.name}</Text>)}
+      {doc && (previews[doc.name] || <Text element={{ size: "sm" }} color="muted">Preview not available for {doc.name}</Text>)}
     </div>
   );
 }
@@ -605,7 +617,7 @@ export function ComponentsPage() {
         transition: 'width var(--azimuth-transition-base), min-width var(--azimuth-transition-base)',
       }}>
         <Stack direction="horizontal" justify="between" align="center" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
-          {!sidebarCollapsed && <Text weight="semibold" size="sm">Components</Text>}
+          {!sidebarCollapsed && <Text weight="semibold" element={{ size: "sm" }}>Components</Text>}
           <Button variant="tertiary" size="sm" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
             aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}>{sidebarCollapsed ? '>' : '<'}
           </Button>
@@ -632,10 +644,10 @@ export function ComponentsPage() {
         <Stack spacing="lg">
           <div>
             <Stack direction="horizontal" spacing="sm" align="center" style={{ marginBottom: 'var(--azimuth-space-xs)' }}>
-              <Text size="h2" style={{ margin: 0 }}>{doc.name}</Text>
+              <Text element={{ size: "h2" }} style={{ margin: 0 }}>{doc.name}</Text>
               <Badge variant="neutral">{doc.category}</Badge>
             </Stack>
-            <Text size="sm" color="secondary">{doc.description}</Text>
+            <Text element={{ size: "sm" }} color="secondary">{doc.description}</Text>
           </div>
 
           <Tabs variant="pills" activeTab={tab} onChange={setTab}
@@ -676,12 +688,12 @@ export function ComponentsPage() {
                 id: 'features', label: 'Features',
                 content: (
                   <Card>
-                    <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Features</Text>
+                    <Text element={{ size: "sm" }} weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Features</Text>
                     {doc.features.length > 0 ? (
                       <List bulleted>{doc.features.map(f => <List.Item key={f}>{f}</List.Item>)}</List>
-                    ) : <Text size="sm" color="muted">No features listed.</Text>}
+                    ) : <Text element={{ size: "sm" }} color="muted">No features listed.</Text>}
                     {doc.variants.length > 0 && (
-                      <><Divider /><Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Variants</Text>
+                      <><Divider /><Text element={{ size: "sm" }} weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Variants</Text>
                         <Stack direction="horizontal" spacing="xs" wrap>
                           {doc.variants.map(v => <Tag key={v} variant="accent">{v}</Tag>)}
                         </Stack>
@@ -693,8 +705,8 @@ export function ComponentsPage() {
               {
                 id: 'api', label: 'API',
                 content: (
-                  <Card header={<Text weight="semibold">Props</Text>}>
-                    {doc.props.length > 0 ? (
+                    <Card header={<Text weight="semibold">Props</Text>}>
+                      {doc.props.length > 0 ? (
                       <Table striped size="sm">
                         <Table.Head><Table.Row>
                           <Table.HeadCell>Name</Table.HeadCell><Table.HeadCell>Type</Table.HeadCell><Table.HeadCell>Default</Table.HeadCell><Table.HeadCell>Description</Table.HeadCell>
@@ -702,15 +714,15 @@ export function ComponentsPage() {
                         <Table.Body>
                           {doc.props.map(p => (
                             <Table.Row key={p.name}>
-                              <Table.Cell><Text size="sm" weight="semibold">{p.name}</Text></Table.Cell>
+                              <Table.Cell><Text element={{ size: "sm" }} weight="semibold">{p.name}</Text></Table.Cell>
                               <Table.Cell><CodeBlock code={p.type} language="ts" maxHeight="none" highlight={false} /></Table.Cell>
                               <Table.Cell>{p.default ? <Tag variant="neutral">{p.default}</Tag> : '-'}</Table.Cell>
-                              <Table.Cell><Text size="sm">{p.description}</Text></Table.Cell>
+                              <Table.Cell><Text element={{ size: "sm" }}>{p.description}</Text></Table.Cell>
                             </Table.Row>
                           ))}
                         </Table.Body>
                       </Table>
-                    ) : <Text size="sm" color="muted">No props documented.</Text>}
+                    ) : <Text element={{ size: "sm" }} color="muted">No props documented.</Text>}
                   </Card>
                 ),
               },
@@ -725,12 +737,12 @@ export function ComponentsPage() {
                           {doc.cssVars.map(v => (
                             <Table.Row key={v.name}>
                               <Table.Cell><CodeBlock code={v.name} language="css" maxHeight="none" highlight={false} /></Table.Cell>
-                              <Table.Cell><Text size="sm">{v.description}</Text></Table.Cell>
+                              <Table.Cell><Text element={{ size: "sm" }}>{v.description}</Text></Table.Cell>
                             </Table.Row>
                           ))}
                         </Table.Body>
                       </Table>
-                    ) : <Text size="sm" color="muted">No CSS variables documented.</Text>}
+                    ) : <Text element={{ size: "sm" }} color="muted">No CSS variables documented.</Text>}
                   </Card>
                 ),
               },
@@ -743,19 +755,19 @@ export function ComponentsPage() {
         </Stack>
       </div>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Demo Modal" subtitle="This demonstrates the Modal component"
+      <Modal visible={{ open: modalOpen, onClose: () => setModalOpen(false) }} content={{ title: 'Demo Modal', subtitle: 'This demonstrates the Modal component' }}
         footer={<Stack direction="horizontal" justify="end" spacing="sm">
           <Button variant="secondary" onClick={() => setModalOpen(false)}>Cancel</Button>
           <Button onClick={() => setModalOpen(false)}>Save</Button>
         </Stack>}
       >
         <Stack spacing="md">
-          <Input label="Name" defaultValue="Jane Doe" />
-          <Input label="Email" type="email" defaultValue="jane@example.com" />
+          <Input label={{ text: 'Name' }} defaultValue="Jane Doe" />
+          <Input label={{ text: 'Email' }} type="email" defaultValue="jane@example.com" />
         </Stack>
       </Modal>
 
-      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} title="Demo Drawer" side="right" size="sm"
+      <Drawer visible={{ open: drawerOpen, onClose: () => setDrawerOpen(false) }} config={{ title: 'Demo Drawer', side: 'right', size: 'sm' }}
         footer={<Stack direction="horizontal" spacing="sm">
           <Button variant="secondary" onClick={() => setDrawerOpen(false)} fullWidth>Cancel</Button>
           <Button onClick={() => setDrawerOpen(false)} fullWidth>Apply</Button>
@@ -764,22 +776,19 @@ export function ComponentsPage() {
         <Stack spacing="md">
           <Toggle label="Option A" defaultChecked />
           <Toggle label="Option B" />
-          <Select label="Category" options={[{ value: 'a', label: 'All' }, { value: 'b', label: 'Tech' }]} />
+          <Select label={{ text: 'Category' }} options={[{ value: 'a', label: 'All' }, { value: 'b', label: 'Tech' }]} />
         </Stack>
       </Drawer>
 
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} title="Confirm Action"
-        description="Are you sure you want to proceed? This action can be undone."
-        variant="warning" confirmLabel="Confirm" cancelLabel="Cancel"
-        onConfirm={() => setDialogOpen(false)}
-        onCancel={() => setDialogOpen(false)}
+      <Dialog visible={{ open: dialogOpen, onClose: () => setDialogOpen(false) }}
+        content={{ title: 'Confirm Action', description: 'Are you sure you want to proceed? This action can be undone.', variant: 'warning' }}
+        actions={{ confirm: { label: 'Confirm', onConfirm: () => setDialogOpen(false) }, cancel: { label: 'Cancel', onCancel: () => setDialogOpen(false) } }}
       />
 
-      <SlideSheet open={sheetOpen} onClose={() => setSheetOpen(false)} title="Demo Sheet" side="bottom" height="40vh"
-        snapPoints={['25vh', '40vh']}
+      <SlideSheet visible={{ open: sheetOpen, onClose: () => setSheetOpen(false) }} config={{ title: 'Demo Sheet', side: 'bottom', height: '40vh', snapPoints: ['25vh', '40vh'] }}
       >
         <Stack spacing="md">
-          <Text size="sm">Slide sheet content with drag handle for resizing.</Text>
+          <Text element={{ size: "sm" }}>Slide sheet content with drag handle for resizing.</Text>
           <Input placeholder="Type something..." />
         </Stack>
       </SlideSheet>

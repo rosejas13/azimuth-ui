@@ -55,8 +55,8 @@ function ThemeToggle() {
 function StatCard({ value, label }: { value: string; label: string }) {
   return (
     <Card style={{ textAlign: 'center' }}>
-      <Text size="h2" color="accent" style={{ marginBottom: 'var(--azimuth-space-xs)' }}>{value}</Text>
-      <Text size="xs" color="secondary">{label}</Text>
+      <Text color="accent" style={{ marginBottom: 'var(--azimuth-space-xs)' }} element={{ size: "h2" }}>{value}</Text>
+      <Text color="secondary" element={{ size: "xs" }}>{label}</Text>
     </Card>
   );
 }
@@ -80,7 +80,7 @@ function ProductCard({ product, onDetails }: { product: Product; onDetails: (p: 
       }
     >
       <Stack spacing="sm">
-        <Text size="sm" color="secondary">{product.tagline}</Text>
+        <Text color="secondary" element={{ size: "sm" }}>{product.tagline}</Text>
         <Divider />
         <Stack direction="horizontal" spacing="xs" wrap>
           {product.badges.map(b => (
@@ -99,15 +99,15 @@ function TeamCard({ member }: { member: TeamMember }) {
         <Avatar size="xl" fallback={member.name.split(' ').map(n => n[0]).join('')} />
         <div>
           <Text weight="semibold">{member.name}</Text>
-          <Text size="sm" color="accent">{member.role}</Text>
+          <Text color="accent" element={{ size: "sm" }}>{member.role}</Text>
         </div>
-        <Text size="sm" color="secondary">{member.bio}</Text>
+        <Text color="secondary" element={{ size: "sm" }}>{member.bio}</Text>
         <Stack direction="horizontal" spacing="sm" justify="center">
           {member.socials.map(s => (
             <Chip key={s.platform} size="sm" variant="neutral" onClick={() => {}}>{s.platform}</Chip>
           ))}
         </Stack>
-        <Text size="xs" color="muted">Since {member.since}</Text>
+        <Text color="muted" element={{ size: "xs" }}>Since {member.since}</Text>
       </Stack>
     </Card>
   );
@@ -125,11 +125,11 @@ function PricingCard({ plan, yearly }: { plan: typeof PRICING_PLANS[0]; yearly: 
       header={
         <Stack spacing="xs" align="center">
           {plan.badge && <Badge variant="accent">{plan.badge}</Badge>}
-          <Text weight="bold" size="h3">{plan.name}</Text>
-          <Text size="sm" color="secondary" style={{ textAlign: 'center' }}>{plan.description}</Text>
+          <Text weight="bold" element={{ size: "h3" }}>{plan.name}</Text>
+          <Text color="secondary" style={{ textAlign: 'center' }} element={{ size: "sm" }}>{plan.description}</Text>
           <Stack direction="horizontal" align="end" spacing="xs">
-            <Text size="h1" color="accent">{price === 0 ? 'Free' : `$${price}`}</Text>
-            {price > 0 && <Text size="sm" color="muted">/{yearly ? 'yr' : 'mo'}</Text>}
+            <Text color="accent" element={{ size: "h1" }}>{price === 0 ? 'Free' : `$${price}`}</Text>
+            {price > 0 && <Text color="muted" element={{ size: "sm" }}>/{yearly ? 'yr' : 'mo'}</Text>}
           </Stack>
         </Stack>
       }
@@ -152,16 +152,16 @@ function TestimonialCard({ t }: { t: typeof TESTIMONIALS[0] }) {
       <Stack spacing="md">
         <Stack direction="horizontal" spacing="xs">
           {Array.from({ length: 5 }, (_, i) => (
-            <Text key={i} size="sm" color={i < t.rating ? 'accent' : 'muted'}>Star</Text>
+            <Text key={i} color={i < t.rating ? 'accent' : 'muted'} element={{ size: "sm" }}>Star</Text>
           ))}
         </Stack>
-        <Text size="sm" style={{ fontStyle: 'italic', color: 'var(--azimuth-color-text)' }}>"{t.quote}"</Text>
+        <Text style={{ fontStyle: 'italic', color: 'var(--azimuth-color-text)' }} element={{ size: "sm" }}>"{t.quote}"</Text>
         <Divider />
         <Stack direction="horizontal" spacing="sm" align="center">
           <Avatar size="sm" fallback={t.author.split(' ').map(n => n[0]).join('')} />
           <div>
-            <Text size="sm" weight="semibold">{t.author}</Text>
-            <Text size="xs" color="secondary">{t.role}, {t.company}</Text>
+            <Text weight="semibold" element={{ size: "sm" }}>{t.author}</Text>
+            <Text color="secondary" element={{ size: "xs" }}>{t.role}, {t.company}</Text>
           </div>
         </Stack>
       </Stack>
@@ -176,10 +176,10 @@ function HomePage({ onProductDetails }: { onProductDetails: (p: Product) => void
       <div style={{ padding: 'var(--azimuth-space-4xl) 0 var(--azimuth-space-3xl)' }}>
         <Stack spacing="lg" align="center" style={{ textAlign: 'center' }}>
           <Badge variant="accent" style={{ fontSize: 'var(--azimuth-fs-sm)' }}>v0.2.0 -- Now in Public Beta</Badge>
-          <Text size="h1" variant="display" style={{ maxWidth: '16ch' }}>
+          <Text style={{ maxWidth: '16ch' }} element={{ size: "h1", variant: "display" }}>
             Build Accessible UIs at Scale
           </Text>
-          <Text size="lg" color="secondary" style={{ maxWidth: '60ch' }}>
+          <Text color="secondary" style={{ maxWidth: '60ch' }} element={{ size: "lg" }}>
             A configurable, accessible React component library. Theme-driven with a single ThemeProvider.
             WCAG 2.2 AA compliant, built with TypeScript and CSS Modules.
           </Text>
@@ -192,22 +192,22 @@ function HomePage({ onProductDetails }: { onProductDetails: (p: Product) => void
           <Stack direction="horizontal" spacing="lg" style={{ marginTop: 'var(--azimuth-space-lg)' }}>
             <Tooltip content="60+ production-ready components">
               <Stack direction="horizontal" spacing="xs" align="center">
-                <Text size="h4" color="accent">60+</Text>
-                <Text size="sm" color="secondary">Components</Text>
+                <Text color="accent" element={{ size: "h4" }}>60+</Text>
+                <Text color="secondary" element={{ size: "sm" }}>Components</Text>
               </Stack>
             </Tooltip>
             <Divider orientation="vertical" />
             <Tooltip content="WCAG 2.2 AA compliant out of the box">
               <Stack direction="horizontal" spacing="xs" align="center">
-                <Text size="h4" color="accent">WCAG 2.2</Text>
-                <Text size="sm" color="secondary">AA Compliant</Text>
+                <Text color="accent" element={{ size: "h4" }}>WCAG 2.2</Text>
+                <Text color="secondary" element={{ size: "sm" }}>AA Compliant</Text>
               </Stack>
             </Tooltip>
             <Divider orientation="vertical" />
             <Tooltip content="100% TypeScript with strict mode">
               <Stack direction="horizontal" spacing="xs" align="center">
-                <Text size="h4" color="accent">100%</Text>
-                <Text size="sm" color="secondary">TypeScript</Text>
+                <Text color="accent" element={{ size: "h4" }}>100%</Text>
+                <Text color="secondary" element={{ size: "sm" }}>TypeScript</Text>
               </Stack>
             </Tooltip>
           </Stack>
@@ -218,8 +218,8 @@ function HomePage({ onProductDetails }: { onProductDetails: (p: Product) => void
 
       <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
         <Stack spacing="lg" align="center" style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-2xl)' }}>
-          <Text size="h2">Trusted by teams worldwide</Text>
-          <Text size="sm" color="secondary">Join thousands of developers building better UIs</Text>
+          <Text element={{ size: "h2" }}>Trusted by teams worldwide</Text>
+          <Text color="secondary" element={{ size: "sm" }}>Join thousands of developers building better UIs</Text>
         </Stack>
         <Grid cols={{ base: 2, md: 3, lg: 6 }} gap="md">
           {STATS.map(s => <StatCard key={s.id} value={s.value} label={s.label} />)}
@@ -230,8 +230,8 @@ function HomePage({ onProductDetails }: { onProductDetails: (p: Product) => void
 
       <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
         <Stack spacing="lg" align="center" style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-2xl)' }}>
-          <Text size="h2">Featured Products</Text>
-          <Text size="sm" color="secondary">Explore our component ecosystem</Text>
+          <Text element={{ size: "h2" }}>Featured Products</Text>
+          <Text color="secondary" element={{ size: "sm" }}>Explore our component ecosystem</Text>
         </Stack>
         <Grid cols={{ base: 1, md: 2 }} gap="lg">
           {featured.map(p => <ProductCard key={p.id} product={p} onDetails={onProductDetails} />)}
@@ -242,8 +242,8 @@ function HomePage({ onProductDetails }: { onProductDetails: (p: Product) => void
 
       <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
         <Stack spacing="lg" align="center" style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-2xl)' }}>
-          <Text size="h2">What our customers say</Text>
-          <Text size="sm" color="secondary">Real feedback from real teams</Text>
+          <Text element={{ size: "h2" }}>What our customers say</Text>
+          <Text color="secondary" element={{ size: "sm" }}>Real feedback from real teams</Text>
         </Stack>
         <Carousel autoRotate={4000} showDots showArrows loop>
           {TESTIMONIALS.map(t => (
@@ -258,8 +258,8 @@ function HomePage({ onProductDetails }: { onProductDetails: (p: Product) => void
 
       <div style={{ padding: 'var(--azimuth-space-3xl) 0', textAlign: 'center' }}>
         <Stack spacing="lg" align="center">
-          <Text size="h2">Ready to get started?</Text>
-          <Text size="lg" color="secondary" style={{ maxWidth: '50ch' }}>
+          <Text element={{ size: "h2" }}>Ready to get started?</Text>
+          <Text color="secondary" style={{ maxWidth: '50ch' }} element={{ size: "lg" }}>
             Start building accessible, beautiful interfaces today. No credit card required.
           </Text>
           <Stack direction="horizontal" spacing="md">
@@ -280,10 +280,10 @@ function AboutPage() {
       <Stack spacing="2xl">
         <div style={{ textAlign: 'center' }}>
           <Badge variant="info" style={{ marginBottom: 'var(--azimuth-space-md)' }}>Our Story</Badge>
-          <Text size="h1" variant="display" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+          <Text style={{ marginBottom: 'var(--azimuth-space-md)' }} element={{ size: "h1", variant: "display" }}>
             Building the future of accessible UI
           </Text>
-          <Text size="lg" color="secondary" style={{ maxWidth: '60ch', margin: '0 auto' }}>
+          <Text color="secondary" style={{ maxWidth: '60ch', margin: '0 auto' }} element={{ size: "lg" }}>
             Azimuth was founded in 2023 with a simple mission: make professional, accessible UI development
             accessible to every team. We believe great design and accessibility should never be a trade-off.
           </Text>
@@ -292,7 +292,7 @@ function AboutPage() {
         <Divider />
 
         <div>
-          <Text size="h2" style={{ marginBottom: 'var(--azimuth-space-xl)' }}>Our Values</Text>
+          <Text style={{ marginBottom: 'var(--azimuth-space-xl)' }} element={{ size: "h2" }}>Our Values</Text>
           <Grid cols={{ base: 1, md: 3 }} gap="lg">
             {[
               { title: 'Accessibility First', desc: 'Every component is built to WCAG 2.2 AA standards as a baseline, not an afterthought.' },
@@ -304,7 +304,7 @@ function AboutPage() {
                   <Text weight="semibold">{v.title}</Text>
                 </Stack>
               }>
-                <Text size="sm" color="secondary">{v.desc}</Text>
+                <Text color="secondary" element={{ size: "sm" }}>{v.desc}</Text>
               </Card>
             ))}
           </Grid>
@@ -313,21 +313,21 @@ function AboutPage() {
         <Divider />
 
         <div>
-          <Text size="h2" style={{ marginBottom: 'var(--azimuth-space-xl)' }}>Our Timeline</Text>
+          <Text style={{ marginBottom: 'var(--azimuth-space-xl)' }} element={{ size: "h2" }}>Our Timeline</Text>
           <ResizablePanel direction="vertical" minSize={60}>
             <div style={{ padding: 'var(--azimuth-space-md)' }}>
               <Stack spacing="sm">
-                <Text size="sm" weight="semibold" color="accent">2023 Q1 -- Inception</Text>
-                <Text size="sm" color="secondary">Project started as an internal tool at a Fortune 500 company. The vision: a component library that does not sacrifice accessibility for aesthetics.</Text>
+                <Text weight="semibold" color="accent" element={{ size: "sm" }}>2023 Q1 -- Inception</Text>
+                <Text color="secondary" element={{ size: "sm" }}>Project started as an internal tool at a Fortune 500 company. The vision: a component library that does not sacrifice accessibility for aesthetics.</Text>
                 <Divider />
-                <Text size="sm" weight="semibold" color="accent">2023 Q3 -- Alpha Release</Text>
-                <Text size="sm" color="secondary">First public alpha with 30 core components. Over 1,000 developers joined the waitlist within the first week.</Text>
+                <Text weight="semibold" color="accent" element={{ size: "sm" }}>2023 Q3 -- Alpha Release</Text>
+                <Text color="secondary" element={{ size: "sm" }}>First public alpha with 30 core components. Over 1,000 developers joined the waitlist within the first week.</Text>
                 <Divider />
-                <Text size="sm" weight="semibold" color="accent">2024 Q1 -- Beta Launch</Text>
-                <Text size="sm" color="secondary">Expanded to 50 components. Introduced the theming system with OKLCH color space support.</Text>
+                <Text weight="semibold" color="accent" element={{ size: "sm" }}>2024 Q1 -- Beta Launch</Text>
+                <Text color="secondary" element={{ size: "sm" }}>Expanded to 50 components. Introduced the theming system with OKLCH color space support.</Text>
                 <Divider />
-                <Text size="sm" weight="semibold" color="accent">2024 Q3 -- v1.0 Release</Text>
-                <Text size="sm" color="secondary">Stable release with 60+ components, WCAG 2.2 AA certification, and enterprise support.</Text>
+                <Text weight="semibold" color="accent" element={{ size: "sm" }}>2024 Q3 -- v1.0 Release</Text>
+                <Text color="secondary" element={{ size: "sm" }}>Stable release with 60+ components, WCAG 2.2 AA certification, and enterprise support.</Text>
               </Stack>
             </div>
             <div style={{ padding: 'var(--azimuth-space-md)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -341,7 +341,7 @@ function AboutPage() {
         <Divider />
 
         <div>
-          <Text size="h2" style={{ marginBottom: 'var(--azimuth-space-xl)', textAlign: 'center' }}>Meet the Team</Text>
+          <Text style={{ marginBottom: 'var(--azimuth-space-xl)', textAlign: 'center' }} element={{ size: "h2" }}>Meet the Team</Text>
           <Grid cols={{ base: 1, md: 2, lg: 3 }} gap="lg">
             {TEAM_MEMBERS.map(m => <TeamCard key={m.id} member={m} />)}
           </Grid>
@@ -351,13 +351,13 @@ function AboutPage() {
 
         <div style={{ textAlign: 'center' }}>
           <Stack spacing="lg" align="center">
-            <Text size="h3">Our Technology Stack</Text>
+            <Text element={{ size: "h3" }}>Our Technology Stack</Text>
             <div style={{ display: 'flex', gap: 'var(--azimuth-space-md)', flexWrap: 'wrap', justifyContent: 'center' }}>
               {[{ n: 'React 19', v: 'info' }, { n: 'TypeScript', v: 'accent' }, { n: 'CSS Modules', v: 'success' }, { n: 'tsup', v: 'neutral' }, { n: 'Vitest', v: 'warning' }, { n: 'Storybook', v: 'danger' }].map(t => (
                 <Chip key={t.n} variant={t.v as any} onClick={() => {}}>{t.n}</Chip>
               ))}
             </div>
-            <Text size="sm" color="secondary">Built with modern tooling for modern teams</Text>
+            <Text color="secondary" element={{ size: "sm" }}>Built with modern tooling for modern teams</Text>
           </Stack>
         </div>
       </Stack>
@@ -390,8 +390,8 @@ function ProductsPage({ onProductDetails }: { onProductDetails: (p: Product) => 
       <Stack spacing="xl">
         <div>
           <Badge variant="success" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>{quantity} Products Available</Badge>
-          <Text size="h1" variant="display">Products</Text>
-          <Text size="lg" color="secondary">Explore the complete Azimuth ecosystem</Text>
+          <Text element={{ size: "h1", variant: "display" }}>Products</Text>
+          <Text color="secondary" element={{ size: "lg" }}>Explore the complete Azimuth ecosystem</Text>
         </div>
 
         <Stack spacing="md">
@@ -402,7 +402,7 @@ function ProductsPage({ onProductDetails }: { onProductDetails: (p: Product) => 
               clearable
             />
             <Select
-              label="Category"
+              label={{ text: 'Category' }}
               size="sm"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
@@ -410,20 +410,24 @@ function ProductsPage({ onProductDetails }: { onProductDetails: (p: Product) => 
             />
             <DropdownList
               label="Sort By"
-              placeholder="Sort..."
-              value={sortBy}
-              onChange={(v) => setSortBy(v as string)}
-              options={[
-                { value: 'name', label: 'Name' },
-                { value: 'users', label: 'Popularity' },
-                { value: 'rating', label: 'Rating' },
-              ]}
+              data={{
+                options: [
+                  { value: 'name', label: 'Name' },
+                  { value: 'users', label: 'Popularity' },
+                  { value: 'rating', label: 'Rating' },
+                ],
+                placeholder: 'Sort...',
+              }}
+              selection={{
+                value: sortBy,
+                onChange: (v) => setSortBy(v as string),
+              }}
             />
-            <Input label="Max Price" type="number" size="sm" placeholder="Any" />
+            <Input label={{ text: "Max Price" }} type="number" size="sm" placeholder="Any" />
           </Grid>
 
           <div style={{ display: 'flex', gap: 'var(--azimuth-space-sm)', flexWrap: 'wrap', alignItems: 'center' }}>
-            <Text size="xs" color="secondary" weight="semibold">Filters:</Text>
+            <Text color="secondary" weight="semibold" element={{ size: "xs" }}>Filters:</Text>
             {allTags.map(tag => (
               <Chip
                 key={tag}
@@ -459,20 +463,23 @@ function ProductsPage({ onProductDetails }: { onProductDetails: (p: Product) => 
               content: (
                 <DataTable
                   title="Product Comparison"
-                  columns={[
-                    { key: 'name', title: 'Name', sortable: true },
-                    { key: 'category', title: 'Category', sortable: true },
-                    { key: 'price', title: 'Price', sortable: true, render: (v: any) => v === 0 ? 'Free' : `$${v}/mo` },
-                    { key: 'version', title: 'Version' },
-                    { key: 'rating', title: 'Rating', sortable: true, render: (v: any) => `${v}/5` },
-                    { key: 'activeUsers', title: 'Users', sortable: true, render: (v: any) => v.toLocaleString() },
-                  ]}
-                  data={filtered as any}
-                  searchable
-                  searchColumnSelector
-                  searchPlaceholder="Search table..."
-                  pageSize={5}
-                  pageSizeOptions={[3, 5, 10]}
+                  data={{
+                    columns: [
+                      { key: 'name', title: 'Name', sortable: true },
+                      { key: 'category', title: 'Category', sortable: true },
+                      { key: 'price', title: 'Price', sortable: true, render: (v: any) => v === 0 ? 'Free' : `$${v}/mo` },
+                      { key: 'version', title: 'Version' },
+                      { key: 'rating', title: 'Rating', sortable: true, render: (v: any) => `${v}/5` },
+                      { key: 'activeUsers', title: 'Users', sortable: true, render: (v: any) => v.toLocaleString() },
+                    ],
+                    data: filtered as any,
+                  }}
+                  search={{
+                    enabled: true,
+                    columnSelector: true,
+                    placeholder: 'Search table...',
+                  }}
+                  pagination={{ pageSize: 5, pageSizeOptions: [3, 5, 10] }}
                   actions={
                     <Button size="sm" variant="secondary">Export CSV</Button>
                   }
@@ -486,8 +493,8 @@ function ProductsPage({ onProductDetails }: { onProductDetails: (p: Product) => 
         <Divider />
 
         <div>
-          <Text size="h3" style={{ marginBottom: 'var(--azimuth-space-md)' }}>API Integration</Text>
-          <Text size="sm" color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+          <Text style={{ marginBottom: 'var(--azimuth-space-md)' }} element={{ size: "h3" }}>API Integration</Text>
+          <Text color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }} element={{ size: "sm" }}>
             Integrate Azimuth into your workflow with our REST API.
           </Text>
           <Tabs
@@ -551,8 +558,8 @@ function PricingPage() {
       <Stack spacing="2xl" align="center">
         <div style={{ textAlign: 'center' }}>
           <Badge variant="info" style={{ marginBottom: 'var(--azimuth-space-md)' }}>Simple Pricing</Badge>
-          <Text size="h1" variant="display">Plans for every team</Text>
-          <Text size="lg" color="secondary" style={{ maxWidth: '50ch', margin: '0 auto var(--azimuth-space-lg)' }}>
+          <Text element={{ size: "h1", variant: "display" }}>Plans for every team</Text>
+          <Text color="secondary" style={{ maxWidth: '50ch', margin: '0 auto var(--azimuth-space-lg)' }} element={{ size: "lg" }}>
             Start free, upgrade as you grow. All plans include our core components and theming system.
           </Text>
           <SegmentedButton
@@ -572,7 +579,7 @@ function PricingPage() {
         <Divider />
 
         <div style={{ width: '100%' }}>
-          <Text size="h3" style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-xl)' }}>Frequently Asked Questions</Text>
+          <Text style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-xl)' }} element={{ size: "h3" }}>Frequently Asked Questions</Text>
           <div style={{ maxWidth: '700px', margin: '0 auto' }}>
             <Tabs
               variant="underline"
@@ -584,7 +591,7 @@ function PricingPage() {
                     <Stack spacing="sm">
                       {FAQ_ITEMS.map(item => (
                         <SectionView key={item.id} title={item.question}>
-                          <Text size="sm" color="secondary">{item.answer}</Text>
+                          <Text color="secondary" element={{ size: "sm" }}>{item.answer}</Text>
                         </SectionView>
                       ))}
                     </Stack>
@@ -596,21 +603,23 @@ function PricingPage() {
                   content: (
                     <DataTable
                       title="Feature Comparison"
-                      columns={[
-                        { key: 'feature', title: 'Feature', sortable: true },
-                        { key: 'starter', title: 'Starter', sortable: true },
-                        { key: 'pro', title: 'Pro', sortable: true },
-                        { key: 'enterprise', title: 'Enterprise', sortable: true },
-                      ]}
-                      data={[
-                        { feature: 'Components', starter: '60+', pro: '120+', enterprise: 'Custom' },
-                        { feature: 'Theming', starter: 'Yes', pro: 'Yes', enterprise: 'Yes' },
-                        { feature: 'Figma Kit', starter: 'No', pro: 'Yes', enterprise: 'Yes' },
-                        { feature: 'Priority Support', starter: 'No', pro: 'Yes', enterprise: 'Dedicated' },
-                        { feature: 'SLA Guarantee', starter: 'No', pro: 'No', enterprise: 'Yes' },
-                        { feature: 'Price', starter: 'Free', pro: '$49/mo', enterprise: '$299/mo' },
-                      ]}
-                      pageSize={10}
+                      data={{
+                        columns: [
+                          { key: 'feature', title: 'Feature', sortable: true },
+                          { key: 'starter', title: 'Starter', sortable: true },
+                          { key: 'pro', title: 'Pro', sortable: true },
+                          { key: 'enterprise', title: 'Enterprise', sortable: true },
+                        ],
+                        data: [
+                          { feature: 'Components', starter: '60+', pro: '120+', enterprise: 'Custom' },
+                          { feature: 'Theming', starter: 'Yes', pro: 'Yes', enterprise: 'Yes' },
+                          { feature: 'Figma Kit', starter: 'No', pro: 'Yes', enterprise: 'Yes' },
+                          { feature: 'Priority Support', starter: 'No', pro: 'Yes', enterprise: 'Dedicated' },
+                          { feature: 'SLA Guarantee', starter: 'No', pro: 'No', enterprise: 'Yes' },
+                          { feature: 'Price', starter: 'Free', pro: '$49/mo', enterprise: '$299/mo' },
+                        ],
+                      }}
+                      pagination={{ pageSize: 10 }}
                     />
                   ),
                 },
@@ -622,7 +631,7 @@ function PricingPage() {
         <Divider />
 
         <div style={{ textAlign: 'center' }}>
-          <Text size="h4" style={{ marginBottom: 'var(--azimuth-space-md)' }}>Still have questions?</Text>
+          <Text style={{ marginBottom: 'var(--azimuth-space-md)' }} element={{ size: "h4" }}>Still have questions?</Text>
           <Stack direction="horizontal" spacing="md" justify="center">
             <Button variant="secondary" onClick={() => {}}>Email Us</Button>
             <Button variant="secondary" onClick={() => {}}>Live Chat</Button>
@@ -641,8 +650,8 @@ function ContactPage() {
       <Grid cols={{ base: 1, md: 2 }} gap="xl">
         <div>
           <Badge variant="accent" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Get in Touch</Badge>
-          <Text size="h1" variant="display" style={{ marginBottom: 'var(--azimuth-space-md)' }}>Contact Us</Text>
-          <Text size="lg" color="secondary" style={{ marginBottom: 'var(--azimuth-space-xl)' }}>
+          <Text style={{ marginBottom: 'var(--azimuth-space-md)' }} element={{ size: "h1", variant: "display" }}>Contact Us</Text>
+          <Text color="secondary" style={{ marginBottom: 'var(--azimuth-space-xl)' }} element={{ size: "lg" }}>
             Have a question, feedback, or want to partner with us? We would love to hear from you.
           </Text>
 
@@ -700,21 +709,25 @@ function ContactPage() {
           <Card header={<Text weight="semibold">Partner Portal</Text>}>
             <LoginSignup
               defaultView="login"
-              onLogin={(data) => {
-                toast({ title: 'Welcome back!', message: `Logged in as ${data.email}`, variant: 'success' });
+              auth={{
+                onLogin: (data) => {
+                  toast({ title: 'Welcome back!', message: `Logged in as ${data.email}`, variant: 'success' });
+                },
+                onSignup: (_data) => {
+                  toast({ title: 'Account created!', message: 'Check your email to verify.', variant: 'success' });
+                },
+                onResetPassword: (data) => {
+                  toast({ title: 'Reset link sent', message: `Check ${data.email} for instructions.`, variant: 'info' });
+                },
               }}
-              onSignup={(_data) => {
-                toast({ title: 'Account created!', message: 'Check your email to verify.', variant: 'success' });
-              }}
-              onResetPassword={(data) => {
-                toast({ title: 'Reset link sent', message: `Check ${data.email} for instructions.`, variant: 'info' });
-              }}
-              providers={[
-                { id: 'github', label: 'GitHub' },
-                { id: 'google', label: 'Google' },
-              ]}
-              onProviderAuth={(id) => {
-                toast({ title: `Connecting to ${id}...`, variant: 'info' });
+              social={{
+                providers: [
+                  { id: 'github', label: 'GitHub' },
+                  { id: 'google', label: 'Google' },
+                ],
+                onProviderAuth: (id) => {
+                  toast({ title: `Connecting to ${id}...`, variant: 'info' });
+                },
               }}
             />
           </Card>
@@ -729,10 +742,9 @@ function ContactPage() {
             <Card header={<Text weight="semibold">Schedule a Meeting</Text>}>
               <Stack spacing="md">
                 <DateTimePicker
-                  onChange={(_d) => {}}
-                  showTime
-                  showSeconds={false}
-                  minuteStep={15}
+                  value={{ onChange: (_d) => {} }}
+                  display={{ showTime: true, showSeconds: false }}
+                  constraints={{ minuteStep: 15 }}
                   aria-label="Schedule a meeting date"
                 />
                 <DateRangePicker
@@ -755,8 +767,8 @@ function PrivacyPage() {
         <Stack spacing="xl">
           <div>
             <Badge variant="neutral" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Last updated: May 2026</Badge>
-            <Text size="h1" variant="display">Privacy Policy</Text>
-            <Text size="lg" color="secondary">How we handle your data at Azimuth</Text>
+            <Text element={{ size: "h1", variant: "display" }}>Privacy Policy</Text>
+            <Text color="secondary" element={{ size: "lg" }}>How we handle your data at Azimuth</Text>
           </div>
 
           <Alert variant="info" title="Our Commitment">
@@ -779,7 +791,7 @@ function PrivacyPage() {
                 label: 'Overview',
                 content: (
                   <Stack spacing="md">
-                    <Text size="h3">Information We Collect</Text>
+                    <Text element={{ size: "h3" }}>Information We Collect</Text>
                     <List bulleted>
                       <List.Item>Account information (name, email, company)</List.Item>
                       <List.Item>Usage data (components used, features accessed)</List.Item>
@@ -787,7 +799,7 @@ function PrivacyPage() {
                       <List.Item>Communication preferences</List.Item>
                     </List>
                     <Divider />
-                    <Text size="h3">How We Use Your Data</Text>
+                    <Text element={{ size: "h3" }}>How We Use Your Data</Text>
                     <List bulleted>
                       <List.Item>To provide and improve our services</List.Item>
                       <List.Item>To send product updates and security notices</List.Item>
@@ -803,35 +815,35 @@ function PrivacyPage() {
                 content: (
                   <Stack spacing="md">
                     <SectionView title="Data Collection">
-                      <Text size="sm" color="secondary">
+                      <Text color="secondary" element={{ size: "sm" }}>
                         We collect information you provide directly, such as when you create an account,
                         subscribe to our newsletter, or contact support. We also automatically collect
                         certain technical information, including IP address, browser type, and usage patterns.
                       </Text>
                     </SectionView>
                     <SectionView title="Data Sharing">
-                      <Text size="sm" color="secondary">
+                      <Text color="secondary" element={{ size: "sm" }}>
                         We never sell your personal data. We may share anonymized, aggregate data with
                         partners for analytics purposes. Service providers (hosting, payment processing)
                         have access to necessary data under strict confidentiality agreements.
                       </Text>
                     </SectionView>
                     <SectionView title="Your Rights">
-                      <Text size="sm" color="secondary">
+                      <Text color="secondary" element={{ size: "sm" }}>
                         You have the right to access, correct, or delete your personal data. You can
                         export your data at any time from your account settings. Contact our privacy
                         team at privacy@azimuth.dev for assistance.
                       </Text>
                     </SectionView>
                     <SectionView title="Security Measures">
-                      <Text size="sm" color="secondary">
+                      <Text color="secondary" element={{ size: "sm" }}>
                         We implement industry-standard security measures including encryption at rest
                         and in transit, regular security audits, and strict access controls. Our
                         infrastructure is SOC 2 compliant.
                       </Text>
                     </SectionView>
                     <SectionView title="Cookies">
-                      <Text size="sm" color="secondary">
+                      <Text color="secondary" element={{ size: "sm" }}>
                         We use essential cookies for authentication and security. Analytics cookies
                         help us improve our service. You can manage cookie preferences in your
                         browser settings.
@@ -847,7 +859,7 @@ function PrivacyPage() {
                   <Card>
                     <Stack spacing="md">
                       <Text weight="semibold">Privacy Team</Text>
-                      <Text size="sm" color="secondary">
+                      <Text color="secondary" element={{ size: "sm" }}>
                         For privacy-related inquiries, contact our Data Protection Officer:
                       </Text>
                       <List>
@@ -856,7 +868,7 @@ function PrivacyPage() {
                         <List.Item>Address: 123 UI Street, San Francisco, CA 94105</List.Item>
                       </List>
                       <Divider />
-                      <Text size="sm" color="secondary">
+                      <Text color="secondary" element={{ size: "sm" }}>
                         We respond to all privacy inquiries within 48 hours.
                       </Text>
                     </Stack>
@@ -953,14 +965,15 @@ export function App() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar
-        logo={
-          <Stack direction="horizontal" spacing="sm" align="center">
-            <img src={logoSvg} alt="Azimuth" style={{ height: 28, width: 'auto' }} />
-            <Text weight="bold" size="lg">Azimuth</Text>
-          </Stack>
-        }
-        items={NAVBAR_ITEMS}
-        activeKey={activePage}
+        branding={{
+          logo: (
+            <Stack direction="horizontal" spacing="sm" align="center">
+              <img src={logoSvg} alt="Azimuth" style={{ height: 28, width: 'auto' }} />
+              <Text weight="bold" element={{ size: "lg" }}>Azimuth</Text>
+            </Stack>
+          ),
+        }}
+        nav={{ items: NAVBAR_ITEMS, activeKey: activePage }}
         actions={
           <Stack direction="horizontal" spacing="sm" align="center">
             <Menu
@@ -1006,7 +1019,7 @@ export function App() {
               dismissible
               onDismiss={() => setAlertsVisible(false)}
             >
-              <Text size="sm">This page showcases all Azimuth components in a realistic business context. Try the theme toggle, interactive elements, and explore each page.</Text>
+              <Text element={{ size: "sm" }}>This page showcases all Azimuth components in a realistic business context. Try the theme toggle, interactive elements, and explore each page.</Text>
             </Alert>
           </div>
         )}
@@ -1025,28 +1038,28 @@ export function App() {
 
         {activePage === 'home' && (
           <div style={{ padding: 'var(--azimuth-space-3xl) 0' }}>
-            <Text size="h3" style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-xl)' }}>Performance and Status</Text>
+            <Text style={{ textAlign: 'center', marginBottom: 'var(--azimuth-space-xl)' }} element={{ size: "h3" }}>Performance and Status</Text>
             <Grid cols={2} gap="lg">
               <Card header={<Stack direction="horizontal" justify="between"><Text weight="semibold">Component Usage</Text><Badge variant="success">Healthy</Badge></Stack>}>
                 <Stack spacing="md">
                   <Stack spacing="xs">
                     <Stack direction="horizontal" justify="between">
-                      <Text size="sm">Bundle Size</Text>
-                      <Text size="sm" weight="semibold">12.4 kB</Text>
+                      <Text element={{ size: "sm" }}>Bundle Size</Text>
+                      <Text weight="semibold" element={{ size: "sm" }}>12.4 kB</Text>
                     </Stack>
                     <ProgressBar value={12} max={100} color="accent" size="sm" />
                   </Stack>
                   <Stack spacing="xs">
                     <Stack direction="horizontal" justify="between">
-                      <Text size="sm">TypeScript Coverage</Text>
-                      <Text size="sm" weight="semibold">100%</Text>
+                      <Text element={{ size: "sm" }}>TypeScript Coverage</Text>
+                      <Text weight="semibold" element={{ size: "sm" }}>100%</Text>
                     </Stack>
                     <ProgressBar value={100} color="success" size="sm" />
                   </Stack>
                   <Stack spacing="xs">
                     <Stack direction="horizontal" justify="between">
-                      <Text size="sm">Test Coverage</Text>
-                      <Text size="sm" weight="semibold">87%</Text>
+                      <Text element={{ size: "sm" }}>Test Coverage</Text>
+                      <Text weight="semibold" element={{ size: "sm" }}>87%</Text>
                     </Stack>
                     <ProgressBar value={87} color="primary" size="sm" />
                   </Stack>
@@ -1055,11 +1068,11 @@ export function App() {
               <Card header={<Text weight="semibold">Demo Information</Text>}>
                 <Stack spacing="md">
                   <div>
-                    <Text size="xs" color="muted">Active Page</Text>
-                    <Text size="sm" weight="semibold">{pageTitle[activePage]}</Text>
+                    <Text color="muted" element={{ size: "xs" }}>Active Page</Text>
+                    <Text weight="semibold" element={{ size: "sm" }}>{pageTitle[activePage]}</Text>
                   </div>
                   <div>
-                    <Text size="xs" color="muted">Components Used</Text>
+                    <Text color="muted" element={{ size: "xs" }}>Components Used</Text>
                     <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: 'var(--azimuth-space-xs)' }}>
                       {['Navbar', 'Button', 'Card', 'Grid', 'Tabs', 'DataTable', 'Carousel', 'Modal', 'Drawer', 'Dialog', 'Toast', 'Form', 'Calendar', 'LoginSignup', 'ResizablePanel', 'TreeList', 'FanMenu', 'Flyout', 'Slider', 'CodeBlock', 'SearchBar', 'Pagination', 'Avatar', 'Badge', 'Chip', 'Alert', 'ProgressBar'].map(c => (
                         <Tag key={c} variant="neutral" removable onRemove={() => {}}>{c}</Tag>
@@ -1086,7 +1099,7 @@ export function App() {
                 <img src={logoSvg} alt="Azimuth" style={{ height: 24, width: 'auto' }} />
                 <Text weight="bold">Azimuth</Text>
               </Stack>
-              <Text size="sm" color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+              <Text color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }} element={{ size: "sm" }}>
                 Building accessible, beautiful UIs for every team.
               </Text>
               <Stack direction="horizontal" spacing="sm">
@@ -1096,7 +1109,7 @@ export function App() {
               </Stack>
             </div>
             <div>
-              <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Sitemap</Text>
+              <Text weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }} element={{ size: "sm" }}>Sitemap</Text>
               <TreeList
                 data={SITEMAP_TREE as unknown as TreeNode[]}
                 showLines
@@ -1111,19 +1124,19 @@ export function App() {
               />
             </div>
             <div>
-              <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Latest Updates</Text>
+              <Text weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }} element={{ size: "sm" }}>Latest Updates</Text>
               <Stack spacing="sm">
-                <Text size="xs" color="muted">May 2026</Text>
-                <Text size="sm">v0.2.0 released with 10 new components</Text>
-                <Text size="xs" color="muted">Apr 2026</Text>
-                <Text size="sm">WCAG 2.2 AA certification completed</Text>
-                <Text size="xs" color="muted">Mar 2026</Text>
-                <Text size="sm">10,000 GitHub stars</Text>
+                <Text color="muted" element={{ size: "xs" }}>May 2026</Text>
+                <Text element={{ size: "sm" }}>v0.2.0 released with 10 new components</Text>
+                <Text color="muted" element={{ size: "xs" }}>Apr 2026</Text>
+                <Text element={{ size: "sm" }}>WCAG 2.2 AA certification completed</Text>
+                <Text color="muted" element={{ size: "xs" }}>Mar 2026</Text>
+                <Text element={{ size: "sm" }}>10,000 GitHub stars</Text>
               </Stack>
             </div>
             <div>
-              <Text size="sm" weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Newsletter</Text>
-              <Text size="xs" color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
+              <Text weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }} element={{ size: "sm" }}>Newsletter</Text>
+              <Text color="secondary" style={{ marginBottom: 'var(--azimuth-space-md)' }} element={{ size: "xs" }}>
                 Get product updates and accessibility tips monthly.
               </Text>
               <InputGroup>
@@ -1131,14 +1144,14 @@ export function App() {
                 <Button size="sm">Subscribe</Button>
               </InputGroup>
               <div style={{ marginTop: 'var(--azimuth-space-md)' }}>
-                <Slider defaultValue={75} showValue size="sm" aria-label="Satisfaction level" />
-                <Text size="xs" color="muted" style={{ marginTop: 'var(--azimuth-space-xs)' }}>Satisfaction level: 75%</Text>
+                <Slider value={{ defaultValue: 75 }} display={{ showValue: true, size: 'sm' }} aria-label="Satisfaction level" />
+                <Text color="muted" style={{ marginTop: 'var(--azimuth-space-xs)' }} element={{ size: "xs" }}>Satisfaction level: 75%</Text>
               </div>
             </div>
           </Grid>
           <Divider style={{ margin: 'var(--azimuth-space-xl) 0' }} />
           <Stack direction="horizontal" justify="between" align="center" wrap>
-            <Text size="xs" color="muted">
+            <Text color="muted" element={{ size: "xs" }}>
               &copy; 2026 Azimuth UI. Built with TypeScript, React 19, and CSS Modules.
             </Text>
             <Stack direction="horizontal" spacing="sm">
@@ -1158,18 +1171,19 @@ export function App() {
       </footer>
 
       <Modal
-        open={!!modalProduct}
-        onClose={() => setModalProduct(null)}
-        title={modalProduct?.name || ''}
-        subtitle={modalProduct?.tagline}
-        size="lg"
+        visible={{ open: !!modalProduct, onClose: () => setModalProduct(null) }}
+        content={{
+          title: modalProduct?.name || '',
+          subtitle: modalProduct?.tagline,
+          size: 'lg',
+        }}
         footer={
           <Stack direction="horizontal" justify="between" align="center">
             <Stack direction="horizontal" spacing="xs">
-              <Text size="xs" color="muted">Version {modalProduct?.version}</Text>
+              <Text color="muted" element={{ size: "xs" }}>Version {modalProduct?.version}</Text>
               <Divider orientation="vertical" />
               <Tooltip content={`${modalProduct?.activeUsers.toLocaleString()} active users`}>
-                <Text size="xs" color="muted">{modalProduct?.activeUsers.toLocaleString()} users</Text>
+                <Text color="muted" element={{ size: "xs" }}>{modalProduct?.activeUsers.toLocaleString()} users</Text>
               </Tooltip>
             </Stack>
             <Stack direction="horizontal" spacing="sm">
@@ -1182,29 +1196,29 @@ export function App() {
         {modalProduct && (
           <Stack spacing="lg">
             <Grid cols={2} gap="md">
-              <Card header={<Text weight="semibold" size="sm">Product Details</Text>}>
+              <Card header={<Text weight="semibold" element={{ size: "sm" }}>Product Details</Text>}>
                 <Stack spacing="sm">
                   <div>
-                    <Text size="xs" color="muted">Price</Text>
-                    <Text weight="bold" size="h3">{modalProduct.price === 0 ? 'Free' : `$${modalProduct.price}/mo`}</Text>
+                    <Text color="muted" element={{ size: "xs" }}>Price</Text>
+                    <Text weight="bold" element={{ size: "h3" }}>{modalProduct.price === 0 ? 'Free' : `$${modalProduct.price}/mo`}</Text>
                   </div>
                   <div>
-                    <Text size="xs" color="muted">Category</Text>
+                    <Text color="muted" element={{ size: "xs" }}>Category</Text>
                     <Chip variant="accent" size="sm" onClick={() => {}}>{modalProduct.category}</Chip>
                   </div>
                   <div>
-                    <Text size="xs" color="muted">Rating</Text>
-                    <Text size="sm">{modalProduct.rating}/5</Text>
+                    <Text color="muted" element={{ size: "xs" }}>Rating</Text>
+                    <Text element={{ size: "sm" }}>{modalProduct.rating}/5</Text>
                   </div>
                 </Stack>
               </Card>
-              <Card header={<Text weight="semibold" size="sm">Key Features</Text>}>
+              <Card header={<Text weight="semibold" element={{ size: "sm" }}>Key Features</Text>}>
                 <List bulleted>
                   {modalProduct.features.map(f => <List.Item key={f}>{f}</List.Item>)}
                 </List>
               </Card>
             </Grid>
-            <Text size="sm" color="secondary">{modalProduct.description}</Text>
+            <Text color="secondary" element={{ size: "sm" }}>{modalProduct.description}</Text>
             <Stack direction="horizontal" spacing="xs" wrap>
               {modalProduct.badges.map(b => (
                 <Badge key={b.label} variant={b.variant}>{b.label}</Badge>
@@ -1215,11 +1229,8 @@ export function App() {
       </Modal>
 
       <Drawer
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        title="Notifications and Settings"
-        side="right"
-        size="sm"
+        visible={{ open: drawerOpen, onClose: () => setDrawerOpen(false) }}
+        config={{ side: 'right', title: 'Notifications and Settings', size: 'sm' }}
         footer={
           <Stack direction="horizontal" spacing="sm">
             <Button variant="secondary" onClick={() => setDrawerOpen(false)} fullWidth>Close</Button>
@@ -1228,13 +1239,13 @@ export function App() {
         }
       >
         <Stack spacing="md">
-          <Text size="sm" weight="semibold">Notification Preferences</Text>
+          <Text weight="semibold" element={{ size: "sm" }}>Notification Preferences</Text>
           <Toggle label="Push Notifications" defaultChecked />
           <Toggle label="Email Digest" defaultChecked />
           <Toggle label="Weekly Reports" />
           <Divider />
-          <Text size="sm" weight="semibold">Display Settings</Text>
-          <Select label="Font Size" options={[{ value: 'sm', label: 'Small' }, { value: 'md', label: 'Medium' }, { value: 'lg', label: 'Large' }]} />
+          <Text weight="semibold" element={{ size: "sm" }}>Display Settings</Text>
+          <Select label={{ text: 'Font Size' }} options={[{ value: 'sm', label: 'Small' }, { value: 'md', label: 'Medium' }, { value: 'lg', label: 'Large' }]} />
           <Radio name="layout" label="Compact" />
           <Radio name="layout" label="Comfortable" defaultChecked />
           <Divider />
@@ -1245,12 +1256,8 @@ export function App() {
       </Drawer>
 
       <SlideSheet
-        open={sheetOpen}
-        onClose={() => setSheetOpen(false)}
-        title="Quick Help"
-        side="bottom"
-        height="40vh"
-        snapPoints={['25vh', '40vh', '70vh']}
+        visible={{ open: sheetOpen, onClose: () => setSheetOpen(false) }}
+        config={{ side: 'bottom', title: 'Quick Help', height: '40vh', snapPoints: ['25vh', '40vh', '70vh'] }}
       >
         <Stack spacing="md">
           <Alert variant="info" title="Need help?" dismissible>
@@ -1258,37 +1265,42 @@ export function App() {
           </Alert>
           <SearchBar placeholder="Search help articles..." onSearch={() => {}} clearable />
           <Grid cols={2} gap="md">
-            <Card header={<Text weight="semibold" size="sm">Getting Started</Text>} footer={<Button size="sm" variant="tertiary">Read</Button>}>
-              <Text size="xs" color="secondary">Learn how to install and configure Azimuth in your project.</Text>
+            <Card header={<Text weight="semibold" element={{ size: "sm" }}>Getting Started</Text>} footer={<Button size="sm" variant="tertiary">Read</Button>}>
+              <Text color="secondary" element={{ size: "xs" }}>Learn how to install and configure Azimuth in your project.</Text>
             </Card>
-            <Card header={<Text weight="semibold" size="sm">API Reference</Text>} footer={<Button size="sm" variant="tertiary">Read</Button>}>
-              <Text size="xs" color="secondary">Complete API documentation for all components and hooks.</Text>
+            <Card header={<Text weight="semibold" element={{ size: "sm" }}>API Reference</Text>} footer={<Button size="sm" variant="tertiary">Read</Button>}>
+              <Text color="secondary" element={{ size: "xs" }}>Complete API documentation for all components and hooks.</Text>
             </Card>
           </Grid>
         </Stack>
       </SlideSheet>
 
       <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        title={dialogVariant === 'danger' ? 'Reset Settings?' : dialogVariant === 'warning' ? 'Are you sure?' : 'Information'}
-        description={
-          dialogVariant === 'danger'
+        visible={{ open: dialogOpen, onClose: () => setDialogOpen(false) }}
+        content={{
+          title: dialogVariant === 'danger' ? 'Reset Settings?' : dialogVariant === 'warning' ? 'Are you sure?' : 'Information',
+          description: dialogVariant === 'danger'
             ? 'This will reset all your preferences to default values. This action cannot be undone.'
             : dialogVariant === 'warning'
               ? 'Please confirm this action before proceeding.'
-              : 'This is an informational dialog demonstrating the Dialog component.'
-        }
-        variant={dialogVariant}
-        confirmLabel="Confirm"
-        cancelLabel="Cancel"
-        onConfirm={() => {
-          toast({ title: 'Action confirmed!', variant: 'success' });
-          setDialogOpen(false);
+              : 'This is an informational dialog demonstrating the Dialog component.',
+          variant: dialogVariant,
         }}
-        onCancel={() => {
-          toast({ title: 'Action cancelled.', variant: 'info', duration: 2000 });
-          setDialogOpen(false);
+        actions={{
+          confirm: {
+            label: 'Confirm',
+            onConfirm: () => {
+              toast({ title: 'Action confirmed!', variant: 'success' });
+              setDialogOpen(false);
+            },
+          },
+          cancel: {
+            label: 'Cancel',
+            onCancel: () => {
+              toast({ title: 'Action cancelled.', variant: 'info', duration: 2000 });
+              setDialogOpen(false);
+            },
+          },
         }}
       />
 
@@ -1317,7 +1329,7 @@ export function App() {
               padding: 'var(--azimuth-space-sm) var(--azimuth-space-md)',
               borderBottom: '1px solid var(--azimuth-color-border)',
             }}>
-              <Text weight="semibold" size="sm">Chat Support</Text>
+              <Text weight="semibold" element={{ size: "sm" }}>Chat Support</Text>
               <Stack direction="horizontal" spacing="xs">
                 <Button variant="tertiary" size="sm" onClick={() => setChatMinimized(true)}>_</Button>
                 <Button variant="tertiary" size="sm" onClick={() => setChatOpen(false)}>X</Button>
