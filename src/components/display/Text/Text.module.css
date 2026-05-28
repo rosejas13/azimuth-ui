@@ -48,8 +48,8 @@
 .accent { color: var(--azimuth-color-primary); }
 
 @supports (color: color-mix(in srgb, red, transparent)) {
-  .secondary { color: color-mix(in srgb, currentColor 65%, transparent); }
-  .muted { color: color-mix(in srgb, currentColor 45%, transparent); }
+  .secondary { color: color-mix(in srgb, currentcolor 65%, transparent); }
+  .muted { color: color-mix(in srgb, currentcolor 45%, transparent); }
 }
 
 .uppercase { text-transform: uppercase; letter-spacing: 0.05em; }
