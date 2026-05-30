@@ -149,6 +149,66 @@ describe('Calendar', () => {
     expect(onChange).toHaveBeenCalledWith(new Date(2024, 5, 8));
   });
 
+  it('navigates across month boundary with ArrowRight from end of month', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Calendar onChange={onChange} defaultValue={new Date(2024, 5, 30)} />,
+    );
+    const cells = screen.getAllByText('30');
+    const selectedDay = cells.find(
+      (c) => c.closest('[role="gridcell"]')?.getAttribute('aria-selected') === 'true',
+    );
+    selectedDay?.focus();
+    await user.keyboard('{ArrowRight}');
+    expect(onChange).toHaveBeenCalledWith(new Date(2024, 6, 1));
+  });
+
+  it('navigates across month boundary with ArrowLeft from start of month', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Calendar onChange={onChange} defaultValue={new Date(2024, 5, 1)} />,
+    );
+    const cells = screen.getAllByText('1');
+    const selectedDay = cells.find(
+      (c) => c.closest('[role="gridcell"]')?.getAttribute('aria-selected') === 'true',
+    );
+    selectedDay?.focus();
+    await user.keyboard('{ArrowLeft}');
+    expect(onChange).toHaveBeenCalledWith(new Date(2024, 4, 31));
+  });
+
+  it('navigates across week boundary with ArrowUp from first week', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Calendar onChange={onChange} defaultValue={new Date(2024, 5, 3)} />,
+    );
+    const cells = screen.getAllByText('3');
+    const selectedDay = cells.find(
+      (c) => c.closest('[role="gridcell"]')?.getAttribute('aria-selected') === 'true',
+    );
+    selectedDay?.focus();
+    await user.keyboard('{ArrowUp}');
+    expect(onChange).toHaveBeenCalledWith(new Date(2024, 4, 27));
+  });
+
+  it('navigates across year boundary with ArrowRight from Dec 31', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Calendar onChange={onChange} defaultValue={new Date(2024, 11, 31)} />,
+    );
+    const cells = screen.getAllByText('31');
+    const selectedDay = cells.find(
+      (c) => c.closest('[role="gridcell"]')?.getAttribute('aria-selected') === 'true',
+    );
+    selectedDay?.focus();
+    await user.keyboard('{ArrowRight}');
+    expect(onChange).toHaveBeenCalledWith(new Date(2025, 0, 1));
+  });
+
   it('does not navigate to disabled dates with arrow keys', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();

@@ -98,6 +98,22 @@ describe('Input', () => {
     expect(handleSelect).toHaveBeenCalledWith('Avocado');
   });
 
+  it('closes autocomplete suggestions with Escape', async () => {
+    const user = userEvent.setup();
+    render(
+      <Input
+        autocomplete={{ options: ['Apple', 'Banana', 'Avocado'] }}
+      />,
+    );
+    const input = screen.getByRole('textbox');
+    await user.type(input, 'a');
+
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
   it('increments and decrements via stepper buttons', async () => {
     const user = userEvent.setup();
     render(<Input type="number" stepper={{ enabled: true, min: 0, max: 10, step: 1 }} />);

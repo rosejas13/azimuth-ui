@@ -239,6 +239,27 @@ describe('ResizablePanel', () => {
     expect(separator).toHaveAttribute('aria-valuenow', '55');
   });
 
+  it('does not resize below minSize with ArrowLeft', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ResizablePanel defaultSizes={[10, 90]} minSize={100}>
+        <div>Left</div>
+        <div>Right</div>
+      </ResizablePanel>,
+    );
+    const root = container.firstChild as HTMLElement;
+    mockGetBoundingClientRect(root);
+
+    const separator = screen.getByRole('slider');
+    separator.focus();
+
+    expect(separator).toHaveAttribute('aria-valuenow', '10');
+
+    await user.keyboard('{ArrowLeft}');
+
+    expect(separator).toHaveAttribute('aria-valuenow', '10');
+  });
+
   it('resizes panels with ArrowUp in vertical mode', async () => {
     const user = userEvent.setup();
     const { container } = render(
