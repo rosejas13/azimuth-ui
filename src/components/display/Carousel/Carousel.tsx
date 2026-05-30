@@ -16,12 +16,12 @@ import styles from './Carousel.module.css';
 export interface CarouselProps extends ComponentPropsWithoutRef<'div'> {
   /** Slide elements to display. */
   children: React.ReactNode;
-  /** @default false */
-  autoPlay?: boolean;
-  /** Interval in milliseconds between auto-advance slides. Only applies when `autoPlay` is true (and `autoRotate` is not set). @default 5000 */
-  interval?: number;
-  /** Milliseconds between automatic rotations. When set, enables auto-advance with this interval and takes precedence over `interval`. */
-  autoRotate?: number;
+  /** Auto-advance behavior. Pass `{ enabled: true, interval: 3000 }` to configure. @default { enabled: false, interval: 5000 } */
+  autoplay?: {
+    enabled?: boolean
+    /** @default 5000 */
+    interval?: number
+  };
   /** @default true */
   showDots?: boolean;
   /** @default true */
@@ -35,9 +35,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
   (
     {
       children,
-      autoPlay = false,
-      interval = 5000,
-      autoRotate,
+      autoplay: { enabled: autoPlay = false, interval = 5000 } = {},
       showDots = true,
       showArrows = true,
       loop = true,
@@ -57,8 +55,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
         : false;
     const [activeIndex, setActiveIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
-    const shouldAutoPlay = autoPlay || autoRotate !== undefined;
-    const rotationInterval = autoRotate ?? interval;
+    const shouldAutoPlay = autoPlay;
     const timerRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
     const goTo = useCallback(
@@ -78,13 +75,13 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
     useEffect(() => {
       if (!shouldAutoPlay || isPaused || totalSlides <= 1 || prefersReducedMotion) return;
 
-      timerRef.current = setInterval(goNext, rotationInterval);
+      timerRef.current = setInterval(goNext, interval);
       return () => {
         if (timerRef.current !== undefined) {
           clearInterval(timerRef.current);
         }
       };
-    }, [shouldAutoPlay, isPaused, rotationInterval, goNext, totalSlides]);
+    }, [shouldAutoPlay, isPaused, interval, goNext, totalSlides]);
 
     if (totalSlides === 0) return null;
 

@@ -108,7 +108,7 @@ describe('Carousel', () => {
   });
 
   it('auto-plays when autoPlay is set', () => {
-    render(<Carousel autoPlay interval={500}>{renderSlides(3)}</Carousel>);
+    render(<Carousel autoplay={{ enabled: true, interval: 500 }}>{renderSlides(3)}</Carousel>);
     act(() => {
       vi.advanceTimersByTime(600);
     });

@@ -450,7 +450,7 @@ function HomePage({
             Real feedback from real teams
           </Text>
         </Stack>
-        <Carousel autoRotate={4000} showDots showArrows loop>
+        <Carousel autoplay={{ enabled: true, interval: 4000 }} showDots showArrows loop>
           {TESTIMONIALS.map((t) => (
             <div key={t.id} style={{ padding: 'var(--azimuth-space-md)' }}>
               <TestimonialCard t={t} />

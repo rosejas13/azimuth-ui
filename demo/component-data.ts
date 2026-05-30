@@ -153,8 +153,7 @@ export const COMPONENT_DATA = [{
     variants: [],
     props: [
       { name: 'children', type: 'ReactNode', description: 'The slides of the carousel' },
-      { name: 'autoPlay', type: 'boolean', default: 'false', description: 'Whether the carousel auto-advances' },
-      { name: 'interval', type: 'number', default: '5000', description: 'Time in milliseconds between auto-advances' },
+      { name: 'autoplay', type: '{ enabled?: boolean; interval?: number }', default: '{ enabled: false, interval: 5000 }', description: 'Auto-advance behavior' },
       { name: 'showDots', type: 'boolean', default: 'true', description: 'Whether to show dot indicators' },
       { name: 'showArrows', type: 'boolean', default: 'true', description: 'Whether to show arrow controls' },
       { name: 'loop', type: 'boolean', default: 'true', description: 'Whether the carousel wraps around' },
