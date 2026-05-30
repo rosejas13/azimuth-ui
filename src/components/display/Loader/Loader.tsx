@@ -36,7 +36,7 @@ export const Loader = forwardRef<HTMLDivElement, LoaderProps>(
             {[0, 1, 2, 3].map((i) => (
               <div
                 key={i}
-                className={cn(styles.bar, styles[`bar${size.charAt(0).toUpperCase() + size.slice(1)}` as keyof typeof styles])}
+                className={cn(styles.bar, styles[`bar${size.charAt(0).toUpperCase() + size.slice(1)}`])}
               />
             ))}
           </div>

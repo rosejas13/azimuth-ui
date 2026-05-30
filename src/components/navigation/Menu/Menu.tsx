@@ -228,11 +228,11 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
 
     const setRefs = useCallback(
       (node: HTMLDivElement | null) => {
-        (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        (containerRef).current = node;
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          (ref).current = node;
         }
       },
       [ref],

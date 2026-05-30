@@ -146,6 +146,14 @@ export const SlideSheet = forwardRef<HTMLDivElement, SlideSheetProps>(
         ref={ref}
         className={cn(styles.overlay, className)}
         onClick={handleOverlayClick}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleOverlayClick(e as unknown as React.MouseEvent);
+          }
+        }}
+        role="presentation"
+        tabIndex={-1}
         style={style}
         {...props}
       >

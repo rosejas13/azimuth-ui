@@ -47,10 +47,23 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
     },
     ref,
   ) => {
+    const overlayRef = useRef<HTMLDivElement>(null);
     const drawerRef = useRef<HTMLDivElement>(null);
     const titleId = useRef(
       `azimuth-drawer-${Math.random().toString(36).slice(2, 9)}`,
     ).current;
+
+    const setOverlayRef = useCallback(
+      (node: HTMLDivElement | null) => {
+        overlayRef.current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          (ref).current = node;
+        }
+      },
+      [ref],
+    );
 
     const handleEscape = useCallback(
       (e: KeyboardEvent) => {
@@ -59,15 +72,6 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
         }
       },
       [onClose],
-    );
-
-    const handleOverlayClick = useCallback(
-      (e: React.MouseEvent) => {
-        if (!persistent && e.target === e.currentTarget) {
-          onClose();
-        }
-      },
-      [persistent, onClose],
     );
 
     useEffect(() => {
@@ -102,14 +106,38 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
       return () => clearTimeout(timer);
     }, [open]);
 
+    useEffect(() => {
+      const el = overlayRef.current;
+      if (!el || !open) return;
+
+      const handleOverlayClick = (e: MouseEvent) => {
+        if (!persistent && e.target === e.currentTarget) {
+          onClose();
+        }
+      };
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClose();
+        }
+      };
+
+      el.addEventListener('click', handleOverlayClick);
+      el.addEventListener('keydown', handleKeyDown);
+      return () => {
+        el.removeEventListener('click', handleOverlayClick);
+        el.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [open, persistent, onClose]);
+
     if (!open) return null;
 
     return createPortal(
       <div
-        ref={ref}
+        ref={setOverlayRef}
         className={cn(styles.overlay, className)}
-        onClick={handleOverlayClick}
         role="dialog"
+        tabIndex={-1}
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
         {...props}

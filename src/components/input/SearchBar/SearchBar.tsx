@@ -86,11 +86,11 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
 
     const setInputRef = useCallback(
       (node: HTMLInputElement | null) => {
-        (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+        (inputRef).current = node;
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
+          (ref).current = node;
         }
       },
       [ref],

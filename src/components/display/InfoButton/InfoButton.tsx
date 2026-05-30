@@ -181,9 +181,9 @@ export const InfoButton = forwardRef<HTMLDivElement, InfoButtonProps>(
     return (
       <div
         ref={(node) => {
-          (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          (containerRef).current = node;
           if (typeof ref === 'function') ref(node);
-          else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          else if (ref) (ref).current = node;
         }}
         className={cn(styles.root, className)}
         {...props}

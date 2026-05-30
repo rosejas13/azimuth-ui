@@ -40,7 +40,7 @@ export const CodeBlock = forwardRef<HTMLPreElement, CodeBlockProps>(
     const [copied, setCopied] = useState(false);
 
     const handleCopy = useCallback(() => {
-      navigator.clipboard.writeText(code).then(() => {
+      void navigator.clipboard.writeText(code).then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       });
@@ -86,7 +86,7 @@ export const CodeBlock = forwardRef<HTMLPreElement, CodeBlockProps>(
                 <span
                   className={styles.lineContent}
                   dangerouslySetInnerHTML={{
-                    __html: highlightedLines[i]!,
+                    __html: highlightedLines[i],
                   }}
                 />
               ) : (

@@ -6,7 +6,7 @@ const HTML_ESCAPE: Record<string, string> = {
 };
 
 function escapeHtml(text: string): string {
-  return text.replace(/[&<>"]/g, (ch) => HTML_ESCAPE[ch]!);
+  return text.replace(/[&<>"]/g, (ch) => HTML_ESCAPE[ch]);
 }
 
 interface TokenRule {

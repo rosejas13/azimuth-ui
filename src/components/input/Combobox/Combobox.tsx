@@ -229,6 +229,12 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
                       i === highlightedIndex && styles.optionHighlighted,
                     )}
                     onClick={() => handleSelect(opt.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelect(opt.value);
+                      }
+                    }}
                     onMouseEnter={() => setHighlightedIndex(i)}
                   >
                     {opt.label}

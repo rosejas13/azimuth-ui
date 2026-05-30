@@ -60,7 +60,20 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
   ) => {
     const [query, setQuery] = useState('');
     const [activeIndex, setActiveIndex] = useState(0);
+    const overlayRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+
+    const setOverlayRef = useCallback(
+      (node: HTMLDivElement | null) => {
+        overlayRef.current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          (ref).current = node;
+        }
+      },
+      [ref],
+    );
 
     const filtered = useMemo(() => {
       if (!query.trim()) return groups;
@@ -135,13 +148,6 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
       [flatItems, activeIndex, onSelect, onClose],
     );
 
-    const handleOverlayClick = useCallback(
-      (e: React.MouseEvent) => {
-        if (e.target === e.currentTarget) onClose();
-      },
-      [onClose],
-    );
-
     const handleEscape = useCallback(
       (e: KeyboardEvent) => {
         if (e.key === 'Escape') onClose();
@@ -155,16 +161,38 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
       return () => document.removeEventListener('keydown', handleEscape);
     }, [open, handleEscape]);
 
+    useEffect(() => {
+      const el = overlayRef.current;
+      if (!el || !open) return;
+
+      const handleOverlayClick = (e: MouseEvent) => {
+        if (e.target === e.currentTarget) onClose();
+      };
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClose();
+        }
+      };
+
+      el.addEventListener('click', handleOverlayClick);
+      el.addEventListener('keydown', handleKeyDown);
+      return () => {
+        el.removeEventListener('click', handleOverlayClick);
+        el.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [open, onClose]);
+
     if (!open) return null;
 
     let itemCounter = 0;
 
     return createPortal(
       <div
-        ref={ref}
+        ref={setOverlayRef}
         className={cn(styles.overlay, className)}
-        onClick={handleOverlayClick}
         role="dialog"
+        tabIndex={-1}
         aria-modal="true"
         aria-label="Command palette"
         {...props}
@@ -213,10 +241,18 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
                           isActive && styles.itemActive,
                         )}
                         role="option"
+                        tabIndex={-1}
                         aria-selected={isActive}
                         onClick={() => {
                           onSelect(item);
                           onClose();
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            onSelect(item);
+                            onClose();
+                          }
                         }}
                         onMouseEnter={() =>
                           setActiveIndex(currentIndex)

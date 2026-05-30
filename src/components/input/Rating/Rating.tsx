@@ -71,6 +71,7 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(
       <div
         ref={ref}
         role="radiogroup"
+        tabIndex={-1}
         className={cn(
           styles.rating,
           styles[size],

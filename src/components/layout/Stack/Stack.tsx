@@ -46,9 +46,9 @@ export const Stack = forwardRef<HTMLDivElement, StackProps>(
         className={cn(
           styles.stack,
           styles[direction],
-          align && styles[`align${align.charAt(0).toUpperCase() + align.slice(1)}` as keyof typeof styles],
-          justify && styles[`justify${justify.charAt(0).toUpperCase() + justify.slice(1)}` as keyof typeof styles],
-          styles[`gap${spacing.charAt(0).toUpperCase() + spacing.slice(1)}` as keyof typeof styles],
+          align && styles[`align${align.charAt(0).toUpperCase() + align.slice(1)}`],
+          justify && styles[`justify${justify.charAt(0).toUpperCase() + justify.slice(1)}`],
+          styles[`gap${spacing.charAt(0).toUpperCase() + spacing.slice(1)}`],
           wrap && styles.wrap,
           className,
         )}

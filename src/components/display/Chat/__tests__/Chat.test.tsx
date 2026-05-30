@@ -45,7 +45,7 @@ describe('Chat', () => {
     const onSend = vi.fn();
     const user = userEvent.setup();
     render(<Chat messages={[]} onSend={onSend} />);
-    const input = screen.getByLabelText('Message input') as HTMLInputElement;
+    const input = screen.getByLabelText('Message input');
     await user.type(input, 'Hello');
     await user.click(screen.getByLabelText('Send message'));
     expect(input.value).toBe('');

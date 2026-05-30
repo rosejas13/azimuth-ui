@@ -161,7 +161,18 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(
 
         {isMobile && mobileOpen && (
           <>
-            <div className={styles.overlay} onClick={closeMobile} />
+            <div
+              className={styles.overlay}
+              role="presentation"
+              tabIndex={-1}
+              onClick={closeMobile}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  closeMobile();
+                }
+              }}
+            />
             <div className={styles.drawer}>
               <div className={styles.drawerHeader}>
                 {logo && <span className={styles.logo}>{logo}</span>}

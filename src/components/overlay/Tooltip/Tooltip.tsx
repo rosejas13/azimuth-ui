@@ -113,11 +113,11 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
 
     const setWrapperRef = useCallback(
       (node: HTMLDivElement | null) => {
-        (wrapperRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        (wrapperRef).current = node;
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          (ref).current = node;
         }
       },
       [ref],
@@ -135,6 +135,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       >
         <span
           className={styles.trigger}
+          role="button"
           tabIndex={0}
           aria-describedby={visible ? tooltipId : undefined}
         >

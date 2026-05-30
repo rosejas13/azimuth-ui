@@ -52,10 +52,23 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
     },
     ref,
   ) => {
+    const overlayRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const titleId = useRef(
       `azimuth-modal-${Math.random().toString(36).slice(2, 9)}`,
     ).current;
+
+    const setOverlayRef = useCallback(
+      (node: HTMLDivElement | null) => {
+        overlayRef.current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          (ref).current = node;
+        }
+      },
+      [ref],
+    );
 
     const handleEscape = useCallback(
       (e: KeyboardEvent) => {
@@ -64,15 +77,6 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         }
       },
       [onClose],
-    );
-
-    const handleOverlayClick = useCallback(
-      (e: React.MouseEvent) => {
-        if (!persistent && e.target === e.currentTarget) {
-          onClose?.();
-        }
-      },
-      [persistent, onClose],
     );
 
     useEffect(() => {
@@ -108,18 +112,42 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
       return () => clearTimeout(timer);
     }, [open]);
 
+    useEffect(() => {
+      const el = overlayRef.current;
+      if (!el || !open) return;
+
+      const handleOverlayClick = (e: MouseEvent) => {
+        if (!persistent && e.target === e.currentTarget) {
+          onClose?.();
+        }
+      };
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClose?.();
+        }
+      };
+
+      el.addEventListener('click', handleOverlayClick);
+      el.addEventListener('keydown', handleKeyDown);
+      return () => {
+        el.removeEventListener('click', handleOverlayClick);
+        el.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [open, persistent, onClose]);
+
     if (!open) return null;
 
     return createPortal(
       <div
-        ref={ref}
+        ref={setOverlayRef}
         className={cn(
           styles.overlay,
           blur !== 'none' && styles[`overlayBlur${blur.charAt(0).toUpperCase() + blur.slice(1)}`],
           className,
         )}
-        onClick={handleOverlayClick}
         role="dialog"
+        tabIndex={-1}
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
         {...props}

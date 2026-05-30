@@ -141,7 +141,18 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
           disabled={disabled}
         />
 
-        <div className={styles.zone} onClick={() => !disabled && inputRef.current?.click()}>
+        <div
+          className={styles.zone}
+          role="button"
+          tabIndex={disabled ? -1 : 0}
+          onClick={() => !disabled && inputRef.current?.click()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              if (!disabled) inputRef.current?.click();
+            }
+          }}
+        >
           <div className={styles.icon}>+</div>
           <div className={styles.title}>
             {dragOver ? 'Drop files here' : 'Drag and drop files here'}

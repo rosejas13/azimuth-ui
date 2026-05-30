@@ -118,7 +118,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           </span>
         )}
         <textarea
-          ref={textareaRef as React.RefObject<HTMLTextAreaElement>}
+          ref={textareaRef}
           id={fieldId}
           value={currentValue}
           onChange={handleChange}

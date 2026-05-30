@@ -54,11 +54,11 @@ export const Flyout = forwardRef<HTMLDivElement, FlyoutProps>(
 
     const mergedRef = useCallback(
       (node: HTMLDivElement | null) => {
-        (wrapperRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        (wrapperRef).current = node;
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          (ref).current = node;
         }
       },
       [ref],

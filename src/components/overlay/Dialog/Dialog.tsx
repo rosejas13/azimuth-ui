@@ -122,6 +122,12 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
             handleCancel();
           }
         }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            if (!loading) handleCancel();
+          }
+        }}
         role={role}
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}

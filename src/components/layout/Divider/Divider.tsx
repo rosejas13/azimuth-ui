@@ -19,7 +19,6 @@ export const Divider = forwardRef<HTMLHRElement, DividerProps>(
           styles[orientation],
           className,
         )}
-        role="separator"
         aria-orientation={orientation}
         {...props}
       />

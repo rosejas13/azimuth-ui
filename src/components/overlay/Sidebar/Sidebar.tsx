@@ -4,8 +4,10 @@ import {
   type ComponentPropsWithoutRef,
   type ReactNode,
   forwardRef,
-  useState,
   useCallback,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Sidebar.module.css';
@@ -57,6 +59,19 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
   ) => {
     const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
     const [hovered, setHovered] = useState(false);
+    const navRef = useRef<HTMLElement>(null);
+
+    const setNavRef = useCallback(
+      (node: HTMLElement | null) => {
+        navRef.current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          (ref).current = node;
+        }
+      },
+      [ref],
+    );
 
     const isExpanded = !collapsed || hovered;
 
@@ -124,30 +139,48 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
       );
     };
 
+    useEffect(() => {
+      const el = navRef.current;
+      if (!el) return;
+
+      const handleMouseEnter = () => {
+        if (collapsed) setHovered(true);
+      };
+      const handleMouseLeave = () => setHovered(false);
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const focusable = el.querySelectorAll('button');
+          const currentIndex = Array.from(focusable).findIndex((f) => f === document.activeElement);
+          let nextIndex: number;
+          if (e.key === 'ArrowDown') {
+            nextIndex = currentIndex < focusable.length - 1 ? currentIndex + 1 : 0;
+          } else {
+            nextIndex = currentIndex > 0 ? currentIndex - 1 : focusable.length - 1;
+          }
+          (focusable[nextIndex] as HTMLElement).focus();
+        }
+      };
+
+      el.addEventListener('mouseenter', handleMouseEnter);
+      el.addEventListener('mouseleave', handleMouseLeave);
+      el.addEventListener('keydown', handleKeyDown);
+      return () => {
+        el.removeEventListener('mouseenter', handleMouseEnter);
+        el.removeEventListener('mouseleave', handleMouseLeave);
+        el.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [collapsed]);
+
     return (
       <nav
-        ref={ref}
+        ref={setNavRef}
         className={cn(
           styles.sidebar,
           isExpanded ? styles.expanded : styles.collapsed,
           className,
         )}
-        onMouseEnter={() => { if (collapsed) setHovered(true); }}
-        onMouseLeave={() => setHovered(false)}
-        onKeyDown={(e) => {
-          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-            e.preventDefault();
-            const focusable = (e.currentTarget as HTMLElement).querySelectorAll('button');
-            const currentIndex = Array.from(focusable).findIndex((el) => el === document.activeElement);
-            let nextIndex: number;
-            if (e.key === 'ArrowDown') {
-              nextIndex = currentIndex < focusable.length - 1 ? currentIndex + 1 : 0;
-            } else {
-              nextIndex = currentIndex > 0 ? currentIndex - 1 : focusable.length - 1;
-            }
-            (focusable[nextIndex] as HTMLElement).focus();
-          }
-        }}
+        tabIndex={-1}
         {...props}
       >
         {header && (

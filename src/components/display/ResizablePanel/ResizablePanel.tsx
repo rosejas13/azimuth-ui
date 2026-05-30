@@ -211,7 +211,7 @@ export const ResizablePanel = forwardRef<HTMLDivElement, ResizablePanelProps>(
     return (
       <div
         ref={(el) => {
-          (containerRef as React.MutableRefObject<HTMLDivElement | null>).current =
+          (containerRef).current =
             el;
           if (typeof ref === 'function') {
             ref(el);

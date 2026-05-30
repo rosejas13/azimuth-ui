@@ -200,7 +200,6 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
             step={step}
             value={clampedValue}
             disabled={disabled}
-            role="slider"
             aria-valuemin={min}
             aria-valuemax={max}
             aria-valuenow={clampedValue}
@@ -215,7 +214,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
             className={cn(
               styles.track,
               isVertical && styles.trackVertical,
-              size !== 'md' && styles[`track${size.charAt(0).toUpperCase() + size.slice(1)}` as keyof typeof styles],
+              size !== 'md' && styles[`track${size.charAt(0).toUpperCase() + size.slice(1)}`],
             )}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
@@ -232,7 +231,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
               className={cn(
                 styles.thumb,
                 isVertical && styles.thumbVertical,
-                size !== 'md' && styles[`thumb${size.charAt(0).toUpperCase() + size.slice(1)}` as keyof typeof styles],
+                size !== 'md' && styles[`thumb${size.charAt(0).toUpperCase() + size.slice(1)}`],
               )}
               style={thumbOffset}
               onPointerDown={handlePointerDown}

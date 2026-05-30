@@ -150,7 +150,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
               );
             }
 
-            const page = item as number;
+            const page = item;
             const isActive = page === safeCurrent;
 
             return (

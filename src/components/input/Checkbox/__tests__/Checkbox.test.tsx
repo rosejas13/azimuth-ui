@@ -64,7 +64,7 @@ describe('Checkbox', () => {
 
   it('supports indeterminate state', () => {
     render(<Checkbox indeterminate />);
-    const checkbox = screen.getByRole('checkbox') as HTMLInputElement;
+    const checkbox = screen.getByRole('checkbox');
     expect(checkbox.indeterminate).toBe(true);
   });
 });

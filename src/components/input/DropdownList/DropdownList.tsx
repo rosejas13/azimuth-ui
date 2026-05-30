@@ -222,7 +222,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
               {label}
             </label>
           )}
-          <div className={styles.control}>
+          <div className={styles.control} aria-invalid={error ? 'true' : undefined}>
             <button
               type="button"
               className={styles.trigger}
@@ -231,7 +231,6 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
               disabled={disabled}
               aria-haspopup="listbox"
               aria-expanded={open}
-              aria-invalid={error ? 'true' : undefined}
             >
               <span
                 className={cn(
@@ -265,11 +264,11 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
                   onKeyDown={(e) => {
                     if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Escape') {
                       e.stopPropagation();
-                      handleKeyDown(e as React.KeyboardEvent);
+                      handleKeyDown(e);
                     }
                     if (e.key === 'Enter') {
                       e.stopPropagation();
-                      handleKeyDown(e as React.KeyboardEvent);
+                      handleKeyDown(e);
                     }
                   }}
                   placeholder="Search..."

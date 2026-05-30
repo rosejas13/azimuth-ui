@@ -166,7 +166,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputElement = (
       <div className={styles.inputContainer}>
         <input
-          ref={inputRef as React.RefObject<HTMLInputElement>}
+          ref={inputRef}
           id={generatedId}
           type={type}
           value={currentValue}

@@ -112,6 +112,7 @@ export const SegmentedButton = forwardRef<HTMLDivElement, SegmentedButtonProps>(
           className,
         )}
         role="radiogroup"
+        tabIndex={-1}
         onKeyDown={handleKeyDown}
         {...props}
       >

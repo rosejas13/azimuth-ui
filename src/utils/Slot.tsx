@@ -20,7 +20,7 @@ function mergeRefs<T>(
       if (typeof ref === 'function') {
         ref(value);
       } else if (ref && typeof ref === 'object' && 'current' in ref) {
-        (ref as React.MutableRefObject<T | null>).current = value;
+        (ref).current = value;
       }
     }
   };

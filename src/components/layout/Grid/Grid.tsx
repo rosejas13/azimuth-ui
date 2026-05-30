@@ -27,9 +27,9 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
     const buildGridClass = () => {
       if (typeof cols === 'object') {
         const base = cols.base ?? 'auto';
-        return typeof base === 'number' ? styles[`cols${base}` as keyof typeof styles] : styles.colsAuto;
+        return typeof base === 'number' ? styles[`cols${base}`] : styles.colsAuto;
       }
-      return typeof cols === 'number' ? styles[`cols${cols}` as keyof typeof styles] : styles.colsAuto;
+      return typeof cols === 'number' ? styles[`cols${cols}`] : styles.colsAuto;
     };
 
     const buildResponsiveStyle = () => {
@@ -54,13 +54,13 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
           styles.grid,
           !isResponsive && buildGridClass(),
           isResponsive && styles.responsive,
-          align && styles[`align${align.charAt(0).toUpperCase() + align.slice(1)}` as keyof typeof styles],
+          align && styles[`align${align.charAt(0).toUpperCase() + align.slice(1)}`],
           variant && variant !== 'auto' && styles[variant as keyof typeof styles],
           className,
         )}
         style={{
           ...(gap ? { gap: `var(--azimuth-space-${gap})` } : {}),
-          ...(isResponsive ? buildResponsiveStyle() as React.CSSProperties : {}),
+          ...(isResponsive ? buildResponsiveStyle() : {}),
           ...style,
         }}
         {...props}
