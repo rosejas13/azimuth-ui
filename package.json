@@ -17,6 +17,16 @@
         "default": "./dist/index.cjs"
       }
     },
+    "./icons": {
+      "import": {
+        "types": "./dist/icons/index.d.ts",
+        "default": "./dist/icons/index.js"
+      },
+      "require": {
+        "types": "./dist/icons/index.d.cts",
+        "default": "./dist/icons/index.cjs"
+      }
+    },
     "./styles.css": "./dist/index.css"
   },
   "files": [
@@ -71,6 +81,13 @@
     "typescript": "^5.6.0",
     "typescript-eslint": "^8.30.0",
     "vitest": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/rosejas13"
   },
   "keywords": [
     "react",
