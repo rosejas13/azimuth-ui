@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect } from 'vitest';
 import { Tooltip } from '../Tooltip';
@@ -16,7 +16,11 @@ describe('Tooltip', () => {
 
   it('shows tooltip on mouse enter', async () => {
     const user = userEvent.setup();
-    render(<Tooltip content="Hello world" delay={0}>Hover me</Tooltip>);
+    render(
+      <Tooltip content="Hello world" delay={0}>
+        Hover me
+      </Tooltip>,
+    );
     await user.hover(screen.getByText('Hover me'));
     await waitFor(() => {
       expect(screen.getByRole('tooltip')).toBeInTheDocument();
@@ -26,7 +30,11 @@ describe('Tooltip', () => {
 
   it('hides tooltip on mouse leave', async () => {
     const user = userEvent.setup();
-    render(<Tooltip content="Hello" delay={0}>Hover me</Tooltip>);
+    render(
+      <Tooltip content="Hello" delay={0}>
+        Hover me
+      </Tooltip>,
+    );
     await user.hover(screen.getByText('Hover me'));
     await waitFor(() => {
       expect(screen.getByRole('tooltip')).toBeInTheDocument();
@@ -38,13 +46,23 @@ describe('Tooltip', () => {
   });
 
   it('applies className to wrapper', () => {
-    render(<Tooltip content="test" className="test-class">Hover me</Tooltip>);
-    expect(screen.getByText('Hover me').parentElement).toHaveClass('test-class');
+    render(
+      <Tooltip content="test" className="test-class">
+        Hover me
+      </Tooltip>,
+    );
+    expect(screen.getByText('Hover me').parentElement).toHaveClass(
+      'test-class',
+    );
   });
 
   it('sets aria-describedby on trigger when visible', async () => {
     const user = userEvent.setup();
-    render(<Tooltip content="Helper" delay={0}>Hover me</Tooltip>);
+    render(
+      <Tooltip content="Helper" delay={0}>
+        Hover me
+      </Tooltip>,
+    );
     await user.hover(screen.getByText('Hover me'));
     await waitFor(() => {
       const span = screen.getByText('Hover me');
@@ -54,14 +72,22 @@ describe('Tooltip', () => {
 
   it('uses custom delay before showing', async () => {
     const user = userEvent.setup();
-    render(<Tooltip content="Delayed" delay={500}>Hover me</Tooltip>);
+    render(
+      <Tooltip content="Delayed" delay={500}>
+        Hover me
+      </Tooltip>,
+    );
     await user.hover(screen.getByText('Hover me'));
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
   });
 
   it('renders multi-line content with newlines', async () => {
     const user = userEvent.setup();
-    render(<Tooltip content={"Line 1\nLine 2"} delay={0}>Hover me</Tooltip>);
+    render(
+      <Tooltip content={'Line 1\nLine 2'} delay={0}>
+        Hover me
+      </Tooltip>,
+    );
     await user.hover(screen.getByText('Hover me'));
     await waitFor(() => {
       expect(screen.getByText(/Line 1/)).toBeInTheDocument();
@@ -73,7 +99,11 @@ describe('Tooltip', () => {
 
   it('shows tooltip on focus', async () => {
     const user = userEvent.setup();
-    render(<Tooltip content="Tooltip content" delay={0}>Hover me</Tooltip>);
+    render(
+      <Tooltip content="Tooltip content" delay={0}>
+        Hover me
+      </Tooltip>,
+    );
     await user.tab();
     await waitFor(() => {
       expect(screen.getByRole('tooltip')).toBeInTheDocument();
@@ -82,12 +112,18 @@ describe('Tooltip', () => {
 
   it('hides tooltip on blur', async () => {
     const user = userEvent.setup();
-    render(<Tooltip content="Tooltip content" delay={0}>Hover me</Tooltip>);
+    render(
+      <Tooltip content="Tooltip content" delay={0}>
+        Hover me
+      </Tooltip>,
+    );
     await user.tab();
     await waitFor(() => {
       expect(screen.getByRole('tooltip')).toBeInTheDocument();
     });
-    screen.getByText('Hover me').blur();
+    act(() => {
+      screen.getByText('Hover me').blur();
+    });
     await waitFor(() => {
       expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
     });
@@ -95,25 +131,33 @@ describe('Tooltip', () => {
 
   it('renders all 4 positions', () => {
     const { unmount: unmountTop } = render(
-      <Tooltip content="Top" position="top">Top trigger</Tooltip>,
+      <Tooltip content="Top" position="top">
+        Top trigger
+      </Tooltip>,
     );
     expect(screen.getByText('Top trigger')).toBeInTheDocument();
     unmountTop();
 
     const { unmount: unmountBottom } = render(
-      <Tooltip content="Bottom" position="bottom">Bottom trigger</Tooltip>,
+      <Tooltip content="Bottom" position="bottom">
+        Bottom trigger
+      </Tooltip>,
     );
     expect(screen.getByText('Bottom trigger')).toBeInTheDocument();
     unmountBottom();
 
     const { unmount: unmountLeft } = render(
-      <Tooltip content="Left" position="left">Left trigger</Tooltip>,
+      <Tooltip content="Left" position="left">
+        Left trigger
+      </Tooltip>,
     );
     expect(screen.getByText('Left trigger')).toBeInTheDocument();
     unmountLeft();
 
     const { unmount: unmountRight } = render(
-      <Tooltip content="Right" position="right">Right trigger</Tooltip>,
+      <Tooltip content="Right" position="right">
+        Right trigger
+      </Tooltip>,
     );
     expect(screen.getByText('Right trigger')).toBeInTheDocument();
     unmountRight();

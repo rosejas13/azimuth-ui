@@ -133,8 +133,12 @@ describe('Flyout', () => {
         <Flyout trigger={<span>Trigger</span>} content="Flyout content" />,
       );
       const trigger = screen.getByRole('button');
-      trigger.focus();
-      await user.keyboard('{Enter}');
+      act(() => {
+        trigger.focus();
+      });
+      await act(async () => {
+        await user.keyboard('{Enter}');
+      });
       expect(screen.getByText('Flyout content')).toBeInTheDocument();
     });
 
@@ -144,8 +148,12 @@ describe('Flyout', () => {
         <Flyout trigger={<span>Trigger</span>} content="Flyout content" />,
       );
       const trigger = screen.getByRole('button');
-      trigger.focus();
-      await user.keyboard(' ');
+      act(() => {
+        trigger.focus();
+      });
+      await act(async () => {
+        await user.keyboard(' ');
+      });
       expect(screen.getByText('Flyout content')).toBeInTheDocument();
     });
 
@@ -155,10 +163,16 @@ describe('Flyout', () => {
         <Flyout trigger={<span>Trigger</span>} content="Flyout content" />,
       );
       const trigger = screen.getByRole('button');
-      trigger.focus();
-      await user.keyboard('{Enter}');
+      act(() => {
+        trigger.focus();
+      });
+      await act(async () => {
+        await user.keyboard('{Enter}');
+      });
       expect(screen.getByText('Flyout content')).toBeInTheDocument();
-      await user.keyboard('{Escape}');
+      await act(async () => {
+        await user.keyboard('{Escape}');
+      });
       expect(screen.queryByText('Flyout content')).not.toBeInTheDocument();
     });
 
@@ -168,8 +182,12 @@ describe('Flyout', () => {
         <Flyout trigger={<span>Trigger</span>} content="Flyout content" />,
       );
       const trigger = screen.getByRole('button');
-      trigger.focus();
-      await user.keyboard('{Enter}');
+      act(() => {
+        trigger.focus();
+      });
+      await act(async () => {
+        await user.keyboard('{Enter}');
+      });
       expect(trigger).toHaveFocus();
     });
   });

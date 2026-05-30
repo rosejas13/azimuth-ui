@@ -48,17 +48,23 @@ describe('Button', () => {
   });
 
   it('renders icon as button when no children', () => {
-    render(<Button icon={<span data-testid="icon">X</span>} aria-label="Close" />);
+    render(
+      <Button icon={<span data-testid="icon">X</span>} aria-label="Close" />,
+    );
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
     expect(screen.getByTestId('icon')).toBeInTheDocument();
   });
 
   it('renders all variants without error', () => {
-    const variants = ['primary', 'secondary', 'tertiary', 'link', 'danger'] as const;
+    const variants = [
+      'primary',
+      'secondary',
+      'tertiary',
+      'link',
+      'danger',
+    ] as const;
     for (const variant of variants) {
-      const { unmount } = render(
-        <Button variant={variant}>{variant}</Button>,
-      );
+      const { unmount } = render(<Button variant={variant}>{variant}</Button>);
       expect(screen.getByRole('button')).toBeInTheDocument();
       unmount();
     }
@@ -108,7 +114,9 @@ describe('Button', () => {
     it('merges child className with Button className', () => {
       render(
         <Button asChild className="btn-custom">
-          <a href="/test" className="link-custom">Link</a>
+          <a href="/test" className="link-custom">
+            Link
+          </a>
         </Button>,
       );
       const link = screen.getByRole('link');
@@ -122,7 +130,15 @@ describe('Button', () => {
       const childClick = vi.fn();
       render(
         <Button asChild onClick={buttonClick}>
-          <a href="/test" onClick={childClick}>Link</a>
+          <a
+            href="/test"
+            onClick={(e) => {
+              e.preventDefault();
+              childClick();
+            }}
+          >
+            Link
+          </a>
         </Button>,
       );
       await user.click(screen.getByRole('link'));

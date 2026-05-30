@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Alert } from '../Alert';
@@ -88,8 +88,12 @@ describe('Alert', () => {
       </Alert>,
     );
     expect(onDismiss).not.toHaveBeenCalled();
-    vi.advanceTimersByTime(5000);
-    vi.advanceTimersByTime(200);
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
     expect(onDismiss).toHaveBeenCalledTimes(1);
     vi.useRealTimers();
   });
