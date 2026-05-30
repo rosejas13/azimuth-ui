@@ -25,6 +25,8 @@ export type {
 
 export { cn } from './utils';
 
+export * from './icons';
+
 export { Button } from './components/input/Button';
 export type { ButtonProps, ButtonVariant } from './components/input/Button';
 
