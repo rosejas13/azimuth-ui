@@ -14,14 +14,20 @@ describe('Flyout', () => {
 
   it('renders trigger content', () => {
     render(
-      <Flyout trigger={<button type="button">Hover me</button>} content="Tooltip text" />,
+      <Flyout
+        trigger={<button type="button">Hover me</button>}
+        content="Tooltip text"
+      />,
     );
     expect(screen.getByText('Hover me')).toBeInTheDocument();
   });
 
   it('does not show content initially', () => {
     render(
-      <Flyout trigger={<button type="button">Trigger</button>} content="Flyout content" />,
+      <Flyout
+        trigger={<button type="button">Trigger</button>}
+        content="Flyout content"
+      />,
     );
     expect(screen.queryByText('Flyout content')).not.toBeInTheDocument();
   });
@@ -38,7 +44,7 @@ describe('Flyout', () => {
     fireEvent.mouseEnter(screen.getByText('Trigger'));
     expect(screen.queryByText('Flyout content')).not.toBeInTheDocument();
 
-    act(() => vi.advanceTimersByTime(200));
+    void act(() => vi.advanceTimersByTime(200));
     expect(screen.getByText('Flyout content')).toBeInTheDocument();
   });
 
@@ -53,13 +59,13 @@ describe('Flyout', () => {
     );
 
     fireEvent.mouseEnter(screen.getByText('Trigger'));
-    act(() => vi.advanceTimersByTime(200));
+    void act(() => vi.advanceTimersByTime(200));
     expect(screen.getByText('Flyout content')).toBeInTheDocument();
 
     fireEvent.mouseLeave(screen.getByText('Trigger'));
     expect(screen.getByText('Flyout content')).toBeInTheDocument();
 
-    act(() => vi.advanceTimersByTime(150));
+    void act(() => vi.advanceTimersByTime(150));
     expect(screen.queryByText('Flyout content')).not.toBeInTheDocument();
   });
 
@@ -72,7 +78,7 @@ describe('Flyout', () => {
     );
 
     fireEvent.mouseEnter(screen.getByText('Trigger'));
-    act(() => vi.advanceTimersByTime(200));
+    void act(() => vi.advanceTimersByTime(200));
     expect(screen.getByRole('tooltip')).toBeInTheDocument();
   });
 
@@ -110,9 +116,9 @@ describe('Flyout', () => {
     );
 
     fireEvent.mouseEnter(screen.getByText('Trigger'));
-    act(() => vi.advanceTimersByTime(100));
+    void act(() => vi.advanceTimersByTime(100));
     fireEvent.mouseLeave(screen.getByText('Trigger'));
-    act(() => vi.advanceTimersByTime(200));
+    void act(() => vi.advanceTimersByTime(200));
     expect(screen.queryByText('Flyout content')).not.toBeInTheDocument();
   });
 

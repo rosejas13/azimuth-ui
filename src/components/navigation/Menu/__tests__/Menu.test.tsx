@@ -76,7 +76,7 @@ describe('Menu', () => {
     expect(onSelect).not.toHaveBeenCalled();
   });
 
-  it('does not select separator', async () => {
+  it('does not select separator', () => {
     const onSelect = vi.fn();
     render(
       <Menu
@@ -222,7 +222,11 @@ describe('Menu', () => {
   it('renders icon in menu item', async () => {
     const user = userEvent.setup();
     const items: MenuItem[] = [
-      { key: 'edit', label: 'Edit', icon: <span data-testid="edit-icon">✎</span> },
+      {
+        key: 'edit',
+        label: 'Edit',
+        icon: <span data-testid="edit-icon">✎</span>,
+      },
     ];
     render(<Menu items={items} />);
     await user.click(screen.getByLabelText('Open menu'));

@@ -5,7 +5,9 @@ import { IconButton } from '../IconButton';
 
 describe('IconButton', () => {
   it('renders with icon', () => {
-    render(<IconButton icon={<span data-testid="icon" />} aria-label="Close" />);
+    render(
+      <IconButton icon={<span data-testid="icon" />} aria-label="Close" />,
+    );
     expect(screen.getByTestId('icon')).toBeInTheDocument();
   });
 
@@ -20,9 +22,17 @@ describe('IconButton', () => {
     expect(btn.className).toContain('primary');
   });
 
-  it('forwards click handler', async () => {
+  it('forwards click handler', () => {
     let clicked = false;
-    render(<IconButton icon={<span />} aria-label="Test" onClick={() => { clicked = true; }} />);
+    render(
+      <IconButton
+        icon={<span />}
+        aria-label="Test"
+        onClick={() => {
+          clicked = true;
+        }}
+      />,
+    );
     screen.getByRole('button').click();
     expect(clicked).toBe(true);
   });
@@ -51,24 +61,34 @@ describe('IconButton', () => {
   });
 
   it('variant CSS class assertions', () => {
-    const { unmount: unmountPrimary } = render(<IconButton icon={<span />} aria-label="Primary" variant="primary" />);
+    const { unmount: unmountPrimary } = render(
+      <IconButton icon={<span />} aria-label="Primary" variant="primary" />,
+    );
     expect(screen.getByRole('button').className).toContain('primary');
     unmountPrimary();
 
-    const { unmount: unmountSecondary } = render(<IconButton icon={<span />} aria-label="Secondary" variant="secondary" />);
+    const { unmount: unmountSecondary } = render(
+      <IconButton icon={<span />} aria-label="Secondary" variant="secondary" />,
+    );
     expect(screen.getByRole('button').className).toContain('secondary');
     unmountSecondary();
 
-    render(<IconButton icon={<span />} aria-label="Tertiary" variant="tertiary" />);
+    render(
+      <IconButton icon={<span />} aria-label="Tertiary" variant="tertiary" />,
+    );
     expect(screen.getByRole('button').className).toContain('tertiary');
   });
 
   it('size CSS class assertions', () => {
-    const { unmount: unmountSm } = render(<IconButton icon={<span />} aria-label="Small" size="sm" />);
+    const { unmount: unmountSm } = render(
+      <IconButton icon={<span />} aria-label="Small" size="sm" />,
+    );
     expect(screen.getByRole('button').className).toContain('sm');
     unmountSm();
 
-    const { unmount: unmountMd } = render(<IconButton icon={<span />} aria-label="Medium" size="md" />);
+    const { unmount: unmountMd } = render(
+      <IconButton icon={<span />} aria-label="Medium" size="md" />,
+    );
     expect(screen.getByRole('button').className).toContain('md');
     unmountMd();
 

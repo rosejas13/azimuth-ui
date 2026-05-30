@@ -10,6 +10,7 @@ line 3`;
 function mockClipboard() {
   const writeText = vi.fn().mockResolvedValue(undefined);
   vi.stubGlobal('navigator', {
+    // eslint-disable-next-line @typescript-eslint/no-misused-spread -- mock object, not a real class instance
     ...globalThis.navigator,
     clipboard: { writeText },
   });
@@ -42,7 +43,9 @@ describe('CodeBlock', () => {
   });
 
   it('renders line numbers when showLineNumbers is true', () => {
-    const { container } = render(<CodeBlock code={multiline} showLineNumbers />);
+    const { container } = render(
+      <CodeBlock code={multiline} showLineNumbers />,
+    );
     expect(container.textContent).toContain('1');
     expect(container.textContent).toContain('2');
     expect(container.textContent).toContain('3');
@@ -56,7 +59,9 @@ describe('CodeBlock', () => {
 
   it('renders copy button when showCopyButton is true', () => {
     render(<CodeBlock code="text" showCopyButton />);
-    expect(screen.getByRole('button', { name: 'Copy code' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Copy code' }),
+    ).toBeInTheDocument();
   });
 
   it('does not render copy button by default', () => {
@@ -95,7 +100,9 @@ describe('CodeBlock', () => {
       vi.advanceTimersByTime(2000);
     });
 
-    expect(screen.getByRole('button', { name: 'Copy code' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Copy code' }),
+    ).toBeInTheDocument();
     vi.useRealTimers();
   });
 
@@ -116,7 +123,9 @@ describe('CodeBlock', () => {
   });
 
   it('renders empty line as non-breaking space in line numbers mode', () => {
-    const { container } = render(<CodeBlock code={'line 0\n\nline 2'} showLineNumbers />);
+    const { container } = render(
+      <CodeBlock code={'line 0\n\nline 2'} showLineNumbers />,
+    );
     expect(container.textContent).toContain('line 0');
     expect(container.textContent).toContain('line 2');
   });

@@ -24,9 +24,7 @@ describe('Alert', () => {
       'notification',
     ] as const;
     for (const variant of variants) {
-      const { unmount } = render(
-        <Alert variant={variant}>{variant}</Alert>,
-      );
+      const { unmount } = render(<Alert variant={variant}>{variant}</Alert>);
       expect(screen.getByText(variant)).toBeInTheDocument();
       unmount();
     }
@@ -70,7 +68,7 @@ describe('Alert', () => {
     const btn = screen.getByRole('button', { name: 'Dismiss' });
     expect(btn).toBeInTheDocument();
     await user.click(btn);
-    await new Promise(r => setTimeout(r, 250));
+    await new Promise((r) => setTimeout(r, 250));
     expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 
@@ -81,7 +79,7 @@ describe('Alert', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('fires autoDismiss after timeout', async () => {
+  it('fires autoDismiss after timeout', () => {
     vi.useFakeTimers();
     const onDismiss = vi.fn();
     render(
