@@ -221,7 +221,13 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   variant?: ButtonVariant;
   size?: 'sm' | 'md' | 'lg';
   icon?: React.ReactNode;
+  /** @default 'left' */
   iconPosition?: 'left' | 'right';
+  /** @default false */
+  fullWidth?: boolean;
+  /** @default 'default' */
+  shape?: 'default' | 'circle';
+  asChild?: boolean;
   children?: React.ReactNode;
 }
 
@@ -330,6 +336,9 @@ All themable values use **CSS custom properties** prefixed with `--azimuth-`. Ne
 ```ts
 export interface ThemeConfig {
   accentColor?: string;        // CSS color value (hex, oklch, etc.)
+  primaryColor?: string;       // Primary UI color (overrides accent for interactive elements)
+  darkAccentColor?: string;    // Dark mode accent
+  darkPrimaryColor?: string;   // Dark mode primary
   borderRadius?: 'none' | 'sm' | 'md' | 'lg' | 'full';
   flat?: boolean;              // true = no shadows, false = 3D depth
   spacing?: 'compact' | 'normal' | 'spacious';
@@ -440,19 +449,19 @@ describe('Button', () => {
 
 ## Success Criteria
 
-- [ ] `<ThemeProvider config={...}>` wraps app and controls all components
-- [ ] Changing `borderRadius` from `'full'` to `'none'` re-shapes all components
-- [ ] Changing `flat` toggles all shadows on/off
-- [ ] Changing `accentColor` re-themes all accent-colored elements
-- [ ] Every component individually importable (tree-shakeable)
-- [ ] `npm run typecheck` passes strict TypeScript
+- [x] `<ThemeProvider config={...}>` wraps app and controls all components
+- [x] Changing `borderRadius` from `'full'` to `'none'` re-shapes all components
+- [x] Changing `flat` toggles all shadows on/off
+- [x] Changing `accentColor` re-themes all accent-colored elements
+- [x] Every component individually importable (tree-shakeable)
+- [x] `npm run typecheck` passes strict TypeScript
 - [ ] `npm run test` passes with 90%+ coverage
-- [ ] `npm run build` produces ESM + CJS + CSS
+- [x] `npm run build` produces ESM + CJS + CSS
 - [ ] Portfolio imports and renders azimuth-ui correctly
-- [ ] All components pass axe-core a11y checks
-- [ ] Dark mode switches all components correctly
-- [ ] `prefers-reduced-motion` disables animations
-- [ ] Works in Next.js 15 App Router, Vite, generic React 19
+- [x] All components pass axe-core a11y checks
+- [x] Dark mode switches all components correctly
+- [x] `prefers-reduced-motion` disables animations
+- [x] Works in Next.js 15 App Router, Vite, generic React 19
 
 ---
 
