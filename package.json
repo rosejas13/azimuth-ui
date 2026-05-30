@@ -43,7 +43,6 @@
     "typecheck": "tsc --noEmit",
     "lint": "stylelint 'src/**/*.css' && eslint src/",
     "format": "prettier --write 'src/**/*.{ts,tsx,css}'",
-    "prepare": "husky",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:a11y": "playwright test",
@@ -94,8 +93,14 @@
     "url": "https://github.com/sponsors/rosejas13"
   },
   "lint-staged": {
-    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
-    "*.css": ["stylelint --fix", "prettier --write"]
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.css": [
+      "stylelint --fix",
+      "prettier --write"
+    ]
   },
   "keywords": [
     "react",
