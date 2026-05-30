@@ -17,8 +17,10 @@ export interface DropdownListProps extends Omit<ComponentPropsWithoutRef<'div'>,
     options: Array<{ value: string; label: string; disabled?: boolean; separator?: boolean }>;
     /** @default 'Select...' */
     placeholder?: string;
-    /** @default false */
-    searchable?: boolean;
+    search?: {
+      /** @default false */
+      enabled?: boolean;
+    };
   };
   selection?: {
     value?: string | string[];
@@ -39,7 +41,7 @@ const selectionDefault: DropdownListProps['selection'] = {};
 export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
   (
     {
-      data: { options, placeholder = 'Select...', searchable = false } = dataDefault,
+      data: { options, placeholder = 'Select...', search: { enabled: searchable = false } = {} } = dataDefault,
       selection: { value, onChange, multiple = false } = selectionDefault,
       disabled = false,
       error,

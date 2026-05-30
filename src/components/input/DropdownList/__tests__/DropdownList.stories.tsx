@@ -30,7 +30,7 @@ function WithLabelDemo() {
 
 function SearchableDemo() {
   const [value, setValue] = useState<string | string[]>('');
-  return <DropdownList data={{ options, searchable: true }} selection={{ value, onChange: setValue }} />;
+  return <DropdownList data={{ options, search: { enabled: true } }} selection={{ value, onChange: setValue }} />;
 }
 
 function ErrorDemo() {

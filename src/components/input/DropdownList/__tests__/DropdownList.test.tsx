@@ -62,18 +62,19 @@ describe('DropdownList', () => {
 
   it('filters options when searchable', async () => {
     const user = userEvent.setup();
-    render(<DropdownList data={{ options, searchable: true }} />);
+    render(<DropdownList data={{ options, search: { enabled: true } }} />);
     await user.click(document.querySelector('[aria-haspopup="listbox"]')!);
     const searchInput = screen.getByPlaceholderText('Search...');
-    await user.type(searchInput, 'Option A');
+    await user.type(searchInput, 'A');
     expect(screen.getByText('Option A')).toBeInTheDocument();
     expect(screen.queryByText('Option B')).not.toBeInTheDocument();
   });
 
-  it('shows empty message when no results', async () => {
+  it('shows no results message for unmatched search', async () => {
     const user = userEvent.setup();
-    render(<DropdownList data={{ options, searchable: true }} />);
-    await user.click(document.querySelector('[aria-haspopup="listbox"]')!);
+    render(<DropdownList data={{ options, search: { enabled: true } }} />);
+    const trigger = document.querySelector('[aria-haspopup="listbox"]')!;
+    await user.click(trigger);
     const searchInput = screen.getByPlaceholderText('Search...');
     await user.type(searchInput, 'zzz');
     expect(screen.getByText('No results found')).toBeInTheDocument();
