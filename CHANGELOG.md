@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.5.0 (2026-05-30)
+
+### Features
+- **Icons barrel**: `export * from './icons'` added to `src/index.ts`. Icons now importable from `'azimuth-ui'` directly, plus `./icons` subpath export in `package.json`
+- **Dolt server mode**: Switched beads from embedded to external Dolt SQL server for VSCode extension compatibility
+- **Playwright a11y tests**: 3 `*.a11y.spec.ts` files for Button, Accordion, Dialog (run with `npm run test:a11y`)
+- **Pre-commit hooks**: husky + lint-staged with eslint --fix and prettier --write on staged files
+
+### Quality
+- **1115 tests total**, 87 test files, all passing. Typecheck and lint clean (0 errors, 0 warnings)
+- **23 a11y lint errors fixed** across 15 components (keyboard handlers, focusable roles, redundant roles)
+- **Arrow key edge cases**: Calendar month/year boundary wrapping, ResizablePanel minSize clamping, Input Escape dismiss
+- **Strict TS rules re-enabled**: `no-floating-promises`, `require-await`, `no-misused-spread`, `no-unnecessary-type-assertion` (all warnings)
+- **MegaLinter wired into CI**: secret scanning (Gitleaks, TruffleHog) runs on every push
+- **React act() warnings eliminated**: All Flyout, Tooltip, Alert, Button tests now properly wrap state updates
+
+### Props Consolidation
+- **Carousel**: `autoPlay`/`interval`/`autoRotate` merged into `autoplay: { enabled, interval }`
+- **DropdownList**: `data.searchable` → `data.search: { enabled }`
+
 ## 0.4.2 (2026-05-28)
 
 ### Test Coverage
@@ -15,7 +35,7 @@
 - **Build**: Sourcemaps removed from published `dist/` (`rm -f dist/*.map`)
 
 ### Quality
-- **1110 tests total** (+72 from previous), 87 test files, all passing
+- **1115 tests total** (+77 from previous), 87 test files, all passing
 - Typecheck clean
 
 ## 0.4.1 (2026-05-27)

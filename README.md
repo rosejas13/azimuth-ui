@@ -157,7 +157,7 @@ import { ThemeProvider, COLOR_PRESETS } from 'azimuth-ui';
 git clone https://github.com/rosejas13/azimuth-ui.git
 cd azimuth-ui
 npm install
-npm run test          # 1038 tests across 87 files
+npm run test          # 1115 tests across 87 files
 npm run typecheck     # Strict TypeScript
 npm run demo          # Component showcase with live playground
 npm run lint          # ESLint (zero-error)

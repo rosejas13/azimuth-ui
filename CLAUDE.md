@@ -5,7 +5,7 @@
 ```bash
 npm run typecheck   # TypeScript strict check (tsc --noEmit)
 npm run lint        # ESLint on src/
-npm run test        # Vitest: 1109 tests across 87 files
+npm run test        # Vitest: 1115 tests across 87 files
 npm run build       # tsup: ESM + CJS + DTS + CSS
 npm run dev         # Storybook on port 6006
 npm run demo        # Vite playground on port 3173
@@ -25,7 +25,7 @@ npm run demo        # Vite playground on port 3173
 - All components use `forwardRef`, typed props interface, CSS Modules `styles.*`, `cn()` utility
 - `'use client'` directive on all component entry files
 - Tests use `@testing-library/react`, `userEvent`, `vitest` (vi.fn, vi.useFakeTimers)
-- Icons: `src/icons/` has 860 SVGs — exported from `src/icons/index.ts` but not yet re-exported from the main barrel (`src/index.ts`)
+- Icons: `src/icons/` has 860 TSX components — exported from `src/icons/index.ts` and re-exported from the main barrel (`src/index.ts`). Import via `import { IconName } from 'azimuth-ui'` or `from 'azimuth-ui/icons'`.
 - Issue tracking via `bd` (beads) - run `bd prime` for workflow context
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:7510c1e2 -->
