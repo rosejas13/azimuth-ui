@@ -5,8 +5,18 @@ import { Chat, type ChatMessage } from '../Chat';
 
 const mockMessages: ChatMessage[] = [
   { id: '1', text: 'Hello', sender: 'user' },
-  { id: '2', text: 'Hi there!', sender: 'other', timestamp: new Date('2024-01-01T10:00:00') },
-  { id: '3', text: 'How are you?', sender: 'user', timestamp: new Date('2024-01-01T10:01:00') },
+  {
+    id: '2',
+    text: 'Hi there!',
+    sender: 'other',
+    timestamp: new Date('2024-01-01T10:00:00'),
+  },
+  {
+    id: '3',
+    text: 'How are you?',
+    sender: 'user',
+    timestamp: new Date('2024-01-01T10:01:00'),
+  },
 ];
 
 describe('Chat', () => {
@@ -18,7 +28,9 @@ describe('Chat', () => {
 
   it('shows empty state when no messages', () => {
     render(<Chat messages={[]} onSend={vi.fn()} />);
-    expect(screen.getByText('No messages yet. Start the conversation!')).toBeInTheDocument();
+    expect(
+      screen.getByText('No messages yet. Start the conversation!'),
+    ).toBeInTheDocument();
   });
 
   it('calls onSend when send button clicked', async () => {
@@ -48,7 +60,7 @@ describe('Chat', () => {
     const input = screen.getByLabelText('Message input');
     await user.type(input, 'Hello');
     await user.click(screen.getByLabelText('Send message'));
-    expect(input.value).toBe('');
+    expect((input as HTMLInputElement).value).toBe('');
   });
 
   it('disables send button when input is empty', () => {
@@ -87,7 +99,9 @@ describe('Chat', () => {
   });
 
   it('renders custom placeholder', () => {
-    render(<Chat messages={[]} onSend={vi.fn()} placeholder="Ask something..." />);
+    render(
+      <Chat messages={[]} onSend={vi.fn()} placeholder="Ask something..." />,
+    );
     expect(screen.getByPlaceholderText('Ask something...')).toBeInTheDocument();
   });
 
@@ -97,7 +111,9 @@ describe('Chat', () => {
   });
 
   it('applies custom className', () => {
-    const { container } = render(<Chat messages={[]} onSend={vi.fn()} className="my-chat" />);
+    const { container } = render(
+      <Chat messages={[]} onSend={vi.fn()} className="my-chat" />,
+    );
     expect(container.firstChild).toHaveClass('my-chat');
   });
 });

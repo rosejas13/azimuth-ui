@@ -55,7 +55,9 @@ describe('Checkbox', () => {
 
   it('respects controlled checked prop', () => {
     const handleChange = vi.fn();
-    const { rerender } = render(<Checkbox checked={false} onChange={handleChange} />);
+    const { rerender } = render(
+      <Checkbox checked={false} onChange={handleChange} />,
+    );
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).not.toBeChecked();
     rerender(<Checkbox checked onChange={handleChange} />);
@@ -65,6 +67,6 @@ describe('Checkbox', () => {
   it('supports indeterminate state', () => {
     render(<Checkbox indeterminate />);
     const checkbox = screen.getByRole('checkbox');
-    expect(checkbox.indeterminate).toBe(true);
+    expect((checkbox as HTMLInputElement).indeterminate).toBe(true);
   });
 });
