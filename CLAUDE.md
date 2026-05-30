@@ -5,7 +5,7 @@
 ```bash
 npm run typecheck   # TypeScript strict check (tsc --noEmit)
 npm run lint        # ESLint on src/
-npm run test        # Vitest: 1038 tests across 87 files
+npm run test        # Vitest: 1109 tests across 87 files
 npm run build       # tsup: ESM + CJS + DTS + CSS
 npm run dev         # Storybook on port 6006
 npm run demo        # Vite playground on port 3173
