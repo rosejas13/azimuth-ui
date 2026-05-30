@@ -115,96 +115,100 @@ export const ImageViewer = forwardRef<HTMLDivElement, ImageViewerProps>(
 
     const content = (
       <div
-        ref={ref}
         className={cn(styles.overlay, className)}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Image viewer"
+        role="presentation"
         onClick={(e) => {
           if (e.target === e.currentTarget) onClose();
         }}
         {...props}
       >
-        <button
-          type="button"
-          className={styles.closeButton}
-          onClick={onClose}
-          aria-label="Close viewer"
+        <div
+          ref={ref}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image viewer"
         >
-          ✕
-        </button>
-
-        <span className={styles.counter}>
-          {index + 1} / {images.length}
-        </span>
-
-        {(images ?? []).length > 1 && (
           <button
             type="button"
-            className={cn(styles.navButton, styles.navPrev)}
-            onClick={goPrev}
-            aria-label="Previous image"
+            className={styles.closeButton}
+            onClick={onClose}
+            aria-label="Close viewer"
           >
-            ‹
+            ✕
           </button>
-        )}
 
-        <div className={styles.container}>
-          <div className={styles.imageWrapper}>
-            {loadState === 'loading' && (
-              <div className={styles.skeleton}>
-                <div className={styles.spinner} />
-              </div>
-            )}
-            {loadState === 'error' && (
-              <div className={styles.errorState}>
-                <span className={styles.errorIcon}>⚠</span>
-                <span>Failed to load image</span>
-              </div>
-            )}
-            <img
-              src={current.src}
-              alt={current.alt ?? ''}
-              className={cn(
-                styles.image,
-                loadState === 'loading' && styles.imageHidden,
-                loadState === 'error' && styles.imageHidden,
+          <span className={styles.counter}>
+            {index + 1} / {images.length}
+          </span>
+
+          {(images ?? []).length > 1 && (
+            <button
+              type="button"
+              className={cn(styles.navButton, styles.navPrev)}
+              onClick={goPrev}
+              aria-label="Previous image"
+            >
+              ‹
+            </button>
+          )}
+
+          <div className={styles.container}>
+            <div className={styles.imageWrapper}>
+              {loadState === 'loading' && (
+                <div className={styles.skeleton}>
+                  <div className={styles.spinner} />
+                </div>
               )}
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-            />
-            {showCaption && current.caption && (
-              <div className={styles.caption}>{current.caption}</div>
-            )}
+              {loadState === 'error' && (
+                <div className={styles.errorState}>
+                  <span className={styles.errorIcon}>⚠</span>
+                  <span>Failed to load image</span>
+                </div>
+              )}
+              <img
+                src={current.src}
+                alt={current.alt ?? ''}
+                className={cn(
+                  styles.image,
+                  loadState === 'loading' && styles.imageHidden,
+                  loadState === 'error' && styles.imageHidden,
+                )}
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+              />
+              {showCaption && current.caption && (
+                <div className={styles.caption}>{current.caption}</div>
+              )}
+            </div>
           </div>
+
+          {(images ?? []).length > 1 && (
+            <button
+              type="button"
+              className={cn(styles.navButton, styles.navNext)}
+              onClick={goNext}
+              aria-label="Next image"
+            >
+              ›
+            </button>
+          )}
+
+          {showThumbnails && (images ?? []).length > 1 && (
+            <div className={styles.thumbnails}>
+              {images.map((img, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={cn(styles.thumbnail, i === index && styles.thumbnailActive)}
+                  onClick={() => goTo(i)}
+                  aria-label={`Go to image ${i + 1}`}
+                >
+                  <img src={img.src} alt={img.alt ?? ''} className={styles.thumbnailImage} />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-
-        {(images ?? []).length > 1 && (
-          <button
-            type="button"
-            className={cn(styles.navButton, styles.navNext)}
-            onClick={goNext}
-            aria-label="Next image"
-          >
-            ›
-          </button>
-        )}
-
-        {showThumbnails && (images ?? []).length > 1 && (
-          <div className={styles.thumbnails}>
-            {images.map((img, i) => (
-              <button
-                key={i}
-                type="button"
-                className={cn(styles.thumbnail, i === index && styles.thumbnailActive)}
-                onClick={() => goTo(i)}
-                aria-label={`Go to image ${i + 1}`}
-              >
-                <img src={img.src} alt={img.alt ?? ''} className={styles.thumbnailImage} />
-              </button>
-            ))}
-          </div>
-        )}
       </div>
     );
 

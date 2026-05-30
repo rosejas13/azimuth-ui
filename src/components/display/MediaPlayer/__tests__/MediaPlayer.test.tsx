@@ -28,7 +28,7 @@ describe('MediaPlayer', () => {
   it('shows title as aria-label when provided', () => {
     render(<MediaPlayer source={{ src: 'video.mp4' }} title="My Video" />);
 
-    expect(screen.getByRole('application')).toHaveAttribute(
+    expect(screen.getByRole('group')).toHaveAttribute(
       'aria-label',
       'My Video',
     );
@@ -37,7 +37,7 @@ describe('MediaPlayer', () => {
   it('shows default aria-label when no title', () => {
     render(<MediaPlayer source={{ src: 'video.mp4' }} />);
 
-    expect(screen.getByRole('application')).toHaveAttribute(
+    expect(screen.getByRole('group')).toHaveAttribute(
       'aria-label',
       'Media player',
     );
@@ -179,17 +179,10 @@ describe('MediaPlayer', () => {
     expect(container.firstChild).toHaveClass('custom-player');
   });
 
-  it('has role application', () => {
+  it('has role group', () => {
     render(<MediaPlayer source={{ src: 'video.mp4' }} />);
 
-    expect(screen.getByRole('application')).toBeInTheDocument();
-  });
-
-  it('is focusable via tabIndex', () => {
-    render(<MediaPlayer source={{ src: 'video.mp4' }} />);
-
-    const el = screen.getByRole('application');
-    expect(el).toHaveAttribute('tabindex', '0');
+    expect(screen.getByRole('group')).toBeInTheDocument();
   });
 
   it('shows playback rate options with valid values', () => {

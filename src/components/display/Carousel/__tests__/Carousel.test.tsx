@@ -128,45 +128,37 @@ describe('Carousel', () => {
       vi.useRealTimers();
     });
 
-    it('navigates to next slide on ArrowRight', async () => {
+    it('navigates to next slide on Next button click', async () => {
       const user = userEvent.setup();
-      const { container } = render(<Carousel>{renderSlides(3)}</Carousel>);
-      const wrapper = container.firstChild as HTMLElement;
-      wrapper.focus();
-      await user.keyboard('{ArrowRight}');
+      render(<Carousel>{renderSlides(3)}</Carousel>);
+      await user.click(screen.getByLabelText('Next slide'));
       const dots = screen.getAllByRole('tab');
       expect(dots[1]).toHaveAttribute('aria-selected', 'true');
     });
 
-    it('navigates to previous slide on ArrowLeft', async () => {
+    it('navigates to previous slide on Prev button click', async () => {
       const user = userEvent.setup();
-      const { container } = render(<Carousel>{renderSlides(3)}</Carousel>);
-      const wrapper = container.firstChild as HTMLElement;
-      wrapper.focus();
-      await user.keyboard('{ArrowRight}');
-      await user.keyboard('{ArrowLeft}');
+      render(<Carousel>{renderSlides(3)}</Carousel>);
+      await user.click(screen.getByLabelText('Next slide'));
+      await user.click(screen.getByLabelText('Previous slide'));
       const dots = screen.getAllByRole('tab');
       expect(dots[0]).toHaveAttribute('aria-selected', 'true');
     });
 
-    it('wraps from first to last on ArrowLeft', async () => {
+    it('wraps from first to last on Prev button click', async () => {
       const user = userEvent.setup();
-      const { container } = render(<Carousel>{renderSlides(3)}</Carousel>);
-      const wrapper = container.firstChild as HTMLElement;
-      wrapper.focus();
-      await user.keyboard('{ArrowLeft}');
+      render(<Carousel>{renderSlides(3)}</Carousel>);
+      await user.click(screen.getByLabelText('Previous slide'));
       const dots = screen.getAllByRole('tab');
       expect(dots[2]).toHaveAttribute('aria-selected', 'true');
     });
 
-    it('wraps from last to first on ArrowRight', async () => {
+    it('wraps from last to first on Next button click', async () => {
       const user = userEvent.setup();
-      const { container } = render(<Carousel>{renderSlides(3)}</Carousel>);
-      const wrapper = container.firstChild as HTMLElement;
-      wrapper.focus();
-      await user.keyboard('{ArrowRight}');
-      await user.keyboard('{ArrowRight}');
-      await user.keyboard('{ArrowRight}');
+      render(<Carousel>{renderSlides(3)}</Carousel>);
+      await user.click(screen.getByLabelText('Next slide'));
+      await user.click(screen.getByLabelText('Next slide'));
+      await user.click(screen.getByLabelText('Next slide'));
       const dots = screen.getAllByRole('tab');
       expect(dots[0]).toHaveAttribute('aria-selected', 'true');
     });

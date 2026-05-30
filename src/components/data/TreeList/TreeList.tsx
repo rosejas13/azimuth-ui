@@ -249,6 +249,12 @@ export const TreeList = forwardRef<HTMLDivElement, TreeListProps>(
               paddingLeft: `calc(var(--azimuth-space-sm) + ${level} * var(--azimuth-space-lg))`,
             }}
             onClick={() => select(node)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                select(node);
+              }
+            }}
             data-node-id={node.id}
           >
             {hasChildren ? (

@@ -15,7 +15,7 @@ npm run demo        # Vite playground on port 3173
 
 - **81 components** grouped into 6 sub-categories under `src/components/`: `input/` (17), `display/` (35), `data/` (12), `layout/` (4), `navigation/` (5), `overlay/` (8)
 - **Zero runtime CSS** - all CSS Modules compiled to vanilla `.css` by tsup
-- **Single barrel export** - `src/index.ts` exports everything; consumers import `{ Button } from '@azimuth/ui'`
+- **Single barrel export** - `src/index.ts` exports everything; consumers import `{ Button } from 'azimuth-ui'`
 - **ThemeProvider** writes CSS custom properties on DOM; all components consume `--azimuth-*` tokens
 - **OKLCH color space** with 10 color presets; WCAG 2.2 AA baseline
 
@@ -28,8 +28,8 @@ npm run demo        # Vite playground on port 3173
 - Icons: `src/icons/` has 860 SVGs — exported from `src/icons/index.ts` but not yet re-exported from the main barrel (`src/index.ts`)
 - Issue tracking via `bd` (beads) - run `bd prime` for workflow context
 
-
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:7510c1e2 -->
+
 ## Beads Issue Tracker
 
 This project uses **bd (beads)** for issue tracking. Run `bd prime` to see full workflow context and commands.
@@ -71,6 +71,7 @@ bd close <id>         # Complete work
 7. **Hand off** - Provide context for next session
 
 **CRITICAL RULES:**
+
 - Work is NOT complete until `git push` succeeds
 - NEVER stop before pushing - that leaves work stranded locally
 - NEVER say "ready to push when you are" - YOU must push

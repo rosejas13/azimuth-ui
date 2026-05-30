@@ -163,16 +163,6 @@ export const MediaPlayer = forwardRef<HTMLDivElement, MediaPlayerProps>(
       [],
     );
 
-    const handleKeyDown = useCallback(
-      (e: React.KeyboardEvent) => {
-        if (e.key === ' ' || e.key === 'Space') {
-          e.preventDefault();
-          togglePlay();
-        }
-      },
-      [togglePlay],
-    );
-
     const MediaTag = type === 'video' ? 'video' : 'audio';
 
     return (
@@ -183,9 +173,7 @@ export const MediaPlayer = forwardRef<HTMLDivElement, MediaPlayerProps>(
         onMouseMove={showControls}
         onMouseEnter={showControls}
         onMouseLeave={() => playing && setControlsVisible(false)}
-        onKeyDown={handleKeyDown}
-        tabIndex={0}
-        role="application"
+        role="group"
         aria-label={title || 'Media player'}
         {...props}
       >
@@ -234,6 +222,12 @@ export const MediaPlayer = forwardRef<HTMLDivElement, MediaPlayerProps>(
                 type="button"
                 className={styles.controlButton}
                 onClick={togglePlay}
+                onKeyDown={(e) => {
+                  if (e.key === ' ' || e.key === 'Space') {
+                    e.preventDefault();
+                    togglePlay();
+                  }
+                }}
                 aria-label={playing ? 'Pause' : 'Play'}
               >
                 {playing ? '\u23F8' : '\u25B6'}

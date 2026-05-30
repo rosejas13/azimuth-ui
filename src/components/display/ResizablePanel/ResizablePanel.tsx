@@ -189,13 +189,14 @@ export const ResizablePanel = forwardRef<HTMLDivElement, ResizablePanelProps>(
       );
       if (i < childrenArray.length - 1) {
         panels.push(
-          <div
+          <div role="slider"
             key={`divider-${i}`}
-            role="separator"
             tabIndex={0}
             aria-label="Resize panel"
             aria-orientation={direction}
             aria-valuenow={sizes ? Math.round(sizes[i]) : Math.round(100 / childCount)}
+            aria-valuemin={0}
+            aria-valuemax={100}
             className={cn(
               styles.divider,
               activeDivider === i && styles.dividerActive,

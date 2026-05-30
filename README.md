@@ -1,26 +1,34 @@
 # Azimuth UI
 
-[![version](https://img.shields.io/npm/v/@azimuth/ui?style=flat-square)](https://www.npmjs.com/package/@azimuth/ui)
+[![version](https://img.shields.io/npm/v/azimuth-ui?style=flat-square)](https://www.npmjs.com/package/azimuth-ui)
 [![license](https://img.shields.io/github/license/rosejas13/azimuth-ui?style=flat-square)](LICENSE)
 
 A configurable, accessible React component library. Theme-driven via a single `<ThemeProvider>` with CSS custom properties. Configure colors, border radius, shadows, spacing density, animations, fonts, and dark mode — every component responds instantly.
 
 ```bash
-npm install @azimuth/ui react react-dom
+npm install azimuth-ui react react-dom
 ```
 
 ```tsx
-import { ThemeProvider, Button, Card, Text, Input, Modal, Chat } from '@azimuth/ui';
-import '@azimuth/ui/styles.css';
+import {
+  ThemeProvider,
+  Button,
+  Card,
+  Text,
+  Input,
+  Modal,
+  Chat,
+} from 'azimuth-ui';
+import 'azimuth-ui/styles.css';
 
 function App() {
   return (
-    <ThemeProvider config={{ accentColor: 'oklch(60% 0.15 30)', borderRadius: 'md' }}>
+    <ThemeProvider
+      config={{ accentColor: 'oklch(60% 0.15 30)', borderRadius: 'md' }}
+    >
       <Button variant="primary">Get Started</Button>
       <Input label="Email" type="email" />
-      <Card header={<Text weight="semibold">Title</Text>}>
-        Content here
-      </Card>
+      <Card header={<Text weight="semibold">Title</Text>}>Content here</Card>
     </ThemeProvider>
   );
 }
@@ -78,8 +86,8 @@ All 81 components live under `src/components/` grouped by category.
 Azimuth UI ships 860 tree-shakeable SVG icons (273 regular + 587 brands) as typed React components. Each icon is a `forwardRef` SVG element that inherits `currentColor` and accepts all standard SVG attributes.
 
 ```tsx
-import { Icon } from '@azimuth/ui';
-import { SearchIcon, BellIcon, GithubIcon } from '@azimuth/ui/icons';
+import { Icon } from 'azimuth-ui';
+import { SearchIcon, BellIcon, GithubIcon } from 'azimuth-ui/icons';
 
 // With Icon wrapper
 <Icon size="lg"><SearchIcon width={20} height={20} /></Icon>
@@ -96,29 +104,29 @@ Icons are auto-generated from Font Awesome Free SVGs via `scripts/generate-icons
 ## Quick Start
 
 ```bash
-npm install @azimuth/ui react react-dom
+npm install azimuth-ui react react-dom
 ```
 
 ```tsx
 // Wrap your app
-import { ThemeProvider } from '@azimuth/ui';
-import '@azimuth/ui/styles.css';
+import { ThemeProvider } from 'azimuth-ui';
+import 'azimuth-ui/styles.css';
 
 <ThemeProvider config={{ borderRadius: 'md', motion: 'snappy' }}>
   <App />
-</ThemeProvider>
+</ThemeProvider>;
 ```
 
 ## Theme Config
 
 ```ts
 interface ThemeConfig {
-  accentColor?: string;         // 'oklch(60% 0.15 30)', '#e8734a', etc.
-  primaryColor?: string;        // Brand color
-  darkPrimaryColor?: string;    // Override for dark mode
-  darkAccentColor?: string;     // Override for dark mode
+  accentColor?: string; // 'oklch(60% 0.15 30)', '#e8734a', etc.
+  primaryColor?: string; // Brand color
+  darkPrimaryColor?: string; // Override for dark mode
+  darkAccentColor?: string; // Override for dark mode
   borderRadius?: 'none' | 'sm' | 'md' | 'lg' | 'full';
-  flat?: boolean;               // true = no shadows
+  flat?: boolean; // true = no shadows
   elevation?: 'flat' | 'raised' | 'floating';
   spacing?: 'compact' | 'normal' | 'spacious';
   animations?: boolean;
@@ -136,11 +144,11 @@ interface ThemeConfig {
 `ocean` `midnight` `forest` `sunset` `plum` `slate` `rose` `cyber` `amber` `mint`
 
 ```tsx
-import { ThemeProvider, COLOR_PRESETS } from '@azimuth/ui';
+import { ThemeProvider, COLOR_PRESETS } from 'azimuth-ui';
 
 <ThemeProvider config={COLOR_PRESETS.ocean.config}>
   <App />
-</ThemeProvider>
+</ThemeProvider>;
 ```
 
 ## Development

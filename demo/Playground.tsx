@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import {
-  Button, Text, Stack, Card,
-} from '../src';
+import { Button, Text, Stack, Card } from '../src';
 import { componentMap } from './componentMap';
 import type { ComponentDoc } from './component-data';
 
@@ -30,12 +28,22 @@ function generateDefaultCode(componentName: string): string {
     Stack: `return React.createElement(Stack, { spacing: 'md' }, React.createElement(Badge, { variant: 'info' }, 'One'), React.createElement(Badge, { variant: 'success' }, 'Two'))`,
     Grid: `return React.createElement(Grid, { cols: 2, gap: 'sm' }, React.createElement(Card, null, React.createElement(Text, null, 'A')), React.createElement(Card, null, React.createElement(Text, null, 'B')))`,
   };
-  return templates[componentName] || `return React.createElement(${componentName}, {}, '${componentName} component')`;
+  return (
+    templates[componentName] ||
+    `return React.createElement(${componentName}, {}, '${componentName} component')`
+  );
 }
 
-function evaluateCode(codeStr: string, componentName: string): { result: React.ReactNode; error: string | null } {
+function evaluateCode(
+  codeStr: string,
+  componentName: string,
+): { result: React.ReactNode; error: string | null } {
   const Comp = componentMap[componentName];
-  if (!Comp) return { result: null, error: `Component "${componentName}" is not available in the sandbox.` };
+  if (!Comp)
+    return {
+      result: null,
+      error: `Component "${componentName}" is not available in the sandbox.`,
+    };
   try {
     const createElement = (...args: any[]) => args;
     const fn = new Function('React', componentName, codeStr);
@@ -76,45 +84,64 @@ export function Playground({ doc }: { doc: ComponentDoc }) {
     setError(err);
   };
 
-  const importCode = `import { ${doc.name} } from '@azimuth/ui';`;
+  const importCode = `import { ${doc.name} } from 'azimuth-ui';`;
 
   return (
     <Stack spacing="lg">
       <Card>
         <Stack spacing="md">
-          <Text element={{ size: "sm" }} weight="semibold">Import</Text>
-          <div style={{
-            padding: 'var(--azimuth-space-sm) var(--azimuth-space-md)',
-            background: 'var(--azimuth-color-bg)',
-            borderRadius: 'var(--azimuth-radius-sm)',
-            fontFamily: 'ui-monospace, monospace',
-            fontSize: 'var(--azimuth-fs-sm)',
-            color: 'var(--azimuth-color-text)',
-            lineHeight: '1.6',
-          }}>
+          <Text element={{ size: 'sm' }} weight="semibold">
+            Import
+          </Text>
+          <div
+            style={{
+              padding: 'var(--azimuth-space-sm) var(--azimuth-space-md)',
+              background: 'var(--azimuth-color-bg)',
+              borderRadius: 'var(--azimuth-radius-sm)',
+              fontFamily: 'ui-monospace, monospace',
+              fontSize: 'var(--azimuth-fs-sm)',
+              color: 'var(--azimuth-color-text)',
+              lineHeight: '1.6',
+            }}
+          >
             {importCode}
           </div>
-          <Text element={{ size: "xs" }} color="muted">You can add other components to the import line above to use them together.</Text>
+          <Text element={{ size: 'xs' }} color="muted">
+            You can add other components to the import line above to use them
+            together.
+          </Text>
         </Stack>
       </Card>
 
       <Card>
         <Stack spacing="md">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text element={{ size: "sm" }} weight="semibold">Code Editor</Text>
-            <Button size="sm" onClick={handleRun}>Run</Button>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Text element={{ size: 'sm' }} weight="semibold">
+              Code Editor
+            </Text>
+            <Button size="sm" onClick={handleRun}>
+              Run
+            </Button>
           </div>
           <textarea
             value={code}
-            onChange={e => handleChange(e.target.value)}
+            onChange={(e) => handleChange(e.target.value)}
             style={{
-              width: '100%', minHeight: '200px',
+              width: '100%',
+              minHeight: '200px',
               padding: 'var(--azimuth-space-md)',
               border: '1px solid var(--azimuth-color-border)',
               borderRadius: 'var(--azimuth-radius-md)',
               background: 'var(--azimuth-color-bg)',
               color: 'var(--azimuth-color-text)',
-              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+              fontFamily:
+                'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
               fontSize: 'var(--azimuth-fs-sm)',
               lineHeight: '1.6',
               resize: 'vertical',
@@ -127,21 +154,36 @@ export function Playground({ doc }: { doc: ComponentDoc }) {
 
       {error && (
         <Card style={{ borderColor: 'var(--azimuth-color-error-text)' }}>
-          <Text element={{ size: "sm" }} style={{ color: 'var(--azimuth-color-error-text)' }}>{error}</Text>
+          <Text
+            element={{ size: 'sm' }}
+            style={{ color: 'var(--azimuth-color-error-text)' }}
+          >
+            {error}
+          </Text>
         </Card>
       )}
 
       <Card>
         <Stack spacing="md">
-          <Text element={{ size: "sm" }} weight="semibold">Rendered Output</Text>
-          <div style={{
-            padding: 'var(--azimuth-space-lg)',
-            border: '1px dashed var(--azimuth-color-border)',
-            borderRadius: 'var(--azimuth-radius-md)',
-            minHeight: '80px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            {output || <Text element={{ size: "sm" }} color="muted">Run the code to see the component</Text>}
+          <Text element={{ size: 'sm' }} weight="semibold">
+            Rendered Output
+          </Text>
+          <div
+            style={{
+              padding: 'var(--azimuth-space-lg)',
+              border: '1px dashed var(--azimuth-color-border)',
+              borderRadius: 'var(--azimuth-radius-md)',
+              minHeight: '80px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {output || (
+              <Text element={{ size: 'sm' }} color="muted">
+                Run the code to see the component
+              </Text>
+            )}
           </div>
         </Stack>
       </Card>

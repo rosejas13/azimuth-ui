@@ -187,7 +187,7 @@ describe('ResizablePanel', () => {
     const root = container.firstChild as HTMLElement;
     mockGetBoundingClientRect(root);
 
-    const separator = screen.getByRole('separator');
+    const separator = screen.getByRole('slider');
     separator.focus();
 
     expect(separator).toHaveAttribute('aria-valuenow', '50');
@@ -208,7 +208,7 @@ describe('ResizablePanel', () => {
     const root = container.firstChild as HTMLElement;
     mockGetBoundingClientRect(root);
 
-    const separator = screen.getByRole('separator');
+    const separator = screen.getByRole('slider');
     separator.focus();
 
     expect(separator).toHaveAttribute('aria-valuenow', '50');
@@ -229,7 +229,7 @@ describe('ResizablePanel', () => {
     const root = container.firstChild as HTMLElement;
     mockGetBoundingClientRect(root);
 
-    const separator = screen.getByRole('separator');
+    const separator = screen.getByRole('slider');
     separator.focus();
 
     expect(separator).toHaveAttribute('aria-valuenow', '50');
@@ -250,7 +250,7 @@ describe('ResizablePanel', () => {
     const root = container.firstChild as HTMLElement;
     mockGetBoundingClientRect(root);
 
-    const separator = screen.getByRole('separator');
+    const separator = screen.getByRole('slider');
     separator.focus();
 
     expect(separator).toHaveAttribute('aria-valuenow', '50');

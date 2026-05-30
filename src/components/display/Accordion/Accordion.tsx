@@ -139,7 +139,6 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
                   type="button"
                   id={headerId}
                   className={styles.trigger}
-                  role="button"
                   aria-expanded={isOpen}
                   aria-controls={panelId}
                   disabled={item.disabled}

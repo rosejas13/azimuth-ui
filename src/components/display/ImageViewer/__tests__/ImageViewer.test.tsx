@@ -202,7 +202,8 @@ describe('ImageViewer', () => {
 
     render(<ImageViewer images={singleImage} open onClose={onClose} />);
 
-    await user.click(screen.getByRole('dialog'));
+    const overlay = screen.getByRole('dialog').parentElement!;
+    await user.click(overlay);
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });

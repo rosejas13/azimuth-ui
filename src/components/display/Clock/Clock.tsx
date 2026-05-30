@@ -208,7 +208,6 @@ export const Clock = forwardRef<HTMLDivElement, ClockProps>(
           className={cn(styles.root, styles[size], className)}
           role="timer"
           aria-live="polite"
-          tabIndex={0}
           aria-label={`Stopwatch: ${display}`}
           {...props}
         >
