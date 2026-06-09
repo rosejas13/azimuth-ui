@@ -39,7 +39,12 @@
   font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-base);
   color: var(--azimuth-color-text);
-  outline: none;
+}
+
+.search:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
+  border-radius: var(--azimuth-radius-sm);
 }
 
 .search::placeholder {
@@ -82,6 +87,11 @@
 .item:hover,
 .itemActive {
   background: var(--azimuth-color-primary-subtle);
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
 }
 
 .itemIcon {

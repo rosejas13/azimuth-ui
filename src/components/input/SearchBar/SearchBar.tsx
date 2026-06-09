@@ -12,8 +12,10 @@ import { cn } from '@/utils/cn';
 import styles from './SearchBar.module.css';
 
 /** Props for the SearchBar component. */
-export interface SearchBarProps
-  extends Omit<ComponentPropsWithoutRef<'input'>, 'onSubmit'> {
+export interface SearchBarProps extends Omit<
+  ComponentPropsWithoutRef<'input'>,
+  'onSubmit'
+> {
   /** Callback fired on search (debounced). Receives the current query string. */
   onSearch?: (query: string) => void;
   /** Array of suggestion strings shown below the input. */
@@ -52,19 +54,19 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
     );
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
-    const [suggestionsStyle, setSuggestionsStyle] = useState<React.CSSProperties>({});
+    const [suggestionsStyle, setSuggestionsStyle] =
+      useState<React.CSSProperties>({});
     const wrapperRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const currentValue =
-      controlledValue !== undefined
-        ? String(controlledValue)
-        : localValue;
+      controlledValue !== undefined ? String(controlledValue) : localValue;
 
-    const filteredSuggestions = suggestions?.filter((s) =>
-      s.toLowerCase().includes(currentValue.toLowerCase()),
-    ) ?? [];
+    const filteredSuggestions =
+      suggestions?.filter((s) =>
+        s.toLowerCase().includes(currentValue.toLowerCase()),
+      ) ?? [];
 
     useEffect(() => {
       if (controlledValue !== undefined) {
@@ -86,11 +88,11 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
 
     const setInputRef = useCallback(
       (node: HTMLInputElement | null) => {
-        (inputRef).current = node;
+        inputRef.current = node;
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref).current = node;
+          ref.current = node;
         }
       },
       [ref],
@@ -287,21 +289,31 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
         </div>
 
         {showSuggestions && filteredSuggestions.length > 0 && (
-          <div className={styles.suggestions} role="listbox" style={suggestionsStyle}>
+          <div
+            className={styles.suggestions}
+            role="listbox"
+            style={suggestionsStyle}
+          >
             {filteredSuggestions.map((suggestion, i) => (
-              <button
+              <div
                 key={suggestion}
-                type="button"
                 className={cn(
                   styles.suggestion,
                   i === highlightedIndex && styles.suggestionHighlighted,
                 )}
                 onClick={() => selectSuggestion(suggestion)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    selectSuggestion(suggestion);
+                  }
+                }}
                 role="option"
                 aria-selected={i === highlightedIndex}
+                tabIndex={-1}
               >
                 {suggestion}
-              </button>
+              </div>
             ))}
           </div>
         )}

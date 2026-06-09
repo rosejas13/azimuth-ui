@@ -111,6 +111,11 @@
   background: var(--azimuth-color-surface-hover);
 }
 
+.suggestion:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
+}
+
 .suggestionHighlighted {
   background: var(--azimuth-color-primary-subtle);
 }

@@ -19,4 +19,24 @@ describe('Container', () => {
     const { container } = render(<Container>Content</Container>);
     expect(container.firstChild).toBeInstanceOf(HTMLDivElement);
   });
+
+  it('defaults to lg size', () => {
+    const { container } = render(<Container>Content</Container>);
+    expect(container.firstChild).toHaveClass('lg');
+  });
+
+  it('applies sm size class', () => {
+    const { container } = render(<Container size="sm">Content</Container>);
+    expect(container.firstChild).toHaveClass('sm');
+  });
+
+  it('applies xl size class', () => {
+    const { container } = render(<Container size="xl">Content</Container>);
+    expect(container.firstChild).toHaveClass('xl');
+  });
+
+  it('applies full size class', () => {
+    const { container } = render(<Container size="full">Content</Container>);
+    expect(container.firstChild).toHaveClass('full');
+  });
 });

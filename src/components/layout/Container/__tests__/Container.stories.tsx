@@ -1,6 +1,23 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Container } from '../Container';
 
+function SampleContent() {
+  return (
+    <div
+      style={{
+        background: 'var(--azimuth-color-primary-subtle)',
+        padding: '2rem',
+        borderRadius: 'var(--azimuth-radius-md)',
+        textAlign: 'center',
+        color: 'var(--azimuth-color-primary)',
+        fontWeight: 600,
+      }}
+    >
+      Container content
+    </div>
+  );
+}
+
 const meta: Meta<typeof Container> = {
   title: 'Components/Container',
   component: Container,
@@ -12,51 +29,21 @@ type Story = StoryObj<typeof Container>;
 
 export const Default: Story = {
   args: {
-    children: (
-      <div
-        style={{
-          background: 'var(--color-surface-2)',
-          padding: '2rem',
-          borderRadius: 'var(--radius-md)',
-          textAlign: 'center',
-        }}
-      >
-        Container content
-      </div>
-    ),
+    children: <SampleContent />,
+    size: 'lg',
   },
 };
 
-export const WithMultipleChildren: Story = {
-  render: () => (
-    <Container>
-      <div
-        style={{
-          background: 'var(--color-surface-2)',
-          padding: '1rem',
-          borderRadius: 'var(--radius-md) 0 0 0',
-        }}
-      >
-        Section A
-      </div>
-      <div
-        style={{
-          background: 'var(--color-surface-1)',
-          padding: '1rem',
-          borderRadius: '0 var(--radius-md) 0 0',
-        }}
-      >
-        Section B
-      </div>
-      <div
-        style={{
-          background: 'var(--color-surface-3)',
-          padding: '1rem',
-          borderRadius: '0 0 var(--radius-md) var(--radius-md)',
-        }}
-      >
-        Section C
-      </div>
-    </Container>
-  ),
+export const Narrow: Story = {
+  args: {
+    children: <SampleContent />,
+    size: 'sm',
+  },
+};
+
+export const Wide: Story = {
+  args: {
+    children: <SampleContent />,
+    size: 'xl',
+  },
 };

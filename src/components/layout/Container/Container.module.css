@@ -1,6 +1,21 @@
 .container {
   width: 100%;
-  max-width: 72rem;
   margin: 0 auto;
   padding: 0 var(--azimuth-space-xl);
+}
+
+.sm {
+  max-width: 40rem;
+}
+.md {
+  max-width: 48rem;
+}
+.lg {
+  max-width: 64rem;
+}
+.xl {
+  max-width: 80rem;
+}
+.full {
+  max-width: 100%;
 }

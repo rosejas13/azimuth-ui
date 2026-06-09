@@ -82,6 +82,11 @@
   background: var(--azimuth-color-surface-hover);
 }
 
+.option:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
+}
+
 .optionHighlighted {
   background: var(--azimuth-color-accent-subtle);
   color: var(--azimuth-color-accent);

@@ -146,6 +146,12 @@
   color: var(--azimuth-color-text);
 }
 
+.stepperBtn:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
 .stepperBtn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
@@ -190,6 +196,11 @@
 .suggestionHighlighted {
   background: var(--azimuth-color-primary-subtle);
   color: var(--azimuth-color-primary);
+}
+
+.suggestion:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
 }
 
 .suggestionInfo {
