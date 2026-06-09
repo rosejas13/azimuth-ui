@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.6.0 (2026-06-09)
+## 0.7.0 (2026-06-09)
 
 ### Features
 - **23 new components + 1 new hook** across 6 categories
@@ -42,6 +42,9 @@
 ### Quality
 - **All new components**: 100% with tests (vitest), Storybook stories (CSF 3), JSDoc, WCAG 2.2 AA keyboard/ARIA, CSS Modules, forwardRef + 'use client', design tokens
 - **zod** added as peer dependency for useForm validation
+
+### Documentation
+- **CONTRIBUTING.md**: Added collaborator guide covering setup, conventions, file structure, accessibility standards, design tokens, and architecture overview
 
 ## 0.5.2 (2026-06-09)
 
