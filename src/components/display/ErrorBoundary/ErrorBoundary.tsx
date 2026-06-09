@@ -50,18 +50,22 @@ export class ErrorBoundary extends Component<
 
       if (typeof fallback === 'function') {
         return (
-          <div className={cn(styles.root, className)}>
+          <div role="alert" className={cn(styles.root, className)}>
             {fallback(error, this.handleReset)}
           </div>
         );
       }
 
       if (fallback != null) {
-        return <div className={cn(styles.root, className)}>{fallback}</div>;
+        return (
+          <div role="alert" className={cn(styles.root, className)}>
+            {fallback}
+          </div>
+        );
       }
 
       return (
-        <div className={cn(styles.root, className)}>
+        <div role="alert" className={cn(styles.root, className)}>
           <ErrorPage
             status={500}
             title="Something went wrong"

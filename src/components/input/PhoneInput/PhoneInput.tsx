@@ -248,7 +248,11 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
               aria-label="Country code"
               disabled={disabled}
             >
-              {flagEmoji && <span className={styles.flag}>{flagEmoji}</span>}
+              {flagEmoji && (
+                <span aria-hidden="true" className={styles.flag}>
+                  {flagEmoji}
+                </span>
+              )}
               <span>{selectedCode}</span>
               <span
                 className={cn(styles.chevron, isOpen && styles.chevronOpen)}

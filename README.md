@@ -55,7 +55,7 @@ function App() {
 
 ## Components
 
-All 81 components live under `src/components/` grouped by category.
+All 104 components live under `src/components/` grouped by category.
 
 ### Input (17)
 

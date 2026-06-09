@@ -94,6 +94,7 @@ export const ActivityFeed = forwardRef<HTMLDivElement, ActivityFeedProps>(
                 ) : (
                   <span
                     className={cn(styles.dot, styles[event.type ?? 'default'])}
+                    aria-label={event.type}
                   />
                 )}
               </span>

@@ -65,7 +65,9 @@ export const Footer = forwardRef<HTMLElement, FooterProps>(
               {newsletterText && (
                 <div className={styles.newsletter}>
                   <p className={styles.newsletterText}>{newsletterText}</p>
-                  <span className={styles.newsletterButton}>Subscribe</span>
+                  <button type="button" className={styles.newsletterButton}>
+                    Subscribe
+                  </button>
                 </div>
               )}
             </div>

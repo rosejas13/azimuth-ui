@@ -171,9 +171,17 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             readOnly
             aria-invalid={error ? 'true' : undefined}
             aria-haspopup="dialog"
+            aria-describedby={
+              error ? `${id}-error` : helpText ? `${id}-help` : undefined
+            }
           />
           {isOpen && (
-            <div style={popupStyle} ref={popupRef}>
+            <div
+              style={popupStyle}
+              ref={popupRef}
+              role="dialog"
+              aria-modal="true"
+            >
               <div className={styles.popup}>
                 <Calendar
                   value={selectedDate}
@@ -186,10 +194,16 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
           )}
         </div>
         {helpText && !error && (
-          <span className={styles.helpText}>{helpText}</span>
+          <span id={id ? `${id}-help` : undefined} className={styles.helpText}>
+            {helpText}
+          </span>
         )}
         {error && (
-          <span className={styles.error} role="alert">
+          <span
+            id={id ? `${id}-error` : undefined}
+            className={styles.error}
+            role="alert"
+          >
             {error}
           </span>
         )}

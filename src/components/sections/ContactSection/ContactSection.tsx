@@ -121,6 +121,17 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(
                 rows={5}
                 required
               />
+              <div role="status" aria-live="polite" className={styles.status}>
+                {submitState !== 'idle' && (
+                  <span className={styles.srOnly}>
+                    {submitState === 'submitting'
+                      ? 'Sending message'
+                      : submitState === 'success'
+                        ? 'Message sent successfully'
+                        : 'Failed to send. Please try again'}
+                  </span>
+                )}
+              </div>
               <Button
                 type="submit"
                 variant="primary"
