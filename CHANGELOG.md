@@ -47,7 +47,18 @@
 - **Playwright browser matrix**: Added Firefox, WebKit, Pixel 7 (mobile Chrome), iPhone 15 (mobile Safari), and iPad landscape to a11y test projects — 6 browser/device targets per component
 - **Responsive viewport tests**: Key layout components tested at 320px, 375px, 768px, and 1280px with axe-core scanning at each breakpoint
 
+### Testing & Coverage
+- **1427 tests** (+14 from 1413): ThemeProvider (4), color-presets (5), style-presets (5)
+- **Coverage thresholds**: Enforced at 60% lines, 75% branches, 45% functions in vitest config
+- **Theme tests**: ThemeProvider renders children, provides context, applies CSS vars + `<style>` tags
+- **CI pipeline**: `npm run ci` = verify + Playwright a11y suite (auto-starts Storybook)
+- **Keyboard e2e test**: Smoke test tabbing through interactive components
+
+### Cross-Browser & Responsive
+- **Playwright browser matrix**: Chromium, Firefox, WebKit, Pixel 7, iPhone 15, iPad — tests a11y on each
+
 ### Developer Experience
+- **browserslist** + **engines** added to package.json (Node >=18, modern browsers)
 - **Minimal setup**: `npm install azimuth-ui` + `import 'azimuth-ui/styles.css'` + `<ThemeProvider>` wraps app — 3 steps to production use
 - **zod peer dep relaxed**: `^4.0.0` instead of exact `4.4.3` to avoid version conflicts
 
