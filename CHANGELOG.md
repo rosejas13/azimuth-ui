@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.1 (2026-06-08)
+
+### Features
+- **Storybook 100% coverage**: Added 23 story files for all remaining components (Data: Calendar, ColorPicker, DataTable, DateRangePicker, DateTimePicker, DiffViewer, SimpleChart; Display: Chat, Clock, CodeBlock, Cursor, FanMenu, ImageViewer, LoginSignup, MapDisplay, MediaPlayer, PageLayout, ResizablePanel, SectionView, Toast; Overlay: CommandPalette, Flyout, Sidebar). 81 stories for 81 component directories.
+- **Container size prop**: Added `size` prop (`'sm' | 'md' | 'lg' | 'xl' | 'full'`, default `'lg'`) with corresponding max-width CSS classes.
+
+### Quality
+- **1119 tests total** (+4 from 0.5.0), 87 test files, all passing
+- **Focus indicators**: Added `:focus-visible` to SearchBar suggestions, Input stepper buttons, Input suggestions, Combobox options, CommandPalette input + items
+- **Color tokens**: Added `--azimuth-color-text-inverse` token (both oklch and hex fallback), filled 6 missing hex fallbacks in `@supports` block
+- **SearchBar a11y**: Changed nested `<button>` elements in suggestions to `<div role="option" tabIndex={-1}>` with keyboard handler — fixes WAI-ARIA nested interactive pattern violation
+- **Beads Dolt server mode**: Project now uses shared Dolt server for issue tracking
+
 ## 0.5.0 (2026-05-30)
 
 ### Features
