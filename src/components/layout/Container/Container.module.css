@@ -7,15 +7,19 @@
 .sm {
   max-width: 40rem;
 }
+
 .md {
   max-width: 48rem;
 }
+
 .lg {
   max-width: 64rem;
 }
+
 .xl {
   max-width: 80rem;
 }
+
 .full {
   max-width: 100%;
 }
