@@ -43,6 +43,14 @@
 - **All new components**: 100% with tests (vitest), Storybook stories (CSF 3), JSDoc, WCAG 2.2 AA keyboard/ARIA, CSS Modules, forwardRef + 'use client', design tokens
 - **zod** added as peer dependency for useForm validation
 
+### Cross-Browser & Responsive
+- **Playwright browser matrix**: Added Firefox, WebKit, Pixel 7 (mobile Chrome), iPhone 15 (mobile Safari), and iPad landscape to a11y test projects — 6 browser/device targets per component
+- **Responsive viewport tests**: Key layout components tested at 320px, 375px, 768px, and 1280px with axe-core scanning at each breakpoint
+
+### Developer Experience
+- **Minimal setup**: `npm install azimuth-ui` + `import 'azimuth-ui/styles.css'` + `<ThemeProvider>` wraps app — 3 steps to production use
+- **zod peer dep relaxed**: `^4.0.0` instead of exact `4.4.3` to avoid version conflicts
+
 ### Documentation
 - **CONTRIBUTING.md**: Added collaborator guide covering setup, conventions, file structure, accessibility standards, design tokens, and architecture overview
 
