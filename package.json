@@ -38,7 +38,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006",
     "demo": "vite demo --config demo/vite.config.ts",
-    "build": "tsup && node scripts/inject-use-client.mjs && rm -f dist/*.map",
+    "build": "tsup && node scripts/inject-use-client.mjs && node scripts/build-css.mjs && rm -f dist/*.map",
     "build-storybook": "storybook build",
     "typecheck": "tsc --noEmit",
     "lint": "stylelint 'src/**/*.css' && eslint src/",

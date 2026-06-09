@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.2 (2026-06-09)
+
+### Accessibility
+- **Heading font-size CSS variables**: Added `--azimuth-fs-h6` (1rem); bundled `tokens.css` into `dist/index.css` so heading font-size vars actually reach consumers
+- **Text contrast WCAG AA**: Darkened `--azimuth-color-text-secondary` to `oklch(35% ...)` and `--azimuth-color-text-muted` to `oklch(42% ...)` — now pass WCAG AA 4.5:1 on white backgrounds. Updated hex fallbacks.
+
+### Build
+- **CSS reset bundled**: Added `scripts/build-css.mjs` to concatenate `tokens.css` + `reset.css` + component CSS into `dist/index.css` during build. Consumers importing `azimuth-ui/styles.css` now get global baseline styles (box-sizing, font-smoothing, reduced-motion, etc.) and all design tokens.
+
 ## 0.5.1 (2026-06-08)
 
 ### Features

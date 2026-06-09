@@ -2,6 +2,7 @@
   "database": "dolt",
   "backend": "dolt",
   "dolt_mode": "server",
+  "dolt_server_port": 54423,
   "dolt_database": "azimuth_ui",
   "project_id": "58f187ad-b48c-4cd1-9c5e-e28b85f41553"
 }
