@@ -1,0 +1,1 @@
+{"id":"int-0b32514a","kind":"field_change","created_at":"2026-06-09T06:38:55.387687Z","actor":"rosejas13","issue_id":"azimuth-ui-e5k","extra":{"field":"status","new_value":"closed","old_value":"in_progress","reason":"All 81 components now have Storybook stories (100% coverage) — 23 stories added in batch 2 covering Data (7), Display (13), and Overlay (3) components"}}
