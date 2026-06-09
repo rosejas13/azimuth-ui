@@ -14,6 +14,7 @@ export interface Step {
   icon?: React.ReactNode;
 }
 
+/** Props for the ProgressSteps component. */
 export interface ProgressStepsProps extends ComponentPropsWithoutRef<'nav'> {
   /** Ordered list of steps to display. */
   steps: Step[];

@@ -36,7 +36,7 @@ function App() {
 
 ## Features
 
-- **104 components**: 13 data, 48 display, 21 input, 4 layout, 5 navigation, 8 overlay, 9 sections
+- **103 components**: 14 data, 44 display, 19 input, 4 layout, 5 navigation, 8 overlay, 9 sections
 - **860 SVG icons**: Tree-shakeable React icon components (Font Awesome subset, regular + brands)
 - **ThemeProvider**: Single config controls every component's appearance
 - **CSS custom properties**: All styling via `--azimuth-*` tokens
@@ -55,19 +55,19 @@ function App() {
 
 ## Components
 
-All 104 components live under `src/components/` grouped by category.
+All 103 components live under `src/components/` grouped by category.
 
-### Input (17)
+### Input (19)
 
-`Button` `Checkbox` `Combobox` `DropdownList` `FileUpload` `Form` `Input` `InputGroup` `OTPInput` `Radio` `Rating` `SearchBar` `Select` `Slider` `TextArea` `TextBox` `Toggle`
+`Button` `Checkbox` `Combobox` `DropdownList` `FileUpload` `Form` `Input` `InputGroup` `OTPInput` `PhoneInput` `QuantityStepper` `Radio` `Rating` `SearchBar` `Select` `Slider` `TextArea` `TextBox` `Toggle`
 
-### Display (35)
+### Display (48)
 
-`Accordion` `Alert` `Avatar` `Badge` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `Cursor` `EmptyState` `ErrorPage` `FanMenu` `Icon` `IconButton` `ImageViewer` `InfoButton` `Kbd` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `NotificationBadge` `PageLayout` `ProgressBar` `ResizablePanel` `SectionView` `SegmentedButton` `Skeleton` `SplitButton` `Tag` `Text` `Toast` `VisuallyHidden`
+`Accordion` `ActivityFeed` `Alert` `AspectRatio` `Avatar` `Badge` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `Cursor` `EmptyState` `ErrorBoundary` `ErrorPage` `FanMenu` `Icon` `IconButton` `ImageViewer` `InfoButton` `Kbd` `KPICard` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `NotificationBadge` `PageLayout` `PriceDisplay` `ProductCard` `ProgressBar` `ProgressSteps` `ResizablePanel` `ScrollArea` `SectionView` `SegmentedButton` `Skeleton` `SkipLink` `SplitButton` `Tag` `Text` `Toast` `VisuallyHidden`
 
-### Data (12)
+### Data (13)
 
-`Calendar` `ColorPicker` `DataTable` `DateRangePicker` `DateTimePicker` `DiffViewer` `List` `Pagination` `SimpleChart` `Table` `Timeline` `TreeList`
+`Calendar` `ColorPicker` `DataFilterBar` `DataTable` `DatePicker` `DateRangePicker` `DateTimePicker` `DiffViewer` `List` `Pagination` `SimpleChart` `Table` `Timeline` `TreeList`
 
 ### Layout (4)
 
@@ -80,6 +80,10 @@ All 104 components live under `src/components/` grouped by category.
 ### Overlay (8)
 
 `CommandPalette` `Dialog` `Drawer` `Flyout` `Modal` `Sidebar` `SlideSheet` `Tooltip`
+
+### Sections (9)
+
+`Hero` `FeaturesGrid` `PricingTable` `Testimonials` `CTABanner` `ContactSection` `TeamSection` `Footer` `StatsSection`
 
 ## Icons
 
@@ -157,7 +161,9 @@ import { ThemeProvider, COLOR_PRESETS } from 'azimuth-ui';
 git clone https://github.com/rosejas13/azimuth-ui.git
 cd azimuth-ui
 npm install
-npm run test          # 1413 tests across 110 files
+npm run test          # 1427 tests across 112 files (vitest)
+npm run test:a11y     # Playwright + axe-core a11y tests (starts Storybook)
+npm run ci            # Full pipeline: lint → typecheck → test → build → a11y
 npm run typecheck     # Strict TypeScript
 npm run demo          # Component showcase with live playground
 npm run lint          # ESLint (zero-error)

@@ -40,6 +40,7 @@ export interface ContactSectionProps extends Omit<
   className?: string;
 }
 
+/** A contact form section with input fields (name, email, subject, message) and an optional contact info sidebar. */
 export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(
   (
     {

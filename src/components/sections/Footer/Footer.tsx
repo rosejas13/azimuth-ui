@@ -4,17 +4,20 @@ import { Container } from '@/components/layout';
 import { Divider } from '@/components/layout';
 import styles from './Footer.module.css';
 
+/** A single column of footer navigation links. */
 export interface FooterColumn {
   title: string;
   links: Array<{ label: string; href: string }>;
 }
 
+/** A social media link with an optional icon. */
 export interface SocialLink {
   label: string;
   href: string;
   icon?: React.ReactNode;
 }
 
+/** Props for the Footer section component. */
 export interface FooterProps extends ComponentPropsWithoutRef<'footer'> {
   brand?: { name: string; description?: string; logo?: React.ReactNode };
   columns?: FooterColumn[];
@@ -24,6 +27,7 @@ export interface FooterProps extends ComponentPropsWithoutRef<'footer'> {
   variant?: 'default' | 'dark' | 'muted';
 }
 
+/** A multi-column site footer with brand, navigation links, social media, newsletter signup, and copyright. */
 export const Footer = forwardRef<HTMLElement, FooterProps>(
   (
     {
