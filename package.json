@@ -47,6 +47,7 @@
     "test:watch": "vitest",
     "test:a11y": "playwright test",
     "verify": "npm run lint && npm run typecheck && npm run test && npm run build",
+    "deadcode": "knip",
     "prepublishOnly": "npm run verify",
     "prepare": "husky"
   },
@@ -75,6 +76,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "husky": "9.1.7",
     "jsdom": "^29.1.1",
+    "knip": "6.16.1",
     "lint-staged": "17.0.6",
     "prettier": "^3.8.3",
     "storybook": "^8.0.0",
