@@ -1,6 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
+  webServer: {
+    command: 'npx storybook dev -p 6006 --ci',
+    url: 'http://localhost:6006',
+    reuseExistingServer: true,
+    timeout: 60000,
+  },
   testDir: './src',
   testMatch: '**/*.a11y.spec.ts',
   fullyParallel: true,
@@ -9,7 +15,9 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [
     ['list'],
-    process.env.CI ? ['html', { outputFolder: '.playwright-report' }] : ['null'],
+    process.env.CI
+      ? ['html', { outputFolder: '.playwright-report' }]
+      : ['null'],
   ],
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:6006',

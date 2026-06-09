@@ -46,6 +46,16 @@
 ### Documentation
 - **CONTRIBUTING.md**: Added collaborator guide covering setup, conventions, file structure, accessibility standards, design tokens, and architecture overview
 
+### Accessibility
+- **Automated a11y test suite**: Added Playwright + axe-core WCAG 2.2 AA scanning for all 104 components. 7 category-level spec files covering input, display, data, sections, layout, navigation, and overlay — runs `npm run test:a11y` against Storybook
+- **Form a11y fixes**: Labels now use `htmlFor` with cloned child `id` via `cloneElement`; `aria-invalid` and `aria-describedby` on form child inputs
+- **ContactSection a11y**: Added `role="status"` with `aria-live="polite"` for submit state screen reader announcements
+- **DatePicker a11y**: Popup has `role="dialog"` + `aria-modal`; input has `aria-describedby` linking to error/help text
+- **ActivityFeed a11y**: Event type dots have `aria-label` so color is not the only indicator
+- **ErrorBoundary a11y**: Fallback container has `role="alert"` with focus target
+- **PhoneInput a11y**: Flag emoji marked `aria-hidden="true"` (country code text suffices)
+- **Footer a11y**: Subscribe newsletter rendered as `<button>` with native keyboard support
+
 ## 0.5.2 (2026-06-09)
 
 ### Accessibility
