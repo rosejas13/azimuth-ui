@@ -10,7 +10,10 @@ describe('Dialog', () => {
 
   it('renders when open', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} content={{ title: "Delete Item" }}>
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'Delete Item' }}
+      >
         <p>Are you sure?</p>
       </Dialog>,
     );
@@ -20,7 +23,10 @@ describe('Dialog', () => {
 
   it('does not render when closed', () => {
     render(
-      <Dialog visible={{ open: false, onClose: () => {} }} content={{ title: "Confirm" }}>
+      <Dialog
+        visible={{ open: false, onClose: () => {} }}
+        content={{ title: 'Confirm' }}
+      >
         <p>Are you sure?</p>
       </Dialog>,
     );
@@ -29,14 +35,22 @@ describe('Dialog', () => {
 
   it('renders confirm and cancel buttons', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} actions={{ confirm: { label: "Yes" }, cancel: { label: "No" } }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        actions={{ confirm: { label: 'Yes' }, cancel: { label: 'No' } }}
+      />,
     );
     expect(screen.getByText('Yes')).toBeInTheDocument();
     expect(screen.getByText('No')).toBeInTheDocument();
   });
 
   it('uses default button labels', () => {
-    render(<Dialog visible={{ open: true, onClose: () => {} }} content={{ title: "Custom" }} />);
+    render(
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'Custom' }}
+      />,
+    );
     expect(screen.getByText('Confirm')).toBeInTheDocument();
     expect(screen.getByText('Cancel')).toBeInTheDocument();
   });
@@ -45,7 +59,10 @@ describe('Dialog', () => {
     const onConfirm = vi.fn();
     const user = userEvent.setup();
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} actions={{ confirm: { onConfirm } }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        actions={{ confirm: { onConfirm } }}
+      />,
     );
     await user.click(screen.getByText('Confirm'));
     expect(onConfirm).toHaveBeenCalledTimes(1);
@@ -55,7 +72,10 @@ describe('Dialog', () => {
     const onCancel = vi.fn();
     const user = userEvent.setup();
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} actions={{ cancel: { onCancel } }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        actions={{ cancel: { onCancel } }}
+      />,
     );
     await user.click(screen.getByText('Cancel'));
     expect(onCancel).toHaveBeenCalledTimes(1);
@@ -64,9 +84,7 @@ describe('Dialog', () => {
   it('calls onClose when cancel button is clicked and no onCancel', async () => {
     const onClose = vi.fn();
     const user = userEvent.setup();
-    render(
-      <Dialog visible={{ open: true, onClose }} />,
-    );
+    render(<Dialog visible={{ open: true, onClose }} />);
     await user.click(screen.getByText('Cancel'));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
@@ -74,9 +92,7 @@ describe('Dialog', () => {
   it('calls onClose on Escape key', async () => {
     const onClose = vi.fn();
     const user = userEvent.setup();
-    render(
-      <Dialog visible={{ open: true, onClose }} />,
-    );
+    render(<Dialog visible={{ open: true, onClose }} />);
     await user.keyboard('{Escape}');
     expect(onClose).toHaveBeenCalledTimes(1);
   });
@@ -84,9 +100,7 @@ describe('Dialog', () => {
   it('calls onClose on overlay click', async () => {
     const onClose = vi.fn();
     const user = userEvent.setup();
-    render(
-      <Dialog visible={{ open: true, onClose }} />,
-    );
+    render(<Dialog visible={{ open: true, onClose }} />);
 
     const overlay = document.querySelector('[class*="overlay"]');
     expect(overlay).not.toBeNull();
@@ -103,7 +117,10 @@ describe('Dialog', () => {
     const onClose = vi.fn();
     const user = userEvent.setup();
     render(
-      <Dialog visible={{ open: true, onClose }} actions={{ confirm: { loading: true } }} />,
+      <Dialog
+        visible={{ open: true, onClose }}
+        actions={{ confirm: { loading: true } }}
+      />,
     );
     await user.keyboard('{Escape}');
     expect(onClose).not.toHaveBeenCalled();
@@ -113,15 +130,23 @@ describe('Dialog', () => {
     render(
       <Dialog
         visible={{ open: true, onClose: () => {} }}
-        content={{ title: "Delete", description: "This action cannot be undone." }}
+        content={{
+          title: 'Delete',
+          description: 'This action cannot be undone.',
+        }}
       />,
     );
-    expect(screen.getByText('This action cannot be undone.')).toBeInTheDocument();
+    expect(
+      screen.getByText('This action cannot be undone.'),
+    ).toBeInTheDocument();
   });
 
   it('renders children', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} content={{ title: "Custom" }}>
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'Custom' }}
+      >
         <p>Custom content</p>
       </Dialog>,
     );
@@ -130,7 +155,13 @@ describe('Dialog', () => {
 
   it('disables buttons when loading', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} actions={{ confirm: { label: "Save", loading: true }, cancel: { label: "Abort" } }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        actions={{
+          confirm: { label: 'Save', loading: true },
+          cancel: { label: 'Abort' },
+        }}
+      />,
     );
     expect(screen.getByText('Save')).toBeDisabled();
     expect(screen.getByText('Abort')).toBeDisabled();
@@ -138,7 +169,10 @@ describe('Dialog', () => {
 
   it('shows spinner when loading', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} actions={{ confirm: { label: "Delete", loading: true } }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        actions={{ confirm: { label: 'Delete', loading: true } }}
+      />,
     );
     const confirmButton = screen.getByText('Delete').closest('button');
     expect(confirmButton?.querySelector('[class*="spinner"]')).toBeTruthy();
@@ -146,56 +180,83 @@ describe('Dialog', () => {
 
   it('applies info variant to confirm button', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} content={{ variant: "info" }} actions={{ confirm: { label: "Proceed" } }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ variant: 'info' }}
+        actions={{ confirm: { label: 'Proceed' } }}
+      />,
     );
     expect(screen.getByText('Proceed')).toHaveClass('confirmInfo');
   });
 
   it('applies warning variant to confirm button', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} content={{ variant: "warning" }} actions={{ confirm: { label: "Proceed" } }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ variant: 'warning' }}
+        actions={{ confirm: { label: 'Proceed' } }}
+      />,
     );
     expect(screen.getByText('Proceed')).toHaveClass('confirmWarning');
   });
 
   it('applies danger variant to confirm button', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} content={{ variant: "danger" }} actions={{ confirm: { label: "Proceed" } }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ variant: 'danger' }}
+        actions={{ confirm: { label: 'Proceed' } }}
+      />,
     );
     expect(screen.getByText('Proceed')).toHaveClass('confirmDanger');
   });
 
   it('uses info variant by default', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} actions={{ confirm: { label: "Proceed" } }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        actions={{ confirm: { label: 'Proceed' } }}
+      />,
     );
     expect(screen.getByText('Proceed')).toHaveClass('confirmInfo');
   });
 
   it('uses alertdialog role for warning variant', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} content={{ variant: "warning", title: "Alert" }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ variant: 'warning', title: 'Alert' }}
+      />,
     );
     expect(screen.getByRole('alertdialog')).toBeInTheDocument();
   });
 
   it('uses alertdialog role for danger variant', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} content={{ variant: "danger", title: "Alert" }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ variant: 'danger', title: 'Alert' }}
+      />,
     );
     expect(screen.getByRole('alertdialog')).toBeInTheDocument();
   });
 
   it('uses dialog role for info variant', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} content={{ variant: "info", title: "Info" }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ variant: 'info', title: 'Info' }}
+      />,
     );
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
   it('applies custom className to overlay', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} className="custom-dialog" />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        className="custom-dialog"
+      />,
     );
     const overlay = document.querySelector('.custom-dialog');
     expect(overlay).toBeInTheDocument();
@@ -203,7 +264,10 @@ describe('Dialog', () => {
 
   it('sets aria-labelledby when title is present', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} content={{ title: "My Dialog" }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'My Dialog' }}
+      />,
     );
     const dialog = screen.getByRole('dialog');
     const title = screen.getByText('My Dialog');
@@ -214,7 +278,7 @@ describe('Dialog', () => {
     render(
       <Dialog
         visible={{ open: true, onClose: () => {} }}
-        content={{ description: "Some description" }}
+        content={{ description: 'Some description' }}
       />,
     );
     const dialog = screen.getByRole('dialog');
@@ -224,17 +288,25 @@ describe('Dialog', () => {
 
   it('sets aria-modal to true', () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} content={{ title: "Modal" }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'Modal' }}
+      />,
     );
     expect(screen.getByRole('dialog')).toHaveAttribute('aria-modal', 'true');
   });
 
-  it('focuses confirm button on open', async () => {
+  it('traps focus and focuses first element on open', async () => {
     render(
-      <Dialog visible={{ open: true, onClose: () => {} }} actions={{ confirm: { label: "Delete" }, cancel: { label: "Keep" } }} />,
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        actions={{ confirm: { label: 'Delete' }, cancel: { label: 'Keep' } }}
+      />,
     );
     await waitFor(() => {
-      expect(document.activeElement).toBe(screen.getByText('Delete'));
+      expect(document.activeElement).toBe(
+        screen.getByLabelText('Close dialog'),
+      );
     });
   });
 

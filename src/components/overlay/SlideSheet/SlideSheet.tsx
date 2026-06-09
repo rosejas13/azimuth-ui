@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import styles from './SlideSheet.module.css';
 
 /**
@@ -41,10 +42,7 @@ export interface SlideSheetProps extends ComponentPropsWithoutRef<'div'> {
 export const SlideSheet = forwardRef<HTMLDivElement, SlideSheetProps>(
   (
     {
-      visible: {
-        open,
-        onClose,
-      } = {},
+      visible: { open, onClose } = {},
       config: {
         side = 'bottom',
         title,
@@ -99,20 +97,7 @@ export const SlideSheet = forwardRef<HTMLDivElement, SlideSheetProps>(
       };
     }, [open]);
 
-    useEffect(() => {
-      if (!open) return;
-
-      const timer = setTimeout(() => {
-        const firstFocusable = sheetRef.current?.querySelector<
-          HTMLElement
-        >(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
-        firstFocusable?.focus();
-      }, 50);
-
-      return () => clearTimeout(timer);
-    }, [open]);
+    useFocusTrap(sheetRef, open ?? false);
 
     const isHorizontal = side === 'left' || side === 'right';
 

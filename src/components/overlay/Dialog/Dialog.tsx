@@ -9,12 +9,16 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import styles from './Dialog.module.css';
 
 /**
  * Props for the Dialog component.
  */
-export interface DialogProps extends Omit<ComponentPropsWithoutRef<'div'>, 'title' | 'content'> {
+export interface DialogProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'title' | 'content'
+> {
   visible: { open: boolean; onClose: () => void };
   content?: {
     title?: string;
@@ -53,7 +57,14 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     {
       visible: { open, onClose },
       content: { title, description, variant = 'info' } = {},
-      actions: { confirm: { label: confirmLabel = 'Confirm', onConfirm, loading = false } = {}, cancel: { label: cancelLabel = 'Cancel', onCancel } = {} } = {},
+      actions: {
+        confirm: {
+          label: confirmLabel = 'Confirm',
+          onConfirm,
+          loading = false,
+        } = {},
+        cancel: { label: cancelLabel = 'Cancel', onCancel } = {},
+      } = {},
       className,
       children,
       ...props
@@ -61,6 +72,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     ref,
   ) => {
     const confirmRef = useRef<HTMLButtonElement>(null);
+    const overlayRef = useRef<HTMLDivElement>(null);
     const titleId = useRef(
       `azimuth-dialog-${Math.random().toString(36).slice(2, 9)}`,
     ).current;
@@ -75,6 +87,20 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
         onClose();
       }
     }, [onCancel, onClose]);
+
+    const setOverlayRef = useCallback(
+      (node: HTMLDivElement | null) => {
+        overlayRef.current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      },
+      [ref],
+    );
+
+    useFocusTrap(overlayRef, open);
 
     useEffect(() => {
       if (!open) return;
@@ -99,23 +125,14 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       };
     }, [open]);
 
-    useEffect(() => {
-      if (!open) return;
-
-      const timer = setTimeout(() => {
-        confirmRef.current?.focus();
-      }, 0);
-
-      return () => clearTimeout(timer);
-    }, [open]);
-
     if (!open) return null;
 
-    const role = variant === 'warning' || variant === 'danger' ? 'alertdialog' : 'dialog';
+    const role =
+      variant === 'warning' || variant === 'danger' ? 'alertdialog' : 'dialog';
 
     return createPortal(
       <div
-        ref={ref}
+        ref={setOverlayRef}
         className={cn(styles.overlay, className)}
         onClick={(e) => {
           if (e.target === e.currentTarget && !loading) {

@@ -9,12 +9,16 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import styles from './Modal.module.css';
 
 /**
  * Props for the Modal component.
  */
-export interface ModalProps extends Omit<ComponentPropsWithoutRef<'div'>, 'content'> {
+export interface ModalProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'content'
+> {
   visible?: {
     open: boolean;
     onClose: () => void;
@@ -44,7 +48,13 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
   (
     {
       visible: { open, onClose } = {},
-      content: { title, subtitle, persistent = false, blur = 'none', size = 'md' } = {},
+      content: {
+        title,
+        subtitle,
+        persistent = false,
+        blur = 'none',
+        size = 'md',
+      } = {},
       children,
       footer,
       className,
@@ -64,7 +74,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref).current = node;
+          ref.current = node;
         }
       },
       [ref],
@@ -96,21 +106,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
       };
     }, [open]);
 
-    useEffect(() => {
-      if (!open) return;
-
-      const timer = setTimeout(() => {
-        const firstFocusable = contentRef.current?.querySelector<
-          HTMLElement
-        >(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
-        firstFocusable?.focus();
-      }, 50);
-      // Timeout waits for portal content to render in DOM before focusing
-
-      return () => clearTimeout(timer);
-    }, [open]);
+    useFocusTrap(contentRef, open ?? false);
 
     useEffect(() => {
       const el = overlayRef.current;
@@ -143,7 +139,10 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         ref={setOverlayRef}
         className={cn(
           styles.overlay,
-          blur !== 'none' && styles[`overlayBlur${blur.charAt(0).toUpperCase() + blur.slice(1)}`],
+          blur !== 'none' &&
+            styles[
+              `overlayBlur${blur.charAt(0).toUpperCase() + blur.slice(1)}`
+            ],
           className,
         )}
         role="dialog"
@@ -152,10 +151,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         aria-labelledby={title ? titleId : undefined}
         {...props}
       >
-        <div
-          ref={contentRef}
-          className={cn(styles.content, styles[size])}
-        >
+        <div ref={contentRef} className={cn(styles.content, styles[size])}>
           {(title || subtitle) && (
             <div className={styles.header}>
               <div className={styles.headerContent}>
@@ -164,9 +160,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
                     {title}
                   </h2>
                 )}
-                {subtitle && (
-                  <p className={styles.subtitle}>{subtitle}</p>
-                )}
+                {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
               </div>
               <button
                 type="button"

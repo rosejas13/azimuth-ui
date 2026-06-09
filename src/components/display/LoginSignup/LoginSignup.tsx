@@ -20,8 +20,10 @@ export interface AuthProvider {
 }
 
 /** A login/signup/reset-password form with tab navigation, social provider support, and loading state. */
-export interface LoginSignupProps
-  extends Omit<ComponentPropsWithoutRef<'div'>, 'onSubmit'> {
+export interface LoginSignupProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'onSubmit'
+> {
   /** @default 'login' */
   defaultView?: AuthView;
   /** Authentication callbacks for login, signup, and password reset flows. */
@@ -92,23 +94,52 @@ export const LoginSignup = forwardRef<HTMLDivElement, LoginSignupProps>(
           onResetPassword?.({ email });
         }
       },
-      [view, email, password, name, remember, onLogin, onSignup, onResetPassword],
+      [
+        view,
+        email,
+        password,
+        name,
+        remember,
+        onLogin,
+        onSignup,
+        onResetPassword,
+      ],
+    );
+
+    const handleTabKeyDown = useCallback(
+      (e: React.KeyboardEvent) => {
+        const keys = VIEWS.map((v) => v.key);
+        const currentIndex = keys.indexOf(view);
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const prevIndex = (currentIndex - 1 + keys.length) % keys.length;
+          setView(keys[prevIndex]);
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          const nextIndex = (currentIndex + 1) % keys.length;
+          setView(keys[nextIndex]);
+        }
+      },
+      [view],
     );
 
     return (
       <div ref={ref} className={cn(styles.root, className)} {...props}>
         {view !== 'reset' && (
-          <div className={styles.tabs} role="tablist" aria-label="Authentication">
+          <div
+            className={styles.tabs}
+            role="tablist"
+            tabIndex={0}
+            aria-label="Authentication"
+            onKeyDown={handleTabKeyDown}
+          >
             {VIEWS.map((v) => (
               <button
                 key={v.key}
                 id={`auth-tab-${v.key}`}
                 type="button"
                 role="tab"
-                className={cn(
-                  styles.tab,
-                  view === v.key && styles.tabActive,
-                )}
+                className={cn(styles.tab, view === v.key && styles.tabActive)}
                 aria-selected={view === v.key}
                 aria-controls="auth-panel"
                 onClick={() => setView(v.key)}
@@ -136,133 +167,130 @@ export const LoginSignup = forwardRef<HTMLDivElement, LoginSignupProps>(
             }
             noValidate
           >
-          {error && (
-            <div className={styles.error} role="alert">
-              {error}
-            </div>
-          )}
-
-          {view === 'reset' && (
-            <p
-              style={{
-                margin: 0,
-                fontSize: 'var(--azimuth-fs-sm)',
-                color: 'var(--azimuth-color-text-secondary)',
-              }}
-            >
-              Enter your email address and we&apos;ll send you a link to reset
-              your password.
-            </p>
-          )}
-
-          {view === 'signup' && (
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="auth-name">
-                Name
-              </label>
-              <input
-                id="auth-name"
-                className={styles.input}
-                type="text"
-                autoComplete="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
-              />
-            </div>
-          )}
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="auth-email">
-              Email
-            </label>
-            <input
-              id="auth-email"
-              className={styles.input}
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-            />
-          </div>
-
-          {view !== 'reset' && (
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="auth-password">
-                Password
-              </label>
-              <input
-                id="auth-password"
-                className={styles.input}
-                type="password"
-                required
-                autoComplete={
-                  view === 'login' ? 'current-password' : 'new-password'
-                }
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-              />
-            </div>
-          )}
-
-          {view === 'login' && (
-            <div className={styles.row}>
-              <div className={styles.checkboxRow}>
-                <input
-                  id="auth-remember"
-                  className={styles.checkbox}
-                  type="checkbox"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
-                />
-                <label className={styles.checkboxLabel} htmlFor="auth-remember">
-                  Remember me
-                </label>
+            {error && (
+              <div className={styles.error} role="alert">
+                {error}
               </div>
+            )}
+
+            {view === 'reset' && (
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 'var(--azimuth-fs-sm)',
+                  color: 'var(--azimuth-color-text-secondary)',
+                }}
+              >
+                Enter your email address and we&apos;ll send you a link to reset
+                your password.
+              </p>
+            )}
+
+            {view === 'signup' && (
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="auth-name">
+                  Name
+                </label>
+                <input
+                  id="auth-name"
+                  className={styles.input}
+                  type="text"
+                  autoComplete="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                />
+              </div>
+            )}
+
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="auth-email">
+                Email
+              </label>
+              <input
+                id="auth-email"
+                className={styles.input}
+                type="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+              />
+            </div>
+
+            {view !== 'reset' && (
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="auth-password">
+                  Password
+                </label>
+                <input
+                  id="auth-password"
+                  className={styles.input}
+                  type="password"
+                  required
+                  autoComplete={
+                    view === 'login' ? 'current-password' : 'new-password'
+                  }
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                />
+              </div>
+            )}
+
+            {view === 'login' && (
+              <div className={styles.row}>
+                <div className={styles.checkboxRow}>
+                  <input
+                    id="auth-remember"
+                    className={styles.checkbox}
+                    type="checkbox"
+                    checked={remember}
+                    onChange={(e) => setRemember(e.target.checked)}
+                  />
+                  <label
+                    className={styles.checkboxLabel}
+                    htmlFor="auth-remember"
+                  >
+                    Remember me
+                  </label>
+                </div>
+                <button
+                  type="button"
+                  className={styles.link}
+                  onClick={() => setView('reset')}
+                >
+                  Forgot password?
+                </button>
+              </div>
+            )}
+
+            {view === 'reset' && (
               <button
                 type="button"
                 className={styles.link}
-                onClick={() => setView('reset')}
+                style={{ alignSelf: 'flex-start' }}
+                onClick={() => setView('login')}
               >
-                Forgot password?
+                &larr; Back to log in
               </button>
-            </div>
-          )}
+            )}
 
-          {view === 'reset' && (
-            <button
-              type="button"
-              className={styles.link}
-              style={{ alignSelf: 'flex-start' }}
-              onClick={() => setView('login')}
-            >
-              &larr; Back to log in
+            <button type="submit" className={styles.submit} disabled={loading}>
+              {loading && <span className={styles.spinner} />}
+              {view === 'login'
+                ? 'Log in'
+                : view === 'signup'
+                  ? 'Sign up'
+                  : 'Send reset link'}
             </button>
-          )}
-
-          <button
-            type="submit"
-            className={styles.submit}
-            disabled={loading}
-          >
-            {loading && <span className={styles.spinner} />}
-            {view === 'login'
-              ? 'Log in'
-              : view === 'signup'
-                ? 'Sign up'
-                : 'Send reset link'}
-          </button>
-        </form>
-      </div>
+          </form>
+        </div>
 
         {providers && providers.length > 0 && (
           <div className={styles.providers}>
-            <span className={styles.providersLabel}>
-              Or continue with
-            </span>
+            <span className={styles.providersLabel}>Or continue with</span>
             {providers.map((provider) => (
               <button
                 key={provider.id}

@@ -22,7 +22,10 @@ export interface MenuItem {
 }
 
 /** Props for the Menu component. */
-export interface MenuProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onSelect'> {
+export interface MenuProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'onSelect'
+> {
   items: MenuItem[];
   trigger?: React.ReactNode;
   onSelect?: (key: string) => void;
@@ -32,17 +35,7 @@ export interface MenuProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onSele
 
 /** A dropdown menu triggered by a button or custom trigger element. Keyboard-navigable. */
 export const Menu = forwardRef<HTMLDivElement, MenuProps>(
-  (
-    {
-      items,
-      trigger,
-      onSelect,
-      side = 'left',
-      className,
-      ...props
-    },
-    ref,
-  ) => {
+  ({ items, trigger, onSelect, side = 'left', className, ...props }, ref) => {
     const [open, setOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
@@ -228,26 +221,21 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
 
     const setRefs = useCallback(
       (node: HTMLDivElement | null) => {
-        (containerRef).current = node;
+        containerRef.current = node;
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref).current = node;
+          ref.current = node;
         }
       },
       [ref],
     );
 
     return (
-      <div
-        ref={setRefs}
-        className={cn(styles.container, className)}
-        {...props}
-      >
+      <div ref={setRefs} className={cn(styles.container, className)} {...props}>
         {trigger ? (
-          <div
-            role="button"
-            tabIndex={0}
+          <button
+            type="button"
             className={styles.trigger}
             onClick={handleToggle}
             onKeyDown={handleTriggerKeyDown}
@@ -255,7 +243,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
             aria-expanded={open}
           >
             {trigger}
-          </div>
+          </button>
         ) : (
           <button
             type="button"
@@ -273,48 +261,48 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
         {open && (
           <div style={panelStyle}>
             <div className={styles.panel} role="menu">
-            {(items ?? []).map((item) => {
-              if (item.separator) {
-                return (
-                  <div
-                    key={item.key}
-                    className={styles.separator}
-                    role="separator"
-                  />
-                );
-              }
+              {(items ?? []).map((item) => {
+                if (item.separator) {
+                  return (
+                    <div
+                      key={item.key}
+                      className={styles.separator}
+                      role="separator"
+                    />
+                  );
+                }
 
-              return (
-                <button
-                  key={item.key}
-                  ref={(el) => {
-                    if (el) {
-                      itemRefs.current.set(item.key, el);
-                    } else {
-                      itemRefs.current.delete(item.key);
-                    }
-                  }}
-                  type="button"
-                  className={cn(
-                    styles.item,
-                    item.danger && styles.itemDanger,
-                    item.disabled && styles.itemDisabled,
-                  )}
-                  role="menuitem"
-                  aria-disabled={item.disabled || undefined}
-                  tabIndex={item.disabled ? -1 : 0}
-                  disabled={item.disabled}
-                  onClick={() => handleSelect(item)}
-                  onKeyDown={(e) => onItemKeyDownRef.current(e)}
-                  onMouseEnter={() => handleItemMouseEnter(item)}
-                >
-                  {item.icon && (
-                    <span className={styles.itemIcon}>{item.icon}</span>
-                  )}
-                  <span className={styles.itemLabel}>{item.label}</span>
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={item.key}
+                    ref={(el) => {
+                      if (el) {
+                        itemRefs.current.set(item.key, el);
+                      } else {
+                        itemRefs.current.delete(item.key);
+                      }
+                    }}
+                    type="button"
+                    className={cn(
+                      styles.item,
+                      item.danger && styles.itemDanger,
+                      item.disabled && styles.itemDisabled,
+                    )}
+                    role="menuitem"
+                    aria-disabled={item.disabled || undefined}
+                    tabIndex={item.disabled ? -1 : 0}
+                    disabled={item.disabled}
+                    onClick={() => handleSelect(item)}
+                    onKeyDown={(e) => onItemKeyDownRef.current(e)}
+                    onMouseEnter={() => handleItemMouseEnter(item)}
+                  >
+                    {item.icon && (
+                      <span className={styles.itemIcon}>{item.icon}</span>
+                    )}
+                    <span className={styles.itemLabel}>{item.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}

@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import styles from './Drawer.module.css';
 
 /**
@@ -59,7 +60,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref).current = node;
+          ref.current = node;
         }
       },
       [ref],
@@ -91,20 +92,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
       };
     }, [open]);
 
-    useEffect(() => {
-      if (!open) return;
-
-      const timer = setTimeout(() => {
-        const firstFocusable = drawerRef.current?.querySelector<
-          HTMLElement
-        >(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
-        firstFocusable?.focus();
-      }, 50);
-
-      return () => clearTimeout(timer);
-    }, [open]);
+    useFocusTrap(drawerRef, open);
 
     useEffect(() => {
       const el = overlayRef.current;

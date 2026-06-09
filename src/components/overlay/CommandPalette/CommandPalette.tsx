@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import styles from './CommandPalette.module.css';
 
 /** A single command item in the command palette. */
@@ -32,7 +33,10 @@ export interface CommandGroup {
 }
 
 /** Props for the CommandPalette component. */
-export interface CommandPaletteProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onSelect'> {
+export interface CommandPaletteProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'onSelect'
+> {
   open: boolean;
   onClose: () => void;
   groups: CommandGroup[];
@@ -69,7 +73,7 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref).current = node;
+          ref.current = node;
         }
       },
       [ref],
@@ -84,9 +88,7 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
           items: g.items.filter((item) => {
             if (item.label.toLowerCase().includes(q)) return true;
             if (item.keywords) {
-              return item.keywords.some((k) =>
-                k.toLowerCase().includes(q),
-              );
+              return item.keywords.some((k) => k.toLowerCase().includes(q));
             }
             return false;
           }),
@@ -103,12 +105,7 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
       setActiveIndex(0);
     }, [query]);
 
-    useEffect(() => {
-      if (open) {
-        const id = setTimeout(() => inputRef.current?.focus(), 50);
-        return () => clearTimeout(id);
-      }
-    }, [open]);
+    useFocusTrap(overlayRef, open);
 
     useEffect(() => {
       if (!open) {
@@ -254,25 +251,16 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
                             onClose();
                           }
                         }}
-                        onMouseEnter={() =>
-                          setActiveIndex(currentIndex)
-                        }
+                        onMouseEnter={() => setActiveIndex(currentIndex)}
                       >
                         {item.icon && (
-                          <span
-                            className={styles.itemIcon}
-                            aria-hidden="true"
-                          >
+                          <span className={styles.itemIcon} aria-hidden="true">
                             {item.icon}
                           </span>
                         )}
-                        <span className={styles.itemLabel}>
-                          {item.label}
-                        </span>
+                        <span className={styles.itemLabel}>{item.label}</span>
                         {item.shortcut && (
-                          <kbd className={styles.shortcut}>
-                            {item.shortcut}
-                          </kbd>
+                          <kbd className={styles.shortcut}>{item.shortcut}</kbd>
                         )}
                       </div>
                     );

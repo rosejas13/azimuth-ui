@@ -7,6 +7,7 @@ import {
   useRef,
   useEffect,
   useCallback,
+  useId,
 } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './FanMenu.module.css';
@@ -67,6 +68,8 @@ export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
     };
 
     const containerRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const fanId = useId();
 
     const handleClickOutside = useCallback(
       (e: MouseEvent) => {
@@ -84,7 +87,8 @@ export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
     useEffect(() => {
       if (!open) return;
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      return () =>
+        document.removeEventListener('mousedown', handleClickOutside);
     }, [open, handleClickOutside]);
 
     const handleOptionClick = (option: FanMenuOption) => {
@@ -98,6 +102,7 @@ export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
       if (e.key === 'Escape') {
         if (!isControlled) setInternalOpen(false);
         onOpenChange?.(false);
+        triggerRef.current?.focus();
         return;
       }
       if (e.key === 'Enter' || e.key === ' ') {
@@ -111,28 +116,29 @@ export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
     };
 
     return (
-      <div
-        ref={ref}
-        className={cn(styles.wrapper, className)}
-        {...props}
-      >
+      <div ref={ref} className={cn(styles.wrapper, className)} {...props}>
         <div ref={containerRef} className={styles.container}>
           <button
+            ref={triggerRef}
             type="button"
             className={styles.trigger}
             onClick={toggle}
             onKeyDown={(e) => handleKeyDown(e)}
             aria-expanded={open}
             aria-haspopup="menu"
+            aria-controls={fanId}
             aria-label="Open fan menu"
           >
             {trigger ?? <span className={styles.triggerIcon}>+</span>}
           </button>
           {open && (
             <div
+              id={fanId}
               className={cn(
                 styles.fan,
-                styles[`direction${direction.charAt(0).toUpperCase() + direction.slice(1)}`],
+                styles[
+                  `direction${direction.charAt(0).toUpperCase() + direction.slice(1)}`
+                ],
               )}
               role="menu"
             >
@@ -155,7 +161,7 @@ export const FanMenu = forwardRef<HTMLDivElement, FanMenuProps>(
                       ? 'marginTop'
                       : 'marginLeft']: index === 0 ? 0 : `${gap}px`,
                   }}
-                  tabIndex={-1}
+                  tabIndex={0}
                 >
                   {option.icon && (
                     <span className={styles.optionIcon}>{option.icon}</span>

@@ -1,6 +1,14 @@
 'use client';
 
-import { type ComponentPropsWithoutRef, forwardRef, useCallback, useEffect, useId, useRef, useState } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Tooltip.module.css';
 
@@ -9,7 +17,10 @@ type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 /**
  * Props for the Tooltip component.
  */
-export interface TooltipProps extends Omit<ComponentPropsWithoutRef<'div'>, 'content'> {
+export interface TooltipProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'content'
+> {
   content: React.ReactNode;
   /** @default 'top' */
   position?: TooltipPosition;
@@ -90,7 +101,10 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     }, [position]);
 
     const show = () => {
-      const id = setTimeout(() => { updatePosition(); setVisible(true); }, delay);
+      const id = setTimeout(() => {
+        updatePosition();
+        setVisible(true);
+      }, delay);
       setTimeoutId(id);
     };
 
@@ -113,11 +127,11 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
 
     const setWrapperRef = useCallback(
       (node: HTMLDivElement | null) => {
-        (wrapperRef).current = node;
+        wrapperRef.current = node;
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref).current = node;
+          ref.current = node;
         }
       },
       [ref],
@@ -133,14 +147,13 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
         onBlur={hide}
         {...props}
       >
-        <span
+        <button
+          type="button"
           className={styles.trigger}
-          role="button"
-          tabIndex={0}
           aria-describedby={visible ? tooltipId : undefined}
         >
           {children}
-        </span>
+        </button>
         {visible && (
           <div
             id={tooltipId}

@@ -14,8 +14,10 @@ import styles from './Flyout.module.css';
 /**
  * Props for the Flyout component.
  */
-export interface FlyoutProps
-  extends Omit<ComponentPropsWithoutRef<'div'>, 'content'> {
+export interface FlyoutProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'content'
+> {
   trigger: React.ReactNode;
   content: React.ReactNode;
   /** @default 'bottom' */
@@ -54,11 +56,11 @@ export const Flyout = forwardRef<HTMLDivElement, FlyoutProps>(
 
     const mergedRef = useCallback(
       (node: HTMLDivElement | null) => {
-        (wrapperRef).current = node;
+        wrapperRef.current = node;
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref).current = node;
+          ref.current = node;
         }
       },
       [ref],
@@ -70,16 +72,40 @@ export const Flyout = forwardRef<HTMLDivElement, FlyoutProps>(
       const gap = 6;
       switch (side) {
         case 'bottom':
-          setPanelStyle({ position: 'fixed', top: triggerRect.bottom + gap, left: triggerRect.left + triggerRect.width / 2, transform: 'translateX(-50%)', zIndex: 500 });
+          setPanelStyle({
+            position: 'fixed',
+            top: triggerRect.bottom + gap,
+            left: triggerRect.left + triggerRect.width / 2,
+            transform: 'translateX(-50%)',
+            zIndex: 500,
+          });
           break;
         case 'top':
-          setPanelStyle({ position: 'fixed', bottom: window.innerHeight - triggerRect.top + gap, left: triggerRect.left + triggerRect.width / 2, transform: 'translateX(-50%)', zIndex: 500 });
+          setPanelStyle({
+            position: 'fixed',
+            bottom: window.innerHeight - triggerRect.top + gap,
+            left: triggerRect.left + triggerRect.width / 2,
+            transform: 'translateX(-50%)',
+            zIndex: 500,
+          });
           break;
         case 'left':
-          setPanelStyle({ position: 'fixed', top: triggerRect.top + triggerRect.height / 2, right: window.innerWidth - triggerRect.left + gap, transform: 'translateY(-50%)', zIndex: 500 });
+          setPanelStyle({
+            position: 'fixed',
+            top: triggerRect.top + triggerRect.height / 2,
+            right: window.innerWidth - triggerRect.left + gap,
+            transform: 'translateY(-50%)',
+            zIndex: 500,
+          });
           break;
         case 'right':
-          setPanelStyle({ position: 'fixed', top: triggerRect.top + triggerRect.height / 2, left: triggerRect.right + gap, transform: 'translateY(-50%)', zIndex: 500 });
+          setPanelStyle({
+            position: 'fixed',
+            top: triggerRect.top + triggerRect.height / 2,
+            left: triggerRect.right + gap,
+            transform: 'translateY(-50%)',
+            zIndex: 500,
+          });
           break;
       }
     }, [side]);
@@ -97,7 +123,10 @@ export const Flyout = forwardRef<HTMLDivElement, FlyoutProps>(
 
     const handleMouseEnter = useCallback(() => {
       clearTimers();
-      openTimerRef.current = setTimeout(() => { updatePosition(); setOpen(true); }, openDelay);
+      openTimerRef.current = setTimeout(() => {
+        updatePosition();
+        setOpen(true);
+      }, openDelay);
     }, [clearTimers, openDelay, updatePosition]);
 
     const handleMouseLeave = useCallback(() => {
@@ -107,7 +136,9 @@ export const Flyout = forwardRef<HTMLDivElement, FlyoutProps>(
 
     useEffect(() => {
       if (!open) return;
-      function handler() { updatePosition(); }
+      function handler() {
+        updatePosition();
+      }
       window.addEventListener('scroll', handler, true);
       window.addEventListener('resize', handler);
       return () => {
@@ -128,23 +159,24 @@ export const Flyout = forwardRef<HTMLDivElement, FlyoutProps>(
         onMouseLeave={handleMouseLeave}
         {...props}
       >
-        <span
+        <button
+          type="button"
           className={styles.trigger}
-          tabIndex={0}
-          role="button"
           onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              updatePosition();
-              setOpen(true);
-            }
             if (e.key === 'Escape') setOpen(false);
           }}
-          onFocus={() => { clearTimers(); updatePosition(); setOpen(true); }}
-          onBlur={() => { clearTimers(); openTimerRef.current = setTimeout(() => setOpen(false), closeDelay); }}
+          onFocus={() => {
+            clearTimers();
+            updatePosition();
+            setOpen(true);
+          }}
+          onBlur={() => {
+            clearTimers();
+            openTimerRef.current = setTimeout(() => setOpen(false), closeDelay);
+          }}
         >
           {trigger}
-        </span>
+        </button>
         {open && (
           <div
             ref={panelRef}

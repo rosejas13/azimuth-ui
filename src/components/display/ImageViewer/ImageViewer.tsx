@@ -5,10 +5,12 @@ import {
   forwardRef,
   useEffect,
   useCallback,
+  useRef,
   useState,
 } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import styles from './ImageViewer.module.css';
 
 /** A single image within an image viewer. */
@@ -57,7 +59,9 @@ export const ImageViewer = forwardRef<HTMLDivElement, ImageViewerProps>(
     ref,
   ) => {
     const [index, setIndex] = useState(initialIndex);
-    const [loadState, setLoadState] = useState<'loading' | 'loaded' | 'error'>('loading');
+    const [loadState, setLoadState] = useState<'loading' | 'loaded' | 'error'>(
+      'loading',
+    );
 
     useEffect(() => {
       setIndex(initialIndex);
@@ -73,12 +77,30 @@ export const ImageViewer = forwardRef<HTMLDivElement, ImageViewerProps>(
     }, [images.length]);
 
     const goPrev = useCallback(() => {
-      setIndex((i) => (i - 1 + ((images ?? []).length || 1)) % ((images ?? []).length || 1));
+      setIndex(
+        (i) =>
+          (i - 1 + ((images ?? []).length || 1)) % ((images ?? []).length || 1),
+      );
     }, [images.length]);
 
     const goTo = useCallback((i: number) => {
       setIndex(i);
     }, []);
+
+    const dialogRef = useRef<HTMLDivElement>(null);
+    const setDialogRef = useCallback(
+      (node: HTMLDivElement | null) => {
+        dialogRef.current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      },
+      [ref],
+    );
+
+    useFocusTrap(dialogRef, open);
 
     useEffect(() => {
       if (!open) return;
@@ -123,7 +145,7 @@ export const ImageViewer = forwardRef<HTMLDivElement, ImageViewerProps>(
         {...props}
       >
         <div
-          ref={ref}
+          ref={setDialogRef}
           role="dialog"
           aria-modal="true"
           aria-label="Image viewer"
@@ -199,11 +221,18 @@ export const ImageViewer = forwardRef<HTMLDivElement, ImageViewerProps>(
                 <button
                   key={i}
                   type="button"
-                  className={cn(styles.thumbnail, i === index && styles.thumbnailActive)}
+                  className={cn(
+                    styles.thumbnail,
+                    i === index && styles.thumbnailActive,
+                  )}
                   onClick={() => goTo(i)}
                   aria-label={`Go to image ${i + 1}`}
                 >
-                  <img src={img.src} alt={img.alt ?? ''} className={styles.thumbnailImage} />
+                  <img
+                    src={img.src}
+                    alt={img.alt ?? ''}
+                    className={styles.thumbnailImage}
+                  />
                 </button>
               ))}
             </div>
