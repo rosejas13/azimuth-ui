@@ -1,3 +1,11 @@
+// Suppress Node.js ExperimentalWarning for localStorage shim
+process.removeAllListeners('warning');
+process.on('warning', (w) => {
+  if (w.name === 'ExperimentalWarning' && w.message.includes('localStorage'))
+    return;
+  process.emitWarning(w);
+});
+
 import '@testing-library/jest-dom/vitest';
 
 if (!Element.prototype.scrollIntoView) {
