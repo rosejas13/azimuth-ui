@@ -5,8 +5,11 @@ import { ThemeContext } from './ThemeContext';
 import { DEFAULT_THEME } from './types';
 import type { ColorMode, ThemeConfig, ThemeTokens } from './types';
 
+/** Props for the ThemeProvider component. */
 interface ThemeProviderProps {
+  /** Partial theme configuration. Unset fields inherit defaults. */
   config?: ThemeConfig;
+  /** React children wrapped by the theme context. */
   children: ReactNode;
 }
 
@@ -19,9 +22,36 @@ const RADIUS_MAP = {
 } as const;
 
 const SPACING_MAP = {
-  compact: { xs: '0.125rem', sm: '0.25rem', md: '0.5rem', lg: '1rem', xl: '1.5rem', '2xl': '2rem', '3xl': '3rem', '4xl': '4rem' },
-  normal: { xs: '0.25rem', sm: '0.5rem', md: '1rem', lg: '1.5rem', xl: '2rem', '2xl': '3rem', '3xl': '4rem', '4xl': '6rem' },
-  spacious: { xs: '0.5rem', sm: '0.75rem', md: '1.5rem', lg: '2rem', xl: '3rem', '2xl': '4rem', '3xl': '6rem', '4xl': '8rem' },
+  compact: {
+    xs: '0.125rem',
+    sm: '0.25rem',
+    md: '0.5rem',
+    lg: '1rem',
+    xl: '1.5rem',
+    '2xl': '2rem',
+    '3xl': '3rem',
+    '4xl': '4rem',
+  },
+  normal: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+    xl: '2rem',
+    '2xl': '3rem',
+    '3xl': '4rem',
+    '4xl': '6rem',
+  },
+  spacious: {
+    xs: '0.5rem',
+    sm: '0.75rem',
+    md: '1.5rem',
+    lg: '2rem',
+    xl: '3rem',
+    '2xl': '4rem',
+    '3xl': '6rem',
+    '4xl': '8rem',
+  },
 } as const;
 
 const MOTION_MAP = {
@@ -32,16 +62,26 @@ const MOTION_MAP = {
 
 const SHADOW_MAP = {
   flat: { sm: 'none', md: 'none', lg: 'none' },
-  raised: { sm: '0 1px 2px 0 rgb(0 0 0 / 0.04)', md: '0 2px 8px 0 rgb(0 0 0 / 0.06)', lg: '0 4px 16px 0 rgb(0 0 0 / 0.08)' },
-  floating: { sm: '0 2px 8px 0 rgb(0 0 0 / 0.10)', md: '0 6px 24px 0 rgb(0 0 0 / 0.12)', lg: '0 12px 48px 0 rgb(0 0 0 / 0.15)' },
+  raised: {
+    sm: '0 1px 2px 0 rgb(0 0 0 / 0.04)',
+    md: '0 2px 8px 0 rgb(0 0 0 / 0.06)',
+    lg: '0 4px 16px 0 rgb(0 0 0 / 0.08)',
+  },
+  floating: {
+    sm: '0 2px 8px 0 rgb(0 0 0 / 0.10)',
+    md: '0 6px 24px 0 rgb(0 0 0 / 0.12)',
+    lg: '0 12px 48px 0 rgb(0 0 0 / 0.15)',
+  },
 } as const;
 
+/** Sets a CSS custom property on the document root. No-op on the server. */
 function setCSSVar(name: string, value: string) {
   if (typeof document !== 'undefined') {
     document.documentElement.style.setProperty(name, value);
   }
 }
 
+/** Converts a hex color string to normalized sRGB components (0–1). Returns null for invalid input. */
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const clean = hex.replace('#', '');
   if (!/^[0-9a-fA-F]{6}$/.test(clean)) return null;
@@ -52,14 +92,22 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   };
 }
 
+/** Converts an sRGB gamma-encoded component to linear light. */
 function srgbToLinear(v: number): number {
   return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
 }
 
+/** Parses an oklch() CSS color string or falls back to hex-to-oklch conversion. Returns null if parsing fails. */
 function parseOklch(color: string): { l: number; c: number; h: number } | null {
-  const match = color.match(/^oklch\(\s*([\d.]+)%?\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*[\d.]+)?\s*\)$/);
+  const match = color.match(
+    /^oklch\(\s*([\d.]+)%?\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*[\d.]+)?\s*\)$/,
+  );
   if (match) {
-    return { l: parseFloat(match[1]), c: parseFloat(match[2]), h: parseFloat(match[3]) };
+    return {
+      l: parseFloat(match[1]),
+      c: parseFloat(match[2]),
+      h: parseFloat(match[3]),
+    };
   }
   // Fallback: convert hex to approximate OKLCH
   const rgb = hexToRgb(color);
@@ -73,27 +121,49 @@ function parseOklch(color: string): { l: number; c: number; h: number } | null {
   const lCbrt = Math.cbrt(l_);
   const mCbrt = Math.cbrt(m_);
   const sCbrt = Math.cbrt(s_);
-  const L = 0.2104542553 * lCbrt + 0.7936177850 * mCbrt - 0.0040720468 * sCbrt;
-  const a = 1.9779984951 * lCbrt - 2.4285922050 * mCbrt + 0.4505937099 * sCbrt;
-  const b_ = 0.0259040371 * lCbrt + 0.7827717662 * mCbrt - 0.8086757660 * sCbrt;
-  return { l: L * 100, c: Math.sqrt(a * a + b_ * b_), h: (Math.atan2(b_, a) * 180) / Math.PI };
+  const L = 0.2104542553 * lCbrt + 0.793617785 * mCbrt - 0.0040720468 * sCbrt;
+  const a = 1.9779984951 * lCbrt - 2.428592205 * mCbrt + 0.4505937099 * sCbrt;
+  const b_ = 0.0259040371 * lCbrt + 0.7827717662 * mCbrt - 0.808675766 * sCbrt;
+  return {
+    l: L * 100,
+    c: Math.sqrt(a * a + b_ * b_),
+    h: (Math.atan2(b_, a) * 180) / Math.PI,
+  };
 }
 
+/** Darkens an oklch color by reducing its lightness by the given amount. Falls back to color-mix. */
 function darken(color: string, amount: number): string {
   const p = parseOklch(color);
   if (!p) return `color-mix(in srgb, ${color}, black 15%)`;
   return `oklch(${Math.max(0, p.l - amount)}% ${p.c} ${p.h})`;
 }
 
+/** Produces a desaturated, lighter or darker variant of a color for use as a subtle background. */
 function makeSubtle(color: string, dark?: boolean): string {
   const p = parseOklch(color);
-  if (!p) return `color-mix(in srgb, ${color} 20%, ${dark ? '#1a1a1a' : '#f5f5f5'})`;
+  if (!p)
+    return `color-mix(in srgb, ${color} 20%, ${dark ? '#1a1a1a' : '#f5f5f5'})`;
   const isLight = p.l > 60;
-  const subtleL = dark || isLight ? Math.max(5, p.l - 35) : Math.min(100, p.l + 42);
+  const subtleL =
+    dark || isLight ? Math.max(5, p.l - 35) : Math.min(100, p.l + 42);
   const subtleC = Math.max(0.05, p.c * 0.3);
   return `oklch(${subtleL}% ${subtleC} ${p.h})`;
 }
 
+/**
+ * Root component that applies theme tokens as CSS custom properties on
+ * `document.documentElement` and provides them through React context.
+ *
+ * Injects light / dark color schemes, border-radius, spacing, typography,
+ * shadow, and motion tokens. Persists the color mode choice in localStorage.
+ *
+ * @example
+ * ```tsx
+ * <ThemeProvider config={{ accentColor: 'oklch(60% 0.15 30)', mode: 'system' }}>
+ *   <App />
+ * </ThemeProvider>
+ * ```
+ */
 export function ThemeProvider({ config, children }: ThemeProviderProps) {
   const mounted = useRef(false);
 
@@ -147,21 +217,29 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     setCSSVar('--azimuth-shadow-md', shadows.md);
     setCSSVar('--azimuth-shadow-lg', shadows.lg);
 
-    const savedMode = (localStorage.getItem('azimuth-theme-mode') as ColorMode) || null;
+    const savedMode =
+      (localStorage.getItem('azimuth-theme-mode') as ColorMode) || null;
     const effectiveMode = savedMode || c.mode;
 
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
     function applyMode(mode: ColorMode) {
-      const isDark = mode === 'dark' || (mode === 'system' && prefersDark.matches);
-      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      const isDark =
+        mode === 'dark' || (mode === 'system' && prefersDark.matches);
+      document.documentElement.setAttribute(
+        'data-theme',
+        isDark ? 'dark' : 'light',
+      );
     }
 
     applyMode(effectiveMode);
 
     if (effectiveMode === 'system') {
       const handler = (e: MediaQueryListEvent) => {
-        document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        document.documentElement.setAttribute(
+          'data-theme',
+          e.matches ? 'dark' : 'light',
+        );
       };
       prefersDark.addEventListener('change', handler);
     }
@@ -178,7 +256,9 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     const darkPrimary = c.darkPrimaryColor || c.primaryColor;
     const darkAccent = c.darkAccentColor || c.accentColor;
 
-    injectStyle('light', `
+    injectStyle(
+      'light',
+      `
       [data-theme="light"], :root {
         --azimuth-accent: ${c.accentColor};
         --azimuth-color-primary: ${c.primaryColor};
@@ -209,9 +289,12 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
         --azimuth-color-info-text: oklch(35% 0.06 250);
         --azimuth-font-mono: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
       }
-    `);
+    `,
+    );
 
-    injectStyle('dark', `
+    injectStyle(
+      'dark',
+      `
       [data-theme="dark"] {
         --azimuth-accent: ${darkAccent};
         --azimuth-color-primary: ${darkPrimary};
@@ -242,14 +325,13 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
         --azimuth-color-info-text: oklch(65% 0.06 250);
         --azimuth-font-mono: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
       }
-    `);
+    `,
+    );
 
     mounted.current = true;
   }, [config]);
 
   return (
-    <ThemeContext.Provider value={merged}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={merged}>{children}</ThemeContext.Provider>
   );
 }

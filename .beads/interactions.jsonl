@@ -93,3 +93,5 @@
 {"id":"int-084ea7b2","kind":"field_change","created_at":"2026-06-09T05:50:54.042265Z","actor":"rosejas13","issue_id":"azimuth-ui-78i","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Closed"}}
 {"id":"int-e4e002b0","kind":"field_change","created_at":"2026-06-09T05:50:54.727795Z","actor":"rosejas13","issue_id":"azimuth-ui-m85","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Closed"}}
 {"id":"int-a9043f7d","kind":"field_change","created_at":"2026-06-09T05:50:55.41552Z","actor":"rosejas13","issue_id":"azimuth-ui-j3k","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Closed"}}
+{"id":"int-74916d2d","kind":"field_change","created_at":"2026-06-09T05:52:49.23223Z","actor":"rosejas13","issue_id":"azimuth-ui-3r5","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Closed"}}
+{"id":"int-3199f96e","kind":"field_change","created_at":"2026-06-09T05:52:49.979398Z","actor":"rosejas13","issue_id":"azimuth-ui-1fc","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Closed"}}

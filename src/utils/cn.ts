@@ -40,6 +40,13 @@ function toValue(input: ClassValue): string {
   return '';
 }
 
+/**
+ * Merges class names with support for strings, arrays, and object syntax.
+ * Inspired by clsx/classnames — filters falsy values and joins with spaces.
+ *
+ * @param inputs - Class values to merge (strings, numbers, arrays, or objects).
+ * @returns A single space-separated class string.
+ */
 export function cn(...inputs: ClassValue[]): string {
   let result = '';
   for (const input of inputs) {

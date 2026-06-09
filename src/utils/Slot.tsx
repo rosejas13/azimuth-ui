@@ -6,12 +6,21 @@ import {
   isValidElement,
 } from 'react';
 
+/**
+ * Props for the Slot component.
+ */
 export interface SlotProps {
+  /** Child element to clone props onto. */
   children: ReactNode;
+  /** Class name merged with the child's existing class names. */
   className?: string;
   [key: string]: unknown;
 }
 
+/**
+ * Merges multiple refs into a single ref callback.
+ * Supports both function and object refs.
+ */
 function mergeRefs<T>(
   ...refs: (React.Ref<T> | undefined)[]
 ): React.RefCallback<T> {
@@ -20,7 +29,7 @@ function mergeRefs<T>(
       if (typeof ref === 'function') {
         ref(value);
       } else if (ref && typeof ref === 'object' && 'current' in ref) {
-        (ref).current = value;
+        ref.current = value;
       }
     }
   };
@@ -39,6 +48,16 @@ const EVENT_MAP: EventMap = {
   onPointerUp: 'onPointerUp',
 };
 
+/**
+ * Radix-inspired Slot component that merges its props onto a single child element.
+ * Inherited props (className, event handlers, ref) are composed with the child's
+ * existing props rather than overwritten. Renders nothing when the child is not a
+ * valid React element.
+ *
+ * @param props - SlotProps including children and any additional props to forward.
+ * @param ref - Forwarded ref, merged with the child's existing ref.
+ * @returns A cloned child element with merged props, or null if children is not a valid element.
+ */
 export const Slot = forwardRef<HTMLElement, SlotProps>(
   ({ children, ...props }, ref) => {
     if (!isValidElement(children)) {

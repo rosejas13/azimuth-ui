@@ -1,10 +1,14 @@
 'use client';
 import { useEffect, type RefObject } from 'react';
 
+/** Fires a handler when a click or touch event occurs outside the referenced element. */
 export function useClickOutside<T extends HTMLElement>(
+  /** Ref to the element to watch. */
   ref: RefObject<T | null>,
+  /** Callback fired on outside click/touch. */
   handler: () => void,
-  enabled = true
+  /** @default true */
+  enabled = true,
 ) {
   useEffect(() => {
     if (!enabled) return;
