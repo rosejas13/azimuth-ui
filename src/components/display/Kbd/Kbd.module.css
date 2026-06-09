@@ -1,7 +1,13 @@
 .kbd {
   display: inline-block;
   padding: var(--azimuth-space-xs);
-  font-family: var(--azimuth-font-mono);
+  font-family: var(
+    --azimuth-font-mono,
+    ui-monospace,
+    'Cascadia Code',
+    'Fira Code',
+    monospace
+  );
   font-size: var(--azimuth-fs-xs);
   line-height: 1;
   color: var(--azimuth-color-text-secondary);

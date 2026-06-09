@@ -22,12 +22,13 @@
   border-bottom: 1px solid var(--azimuth-color-border);
   font-weight: 600;
   font-size: var(--azimuth-fs-base);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   color: var(--azimuth-color-text);
 }
 
 .header:first-child {
-  border-radius: var(--azimuth-radius, var(--azimuth-radius-md)) var(--azimuth-radius, var(--azimuth-radius-md)) 0 0;
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md))
+    var(--azimuth-radius, var(--azimuth-radius-md)) 0 0;
   overflow: hidden;
 }
 
@@ -65,7 +66,7 @@
   flex: 1;
   padding: var(--azimuth-space-md);
   color: var(--azimuth-color-text);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   line-height: var(--azimuth-lh-base);
   transition:
@@ -85,11 +86,13 @@
 }
 
 .body:first-child {
-  border-radius: var(--azimuth-radius, var(--azimuth-radius-md)) var(--azimuth-radius, var(--azimuth-radius-md)) 0 0;
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md))
+    var(--azimuth-radius, var(--azimuth-radius-md)) 0 0;
 }
 
 .body:last-child {
-  border-radius: 0 0 var(--azimuth-radius, var(--azimuth-radius-md)) var(--azimuth-radius, var(--azimuth-radius-md));
+  border-radius: 0 0 var(--azimuth-radius, var(--azimuth-radius-md))
+    var(--azimuth-radius, var(--azimuth-radius-md));
 }
 
 .body:only-child {
@@ -101,12 +104,13 @@
   border-top: 1px solid var(--azimuth-color-border);
   background: var(--azimuth-color-primary-subtle);
   color: var(--azimuth-color-text-secondary);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
 }
 
 .footer:last-child {
-  border-radius: 0 0 var(--azimuth-radius, var(--azimuth-radius-md)) var(--azimuth-radius, var(--azimuth-radius-md));
+  border-radius: 0 0 var(--azimuth-radius, var(--azimuth-radius-md))
+    var(--azimuth-radius, var(--azimuth-radius-md));
   overflow: hidden;
 }
 
@@ -114,7 +118,7 @@
   margin: 0;
   font-size: var(--azimuth-fs-lg);
   font-weight: 600;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   color: var(--azimuth-color-text);
   line-height: var(--azimuth-lh-heading);
 }
@@ -122,13 +126,13 @@
 .description {
   margin: 0;
   font-size: var(--azimuth-fs-sm);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   color: var(--azimuth-color-text-secondary);
   line-height: var(--azimuth-lh-base);
 }
 
 .content {
   padding: var(--azimuth-space-md);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   color: var(--azimuth-color-text);
 }

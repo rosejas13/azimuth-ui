@@ -27,7 +27,7 @@
   padding-right: calc(var(--azimuth-space-md) + 20px);
   border: 1px solid var(--azimuth-color-border);
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-base);
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text);
@@ -85,7 +85,8 @@
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
   background: var(--azimuth-color-surface);
   box-shadow: var(--azimuth-shadow-md);
-  animation: azimuth-slide-in-up var(--azimuth-transition-fast) var(--azimuth-ease) forwards;
+  animation: azimuth-slide-in-up var(--azimuth-transition-fast)
+    var(--azimuth-ease) forwards;
   overflow-y: auto;
   max-height: 220px;
 }
@@ -96,7 +97,7 @@
   padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
   border: none;
   border-radius: var(--azimuth-radius-sm);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   background: transparent;
   color: var(--azimuth-color-text);

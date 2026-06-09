@@ -4,7 +4,13 @@
   border: 1px solid var(--azimuth-color-border);
   border-radius: var(--azimuth-radius);
   background: var(--azimuth-color-surface);
-  font-family: var(--azimuth-font-mono);
+  font-family: var(
+    --azimuth-font-mono,
+    ui-monospace,
+    'Cascadia Code',
+    'Fira Code',
+    monospace
+  );
   font-size: var(--azimuth-fs-xs);
   line-height: var(--azimuth-lh-base);
   color: var(--azimuth-color-text);
@@ -22,7 +28,7 @@
 }
 
 .language {
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-xs);
   color: var(--azimuth-color-text-muted);
   margin-right: auto;
@@ -36,7 +42,7 @@
   border-radius: var(--azimuth-radius-sm);
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text-secondary);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-xs);
   line-height: 1.5;
   cursor: pointer;

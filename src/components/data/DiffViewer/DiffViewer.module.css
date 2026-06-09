@@ -1,5 +1,11 @@
 .root {
-  font-family: var(--azimuth-font-mono);
+  font-family: var(
+    --azimuth-font-mono,
+    ui-monospace,
+    'Cascadia Code',
+    'Fira Code',
+    monospace
+  );
   font-size: var(--azimuth-fs-xs);
   line-height: var(--azimuth-lh-base);
   border: 1px solid var(--azimuth-color-border);
@@ -14,7 +20,7 @@
   padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
   border-bottom: 1px solid var(--azimuth-color-border);
   background: var(--azimuth-color-bg);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
 }
 
 .language {
@@ -93,7 +99,7 @@
 .columnHeader {
   position: sticky;
   top: 0;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-xs);
   font-weight: 600;
   text-transform: uppercase;

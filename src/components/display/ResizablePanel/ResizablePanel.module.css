@@ -4,7 +4,7 @@
   height: 100%;
   position: relative;
   overflow: hidden;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
 }
 
 .horizontal {

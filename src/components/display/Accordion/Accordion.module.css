@@ -1,6 +1,6 @@
 .root {
   width: 100%;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
 }
 
 .item {

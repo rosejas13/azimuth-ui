@@ -16,7 +16,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--azimuth-space-sm);
-  font-family: var(--azimuth-font-display);
+  font-family: var(--azimuth-font-display, system-ui, sans-serif);
   font-size: var(--azimuth-fs-lg);
   font-weight: 700;
   color: var(--azimuth-color-text);
@@ -39,7 +39,7 @@
 }
 
 .link {
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   font-weight: 500;
   color: var(--azimuth-color-text-secondary);
@@ -88,7 +88,9 @@
   height: 2px;
   background: currentcolor;
   border-radius: 1px;
-  transition: transform var(--azimuth-transition-fast), opacity var(--azimuth-transition-fast);
+  transition:
+    transform var(--azimuth-transition-fast),
+    opacity var(--azimuth-transition-fast);
 }
 
 .hamburger.open .hamburgerLine:nth-child(1) {
@@ -125,7 +127,8 @@
   gap: var(--azimuth-space-lg);
   padding: var(--azimuth-space-xl);
   z-index: 90;
-  animation: azimuth-slide-in-right var(--azimuth-transition-base) var(--azimuth-ease) forwards;
+  animation: azimuth-slide-in-right var(--azimuth-transition-base)
+    var(--azimuth-ease) forwards;
 }
 
 .drawerHeader {
@@ -161,7 +164,7 @@
 }
 
 .mobileLink {
-  font-family: var(--azimuth-font-display);
+  font-family: var(--azimuth-font-display, system-ui, sans-serif);
   font-size: var(--azimuth-fs-lg);
   font-weight: 500;
   color: var(--azimuth-color-text);
@@ -201,7 +204,7 @@
 }
 
 @media (width <= 768px) {
-  .nav[data-mobile-position="bottom"] {
+  .nav[data-mobile-position='bottom'] {
     position: fixed;
     bottom: 0;
     top: auto;
@@ -214,12 +217,12 @@
     gap: 0;
   }
 
-  .nav[data-mobile-position="bottom"] .logo,
-  .nav[data-mobile-position="bottom"] .hamburger {
+  .nav[data-mobile-position='bottom'] .logo,
+  .nav[data-mobile-position='bottom'] .hamburger {
     display: none;
   }
 
-  .nav[data-mobile-position="bottom"] .bottomBar {
+  .nav[data-mobile-position='bottom'] .bottomBar {
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -240,7 +243,7 @@
     border: none;
     background: none;
     color: var(--azimuth-color-text-muted);
-    font-family: var(--azimuth-font-body);
+    font-family: var(--azimuth-font-body, system-ui, sans-serif);
     font-size: var(--azimuth-fs-xs);
     cursor: pointer;
     transition: color var(--azimuth-transition-fast);

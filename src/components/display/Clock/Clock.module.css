@@ -2,7 +2,13 @@
   display: flex;
   align-items: center;
   gap: var(--azimuth-space-sm);
-  font-family: var(--azimuth-font-mono);
+  font-family: var(
+    --azimuth-font-mono,
+    ui-monospace,
+    'Cascadia Code',
+    'Fira Code',
+    monospace
+  );
   font-weight: 600;
   color: var(--azimuth-color-text);
   user-select: none;
@@ -53,7 +59,7 @@
 
 .ampm {
   font-size: 0.5em;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-weight: 500;
   color: var(--azimuth-color-text-secondary);
   margin-left: var(--azimuth-space-xs);
@@ -79,7 +85,7 @@
 
 .countdownLabel {
   font-size: 0.5em;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-weight: 500;
   color: var(--azimuth-color-text-secondary);
   text-transform: uppercase;
@@ -87,14 +93,14 @@
 }
 
 .countdownFinished {
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-weight: 600;
   color: var(--azimuth-color-primary);
 }
 
 .stopwatchHint {
   font-size: 0.35em;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-weight: 400;
   color: var(--azimuth-color-text-muted);
   position: absolute;

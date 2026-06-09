@@ -1,5 +1,5 @@
 .wrapper {
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   width: 100%;
 }
 
@@ -36,7 +36,7 @@
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text);
   font-size: var(--azimuth-fs-sm);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   transition: border-color var(--azimuth-transition-fast);
 }
 
@@ -59,7 +59,7 @@
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text);
   font-size: var(--azimuth-fs-sm);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   cursor: pointer;
   white-space: nowrap;
   transition: border-color var(--azimuth-transition-fast);
@@ -104,7 +104,7 @@
   background: var(--azimuth-color-surface-hover);
 }
 
-.columnOption input[type="checkbox"] {
+.columnOption input[type='checkbox'] {
   accent-color: var(--azimuth-color-primary);
 }
 
@@ -241,7 +241,7 @@
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text);
   font-size: var(--azimuth-fs-xs);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   cursor: pointer;
 }
 
@@ -263,7 +263,7 @@
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text);
   font-size: var(--azimuth-fs-xs);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   cursor: pointer;
   transition:
     background var(--azimuth-transition-fast),

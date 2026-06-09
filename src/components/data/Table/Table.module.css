@@ -2,7 +2,7 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   color: var(--azimuth-color-text);
 }

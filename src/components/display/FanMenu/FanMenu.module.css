@@ -87,7 +87,7 @@
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text);
   font-size: var(--azimuth-fs-sm);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   cursor: pointer;
   white-space: nowrap;
   animation: azimuth-bounce-in 350ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;

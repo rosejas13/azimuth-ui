@@ -5,7 +5,7 @@
   justify-content: center;
   text-align: center;
   padding: var(--azimuth-space-xl);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
 }
 
 .sm {

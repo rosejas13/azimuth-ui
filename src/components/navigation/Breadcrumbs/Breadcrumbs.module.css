@@ -1,5 +1,5 @@
 .breadcrumbs {
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   color: var(--azimuth-color-text-secondary);
 }

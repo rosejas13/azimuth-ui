@@ -6,7 +6,7 @@
   border-right: 1px solid var(--azimuth-color-border);
   transition: width var(--azimuth-transition-base);
   overflow: hidden;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
 }
 
 .expanded {
@@ -59,7 +59,7 @@
   color: var(--azimuth-color-text);
   cursor: pointer;
   text-align: left;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   line-height: 1.5;
   transition:
@@ -165,7 +165,7 @@
   transition:
     background var(--azimuth-transition-fast),
     color var(--azimuth-transition-fast);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
 }
 
 .toggleBtn:hover {

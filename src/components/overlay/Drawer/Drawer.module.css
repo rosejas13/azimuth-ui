@@ -54,7 +54,7 @@
 }
 
 .title {
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-h5);
   color: var(--azimuth-color-text);
   margin: 0;
@@ -76,7 +76,9 @@
   font-size: 18px;
   line-height: 1;
   padding: 0;
-  transition: background var(--azimuth-transition-fast), color var(--azimuth-transition-fast);
+  transition:
+    background var(--azimuth-transition-fast),
+    color var(--azimuth-transition-fast);
 }
 
 .closeButton:hover {
@@ -93,7 +95,7 @@
   flex: 1;
   overflow-y: auto;
   padding: var(--azimuth-space-xl);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   color: var(--azimuth-color-text);
 }
 

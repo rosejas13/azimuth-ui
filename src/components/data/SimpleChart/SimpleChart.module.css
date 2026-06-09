@@ -30,7 +30,13 @@
 
 .sliceLabel {
   pointer-events: none;
-  font-family: var(--azimuth-font-mono, monospace);
+  font-family: var(
+    --azimuth-font-mono,
+    ui-monospace,
+    'Cascadia Code',
+    'Fira Code',
+    monospace
+  );
 }
 
 .line {
@@ -56,7 +62,13 @@
 
 .axisLabel {
   fill: var(--azimuth-color-text-secondary);
-  font-family: var(--azimuth-font-mono, monospace);
+  font-family: var(
+    --azimuth-font-mono,
+    ui-monospace,
+    'Cascadia Code',
+    'Fira Code',
+    monospace
+  );
 }
 
 .tooltip {

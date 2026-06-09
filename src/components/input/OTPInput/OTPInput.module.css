@@ -1,7 +1,7 @@
 .container {
   display: flex;
   gap: var(--azimuth-space-sm);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
 }
 
 .container.disabled {
@@ -24,7 +24,7 @@
   text-align: center;
   border: 1px solid var(--azimuth-color-border);
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-weight: 600;
   color: var(--azimuth-color-text);
   background: var(--azimuth-color-surface);

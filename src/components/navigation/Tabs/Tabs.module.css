@@ -1,5 +1,5 @@
 .tabs {
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
 }
 
 .tabList {
@@ -18,7 +18,7 @@
   background: transparent;
   color: var(--azimuth-color-text-secondary);
   font-size: var(--azimuth-fs-sm);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   cursor: pointer;
   position: relative;
   transition: color var(--azimuth-transition-fast);

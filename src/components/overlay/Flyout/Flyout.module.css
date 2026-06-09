@@ -13,7 +13,7 @@
   border-radius: var(--azimuth-radius);
   box-shadow: var(--azimuth-shadow-md);
   padding: var(--azimuth-space-md);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   color: var(--azimuth-color-text);
   white-space: nowrap;

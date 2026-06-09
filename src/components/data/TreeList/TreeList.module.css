@@ -1,5 +1,5 @@
 .root {
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   color: var(--azimuth-color-text);
   background: var(--azimuth-color-bg);
@@ -124,7 +124,9 @@
 .lines .node::before {
   content: '';
   position: absolute;
-  left: calc(var(--level, 0) * var(--azimuth-space-lg) + var(--azimuth-space-md));
+  left: calc(
+    var(--level, 0) * var(--azimuth-space-lg) + var(--azimuth-space-md)
+  );
   top: 0;
   bottom: 50%;
   width: 1px;
@@ -135,7 +137,9 @@
 .lines .node::after {
   content: '';
   position: absolute;
-  left: calc(var(--level, 0) * var(--azimuth-space-lg) + var(--azimuth-space-md));
+  left: calc(
+    var(--level, 0) * var(--azimuth-space-lg) + var(--azimuth-space-md)
+  );
   top: 50%;
   width: calc(var(--azimuth-space-md));
   height: 1px;

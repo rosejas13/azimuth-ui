@@ -12,10 +12,11 @@
   border: 1px solid var(--azimuth-color-border);
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   line-height: var(--azimuth-lh-base);
-  animation: azimuth-slide-in-up var(--azimuth-transition-base) var(--azimuth-ease) forwards;
+  animation: azimuth-slide-in-up var(--azimuth-transition-base)
+    var(--azimuth-ease) forwards;
 }
 
 .icon {

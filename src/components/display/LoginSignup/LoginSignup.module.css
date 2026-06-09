@@ -1,7 +1,7 @@
 .root {
   width: 100%;
   max-width: 400px;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   color: var(--azimuth-color-text);
   background: var(--azimuth-color-surface);
   border: 1px solid var(--azimuth-color-border);
@@ -23,7 +23,7 @@
   border: none;
   background: transparent;
   color: var(--azimuth-color-text-muted);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   font-weight: 500;
   cursor: pointer;
@@ -67,7 +67,7 @@
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
   background: var(--azimuth-color-bg);
   color: var(--azimuth-color-text);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   transition:
     border-color var(--azimuth-transition-fast),
@@ -116,7 +116,7 @@
   border: none;
   padding: 0;
   color: var(--azimuth-color-primary);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   cursor: pointer;
   transition: color var(--azimuth-transition-fast);
@@ -134,7 +134,7 @@
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
   background: var(--azimuth-color-primary);
   color: var(--azimuth-color-on-primary);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   font-weight: 600;
   cursor: pointer;
@@ -205,7 +205,7 @@
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
   background: var(--azimuth-color-bg);
   color: var(--azimuth-color-text);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   font-weight: 500;
   cursor: pointer;

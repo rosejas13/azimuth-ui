@@ -7,13 +7,14 @@
   border: 1px solid var(--azimuth-color-border);
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   line-height: var(--azimuth-lh-base);
   box-shadow: var(--azimuth-shadow-md);
   max-width: 360px;
   min-width: 280px;
-  animation: azimuth-slide-in-right var(--azimuth-transition-base) var(--azimuth-ease) forwards;
+  animation: azimuth-slide-in-right var(--azimuth-transition-base)
+    var(--azimuth-ease) forwards;
 }
 
 .icon {

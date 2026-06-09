@@ -42,7 +42,9 @@
 }
 
 @keyframes azimuth-media-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +111,13 @@
 .timeDisplay {
   font-size: var(--azimuth-fs-xs);
   color: var(--azimuth-color-text-inverse, #fff);
-  font-family: var(--azimuth-font-mono, monospace);
+  font-family: var(
+    --azimuth-font-mono,
+    ui-monospace,
+    'Cascadia Code',
+    'Fira Code',
+    monospace
+  );
   min-width: 40px;
   text-align: center;
   white-space: nowrap;

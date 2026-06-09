@@ -52,7 +52,7 @@
   background: var(--azimuth-color-surface);
   border-top: 1px solid var(--azimuth-color-border);
   color: var(--azimuth-color-text-secondary);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
 }
 

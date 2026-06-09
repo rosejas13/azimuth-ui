@@ -8,7 +8,7 @@
   font-size: var(--azimuth-fs-sm);
   font-weight: 500;
   color: var(--azimuth-color-text);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
 }
 
 .inputRow {
@@ -33,7 +33,7 @@
   font-size: var(--azimuth-fs-sm);
   font-weight: 500;
   color: var(--azimuth-color-text-secondary);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   flex-shrink: 0;
 }
 
@@ -51,7 +51,7 @@
   background: var(--azimuth-color-bg);
   color: var(--azimuth-color-text);
   font-size: var(--azimuth-fs-sm);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   cursor: pointer;
   transition: border-color var(--azimuth-transition-fast);
   box-sizing: border-box;
@@ -112,7 +112,13 @@
   font-size: var(--azimuth-fs-sm);
   font-weight: 600;
   color: var(--azimuth-color-text);
-  font-family: var(--azimuth-font-mono, var(--azimuth-font-body));
+  font-family: var(
+    --azimuth-font-mono,
+    ui-monospace,
+    'Cascadia Code',
+    'Fira Code',
+    monospace
+  );
   padding: var(--azimuth-space-xs) 0;
   min-width: 2ch;
   text-align: center;

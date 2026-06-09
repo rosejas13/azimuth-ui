@@ -63,7 +63,7 @@
   padding: var(--azimuth-space-sm) var(--azimuth-space-md);
   border: 1px solid var(--azimuth-color-border);
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-base);
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text);
@@ -109,7 +109,7 @@
   margin: 0;
 }
 
-.hasSteppers[type="number"] {
+.hasSteppers[type='number'] {
   appearance: textfield;
 }
 
@@ -136,7 +136,9 @@
   color: var(--azimuth-color-text-secondary);
   cursor: pointer;
   font-size: 10px;
-  transition: background var(--azimuth-transition-fast), color var(--azimuth-transition-fast);
+  transition:
+    background var(--azimuth-transition-fast),
+    color var(--azimuth-transition-fast);
 }
 
 .stepperBtn:hover {
@@ -167,7 +169,8 @@
   box-shadow: var(--azimuth-shadow-lg);
   max-height: 240px;
   overflow-y: auto;
-  animation: azimuth-scale-in var(--azimuth-transition-fast) var(--azimuth-ease) forwards;
+  animation: azimuth-scale-in var(--azimuth-transition-fast) var(--azimuth-ease)
+    forwards;
 }
 
 .suggestion {

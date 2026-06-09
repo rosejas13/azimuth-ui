@@ -25,7 +25,10 @@
 .placeholderGrid {
   position: absolute;
   inset: 0;
-  background: var(--azimuth-color-surface-secondary, var(--azimuth-color-surface));
+  background: var(
+    --azimuth-color-surface-secondary,
+    var(--azimuth-color-surface)
+  );
   background-image:
     repeating-linear-gradient(
       0deg,
@@ -114,7 +117,13 @@
   transform: translateY(-50%);
   font-size: 9px;
   color: var(--azimuth-color-text-secondary);
-  font-family: var(--azimuth-font-mono, monospace);
+  font-family: var(
+    --azimuth-font-mono,
+    ui-monospace,
+    'Cascadia Code',
+    'Fira Code',
+    monospace
+  );
   white-space: nowrap;
   pointer-events: none;
   z-index: 1;
@@ -126,7 +135,13 @@
   transform: translateX(-50%);
   font-size: 9px;
   color: var(--azimuth-color-text-secondary);
-  font-family: var(--azimuth-font-mono, monospace);
+  font-family: var(
+    --azimuth-font-mono,
+    ui-monospace,
+    'Cascadia Code',
+    'Fira Code',
+    monospace
+  );
   white-space: nowrap;
   pointer-events: none;
   z-index: 1;

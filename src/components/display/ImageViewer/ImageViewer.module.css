@@ -68,7 +68,7 @@
   align-items: center;
   gap: var(--azimuth-space-sm);
   color: white;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-base);
 }
 
@@ -147,7 +147,7 @@
   left: 50%;
   transform: translateX(-50%);
   color: white;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   z-index: 2;
 }
@@ -156,7 +156,7 @@
   text-align: center;
   color: white;
   padding: var(--azimuth-space-md);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   line-height: var(--azimuth-lh-base);
 }
@@ -181,7 +181,9 @@
   cursor: pointer;
   padding: 0;
   background: transparent;
-  transition: border-color var(--azimuth-transition-fast), opacity var(--azimuth-transition-fast);
+  transition:
+    border-color var(--azimuth-transition-fast),
+    opacity var(--azimuth-transition-fast);
   opacity: 0.5;
 }
 

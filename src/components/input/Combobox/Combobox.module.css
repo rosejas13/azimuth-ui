@@ -19,7 +19,7 @@
   width: 100%;
   border: 1px solid var(--azimuth-color-border);
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text);
   line-height: 1.5;

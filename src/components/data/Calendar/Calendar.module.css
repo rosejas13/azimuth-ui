@@ -6,7 +6,7 @@
   border: 1px solid var(--azimuth-color-border);
   border-radius: var(--azimuth-radius-md);
   background: var(--azimuth-color-surface);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   user-select: none;
 }
 
@@ -105,7 +105,7 @@
   background: transparent;
   color: var(--azimuth-color-text);
   font-size: var(--azimuth-fs-xs);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   cursor: pointer;
   transition:
     background var(--azimuth-transition-fast),

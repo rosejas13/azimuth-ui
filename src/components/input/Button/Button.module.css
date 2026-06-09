@@ -6,7 +6,7 @@
   padding: var(--azimuth-space-sm) var(--azimuth-space-lg);
   border: 1px solid transparent;
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   font-weight: 500;
   line-height: 1.5;

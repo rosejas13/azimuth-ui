@@ -14,7 +14,7 @@
 
 .title {
   margin: 0;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-h5);
   font-weight: 700;
   color: var(--azimuth-color-text);
@@ -23,7 +23,7 @@
 
 .description {
   margin: var(--azimuth-space-sm) 0 0;
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
   color: var(--azimuth-color-text-muted);
   line-height: var(--azimuth-lh-base);

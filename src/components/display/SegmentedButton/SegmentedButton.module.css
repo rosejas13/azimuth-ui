@@ -22,7 +22,7 @@
   border: none;
   background: transparent;
   color: var(--azimuth-color-text-secondary);
-  font-family: var(--azimuth-font-body);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
   cursor: pointer;
   transition:
     background var(--azimuth-transition-fast),
