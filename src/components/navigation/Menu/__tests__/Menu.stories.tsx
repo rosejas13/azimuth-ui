@@ -59,3 +59,22 @@ export const SideRight: Story = {
     ],
   },
 };
+
+export const ContextMenu: Story = {
+  args: {
+    triggerMode: 'context',
+    trigger: (
+      <div
+        style={{ padding: '1rem', border: '1px dashed #888', borderRadius: 4 }}
+      >
+        Right-click here
+      </div>
+    ),
+    items: [
+      { key: 'edit', label: 'Edit', icon: <span>&#9998;</span> },
+      { key: 'copy', label: 'Copy', icon: <span>&#128203;</span> },
+      { key: 'sep1', label: '', separator: true },
+      { key: 'delete', label: 'Delete', danger: true },
+    ],
+  },
+};

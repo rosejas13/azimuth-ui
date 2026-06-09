@@ -7,6 +7,8 @@ export * from './Form';
 export * from './Input';
 export * from './InputGroup';
 export * from './OTPInput';
+export * from './QuantityStepper';
+export * from './PhoneInput';
 export * from './Radio';
 export * from './Rating';
 export * from './SearchBar';

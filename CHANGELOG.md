@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.6.0 (2026-06-09)
+
+### Features
+- **23 new components + 1 new hook** across 6 categories
+
+#### Phase 1 — UI Primitives
+- **ScrollArea**: Custom-styled scrollable container with vertical/horizontal/both orientations, optional hide-scrollbar, smooth scroll
+- **AspectRatio**: Maintains width-to-height ratio for media (16:9, 4:3, 1:1, etc.) with CSS `aspect-ratio` + fallback
+- **SkipLink**: Skip-to-content link for keyboard users — visually hidden until focused, WCAG requirement
+
+#### Phase 2 — Marketing Site Sections
+- **Hero**: Full-width hero with center/split layouts, background image overlay, CTA buttons, 4 variants
+- **FeaturesGrid**: Feature showcase with icons, titles, descriptions; configurable columns (2/3/4)
+- **PricingTable**: Tiered pricing cards with feature comparison, highlighted tier, badges, CTA
+- **Testimonials**: Quote cards with avatar, star ratings, configurable columns
+- **CTABanner**: Focused call-to-action strip with title, description, buttons
+- **ContactSection**: Contact form with info sidebar (address, email, phone, social links)
+- **TeamSection**: Team member grid with avatars, roles, bios, social links
+- **Footer**: Multi-column site footer with brand, navigation, social links, newsletter signup
+- **StatsSection**: Number/metric showcase with icons, prefixes/suffixes, grid layout
+
+#### Phase 3 — Form & Data
+- **useForm hook**: Form state management with optional Zod validation — tracks values, errors, touched, dirty/submitting states; integrates with existing Form.Field error display
+- **PhoneInput**: International phone input with searchable country code selector (36 countries), flag emojis, controlled/uncontrolled
+- **DatePicker**: Single-date input trigger with Calendar popup, date formatting (PPP/PP/P/ISO), min/max constraints
+- **ContextMenu mode on Menu**: Added `triggerMode="context"` prop to Menu — right-click opens at mouse position
+
+#### Phase 4 — App/Dashboard Patterns
+- **ProgressSteps**: Multi-step wizard indicator with default/numbered/compact variants, horizontal/vertical orientation, click-to-navigate
+- **DataFilterBar**: Table filter bar with search input, filter dropdowns, sort controls, active filter chips, result count
+- **KPICard**: Dashboard metric card with value, label, trend arrow, 5 color variants, interactive mode
+- **ErrorBoundary**: React error boundary with ErrorPage fallback, custom fallback renderer, reset capability
+- **ActivityFeed**: Dashboard activity timeline with color-coded event dots, timestamps, show-more pagination, empty state
+
+#### Phase 5 — Storefront
+- **ProductCard**: Product display card with image, title, price, rating, sale badge, out-of-stock state
+- **QuantityStepper**: +/- quantity selector with min/max/step, size variants, disabled state
+- **PriceDisplay**: Formatted price with currency, sale strikethrough, suffix, size variants
+
+### Quality
+- **All new components**: 100% with tests (vitest), Storybook stories (CSF 3), JSDoc, WCAG 2.2 AA keyboard/ARIA, CSS Modules, forwardRef + 'use client', design tokens
+- **zod** added as peer dependency for useForm validation
+
 ## 0.5.2 (2026-06-09)
 
 ### Accessibility

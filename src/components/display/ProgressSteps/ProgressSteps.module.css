@@ -1,0 +1,169 @@
+.steps {
+  --step-size: 32px;
+  --connector-thickness: 2px;
+}
+
+.list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+}
+
+.vertical .list {
+  flex-direction: column;
+}
+
+.step {
+  position: relative;
+  list-style: none;
+}
+
+.horizontal .step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.vertical .step {
+  display: block;
+  padding-bottom: var(--azimuth-space-lg);
+}
+
+.stepBody,
+.stepButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.stepBody {
+  cursor: default;
+}
+
+.stepButton {
+  cursor: pointer;
+}
+
+.horizontal .stepBody,
+.horizontal .stepButton {
+  align-items: center;
+}
+
+.vertical .stepBody,
+.vertical .stepButton {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--azimuth-space-sm);
+}
+
+.indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--step-size);
+  height: var(--step-size);
+  border-radius: var(--azimuth-radius-full);
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 600;
+  flex-shrink: 0;
+  z-index: 1;
+  background: var(--azimuth-color-surface);
+  border: 2px solid var(--azimuth-color-border);
+  color: var(--azimuth-color-text-secondary);
+  transition:
+    background var(--azimuth-transition-base),
+    border-color var(--azimuth-transition-base),
+    color var(--azimuth-transition-base);
+}
+
+.completed .indicator {
+  background: var(--azimuth-color-primary);
+  border-color: var(--azimuth-color-primary);
+  color: var(--azimuth-color-surface);
+}
+
+.active .indicator {
+  border-color: var(--azimuth-color-primary);
+  color: var(--azimuth-color-primary);
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-2xs, 2px);
+}
+
+.horizontal .label {
+  align-items: center;
+  text-align: center;
+  margin-top: var(--azimuth-space-xs);
+}
+
+.vertical .label {
+  margin-top: 2px;
+  flex: 1;
+}
+
+.title {
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 500;
+  color: var(--azimuth-color-text-primary);
+  white-space: nowrap;
+}
+
+.description {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-secondary);
+}
+
+.active .title {
+  color: var(--azimuth-color-primary);
+  font-weight: 600;
+}
+
+.connector {
+  position: absolute;
+  background: var(--azimuth-color-border);
+  transition: background var(--azimuth-transition-base);
+}
+
+.horizontal .connector {
+  top: calc(var(--step-size) / 2);
+  height: var(--connector-thickness);
+  left: calc(50% + var(--step-size) / 2 + var(--azimuth-space-xs));
+  right: calc(-50% + var(--step-size) / 2 + var(--azimuth-space-xs));
+  transform: translateY(-50%);
+}
+
+.vertical .connector {
+  left: calc(var(--step-size) / 2);
+  width: var(--connector-thickness);
+  top: var(--step-size);
+  bottom: 0;
+  transform: translateX(-50%);
+}
+
+.completed .connector {
+  background: var(--azimuth-color-primary);
+}
+
+.numbered .indicator {
+  font-weight: 700;
+}
+
+.compact {
+  --step-size: 20px;
+  --connector-thickness: 1px;
+}
+
+.compact .title {
+  font-size: var(--azimuth-fs-xs);
+}

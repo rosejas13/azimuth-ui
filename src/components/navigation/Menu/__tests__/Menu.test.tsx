@@ -265,4 +265,111 @@ describe('Menu', () => {
     await user.keyboard('{ArrowDown}');
     expect(screen.getByRole('menu')).toBeInTheDocument();
   });
+
+  describe('context mode', () => {
+    it('opens on right-click', () => {
+      render(<Menu items={sampleItems} triggerMode="context" />);
+      const trigger = screen.getByLabelText('Open menu');
+      fireEvent.contextMenu(trigger);
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+    });
+
+    it('positions at mouse coordinates on right-click', () => {
+      render(<Menu items={sampleItems} triggerMode="context" />);
+      const trigger = screen.getByLabelText('Open menu');
+      fireEvent.contextMenu(trigger, {
+        clientX: 200,
+        clientY: 300,
+      });
+      const wrapper = screen.getByRole('menu').parentElement;
+      expect(wrapper!.style.position).toBe('fixed');
+      expect(wrapper!.style.top).toBe('304px');
+      expect(wrapper!.style.left).toBe('200px');
+    });
+
+    it('prevents native context menu', () => {
+      render(<Menu items={sampleItems} triggerMode="context" />);
+      const trigger = screen.getByLabelText('Open menu');
+      const prevented = fireEvent.contextMenu(trigger);
+      expect(prevented).toBe(false);
+    });
+
+    it('closes on outside click', async () => {
+      const user = userEvent.setup();
+      render(
+        <div>
+          <Menu items={sampleItems} triggerMode="context" />
+          <button type="button">Outside</button>
+        </div>,
+      );
+      const trigger = screen.getByLabelText('Open menu');
+      fireEvent.contextMenu(trigger);
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+      await user.click(screen.getByText('Outside'));
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+      });
+    });
+
+    it('does not react to left click', async () => {
+      const user = userEvent.setup();
+      render(<Menu items={sampleItems} triggerMode="context" />);
+      const trigger = screen.getByLabelText('Open menu');
+      await user.click(trigger);
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    });
+
+    it('supports keyboard open from trigger', async () => {
+      const user = userEvent.setup();
+      render(<Menu items={sampleItems} triggerMode="context" />);
+      const trigger = screen.getByLabelText('Open menu');
+      trigger.focus();
+      await user.keyboard('{Enter}');
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+    });
+
+    it('closes on Escape', async () => {
+      const user = userEvent.setup();
+      render(<Menu items={sampleItems} triggerMode="context" />);
+      fireEvent.contextMenu(screen.getByLabelText('Open menu'));
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+      await user.keyboard('{Escape}');
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+      });
+    });
+
+    it('navigates items with keyboard', async () => {
+      render(<Menu items={sampleItems} triggerMode="context" />);
+      fireEvent.contextMenu(screen.getByLabelText('Open menu'));
+
+      await waitFor(() => {
+        expect(getMenuItemButton('Edit')).toHaveFocus();
+      });
+
+      fireEvent.keyDown(getMenuItemButton('Edit')!, { key: 'ArrowDown' });
+      expect(getMenuItemButton('Copy')).toHaveFocus();
+    });
+
+    it('calls onSelect on item click', () => {
+      const onSelect = vi.fn();
+      render(
+        <Menu items={sampleItems} triggerMode="context" onSelect={onSelect} />,
+      );
+      fireEvent.contextMenu(screen.getByLabelText('Open menu'));
+      fireEvent.click(screen.getByText('Edit'));
+      expect(onSelect).toHaveBeenCalledWith('edit');
+    });
+
+    it('renders custom trigger content', () => {
+      render(
+        <Menu
+          items={sampleItems}
+          triggerMode="context"
+          trigger={<span>Right-click me</span>}
+        />,
+      );
+      expect(screen.getByText('Right-click me')).toBeInTheDocument();
+    });
+  });
 });

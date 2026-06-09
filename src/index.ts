@@ -67,7 +67,10 @@ export { Stack } from './components/layout/Stack';
 export type { StackProps } from './components/layout/Stack';
 
 export { Accordion } from './components/display/Accordion';
-export type { AccordionProps, AccordionItem } from './components/display/Accordion';
+export type {
+  AccordionProps,
+  AccordionItem,
+} from './components/display/Accordion';
 
 export { Alert } from './components/display/Alert';
 export type { AlertProps } from './components/display/Alert';
@@ -79,7 +82,10 @@ export { Badge } from './components/display/Badge';
 export type { BadgeProps } from './components/display/Badge';
 
 export { BreadcrumbPageHeader } from './components/navigation/BreadcrumbPageHeader';
-export type { BreadcrumbPageHeaderProps, BreadcrumbItem } from './components/navigation/BreadcrumbPageHeader';
+export type {
+  BreadcrumbPageHeaderProps,
+  BreadcrumbItem,
+} from './components/navigation/BreadcrumbPageHeader';
 
 export { Breadcrumbs } from './components/navigation/Breadcrumbs';
 export type { BreadcrumbsProps } from './components/navigation/Breadcrumbs';
@@ -88,7 +94,11 @@ export { Calendar } from './components/data/Calendar';
 export type { CalendarProps } from './components/data/Calendar';
 
 export { Card } from './components/display/Card';
-export type { CardProps, CardHeaderProps, CardFooterProps } from './components/display/Card';
+export type {
+  CardProps,
+  CardHeaderProps,
+  CardFooterProps,
+} from './components/display/Card';
 
 export { Carousel } from './components/display/Carousel';
 export type { CarouselProps } from './components/display/Carousel';
@@ -109,7 +119,10 @@ export { ColorPicker } from './components/data/ColorPicker';
 export type { ColorPickerProps } from './components/data/ColorPicker';
 
 export { Combobox } from './components/input/Combobox';
-export type { ComboboxProps, ComboboxOption } from './components/input/Combobox';
+export type {
+  ComboboxProps,
+  ComboboxOption,
+} from './components/input/Combobox';
 
 export { Cursor, useCursor } from './components/display/Cursor';
 export type { CursorProps } from './components/display/Cursor';
@@ -121,7 +134,10 @@ export { DateTimePicker } from './components/data/DateTimePicker';
 export type { DateTimePickerProps } from './components/data/DateTimePicker';
 
 export { DateRangePicker } from './components/data/DateRangePicker';
-export type { DateRangePickerProps, DateRange } from './components/data/DateRangePicker';
+export type {
+  DateRangePickerProps,
+  DateRange,
+} from './components/data/DateRangePicker';
 
 export { FileUpload } from './components/input/FileUpload';
 export type { FileUploadProps } from './components/input/FileUpload';
@@ -154,7 +170,10 @@ export { InputGroup } from './components/input/InputGroup';
 export type { InputGroupProps } from './components/input/InputGroup';
 
 export { ImageViewer } from './components/display/ImageViewer';
-export type { ImageViewerProps, ImageViewerImage } from './components/display/ImageViewer';
+export type {
+  ImageViewerProps,
+  ImageViewerImage,
+} from './components/display/ImageViewer';
 
 export { InfoButton } from './components/display/InfoButton';
 export type { InfoButtonProps } from './components/display/InfoButton';
@@ -169,7 +188,11 @@ export { Loader } from './components/display/Loader';
 export type { LoaderProps } from './components/display/Loader';
 
 export { LoginSignup } from './components/display/LoginSignup';
-export type { LoginSignupProps, AuthView, AuthProvider } from './components/display/LoginSignup';
+export type {
+  LoginSignupProps,
+  AuthView,
+  AuthProvider,
+} from './components/display/LoginSignup';
 
 export { Menu } from './components/navigation/Menu';
 export type { MenuProps, MenuItem } from './components/navigation/Menu';
@@ -208,7 +231,10 @@ export { SectionView } from './components/display/SectionView';
 export type { SectionViewProps } from './components/display/SectionView';
 
 export { SegmentedButton } from './components/display/SegmentedButton';
-export type { SegmentedButtonProps, SegmentedButtonOption } from './components/display/SegmentedButton';
+export type {
+  SegmentedButtonProps,
+  SegmentedButtonOption,
+} from './components/display/SegmentedButton';
 
 export { Sidebar } from './components/overlay/Sidebar';
 export type { SidebarProps, SidebarItem } from './components/overlay/Sidebar';
@@ -217,7 +243,10 @@ export { Skeleton } from './components/display/Skeleton';
 export type { SkeletonProps } from './components/display/Skeleton';
 
 export { SplitButton } from './components/display/SplitButton';
-export type { SplitButtonProps, SplitButtonOption } from './components/display/SplitButton';
+export type {
+  SplitButtonProps,
+  SplitButtonOption,
+} from './components/display/SplitButton';
 
 export { SlideSheet } from './components/overlay/SlideSheet';
 export type { SlideSheetProps } from './components/overlay/SlideSheet';
@@ -243,8 +272,17 @@ export type { TextBoxProps } from './components/input/TextBox';
 export { Timeline } from './components/data/Timeline';
 export type { TimelineProps, TimelineItem } from './components/data/Timeline';
 
-export { Toast, ToastProvider, useToast, ToastContext } from './components/display/Toast';
-export type { ToastProps, ToastOptions, ToastPosition } from './components/display/Toast';
+export {
+  Toast,
+  ToastProvider,
+  useToast,
+  ToastContext,
+} from './components/display/Toast';
+export type {
+  ToastProps,
+  ToastOptions,
+  ToastPosition,
+} from './components/display/Toast';
 
 export { Tooltip } from './components/overlay/Tooltip';
 export type { TooltipProps } from './components/overlay/Tooltip';
@@ -256,23 +294,118 @@ export { VisuallyHidden } from './components/display/VisuallyHidden';
 export type { VisuallyHiddenProps } from './components/display/VisuallyHidden';
 
 export { CommandPalette } from './components/overlay/CommandPalette';
-export type { CommandPaletteProps, CommandGroup, CommandItem } from './components/overlay/CommandPalette';
+export type {
+  CommandPaletteProps,
+  CommandGroup,
+  CommandItem,
+} from './components/overlay/CommandPalette';
 
 export { MapDisplay } from './components/display/MapDisplay';
-export type { MapDisplayProps, MapMarker } from './components/display/MapDisplay';
+export type {
+  MapDisplayProps,
+  MapMarker,
+} from './components/display/MapDisplay';
 
 export { MediaPlayer } from './components/display/MediaPlayer';
 export type { MediaPlayerProps } from './components/display/MediaPlayer';
 
 export { SimpleChart } from './components/data/SimpleChart';
-export type { SimpleChartProps, ChartDataPoint } from './components/data/SimpleChart';
+export type {
+  SimpleChartProps,
+  ChartDataPoint,
+} from './components/data/SimpleChart';
 
 export { DiffViewer } from './components/data/DiffViewer';
 export type { DiffViewerProps } from './components/data/DiffViewer';
+
+export { ActivityFeed } from './components/display/ActivityFeed';
+export type {
+  ActivityFeedProps,
+  ActivityEvent,
+} from './components/display/ActivityFeed';
+
+export { AspectRatio } from './components/display/AspectRatio';
+export type { AspectRatioProps } from './components/display/AspectRatio';
+
+export { DatePicker } from './components/data/DatePicker';
+export type { DatePickerProps } from './components/data/DatePicker';
+
+export { DataFilterBar } from './components/data/DataFilterBar';
+export type {
+  DataFilterBarProps,
+  FilterDefinition,
+  ActiveFilter,
+  SortConfig,
+} from './components/data/DataFilterBar';
+
+export { ErrorBoundary } from './components/display/ErrorBoundary';
+export type { ErrorBoundaryProps } from './components/display/ErrorBoundary';
+
+export { KPICard } from './components/display/KPICard';
+export type { KPICardProps } from './components/display/KPICard';
+
+export { PhoneInput } from './components/input/PhoneInput';
+export type {
+  PhoneInputProps,
+  CountryCode,
+} from './components/input/PhoneInput';
+
+export { PriceDisplay } from './components/display/PriceDisplay';
+export type { PriceDisplayProps } from './components/display/PriceDisplay';
+
+export { ProductCard } from './components/display/ProductCard';
+export type { ProductCardProps } from './components/display/ProductCard';
+
+export { ProgressSteps } from './components/display/ProgressSteps';
+export type {
+  ProgressStepsProps,
+  Step,
+} from './components/display/ProgressSteps';
+
+export { QuantityStepper } from './components/input/QuantityStepper';
+export type { QuantityStepperProps } from './components/input/QuantityStepper';
+
+export { ScrollArea } from './components/display/ScrollArea';
+export type { ScrollAreaProps } from './components/display/ScrollArea';
+
+export { SkipLink } from './components/display/SkipLink';
+export type { SkipLinkProps } from './components/display/SkipLink';
+
+export {
+  Hero,
+  FeaturesGrid,
+  PricingTable,
+  Testimonials,
+  CTABanner,
+  ContactSection,
+  TeamSection,
+  Footer,
+  StatsSection,
+} from './components/sections';
+export type {
+  HeroProps,
+  FeaturesGridProps,
+  FeatureItem,
+  PricingTableProps,
+  PricingTier,
+  TestimonialsProps,
+  TestimonialItem,
+  CTABannerProps,
+  ContactSectionProps,
+  ContactInfo,
+  TeamSectionProps,
+  TeamMember,
+  FooterProps,
+  FooterColumn,
+  SocialLink,
+  StatsSectionProps,
+  StatItem,
+} from './components/sections';
 
 export {
   useDisclosure,
   useClickOutside,
   useMediaQuery,
   useControllableState,
+  useForm,
 } from './hooks';

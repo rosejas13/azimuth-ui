@@ -1,0 +1,47 @@
+.section {
+  width: 100%;
+  padding: var(--azimuth-space-3xl, 4rem) 0;
+}
+.default {
+  background: var(--azimuth-color-bg);
+}
+.accent {
+  background: var(--azimuth-color-primary);
+  color: var(--azimuth-color-on-primary);
+}
+.dark {
+  background: var(--azimuth-color-bg-inverse);
+  color: var(--azimuth-color-text-inverse);
+}
+.muted {
+  background: var(--azimuth-color-surface);
+}
+.inner {
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-md);
+  align-items: center;
+}
+.title {
+  font-family: var(--azimuth-font-display, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-2xl, 2rem);
+  font-weight: 700;
+  line-height: var(--azimuth-lh-display, 1.1);
+  margin: 0;
+}
+.actions {
+  display: flex;
+  gap: var(--azimuth-space-md);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--azimuth-space-sm);
+}
+
+@media (width <= 48rem) {
+  .section {
+    padding: var(--azimuth-space-2xl, 3rem) 0;
+  }
+}

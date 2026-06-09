@@ -28,6 +28,8 @@ export interface MenuProps extends Omit<
 > {
   items: MenuItem[];
   trigger?: React.ReactNode;
+  /** @default 'click' */
+  triggerMode?: 'click' | 'context';
   onSelect?: (key: string) => void;
   /** @default 'left' */
   side?: 'left' | 'right';
@@ -35,7 +37,18 @@ export interface MenuProps extends Omit<
 
 /** A dropdown menu triggered by a button or custom trigger element. Keyboard-navigable. */
 export const Menu = forwardRef<HTMLDivElement, MenuProps>(
-  ({ items, trigger, onSelect, side = 'left', className, ...props }, ref) => {
+  (
+    {
+      items,
+      trigger,
+      triggerMode = 'click',
+      onSelect,
+      side = 'left',
+      className,
+      ...props
+    },
+    ref,
+  ) => {
     const [open, setOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
@@ -73,6 +86,18 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
         });
       }
     }, [side]);
+
+    const handleContextMenu = useCallback((e: React.MouseEvent) => {
+      e.preventDefault();
+      const gap = 4;
+      setPanelStyle({
+        position: 'fixed',
+        top: e.clientY + gap,
+        left: e.clientX,
+        zIndex: 1200,
+      });
+      setOpen(true);
+    }, []);
 
     const handleSelect = useCallback(
       (item: MenuItem) => {
@@ -173,17 +198,24 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
         }
       }, 0);
 
-      const positionHandler = () => updatePosition();
-      window.addEventListener('scroll', positionHandler, true);
-      window.addEventListener('resize', positionHandler);
+      if (triggerMode !== 'context') {
+        const positionHandler = () => updatePosition();
+        window.addEventListener('scroll', positionHandler, true);
+        window.addEventListener('resize', positionHandler);
+
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+          clearTimeout(timer);
+          window.removeEventListener('scroll', positionHandler, true);
+          window.removeEventListener('resize', positionHandler);
+        };
+      }
 
       return () => {
         document.removeEventListener('mousedown', handleClickOutside);
         clearTimeout(timer);
-        window.removeEventListener('scroll', positionHandler, true);
-        window.removeEventListener('resize', positionHandler);
       };
-    }, [open, close, clickableItems, updatePosition]);
+    }, [open, close, clickableItems, updatePosition, triggerMode]);
 
     const handleOpen = useCallback(() => {
       updatePosition();
@@ -233,30 +265,20 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
 
     return (
       <div ref={setRefs} className={cn(styles.container, className)} {...props}>
-        {trigger ? (
-          <button
-            type="button"
-            className={styles.trigger}
-            onClick={handleToggle}
-            onKeyDown={handleTriggerKeyDown}
-            aria-haspopup="menu"
-            aria-expanded={open}
-          >
-            {trigger}
-          </button>
-        ) : (
-          <button
-            type="button"
-            className={styles.trigger}
-            onClick={handleToggle}
-            onKeyDown={handleTriggerKeyDown}
-            aria-haspopup="menu"
-            aria-expanded={open}
-            aria-label="Open menu"
-          >
-            &#x22EE;
-          </button>
-        )}
+        <button
+          type="button"
+          className={styles.trigger}
+          onClick={triggerMode === 'click' ? handleToggle : undefined}
+          onContextMenu={
+            triggerMode === 'context' ? handleContextMenu : undefined
+          }
+          onKeyDown={handleTriggerKeyDown}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-label={trigger ? undefined : 'Open menu'}
+        >
+          {trigger ?? '\u22EE'}
+        </button>
 
         {open && (
           <div style={panelStyle}>

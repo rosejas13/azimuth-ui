@@ -1,0 +1,66 @@
+.scrollArea {
+  --scrollbar-size: 6px;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: var(--azimuth-color-border);
+  --scrollbar-thumb-hover: var(--azimuth-color-border-strong);
+
+  position: relative;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.vertical {
+  overflow: hidden auto;
+}
+
+.horizontal {
+  overflow: auto hidden;
+}
+
+.both {
+  overflow: auto;
+}
+
+.smoothScroll {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smoothScroll {
+    scroll-behavior: auto;
+  }
+}
+
+.hideScrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hideScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollArea::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+.scrollArea::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: var(--azimuth-radius-full);
+}
+
+.scrollArea::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: var(--azimuth-radius-full);
+  transition: background var(--azimuth-transition-fast);
+}
+
+.scrollArea::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+.scrollArea::-webkit-scrollbar-corner {
+  background: transparent;
+}

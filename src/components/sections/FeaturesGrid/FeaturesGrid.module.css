@@ -1,0 +1,114 @@
+.section {
+  position: relative;
+  width: 100%;
+  padding: var(--azimuth-space-3xl, 4rem) 0;
+}
+
+.default {
+  background: var(--azimuth-color-bg);
+}
+
+.accent {
+  background: var(--azimuth-color-primary);
+  color: var(--azimuth-color-on-primary);
+}
+
+.dark {
+  background: var(--azimuth-color-bg-inverse);
+  color: var(--azimuth-color-text-inverse);
+}
+
+.muted {
+  background: var(--azimuth-color-surface);
+}
+
+.header {
+  text-align: center;
+  margin: 0 auto var(--azimuth-space-2xl, 3rem);
+  max-width: 48rem;
+}
+
+.subtitle {
+  display: block;
+  margin-bottom: var(--azimuth-space-sm);
+}
+
+.title {
+  font-family: var(--azimuth-font-display, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-h2, 2rem);
+  font-weight: 700;
+  line-height: var(--azimuth-lh-display, 1.1);
+  margin: 0 0 var(--azimuth-space-md, 1rem);
+  letter-spacing: -0.02em;
+}
+
+.description {
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  gap: var(--azimuth-space-lg, 1.5rem);
+}
+
+.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--azimuth-radius-md, 0.5rem);
+  background: var(--azimuth-color-primary-subtle);
+  color: var(--azimuth-color-primary);
+  margin-bottom: var(--azimuth-space-md, 1rem);
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.accent .icon {
+  background: rgb(255 255 255 / 20%);
+  color: var(--azimuth-color-on-primary);
+}
+
+.dark .icon {
+  background: var(--azimuth-color-primary-subtle);
+  color: var(--azimuth-color-primary);
+}
+
+.muted .icon {
+  background: var(--azimuth-color-primary-subtle);
+  color: var(--azimuth-color-primary);
+}
+
+@media (width <= 64rem) {
+  .cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width <= 48rem) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .section {
+    padding: var(--azimuth-space-2xl, 3rem) 0;
+  }
+}

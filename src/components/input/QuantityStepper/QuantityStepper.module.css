@@ -1,0 +1,38 @@
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+
+.label {
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text-secondary);
+  margin-right: var(--azimuth-space-sm);
+}
+
+.value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  padding: 0 var(--azimuth-space-sm);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: center;
+  color: var(--azimuth-color-text);
+}
+
+.sm .value {
+  min-width: 2rem;
+  font-size: var(--azimuth-fs-sm);
+}
+
+.md .value {
+  min-width: 2.5rem;
+  font-size: var(--azimuth-fs-base);
+}
+
+.lg .value {
+  min-width: 3rem;
+  font-size: var(--azimuth-fs-lg);
+}

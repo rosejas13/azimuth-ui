@@ -1,0 +1,25 @@
+.root {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  background: var(--azimuth-color-bg);
+  color: var(--azimuth-color-primary);
+  font-size: var(--azimuth-fs-sm);
+  font-family: var(--azimuth-font-body);
+  text-decoration: none;
+  outline: none;
+  transition:
+    top var(--azimuth-transition-base),
+    box-shadow var(--azimuth-transition-fast);
+}
+
+.root:focus {
+  top: 0;
+  box-shadow: var(--azimuth-shadow-focus);
+}

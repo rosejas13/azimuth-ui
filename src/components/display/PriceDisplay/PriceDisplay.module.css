@@ -1,0 +1,43 @@
+.container {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--azimuth-space-xs);
+  font-family: var(--azimuth-font-body);
+  line-height: var(--azimuth-lh-tight);
+}
+
+.price {
+  font-weight: 700;
+  color: var(--azimuth-color-text);
+}
+
+.originalPrice {
+  text-decoration: line-through;
+  color: var(--azimuth-color-text-muted);
+  font-weight: 400;
+}
+
+.suffix {
+  color: var(--azimuth-color-text-secondary);
+  font-weight: 400;
+}
+
+.sm {
+  font-size: var(--azimuth-fs-sm);
+}
+
+.md {
+  font-size: var(--azimuth-fs-base);
+}
+
+.lg {
+  font-size: var(--azimuth-fs-xl);
+}
+
+.sm .price {
+  font-weight: 600;
+}
+
+.lg .price {
+  font-weight: 800;
+}

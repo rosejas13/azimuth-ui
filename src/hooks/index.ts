@@ -8,3 +8,5 @@ export { useMediaQuery } from './useMediaQuery';
 export { useControllableState } from './useControllableState';
 /** A hook for trapping focus within a container element (Tab cycling and Shift+Tab). */
 export { useFocusTrap } from './useFocusTrap';
+/** A hook for form state management with optional Zod validation. */
+export { useForm } from './useForm';

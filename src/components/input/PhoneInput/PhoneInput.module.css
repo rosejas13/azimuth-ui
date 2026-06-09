@@ -1,0 +1,212 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-xs);
+}
+
+.label {
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 600;
+  color: var(--azimuth-color-text-secondary);
+}
+
+.inputRow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.countrySelector {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.countryButton {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-xs);
+  height: 100%;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  border: 1px solid var(--azimuth-color-border);
+  border-right: none;
+  border-radius: var(--azimuth-radius) 0 0 var(--azimuth-radius);
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-base);
+  line-height: 1.5;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    border-color var(--azimuth-transition-fast),
+    background var(--azimuth-transition-fast);
+}
+
+.countryButton:hover:not(:disabled) {
+  background: var(--azimuth-color-surface-hover);
+}
+
+.countryButton:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+.countryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.flag {
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.chevron {
+  font-size: 0.65em;
+  color: var(--azimuth-color-text-muted);
+  transition: transform var(--azimuth-transition-fast);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 50;
+  margin-top: var(--azimuth-space-xs);
+  min-width: 280px;
+  background: var(--azimuth-color-surface);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius);
+  box-shadow: var(--azimuth-shadow-lg);
+  animation: azimuth-scale-in var(--azimuth-transition-fast) var(--azimuth-ease)
+    forwards;
+}
+
+.searchInput {
+  display: block;
+  width: 100%;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  border: none;
+  border-bottom: 1px solid var(--azimuth-color-border);
+  background: transparent;
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.searchInput:focus {
+  background: var(--azimuth-color-surface-hover);
+}
+
+.searchInput::placeholder {
+  color: var(--azimuth-color-text-muted);
+}
+
+.countryList {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.countryOption {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-sm);
+  width: 100%;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  border: none;
+  background: none;
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--azimuth-transition-fast);
+}
+
+.countryOption:hover,
+.countryOptionHighlighted {
+  background: var(--azimuth-color-primary-subtle);
+  color: var(--azimuth-color-primary);
+}
+
+.countryOption:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
+}
+
+.countryOptionCode {
+  color: var(--azimuth-color-text-muted);
+  margin-left: auto;
+}
+
+.noResults {
+  padding: var(--azimuth-space-md);
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text-muted);
+  text-align: center;
+}
+
+.phoneInput {
+  flex: 1;
+  min-width: 0;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: 0 var(--azimuth-radius) var(--azimuth-radius) 0;
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-base);
+  line-height: 1.5;
+  outline: none;
+  transition:
+    border-color var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast);
+}
+
+.phoneInput:focus {
+  border-color: var(--azimuth-color-primary);
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.phoneInput::placeholder {
+  color: var(--azimuth-color-text-muted);
+}
+
+.phoneInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--azimuth-color-surface-hover);
+}
+
+.hasError .countryButton {
+  border-color: var(--azimuth-color-error-text);
+}
+
+.hasError .phoneInput {
+  border-color: var(--azimuth-color-error-text);
+}
+
+.hasError .phoneInput:focus {
+  box-shadow: var(--azimuth-shadow-focus-error);
+}
+
+.footerArea {
+  min-height: calc(var(--azimuth-fs-xs) * var(--azimuth-lh-base));
+}
+
+.errorMessage {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-error-text);
+}
+
+.helpText {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+}

@@ -1,0 +1,131 @@
+.hero {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 28rem;
+}
+
+.default {
+  background: var(--azimuth-color-bg);
+}
+
+.accent {
+  background: var(--azimuth-color-primary);
+  color: var(--azimuth-color-on-primary);
+}
+
+.dark {
+  background: var(--azimuth-color-bg-inverse);
+  color: var(--azimuth-color-text-inverse);
+}
+
+.muted {
+  background: var(--azimuth-color-surface);
+}
+
+.withBackground {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgb(0 0 0 / 50%);
+}
+
+.inner {
+  position: relative;
+  z-index: 2;
+  padding: var(--azimuth-space-3xl, 4rem) 0;
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-md);
+  max-width: 48rem;
+}
+
+.center {
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.split {
+  align-items: flex-start;
+}
+
+.title {
+  font-family: var(--azimuth-font-display, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-hero, 3rem);
+  font-weight: 700;
+  line-height: var(--azimuth-lh-display, 1.1);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.actions {
+  display: flex;
+  gap: var(--azimuth-space-md);
+  flex-wrap: wrap;
+  margin-top: var(--azimuth-space-sm);
+}
+
+.center .actions {
+  justify-content: center;
+}
+
+.split .actions {
+  justify-content: flex-start;
+}
+
+.splitLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--azimuth-space-xl);
+  align-items: center;
+}
+
+.media {
+  border-radius: var(--azimuth-radius-lg, 0.5rem);
+  overflow: hidden;
+}
+
+.media img,
+.media video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (width <= 48rem) {
+  .inner {
+    padding: var(--azimuth-space-2xl, 3rem) 0;
+  }
+
+  .splitLayout {
+    grid-template-columns: 1fr;
+    gap: var(--azimuth-space-lg);
+  }
+
+  .splitLayout .content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .splitLayout .actions {
+    justify-content: center;
+  }
+
+  .media {
+    order: -1;
+  }
+}

@@ -4,3 +4,4 @@ export * from './data';
 export * from './navigation';
 export * from './overlay';
 export * from './layout';
+export * from './sections';

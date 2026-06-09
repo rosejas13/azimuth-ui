@@ -1,0 +1,105 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-xs);
+  padding: var(--azimuth-space-lg);
+  border-radius: var(--azimuth-radius-lg);
+  background: var(--azimuth-color-surface);
+  border: 1px solid var(--azimuth-color-border);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  transition:
+    box-shadow var(--azimuth-transition-fast),
+    background var(--azimuth-transition-fast);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  box-shadow: var(--azimuth-shadow-md);
+  background: var(--azimuth-color-surface-hover);
+}
+
+.default {
+  border-color: var(--azimuth-color-border);
+}
+
+.accent {
+  border-color: var(--azimuth-color-accent);
+}
+
+.success {
+  border-color: var(--azimuth-color-success-text);
+}
+
+.warning {
+  border-color: var(--azimuth-color-warning-text);
+}
+
+.danger {
+  border-color: var(--azimuth-color-error-text);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.value {
+  font-size: var(--azimuth-fs-h2);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--azimuth-color-text);
+}
+
+.icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--azimuth-color-text-muted);
+  flex-shrink: 0;
+  margin-left: var(--azimuth-space-sm);
+}
+
+.label {
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text-secondary);
+  line-height: var(--azimuth-lh-base);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-xs);
+  margin-top: var(--azimuth-space-xs);
+}
+
+.trendIndicator {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.trendValue {
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 600;
+}
+
+.trendUp {
+  color: var(--azimuth-color-success-text);
+}
+
+.trendDown {
+  color: var(--azimuth-color-error-text);
+}
+
+.trendNeutral {
+  color: var(--azimuth-color-text-muted);
+}
+
+.description {
+  margin: 0;
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+  line-height: var(--azimuth-lh-base);
+}

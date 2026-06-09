@@ -1,0 +1,26 @@
+.root {
+  position: relative;
+  width: 100%;
+}
+
+.inner {
+  aspect-ratio: var(--aspect-ratio, 16/9);
+}
+
+@supports not (aspect-ratio: 1/1) {
+  .inner::before {
+    display: block;
+    width: 100%;
+    padding-bottom: var(--aspect-ratio-padding, 56.25%);
+    content: '';
+  }
+
+  .inner {
+    display: flex;
+  }
+}
+
+.content {
+  position: absolute;
+  inset: 0;
+}

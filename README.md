@@ -36,7 +36,7 @@ function App() {
 
 ## Features
 
-- **81 components**: 12 data, 35 display, 17 input, 4 layout, 5 navigation, 8 overlay
+- **104 components**: 13 data, 48 display, 21 input, 4 layout, 5 navigation, 8 overlay, 9 sections
 - **860 SVG icons**: Tree-shakeable React icon components (Font Awesome subset, regular + brands)
 - **ThemeProvider**: Single config controls every component's appearance
 - **CSS custom properties**: All styling via `--azimuth-*` tokens
@@ -157,7 +157,7 @@ import { ThemeProvider, COLOR_PRESETS } from 'azimuth-ui';
 git clone https://github.com/rosejas13/azimuth-ui.git
 cd azimuth-ui
 npm install
-npm run test          # 1119 tests across 87 files
+npm run test          # 1413 tests across 110 files
 npm run typecheck     # Strict TypeScript
 npm run demo          # Component showcase with live playground
 npm run lint          # ESLint (zero-error)

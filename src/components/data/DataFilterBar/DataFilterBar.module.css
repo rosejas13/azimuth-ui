@@ -1,0 +1,181 @@
+.bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-sm);
+}
+
+.controlsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-sm);
+  flex-wrap: wrap;
+}
+
+.searchWrapper {
+  position: relative;
+  flex: 1 1 200px;
+  min-width: 140px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--azimuth-space-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  color: var(--azimuth-color-text-muted);
+  pointer-events: none;
+  line-height: 1;
+}
+
+.searchInput {
+  width: 100%;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  padding-left: calc(var(--azimuth-space-md) + 16px);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-md);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-sm);
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  line-height: 1.5;
+  box-sizing: border-box;
+  transition: border-color var(--azimuth-transition-fast);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--azimuth-color-primary);
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.selectWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.select {
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  padding-right: calc(var(--azimuth-space-md) + 18px);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-md);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-sm);
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  line-height: 1.5;
+  cursor: pointer;
+  appearance: none;
+  box-sizing: border-box;
+  transition: border-color var(--azimuth-transition-fast);
+  min-width: 120px;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--azimuth-color-primary);
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.selectChevron {
+  position: absolute;
+  right: var(--azimuth-space-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  color: var(--azimuth-color-text-muted);
+  pointer-events: none;
+  line-height: 1;
+}
+
+.sortGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--azimuth-space-xs);
+}
+
+.sortDirectionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-md);
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  cursor: pointer;
+  transition:
+    border-color var(--azimuth-transition-fast),
+    background var(--azimuth-transition-fast);
+}
+
+.sortDirectionBtn:hover {
+  background: var(--azimuth-color-surface-hover);
+}
+
+.sortDirectionBtn:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 2px;
+}
+
+.resultCount {
+  font-size: var(--azimuth-fs-sm);
+  color: var(--azimuth-color-text-muted);
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.chipsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--azimuth-space-xs);
+  align-items: center;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--azimuth-space-xs);
+  padding: 2px var(--azimuth-space-sm);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-sm);
+  font-size: var(--azimuth-fs-xs);
+  background: var(--azimuth-color-primary-subtle);
+  color: var(--azimuth-color-text);
+  line-height: 1.5;
+}
+
+.chipLabel {
+  white-space: nowrap;
+}
+
+.chipRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--azimuth-color-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--azimuth-transition-fast),
+    color var(--azimuth-transition-fast);
+}
+
+.chipRemove:hover {
+  background: var(--azimuth-color-text-muted);
+  color: var(--azimuth-color-surface);
+}
+
+.chipRemove:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 1px;
+}
