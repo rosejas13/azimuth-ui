@@ -35,27 +35,35 @@
 .h1 {
   font-size: var(--azimuth-fs-h1);
 }
+
 .h2 {
   font-size: var(--azimuth-fs-h2);
 }
+
 .h3 {
   font-size: var(--azimuth-fs-h3);
 }
+
 .h4 {
   font-size: var(--azimuth-fs-h4);
 }
+
 .h5 {
   font-size: var(--azimuth-fs-h5);
 }
+
 .lg {
   font-size: var(--azimuth-fs-lg);
 }
+
 .base {
   font-size: var(--azimuth-fs-base);
 }
+
 .sm {
   font-size: var(--azimuth-fs-sm);
 }
+
 .xs {
   font-size: var(--azimuth-fs-xs);
 }
@@ -63,15 +71,19 @@
 .bold {
   font-weight: 700;
 }
+
 .semibold {
   font-weight: 600;
 }
+
 .medium {
   font-weight: 500;
 }
+
 .normal {
   font-weight: 400;
 }
+
 .light {
   font-weight: 300;
 }
@@ -79,12 +91,15 @@
 .primary {
   color: var(--azimuth-color-text);
 }
+
 .secondary {
   color: var(--azimuth-color-text-secondary);
 }
+
 .muted {
   color: var(--azimuth-color-text-muted);
 }
+
 .accent {
   color: var(--azimuth-color-primary);
 }
@@ -93,6 +108,7 @@
   .secondary {
     color: color-mix(in srgb, currentcolor 65%, transparent);
   }
+
   .muted {
     color: color-mix(in srgb, currentcolor 45%, transparent);
   }
@@ -102,9 +118,11 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
 .capitalize {
   text-transform: capitalize;
 }
+
 .nowrap {
   white-space: nowrap;
 }

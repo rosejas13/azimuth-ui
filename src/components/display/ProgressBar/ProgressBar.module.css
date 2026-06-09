@@ -16,9 +16,11 @@
 .sm {
   height: 4px;
 }
+
 .md {
   height: 8px;
 }
+
 .lg {
   height: 12px;
 }
@@ -38,12 +40,15 @@
 .accent .fill {
   background: var(--azimuth-color-accent);
 }
+
 .success .fill {
   background: var(--azimuth-color-success-text);
 }
+
 .warning .fill {
   background: var(--azimuth-color-warning-text);
 }
+
 .danger .fill {
   background: var(--azimuth-color-error-text);
 }
@@ -52,6 +57,7 @@
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(350%);
   }
