@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1 (2026-06-12)
+
+### Fixes
+
+- **Card**: `Card.body` now renders as a flex column, allowing children to use `flex: 1` or `margin-top: auto` to push the footer to the bottom of the card. Previously the body had `flex: 1` in the card's column layout but wasn't itself a flex container, so children couldn't fill available space.
+
 ## 0.7.0 (2026-06-09)
 
 ### Features
