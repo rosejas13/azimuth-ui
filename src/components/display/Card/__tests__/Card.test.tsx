@@ -28,7 +28,11 @@ describe('Card', () => {
 
   it('renders expandable toggle and collapses body on click', async () => {
     const user = userEvent.setup();
-    render(<Card expandable defaultExpanded={true}>Collapsible content</Card>);
+    render(
+      <Card expandable defaultExpanded={true}>
+        Collapsible content
+      </Card>,
+    );
     const button = screen.getByRole('button');
     expect(screen.getByText('Collapsible content')).toBeInTheDocument();
     await user.click(button);
@@ -89,5 +93,93 @@ describe('Card', () => {
     expect(screen.getByText('Title')).toBeInTheDocument();
     expect(screen.getByText('Body text')).toBeInTheDocument();
     expect(screen.getByText('Foot')).toBeInTheDocument();
+  });
+
+  it('renders with elevated variant class', () => {
+    const { container } = render(<Card variant="elevated">Content</Card>);
+    expect(container.firstChild).toHaveClass('elevated');
+  });
+
+  it('renders with dashed variant class', () => {
+    const { container } = render(<Card variant="dashed">Content</Card>);
+    expect(container.firstChild).toHaveClass('dashed');
+  });
+
+  it('renders with fill class', () => {
+    const { container } = render(<Card fill>Content</Card>);
+    expect(container.firstChild).toHaveClass('fill');
+  });
+
+  it('default variant (outline) does not apply variant class', () => {
+    const { container } = render(<Card>Content</Card>);
+    expect(container.firstChild).not.toHaveClass('outline');
+    expect(container.firstChild).not.toHaveClass('elevated');
+    expect(container.firstChild).not.toHaveClass('dashed');
+  });
+});
+
+describe('CSS structure', () => {
+  it('applies the card CSS module class to the root element', () => {
+    const { container } = render(<Card>Content</Card>);
+    const el = container.firstChild as HTMLElement;
+    expect(el).toBeInstanceOf(HTMLDivElement);
+    expect(el.classList.length).toBeGreaterThan(0);
+    expect(el.className).toContain('card');
+  });
+
+  it('applies elevated and dashed variant CSS module classes', () => {
+    const { container: elevated } = render(
+      <Card variant="elevated">Content</Card>,
+    );
+    expect((elevated.firstChild as HTMLElement).className).toContain(
+      'elevated',
+    );
+
+    const { container: dashed } = render(<Card variant="dashed">Content</Card>);
+    expect((dashed.firstChild as HTMLElement).className).toContain('dashed');
+  });
+
+  it('applies the fill CSS module class', () => {
+    const { container } = render(<Card fill>Content</Card>);
+    expect((container.firstChild as HTMLElement).className).toContain('fill');
+  });
+
+  it('applies header, body, and footer CSS module classes to sub-elements', () => {
+    const { container } = render(
+      <Card header="Title" footer="Foot">
+        Body
+      </Card>,
+    );
+    const bodyEl = container.querySelector('.body');
+    expect(bodyEl).toBeTruthy();
+    expect(bodyEl?.textContent).toContain('Body');
+
+    const headerEl = container.querySelector('.header');
+    expect(headerEl).toBeTruthy();
+    expect(headerEl?.textContent).toContain('Title');
+
+    const footerEl = container.querySelector('.footer');
+    expect(footerEl).toBeTruthy();
+    expect(footerEl?.textContent).toContain('Foot');
+  });
+
+  it('applies collapsed CSS module class to body when defaultExpanded is false', () => {
+    const { container } = render(
+      <Card expandable defaultExpanded={false}>
+        Hidden
+      </Card>,
+    );
+    const body = container.querySelector('.body');
+    expect(body?.className).toContain('collapsed');
+  });
+
+  it('does not apply collapsed CSS module class when defaultExpanded is true', () => {
+    const { container } = render(
+      <Card expandable defaultExpanded={true}>
+        Visible
+      </Card>,
+    );
+    const body = container.querySelector('.body');
+    expect(body?.className).not.toContain('collapsed');
   });
 });

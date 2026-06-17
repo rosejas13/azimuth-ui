@@ -39,4 +39,49 @@ describe('Container', () => {
     const { container } = render(<Container size="full">Content</Container>);
     expect(container.firstChild).toHaveClass('full');
   });
+
+  it('renders maxWidth as number (px)', () => {
+    const { container } = render(<Container maxWidth={960}>Content</Container>);
+    expect(container.firstChild).toHaveStyle({ maxWidth: '960px' });
+  });
+
+  it('renders maxWidth as string (rem)', () => {
+    const { container } = render(
+      <Container maxWidth="60rem">Content</Container>,
+    );
+    expect(container.firstChild).toHaveStyle({ maxWidth: '60rem' });
+  });
+
+  it('maxWidth overrides size prop', () => {
+    const { container } = render(
+      <Container size="sm" maxWidth={1200}>
+        Content
+      </Container>,
+    );
+    expect(container.firstChild).toHaveClass('sm');
+    expect(container.firstChild).toHaveStyle({ maxWidth: '1200px' });
+  });
+});
+
+describe('CSS structure', () => {
+  it('applies the container CSS module class to the root element', () => {
+    const { container } = render(<Container>Content</Container>);
+    const el = container.firstChild as HTMLElement;
+    expect(el).toBeInstanceOf(HTMLDivElement);
+    expect(el.classList.length).toBeGreaterThan(0);
+    expect(el.className).toContain('container');
+  });
+
+  it('applies distinct class strings for each size variant', () => {
+    const sizes = ['sm', 'md', 'lg', 'xl', 'full'] as const;
+    const classStrings = new Set<string>();
+    for (const size of sizes) {
+      const { container, unmount } = render(
+        <Container size={size}>Content</Container>,
+      );
+      classStrings.add((container.firstChild as HTMLElement).className);
+      unmount();
+    }
+    expect(classStrings.size).toBe(sizes.length);
+  });
 });

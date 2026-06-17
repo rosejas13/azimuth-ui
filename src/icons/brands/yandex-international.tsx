@@ -1,10 +1,22 @@
 import { type SVGAttributes, forwardRef } from 'react';
 
-export const YandexInternationalIcon = forwardRef<SVGSVGElement, SVGAttributes<SVGSVGElement>>(
-  ({ className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className={className} {...props}>
-      <path fill="currentColor" d="M289.5 576L289.5 409.9L178.5 112L234.3 112L316.1 341.7L410.2 64L461.5 64L340.8 411.8L340.8 576L289.5 576z"/>
-    </svg>
-  ),
-);
+export const YandexInternationalIcon = forwardRef<
+  SVGSVGElement,
+  SVGAttributes<SVGSVGElement>
+>(({ className, ...props }, ref) => (
+  <svg
+    ref={ref}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 640 640"
+    width="1em"
+    height="1em"
+    className={className}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M289.5 576L289.5 409.9L178.5 112L234.3 112L316.1 341.7L410.2 64L461.5 64L340.8 411.8L340.8 576L289.5 576z"
+    />
+  </svg>
+));
 YandexInternationalIcon.displayName = 'YandexInternationalIcon';

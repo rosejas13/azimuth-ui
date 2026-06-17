@@ -132,3 +132,19 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.left {
+  text-align: left;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.justify {
+  text-align: justify;
+}

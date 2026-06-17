@@ -1,10 +1,22 @@
 import { type SVGAttributes, forwardRef } from 'react';
 
-export const InstalodIcon = forwardRef<SVGSVGElement, SVGAttributes<SVGSVGElement>>(
-  ({ className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className={className} {...props}>
-      <path fill="currentColor" d="M217.6 544L451.3 544L566.7 339.8L268.4 397.2L217.6 544zM569 304.1L451.4 96L219.9 96L424.5 331.9L569 304.1zM188.6 112.8L71.5 320L187.5 525.2L289.9 229.6L188.6 112.8z"/>
-    </svg>
-  ),
-);
+export const InstalodIcon = forwardRef<
+  SVGSVGElement,
+  SVGAttributes<SVGSVGElement>
+>(({ className, ...props }, ref) => (
+  <svg
+    ref={ref}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 640 640"
+    width="1em"
+    height="1em"
+    className={className}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M217.6 544L451.3 544L566.7 339.8L268.4 397.2L217.6 544zM569 304.1L451.4 96L219.9 96L424.5 331.9L569 304.1zM188.6 112.8L71.5 320L187.5 525.2L289.9 229.6L188.6 112.8z"
+    />
+  </svg>
+));
 InstalodIcon.displayName = 'InstalodIcon';

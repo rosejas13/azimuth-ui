@@ -8,13 +8,25 @@
   white-space: nowrap;
 }
 
-.xs { font-size: var(--azimuth-fs-xs); padding: 1px var(--azimuth-space-xs); }
-.sm { font-size: var(--azimuth-fs-xs); }
-.md { font-size: var(--azimuth-fs-xs); }
+.xs {
+  font-size: var(--azimuth-fs-xs);
+  padding: 1px var(--azimuth-space-xs);
+}
+.sm {
+  font-size: var(--azimuth-fs-xs);
+}
+.md {
+  font-size: var(--azimuth-fs-xs);
+}
 
 .neutral {
   background: var(--azimuth-color-primary-subtle);
   color: var(--azimuth-color-primary);
+}
+
+.primary {
+  background: var(--azimuth-color-primary);
+  color: #fff;
 }
 
 .accent {

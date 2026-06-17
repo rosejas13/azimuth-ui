@@ -1,6 +1,11 @@
 'use client';
 
-import { type ComponentPropsWithoutRef, forwardRef, useState, useId } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  forwardRef,
+  useState,
+  useId,
+} from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Card.module.css';
 
@@ -12,6 +17,10 @@ export interface CardProps extends ComponentPropsWithoutRef<'div'> {
   expandable?: boolean;
   /** @default true */
   defaultExpanded?: boolean;
+  /** @default 'outline' */
+  variant?: 'outline' | 'elevated' | 'dashed';
+  /** @default false */
+  fill?: boolean;
   /** Body content of the card. */
   children?: React.ReactNode;
 }
@@ -23,6 +32,8 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
       footer,
       expandable = false,
       defaultExpanded = true,
+      variant,
+      fill,
       className,
       children,
       ...props
@@ -33,7 +44,16 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
     const bodyId = useId();
 
     return (
-      <div ref={ref} className={cn(styles.card, className)} {...props}>
+      <div
+        ref={ref}
+        className={cn(
+          styles.card,
+          variant && variant !== 'outline' && styles[variant],
+          fill && styles.fill,
+          className,
+        )}
+        {...props}
+      >
         {(header || expandable) && (
           <div className={styles.header}>
             {header && <span className={styles.headerContent}>{header}</span>}

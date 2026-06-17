@@ -1,10 +1,22 @@
 import { type SVGAttributes, forwardRef } from 'react';
 
-export const BandcampIcon = forwardRef<SVGSVGElement, SVGAttributes<SVGSVGElement>>(
-  ({ className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className={className} {...props}>
-      <path fill="currentColor" d="M320 72C183 72 72 183 72 320C72 457 183 568 320 568C457 568 568 457 568 320C568 183 457 72 320 72zM368.2 398.1L187.2 398.1L271.9 242L452.9 242L368.2 398.1z"/>
-    </svg>
-  ),
-);
+export const BandcampIcon = forwardRef<
+  SVGSVGElement,
+  SVGAttributes<SVGSVGElement>
+>(({ className, ...props }, ref) => (
+  <svg
+    ref={ref}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 640 640"
+    width="1em"
+    height="1em"
+    className={className}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M320 72C183 72 72 183 72 320C72 457 183 568 320 568C457 568 568 457 568 320C568 183 457 72 320 72zM368.2 398.1L187.2 398.1L271.9 242L452.9 242L368.2 398.1z"
+    />
+  </svg>
+));
 BandcampIcon.displayName = 'BandcampIcon';

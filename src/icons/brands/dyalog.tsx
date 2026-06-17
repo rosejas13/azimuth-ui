@@ -1,10 +1,22 @@
 import { type SVGAttributes, forwardRef } from 'react';
 
-export const DyalogIcon = forwardRef<SVGSVGElement, SVGAttributes<SVGSVGElement>>(
-  ({ className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className={className} {...props}>
-      <path fill="currentColor" d="M112 96L112 215.2L176 215.2L176 160L283.2 160C396.6 160 464 240.2 464 319.9C464 396 405.4 480 283.2 480L112 480L112 544L283.2 544C443.9 544 528 431.3 528 319.9C528 261.2 505.9 206.5 465.7 165.6C420.9 120 357.7 96 283.2 96L112 96z"/>
-    </svg>
-  ),
-);
+export const DyalogIcon = forwardRef<
+  SVGSVGElement,
+  SVGAttributes<SVGSVGElement>
+>(({ className, ...props }, ref) => (
+  <svg
+    ref={ref}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 640 640"
+    width="1em"
+    height="1em"
+    className={className}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M112 96L112 215.2L176 215.2L176 160L283.2 160C396.6 160 464 240.2 464 319.9C464 396 405.4 480 283.2 480L112 480L112 544L283.2 544C443.9 544 528 431.3 528 319.9C528 261.2 505.9 206.5 465.7 165.6C420.9 120 357.7 96 283.2 96L112 96z"
+    />
+  </svg>
+));
 DyalogIcon.displayName = 'DyalogIcon';

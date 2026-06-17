@@ -1,10 +1,22 @@
 import { type SVGAttributes, forwardRef } from 'react';
 
-export const VuejsIcon = forwardRef<SVGSVGElement, SVGAttributes<SVGSVGElement>>(
-  ({ className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className={className} {...props}>
-      <path fill="currentColor" d="M452.9 128.3L376 128.3L320 216.9L272 128.3L96 128.3L320 512L544 128.3L452.9 128.3zM151.7 160.3L205.5 160.3L320 358.5L434.4 160.3L488.2 160.3L320 448.5L151.7 160.3z"/>
-    </svg>
-  ),
-);
+export const VuejsIcon = forwardRef<
+  SVGSVGElement,
+  SVGAttributes<SVGSVGElement>
+>(({ className, ...props }, ref) => (
+  <svg
+    ref={ref}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 640 640"
+    width="1em"
+    height="1em"
+    className={className}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M452.9 128.3L376 128.3L320 216.9L272 128.3L96 128.3L320 512L544 128.3L452.9 128.3zM151.7 160.3L205.5 160.3L320 358.5L434.4 160.3L488.2 160.3L320 448.5L151.7 160.3z"
+    />
+  </svg>
+));
 VuejsIcon.displayName = 'VuejsIcon';

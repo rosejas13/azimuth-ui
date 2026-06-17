@@ -1,4 +1,9 @@
-import { type ComponentPropsWithoutRef, type ElementType, createElement, forwardRef } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  createElement,
+  forwardRef,
+} from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Text.module.css';
 
@@ -7,6 +12,8 @@ type TextSize = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'lg' | 'base' | 'sm' | 'xs';
 type TextWeight = 'bold' | 'semibold' | 'medium' | 'normal' | 'light';
 
 type TextColor = 'primary' | 'secondary' | 'muted' | 'accent';
+
+type TextAlign = 'left' | 'center' | 'right' | 'justify';
 
 type TextVariant = 'display' | 'heading' | 'body' | 'mono';
 
@@ -38,6 +45,8 @@ export interface TextProps extends ComponentPropsWithoutRef<'p'> {
   truncate?: boolean;
   /** @default false */
   nowrap?: boolean;
+  /** Text alignment. */
+  align?: TextAlign;
   /** Text content. */
   children?: React.ReactNode;
 }
@@ -46,13 +55,10 @@ export interface TextProps extends ComponentPropsWithoutRef<'p'> {
 export const Text = forwardRef<HTMLElement, TextProps>(
   (
     {
-      element: {
-        as,
-        size = 'base',
-        variant = 'body',
-      } = {},
+      element: { as, size = 'base', variant = 'body' } = {},
       weight,
       color,
+      align,
       uppercase = false,
       truncate = false,
       nowrap = false,
@@ -74,6 +80,7 @@ export const Text = forwardRef<HTMLElement, TextProps>(
           styles[size],
           weight && styles[weight],
           color && styles[color],
+          align && styles[align],
           uppercase && styles.uppercase,
           truncate && styles.truncate,
           nowrap && styles.nowrap,

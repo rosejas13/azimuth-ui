@@ -1,10 +1,22 @@
 import { type SVGAttributes, forwardRef } from 'react';
 
-export const YCombinatorIcon = forwardRef<SVGSVGElement, SVGAttributes<SVGSVGElement>>(
-  ({ className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className={className} {...props}>
-      <path fill="currentColor" d="M544 96L544 544L96 544L96 96L544 96zM332 351.5L409.5 206L376.8 206L331 297C326.3 306.3 322 315.3 318.2 323.8L306 297L260.8 206L225.8 206L302.5 349.8L302.5 444.3L332 444.3L332 351.5z"/>
-    </svg>
-  ),
-);
+export const YCombinatorIcon = forwardRef<
+  SVGSVGElement,
+  SVGAttributes<SVGSVGElement>
+>(({ className, ...props }, ref) => (
+  <svg
+    ref={ref}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 640 640"
+    width="1em"
+    height="1em"
+    className={className}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M544 96L544 544L96 544L96 96L544 96zM332 351.5L409.5 206L376.8 206L331 297C326.3 306.3 322 315.3 318.2 323.8L306 297L260.8 206L225.8 206L302.5 349.8L302.5 444.3L332 444.3L332 351.5z"
+    />
+  </svg>
+));
 YCombinatorIcon.displayName = 'YCombinatorIcon';

@@ -14,6 +14,29 @@
   background: var(--azimuth-color-surface-hover);
 }
 
+.elevated {
+  border: none;
+  box-shadow: var(--azimuth-shadow-md);
+}
+
+.elevated:hover {
+  box-shadow: var(--azimuth-shadow-lg);
+}
+
+.dashed {
+  border: 2px dashed var(--azimuth-color-primary);
+  box-shadow: none;
+}
+
+.dashed:hover {
+  box-shadow: none;
+  background: var(--azimuth-color-surface-hover);
+}
+
+.fill {
+  height: 100%;
+}
+
 .header {
   display: flex;
   align-items: center;

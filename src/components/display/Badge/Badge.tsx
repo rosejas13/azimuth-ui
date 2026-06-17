@@ -2,7 +2,14 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Badge.module.css';
 
-type BadgeVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
+type BadgeVariant =
+  | 'neutral'
+  | 'primary'
+  | 'accent'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'info';
 type BadgeSize = 'xs' | 'sm' | 'md';
 
 /** A small badge/tag for statuses, counts, or labels. */
@@ -17,7 +24,10 @@ export interface BadgeProps extends ComponentPropsWithoutRef<'span'> {
 
 /** A small badge for statuses, counts, or contextual labels. */
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ variant = 'neutral', size = 'md', className, children, ...props }, ref) => {
+  (
+    { variant = 'neutral', size = 'md', className, children, ...props },
+    ref,
+  ) => {
     return (
       <span
         ref={ref}
