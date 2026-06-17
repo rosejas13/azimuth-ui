@@ -56,3 +56,5 @@ no-db: true
 dolt.auto-commit: "on"
 
 dolt.port: 54423
+
+sync.remote: "git+https://github.com/rosejas13/azimuth-ui.git"
