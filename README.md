@@ -61,11 +61,11 @@ All 103 components live under `src/components/` grouped by category.
 
 `Button` `Checkbox` `Combobox` `DropdownList` `FileUpload` `Form` `Input` `InputGroup` `OTPInput` `PhoneInput` `QuantityStepper` `Radio` `Rating` `SearchBar` `Select` `Slider` `TextArea` `TextBox` `Toggle`
 
-### Display (48)
+### Display (44)
 
 `Accordion` `ActivityFeed` `Alert` `AspectRatio` `Avatar` `Badge` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `Cursor` `EmptyState` `ErrorBoundary` `ErrorPage` `FanMenu` `Icon` `IconButton` `ImageViewer` `InfoButton` `Kbd` `KPICard` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `NotificationBadge` `PageLayout` `PriceDisplay` `ProductCard` `ProgressBar` `ProgressSteps` `ResizablePanel` `ScrollArea` `SectionView` `SegmentedButton` `Skeleton` `SkipLink` `SplitButton` `Tag` `Text` `Toast` `VisuallyHidden`
 
-### Data (13)
+### Data (14)
 
 `Calendar` `ColorPicker` `DataFilterBar` `DataTable` `DatePicker` `DateRangePicker` `DateTimePicker` `DiffViewer` `List` `Pagination` `SimpleChart` `Table` `Timeline` `TreeList`
 

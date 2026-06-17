@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.8.0 (2026-06-17)
+
+### Features
+
+- **Container**: New `maxWidth` prop accepts numbers (px) or CSS strings — eliminates `style={{ maxWidth: 960 }}` workaround on every page. Use `<Container maxWidth={960}>` or `<Container maxWidth="60rem">`.
+- **Text**: New `align` prop (`left` | `center` | `right` | `justify`) — replaces 30+ instances of `style={{ textAlign: 'center' }}` across the codebase.
+- **Grid**: New `minWidth` prop for auto-fill responsive columns — replaces hardcoded `250px` with configurable values. `<Grid cols={{ base: 'auto' }} minWidth={280} />`.
+- **Divider**: New `margin` prop accepts azimuth space tokens (`xs`/`sm`/`md`/`lg`/`xl`) — eliminates inline margin styles around dividers.
+- **Card**: New `variant` prop (`outline`/`elevated`/`dashed`) for border style presets. New `fill` prop for equal-height grid card layouts (`height: 100%`).
+- **Badge**: New `primary` variant with solid primary background and white text.
+- **Icons**: All 860 SVG icons now include `width="1em" height="1em"` — renders at correct size even without the `<Icon>` wrapper.
+
+### Quality
+
+- **CSS structure tests**: Added for Container, Text, Divider, Grid, Card, and Badge — verifies CSS module class names are applied to correct DOM elements.
+
 ## 0.7.1 (2026-06-12)
 
 ### Fixes

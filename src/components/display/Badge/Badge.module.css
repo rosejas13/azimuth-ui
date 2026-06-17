@@ -12,9 +12,11 @@
   font-size: var(--azimuth-fs-xs);
   padding: 1px var(--azimuth-space-xs);
 }
+
 .sm {
   font-size: var(--azimuth-fs-xs);
 }
+
 .md {
   font-size: var(--azimuth-fs-xs);
 }
