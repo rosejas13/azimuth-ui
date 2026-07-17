@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.9.1 (2026-06-26)
+
+### Features
+
+- **PageLayout**: Responsive mobile sidebar with hamburger toggle, backdrop overlay, and `breakpoint` prop. Focus trapped while open, closes on Escape, announces state to screen readers.
+- **Icons**: 6 new regular icons — Lock, LockOpen, Shield, Search, ArrowLeft, ArrowRight.
+- **PRODUCT.md + DESIGN.md**: Added strategic design context and visual system documentation via `/impeccable`.
+- **AGENTS.md**: Added Design Context pointer with 9 key design facts for agent reference.
+
+### Design Tokens
+
+- **`--azimuth-shadow-xl`**: New 4th shadow tier (`0 8px 32px 0 rgb(0 0 0 / 10%)`) for full-screen overlays, drawers, and command palette. Extends the existing sm/md/lg scale.
+- **Spacing aliases**: Added `--azimuth-spacing-*` variables mapping to existing `--azimuth-space-*` tokens for API consistency.
+
+### Accessibility (WCAG 2.2 AA)
+
+- **PageLayout mobile sidebar**: Added focus trap (Tab/Shift+Tab cycling), `aria-controls` on hamburger, `aria-live="polite"` status announcement, `:focus-within` outline on overlay, and `prefers-reduced-motion` overrides in CSS module.
+- **`a:hover` indicator**: Re-added `text-decoration: underline` as non-color link hover indicator (removed by issue closure, reverted per a11y audit).
+- **Icon SVGs**: Added `role="img"` and `<title>` to all icon components for screen reader identification.
+
+### Quality
+
+- **Beads config**: Switched from external Dolt server to embedded mode with auto-export to JSONL. Resolves `bd` compatibility with local workflow.
+- **Style presets**: Fixed `--azimuth-background` typo → `--azimuth-color-bg` in Minimal and Crisp presets.
+- **A11y audit**: Ran full WCAG 2.2 AA audit across changed files (PageLayout, reset.css, icon SVGs). All 8 findings closed.
+
+## 0.9.0 (2026-06-19)
+
+### Features
+
+- **PageLayout**: New responsive mobile sidebar — hamburger toggle, backdrop overlay, configurable `breakpoint` prop (default `768px`), keyboard dismiss (Escape). Sidebar slides in from left/right matching desktop position.
+- **Icons**: 7 new regular icons — Lock, LockOpen, Shield, Search, ArrowLeft, ArrowRight, History.
+- **Spacing tokens**: Added `--azimuth-spacing-*` CSS alias variables for all 8 `--azimuth-space-*` scale steps.
+
+### Fixes
+
+- **Beads config**: Fixed stale `data_dir` path (`personal/` → `nova-mir/`). Switched from external Dolt server to embedded Dolt mode with `export.auto: true` — beads now works fully offline with auto-export to JSONL.
+- **Global `a:hover`**: Removed default `text-decoration: underline` from anchor hover style (was redundant with color change and clashed with component-level link styling).
+
+### Chores
+
+- **Issue tracking**: Closed 3 completed items (DataTable keyboard sort, SidebarNav nested items, Dropdown menu placement).
+
 ## 0.8.0 (2026-06-17)
 
 ### Features

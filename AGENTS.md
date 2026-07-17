@@ -169,3 +169,18 @@ For more details, see README.md and docs/QUICKSTART.md.
 - If push fails, resolve and retry until it succeeds
 
 <!-- END BEADS INTEGRATION -->
+
+## Design Context
+
+Design intent is captured in PRODUCT.md (strategy) and DESIGN.md (visual system).
+Read both before generating new components. Key facts:
+
+- **Register**: product (component library / design system)
+- **North Star**: "The Workbench" — clean, organized, tactile
+- **Primary accent**: Slate Teal (`oklch(50% 0.13 195deg)`)
+- **Accent**: Copper (`#e8734a`)
+- **Typeface**: Onest (single family for display through label)
+- **Elevation**: flat at rest, lift on interaction (4 shadow tiers: sm/md/lg/xl)
+- **Easing**: `cubic-bezier(0.16, 1, 0.3, 1)` (exponential ease-out)
+- **Anti-references**: bloated UI libs (MUI, AntD, Chakra) and generic SaaS-cream
+- **Do not**: side-stripe borders, gradient text, glassmorphism defaults, hero-metric templates, identical card grids, modals as first thought<!-- END BEADS INTEGRATION -->

@@ -263,6 +263,9 @@ export type { TabsProps } from './components/navigation/Tabs';
 export { Tag } from './components/display/Tag';
 export type { TagProps } from './components/display/Tag';
 
+export { ThemeToggle } from './components/display/ThemeToggle';
+export type { ThemeToggleProps } from './components/display/ThemeToggle';
+
 export { TextArea } from './components/input/TextArea';
 export type { TextAreaProps } from './components/input/TextArea';
 

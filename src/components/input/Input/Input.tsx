@@ -15,6 +15,8 @@ type InputBaseProps = ComponentPropsWithoutRef<'input'>;
 
 /** A text input component with label, validation, autocomplete, and stepper support. */
 export interface InputProps extends Omit<InputBaseProps, 'size' | 'value' | 'disabled' | 'min' | 'max' | 'step' | 'maxLength'> {
+  /** Props spread directly onto the underlying <input> element. Overrides other native attribute props. */
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   label?: { text?: string; subtitle?: string; error?: string; /** @default false */ required?: boolean; /** @default 'top' */ position?: 'top' | 'left' | 'inner' };
   value?: { value?: string; onChange?: React.ChangeEventHandler<HTMLInputElement>; disabled?: boolean };
   charCount?: { maxLength?: number; /** @default false */ showCharCount?: boolean };
@@ -57,6 +59,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       type = 'text',
       className,
       id,
+      inputProps,
       ...props
     },
     ref,
@@ -201,6 +204,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           aria-controls={autocompleteOptions && showSuggestions ? `${generatedId}-suggestions` : undefined}
           autoComplete={autocompleteOptions ? 'off' : undefined}
           {...props}
+          {...inputProps}
         />
 
         {hasSteppers && (

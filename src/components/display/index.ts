@@ -40,5 +40,6 @@ export * from './Skeleton';
 export * from './SplitButton';
 export * from './Tag';
 export * from './Text';
+export * from './ThemeToggle';
 export * from './Toast';
 export * from './VisuallyHidden';

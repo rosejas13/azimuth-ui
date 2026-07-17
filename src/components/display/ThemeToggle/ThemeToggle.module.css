@@ -1,0 +1,50 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text-secondary);
+  cursor: pointer;
+  transition:
+    background var(--azimuth-transition-fast),
+    color var(--azimuth-transition-fast),
+    border-color var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast);
+}
+
+.toggle:hover {
+  background: var(--azimuth-color-surface-hover);
+  color: var(--azimuth-color-text);
+  border-color: var(--azimuth-color-border-strong);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 2px;
+}
+
+.toggle svg {
+  width: 1em;
+  height: 1em;
+}
+
+.sm {
+  width: 28px;
+  height: 28px;
+  font-size: var(--azimuth-fs-sm);
+}
+
+.md {
+  width: 36px;
+  height: 36px;
+  font-size: var(--azimuth-fs-base);
+}
+
+.lg {
+  width: 44px;
+  height: 44px;
+  font-size: var(--azimuth-fs-lg);
+}
