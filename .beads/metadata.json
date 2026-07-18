@@ -1,6 +1,7 @@
 {
+  "database": "dolt",
   "backend": "dolt",
-  "dolt_mode": "embedded",
+  "dolt_mode": "server",
   "dolt_database": "azimuth_ui",
   "project_id": "58f187ad-b48c-4cd1-9c5e-e28b85f41553"
 }

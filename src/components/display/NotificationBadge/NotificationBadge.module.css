@@ -18,8 +18,14 @@
   pointer-events: none;
 }
 
-.sm { font-size: var(--azimuth-fs-xs); padding: 2px 5px; }
-.md { font-size: var(--azimuth-fs-xs); padding: 3px 6px; }
+.sm {
+  font-size: var(--azimuth-fs-xs);
+  padding: 2px 5px;
+}
+.md {
+  font-size: var(--azimuth-fs-xs);
+  padding: 3px 6px;
+}
 
 .dotMode {
   min-width: unset;
@@ -38,7 +44,7 @@
 }
 
 .accent {
-  background: var(--azimuth-color-accent);
+  background: var(--azimuth-color-accent-strong);
   color: var(--azimuth-color-on-accent);
 }
 

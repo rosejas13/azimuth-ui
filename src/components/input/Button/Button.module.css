@@ -45,6 +45,7 @@
 
 .primary:hover:not(:disabled) {
   background: var(--azimuth-color-primary-hover);
+  color: var(--azimuth-color-on-primary-hover);
 }
 
 .secondary {

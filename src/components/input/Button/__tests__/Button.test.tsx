@@ -159,5 +159,41 @@ describe('Button', () => {
       const { container } = render(<Button asChild />);
       expect(container.innerHTML).toBe('');
     });
+
+    // Regression: azimuth_ui-c5m. A Button rendered as an anchor must carry the
+    // base `.button` class (which declares `text-decoration: none`) so the UA
+    // default anchor underline is suppressed in every variant, including asChild.
+    it('anchor carries the underline-suppressing .button class', () => {
+      render(
+        <Button asChild variant="primary">
+          <a href="/test">Start Your Project</a>
+        </Button>,
+      );
+      const link = screen.getByRole('link');
+      expect(link.className).toContain('button');
+      expect(link.className).toContain('primary');
+      // No inline style reintroduces an underline.
+      expect(link.getAttribute('style')).toBeNull();
+    });
+
+    it('anchor has no underline class across all variants', () => {
+      const variants = [
+        'primary',
+        'secondary',
+        'tertiary',
+        'link',
+        'danger',
+      ] as const;
+      for (const variant of variants) {
+        const { unmount } = render(
+          <Button asChild variant={variant}>
+            <a href="/test">{variant}</a>
+          </Button>,
+        );
+        // The `.button` base class is the underline-reset hook (CSS text-decoration: none).
+        expect(screen.getByRole('link').className).toContain('button');
+        unmount();
+      }
+    });
   });
 });

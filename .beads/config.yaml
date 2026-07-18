@@ -1,6 +1,5 @@
 export.auto: true
 export.git-add: true
 export.path: issues.jsonl
-dolt.auto-commit: "on"
 sync:
     remote: "git+ssh://git@github.com/rosejas13/azimuth-ui.git"

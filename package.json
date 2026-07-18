@@ -1,6 +1,6 @@
 {
   "name": "azimuth-ui",
-  "version": "0.9.1",
+  "version": "0.9.3",
   "description": "A configurable, accessible React component library. Theme-driven via a single ThemeProvider with CSS custom properties. Built with TypeScript and CSS Modules.",
   "browserslist": [
     "> 1%",
@@ -81,11 +81,13 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.0.0",
+    "@types/culori": "4.0.1",
     "@types/node": "25.9.3",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^5.2.0",
     "@vitest/coverage-v8": "^2.1.9",
+    "culori": "4.0.2",
     "eslint": "^9.39.4",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "husky": "9.1.7",

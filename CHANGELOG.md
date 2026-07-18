@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.9.3 (2026-07-17)
+
+### Accessibility (WCAG 2.2 AA)
+
+- **Button fallback hex**: Replaced light-theme fallback `--azimuth-color-primary` `#2e9e8e` → `#00787a` and `--azimuth-color-primary-hover` `#258a7c` → `#006b6d` in the `@supports not (color: oklch)` block so the fallback matches the oklch primary (which passes AA at 5.29:1) instead of rendering a lighter, AA-failing teal in legacy browsers. Closes azimuth_ui-8hu.
+- **Button hover text color**: Added `--azimuth-color-on-primary-hover` and `--azimuth-color-on-accent-hover` tokens in all four theme/path blocks; `.primary:hover` in `Button` and `SplitButton` now re-asserts `color` against the hover background so text contrast holds across themes. Closes azimuth_ui-ck8.
+- **Button asChild link underline**: Added `AsChildLink` Storybook story and a vitest + Playwright a11y spec verifying the base `.button` class's `text-decoration: none` reset suppresses the UA anchor underline in every variant. Closes azimuth_ui-c5m.
+- **Filled-accent AA**: Added `--azimuth-color-accent-strong` (`oklch(56% 0.16 35deg)` → `#c0482a`, 5.00:1 vs white) for filled-accent surfaces that overlay white `on-accent` text; swapped `NotificationBadge.accent`, `Chip.accent.selected`, `ProductCard.badge`, and `Timeline.dot` to use it. Base Copper `#e8734a` retained for non-text accent usages per DESIGN.md's "Copper Rule". Closes azimuth_ui-yfc.
+
+### Quality
+
+- **Token contrast guard**: New automated test `src/styles/__tests__/tokens.contrast.test.ts` (29 assertions) using `culori` — asserts every filled-button variant (primary/secondary/danger/accent-filled) × rest+hover × light/dark × oklch/fallback paths meets >=4.5:1. Guards against future per-theme token drift breaking AA.
+- **Dev deps**: Added `culori` + `@types/culori` for authoritative oklch→sRGB color math (sRGB gamut mapping matches browser behavior).
+
+## 0.9.2 (2026-06-27)
+
+### Features
+
+- **ThemeToggle**: New built-in component cycling light → dark → system theme modes via `useThemeMode().toggle`. Shows SunIcon, MoonIcon, or MonitorIcon per state with dynamic `aria-label`. Accepts `size` prop (`sm`/`md`/`lg`). Ships with tests and Storybook story.
+- **Icons**: Added `MonitorIcon` for system-mode theme indicator.
+- **Input**: Added explicit `inputProps` prop (`InputHTMLAttributes`) for discoverable passthrough of native HTML attributes (`autoComplete`, `inputMode`, `pattern`, etc.). Spreads after `{...props}` so consumers can override.
+
 ## 0.9.1 (2026-06-26)
 
 ### Features

@@ -29,7 +29,7 @@
   width: 12px;
   height: 12px;
   border-radius: var(--azimuth-radius-full);
-  background: var(--azimuth-color-accent);
+  background: var(--azimuth-color-accent-strong);
   display: flex;
   align-items: center;
   justify-content: center;

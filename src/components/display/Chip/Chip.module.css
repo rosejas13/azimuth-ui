@@ -78,7 +78,7 @@
 }
 
 .accent.selected {
-  background: var(--azimuth-color-accent);
+  background: var(--azimuth-color-accent-strong);
   color: var(--azimuth-color-on-accent);
 }
 
