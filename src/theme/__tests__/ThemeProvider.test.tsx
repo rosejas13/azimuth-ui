@@ -8,6 +8,19 @@ function TestConsumer() {
   return <div data-testid="consumer">ok</div>;
 }
 
+/**
+ * Reads a --azimuth-* token value out of ThemeProvider's injected
+ * `data-azimuth-tokens` style block. Tokens are emitted into an injected
+ * :root rule (inside the azimuth.runtime cascade layer) rather than inline
+ * styles, and jsdom does not resolve cascade layers via getComputedStyle,
+ * so we assert against the emitted CSS text directly.
+ */
+function injectedToken(name: string): string | undefined {
+  const block = document.head.querySelector('style[data-azimuth-tokens]');
+  const match = block?.textContent?.match(new RegExp(`${name}:\\s*([^;]+);`));
+  return match?.[1].trim();
+}
+
 describe('ThemeProvider', () => {
   it('renders children', () => {
     render(
@@ -27,15 +40,21 @@ describe('ThemeProvider', () => {
     expect(screen.getByTestId('consumer')).toBeInTheDocument();
   });
 
-  it('applies CSS custom properties to document', () => {
+  it('emits non-color tokens into the injected runtime layer, not inline', () => {
     render(
       <ThemeProvider>
         <div />
       </ThemeProvider>,
     );
-    const root = document.documentElement;
-    const radius = root.style.getPropertyValue('--azimuth-radius-md');
-    expect(radius).toBe('8px');
+    // No longer set as inline documentElement styles (that would be
+    // un-overridable by consumer CSS).
+    expect(
+      document.documentElement.style.getPropertyValue('--azimuth-radius-md'),
+    ).toBe('');
+    // Present in the injected tokens block instead.
+    expect(injectedToken('--azimuth-radius-md')).toBe('8px');
+    const block = document.head.querySelector('style[data-azimuth-tokens]');
+    expect(block?.textContent).toContain('@layer azimuth.runtime');
   });
 
   it('emits the shadow-xl token (raised elevation by default)', () => {
@@ -44,10 +63,9 @@ describe('ThemeProvider', () => {
         <div />
       </ThemeProvider>,
     );
-    const xl = document.documentElement.style.getPropertyValue(
-      '--azimuth-shadow-xl',
+    expect(injectedToken('--azimuth-shadow-xl')).toBe(
+      '0 8px 32px 0 rgb(0 0 0 / 0.10)',
     );
-    expect(xl).toBe('0 8px 32px 0 rgb(0 0 0 / 0.10)');
   });
 
   it('scales shadow-xl above shadow-lg for the floating elevation', () => {
@@ -56,11 +74,10 @@ describe('ThemeProvider', () => {
         <div />
       </ThemeProvider>,
     );
-    const root = document.documentElement;
-    expect(root.style.getPropertyValue('--azimuth-shadow-xl')).toBe(
+    expect(injectedToken('--azimuth-shadow-xl')).toBe(
       '0 20px 64px 0 rgb(0 0 0 / 0.18)',
     );
-    expect(root.style.getPropertyValue('--azimuth-shadow-lg')).toBe(
+    expect(injectedToken('--azimuth-shadow-lg')).toBe(
       '0 12px 48px 0 rgb(0 0 0 / 0.15)',
     );
   });
@@ -74,5 +91,52 @@ describe('ThemeProvider', () => {
     const style = document.head.querySelector('style[data-azimuth-light]');
     expect(style).toBeTruthy();
     expect(style?.textContent).toContain('--azimuth-color-accent');
+  });
+
+  it('wraps every injected block in the azimuth.runtime layer', () => {
+    render(
+      <ThemeProvider config={{ mode: 'light' }}>
+        <div />
+      </ThemeProvider>,
+    );
+    for (const id of ['tokens', 'light', 'dark']) {
+      const block = document.head.querySelector(`style[data-azimuth-${id}]`);
+      expect(block, `expected data-azimuth-${id} block`).toBeTruthy();
+      expect(block?.textContent).toContain('@layer azimuth.runtime');
+    }
+  });
+
+  it('reflects config changes in the injected token block', () => {
+    const { rerender } = render(
+      <ThemeProvider config={{ borderRadius: 'none' }}>
+        <div />
+      </ThemeProvider>,
+    );
+    expect(injectedToken('--azimuth-radius')).toBe('0px');
+
+    rerender(
+      <ThemeProvider config={{ borderRadius: 'lg' }}>
+        <div />
+      </ThemeProvider>,
+    );
+    expect(injectedToken('--azimuth-radius')).toBe('12px');
+  });
+
+  it('does not leak non-color tokens onto inline documentElement styles', () => {
+    render(
+      <ThemeProvider config={{ spacing: 'spacious' }}>
+        <div />
+      </ThemeProvider>,
+    );
+    const inline = document.documentElement.style;
+    for (const name of [
+      '--azimuth-space-md',
+      '--azimuth-radius-md',
+      '--azimuth-shadow-lg',
+      '--azimuth-font-body',
+      '--azimuth-ease',
+    ]) {
+      expect(inline.getPropertyValue(name)).toBe('');
+    }
   });
 });

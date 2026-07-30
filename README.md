@@ -141,6 +141,39 @@ interface ThemeConfig {
 }
 ```
 
+## Overriding tokens from your own CSS
+
+`<ThemeProvider>` is the primary way to theme Azimuth, but you can override any
+`--azimuth-*` token directly from your own stylesheet. All of Azimuth's tokens —
+the base defaults (`tokens.css`) and everything `ThemeProvider` emits at runtime —
+live in the `azimuth` [CSS cascade layer](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer).
+
+Any CSS you write **outside a layer** beats Azimuth regardless of specificity or
+stylesheet load order — no `!important`, no imperative `style.setProperty`, no
+selector-specificity tricks:
+
+```css
+/* your stylesheet — wins over every --azimuth-* token */
+:root {
+  --azimuth-radius-md: 2px;
+  --azimuth-space-md: 0.75rem;
+  --azimuth-color-primary: oklch(55% 0.15 250);
+  --azimuth-shadow-lg: none;
+}
+```
+
+Scope overrides to a subtree by targeting any ancestor instead of `:root`:
+
+```css
+.marketing-page {
+  --azimuth-radius-md: 16px;
+}
+```
+
+> Requires a browser with CSS cascade layer support (Chrome/Edge 99+, Firefox 97+,
+> Safari 15.4+ — all shipped in 2022). In older engines the layered token rules are
+> ignored entirely; use `ThemeProvider` config for those consumers.
+
 ## Color Presets
 
 10 preset color schemes available via `COLOR_PRESETS`:

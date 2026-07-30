@@ -76,13 +76,6 @@ const SHADOW_MAP = {
   },
 } as const;
 
-/** Sets a CSS custom property on the document root. No-op on the server. */
-function setCSSVar(name: string, value: string) {
-  if (typeof document !== 'undefined') {
-    document.documentElement.style.setProperty(name, value);
-  }
-}
-
 /** Converts a hex color string to normalized sRGB components (0–1). Returns null for invalid input. */
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const clean = hex.replace('#', '');
@@ -191,34 +184,36 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     const radii = RADIUS_MAP[c.borderRadius];
     const spaces = SPACING_MAP[c.spacing];
     const ease = MOTION_MAP[c.motion];
-
-    setCSSVar('--azimuth-radius', radii);
-    setCSSVar('--azimuth-radius-none', RADIUS_MAP.none);
-    setCSSVar('--azimuth-radius-sm', RADIUS_MAP.sm);
-    setCSSVar('--azimuth-radius-md', RADIUS_MAP.md);
-    setCSSVar('--azimuth-radius-lg', RADIUS_MAP.lg);
-    setCSSVar('--azimuth-radius-full', RADIUS_MAP.full);
-
-    setCSSVar('--azimuth-space-xs', spaces.xs);
-    setCSSVar('--azimuth-space-sm', spaces.sm);
-    setCSSVar('--azimuth-space-md', spaces.md);
-    setCSSVar('--azimuth-space-lg', spaces.lg);
-    setCSSVar('--azimuth-space-xl', spaces.xl);
-    setCSSVar('--azimuth-space-2xl', spaces['2xl']);
-    setCSSVar('--azimuth-space-3xl', spaces['3xl']);
-    setCSSVar('--azimuth-space-4xl', spaces['4xl']);
-
-    setCSSVar('--azimuth-font-display', c.fontDisplay);
-    setCSSVar('--azimuth-font-body', c.fontBody);
-
-    setCSSVar('--azimuth-ease', ease);
-
     const elevation = c.flat ? 'flat' : c.elevation;
     const shadows = SHADOW_MAP[elevation];
-    setCSSVar('--azimuth-shadow-sm', shadows.sm);
-    setCSSVar('--azimuth-shadow-md', shadows.md);
-    setCSSVar('--azimuth-shadow-lg', shadows.lg);
-    setCSSVar('--azimuth-shadow-xl', shadows.xl);
+
+    // Non-color tokens. Emitted into an injected :root block (inside the
+    // azimuth.runtime cascade layer) rather than inline documentElement styles,
+    // so a consumer's unlayered CSS can override any of them — inline styles
+    // would win by specificity and could not be overridden from a stylesheet.
+    const tokenVars = `
+      --azimuth-radius: ${radii};
+      --azimuth-radius-none: ${RADIUS_MAP.none};
+      --azimuth-radius-sm: ${RADIUS_MAP.sm};
+      --azimuth-radius-md: ${RADIUS_MAP.md};
+      --azimuth-radius-lg: ${RADIUS_MAP.lg};
+      --azimuth-radius-full: ${RADIUS_MAP.full};
+      --azimuth-space-xs: ${spaces.xs};
+      --azimuth-space-sm: ${spaces.sm};
+      --azimuth-space-md: ${spaces.md};
+      --azimuth-space-lg: ${spaces.lg};
+      --azimuth-space-xl: ${spaces.xl};
+      --azimuth-space-2xl: ${spaces['2xl']};
+      --azimuth-space-3xl: ${spaces['3xl']};
+      --azimuth-space-4xl: ${spaces['4xl']};
+      --azimuth-font-display: ${c.fontDisplay};
+      --azimuth-font-body: ${c.fontBody};
+      --azimuth-ease: ${ease};
+      --azimuth-shadow-sm: ${shadows.sm};
+      --azimuth-shadow-md: ${shadows.md};
+      --azimuth-shadow-lg: ${shadows.lg};
+      --azimuth-shadow-xl: ${shadows.xl};
+    `;
 
     const savedMode =
       (localStorage.getItem('azimuth-theme-mode') as ColorMode) || null;
@@ -247,14 +242,20 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
       prefersDark.addEventListener('change', handler);
     }
 
+    // All ThemeProvider output goes into the `azimuth.runtime` cascade layer,
+    // which is declared after `azimuth.base` (see tokens.css) so it wins over
+    // the base defaults, while any consumer CSS that is not in a layer beats
+    // both azimuth layers regardless of specificity or stylesheet load order.
     function injectStyle(id: string, content: string) {
       const existing = document.head.querySelector(`style[data-azimuth-${id}]`);
       if (existing) existing.remove();
       const style = document.createElement('style');
       style.setAttribute(`data-azimuth-${id}`, '');
-      style.textContent = content;
+      style.textContent = `@layer azimuth.runtime {\n${content}\n}`;
       document.head.appendChild(style);
     }
+
+    injectStyle('tokens', `:root {\n${tokenVars}\n}`);
 
     const darkPrimary = c.darkPrimaryColor || c.primaryColor;
     const darkAccent = c.darkAccentColor || c.accentColor;
