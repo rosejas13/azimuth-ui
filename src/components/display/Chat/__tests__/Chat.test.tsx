@@ -142,6 +142,64 @@ describe('Chat', () => {
     expect(onSend).toHaveBeenCalledWith('line one\nline two');
   });
 
+  it('renders markdown formatting as HTML elements', () => {
+    const msgs: ChatMessage[] = [
+      {
+        id: '1',
+        sender: 'other',
+        format: 'markdown',
+        text: 'Some **bold** and `code`\n\n- one\n- two\n\n[link](https://example.com)',
+      },
+    ];
+    const { container } = render(<Chat messages={msgs} onSend={vi.fn()} />);
+    expect(container.querySelector('strong')).toHaveTextContent('bold');
+    expect(container.querySelector('code')).toHaveTextContent('code');
+    expect(container.querySelectorAll('li')).toHaveLength(2);
+    const link = container.querySelector('a');
+    expect(link).toHaveAttribute('href', 'https://example.com');
+    // No literal markdown syntax leaks through.
+    expect(screen.queryByText(/\*\*bold\*\*/)).not.toBeInTheDocument();
+  });
+
+  it('renders format:text as a literal string (no markdown)', () => {
+    const msgs: ChatMessage[] = [
+      { id: '1', sender: 'user', text: 'literal **stars** stay' },
+    ];
+    const { container } = render(<Chat messages={msgs} onSend={vi.fn()} />);
+    expect(screen.getByText('literal **stars** stay')).toBeInTheDocument();
+    expect(container.querySelector('strong')).toBeNull();
+  });
+
+  it('does not execute HTML embedded in markdown (XSS)', () => {
+    const msgs: ChatMessage[] = [
+      {
+        id: '1',
+        sender: 'other',
+        format: 'markdown',
+        text: '<script>window.__pwned = true</script><img src=x onerror="window.__pwned = true">',
+      },
+    ];
+    const { container } = render(<Chat messages={msgs} onSend={vi.fn()} />);
+    expect(container.querySelector('script')).toBeNull();
+    expect(container.querySelector('img')).toBeNull();
+    // Raw HTML is shown as literal text instead.
+    expect(container.textContent).toContain('<script>');
+  });
+
+  it('strips javascript: links, rendering them as plain text (XSS)', () => {
+    const msgs: ChatMessage[] = [
+      {
+        id: '1',
+        sender: 'other',
+        format: 'markdown',
+        text: '[click me](javascript:alert(1))',
+      },
+    ];
+    const { container } = render(<Chat messages={msgs} onSend={vi.fn()} />);
+    expect(container.querySelector('a')).toBeNull();
+    expect(container.textContent).toContain('click me');
+  });
+
   it('renders custom bubble content via renderMessage', () => {
     render(
       <Chat

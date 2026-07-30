@@ -79,6 +79,45 @@
   margin-top: var(--azimuth-space-xs);
 }
 
+/* Markdown-rendered content inside a bubble. */
+.mdParagraph {
+  margin: 0;
+}
+
+.mdParagraph + .mdParagraph,
+.mdList,
+.pre {
+  margin-top: var(--azimuth-space-xs);
+}
+
+.mdList {
+  margin-bottom: 0;
+  padding-left: var(--azimuth-space-lg);
+}
+
+.code {
+  font-family: var(--azimuth-font-mono, ui-monospace, monospace);
+  font-size: 0.9em;
+  padding: 0 var(--azimuth-space-xs);
+  border-radius: var(--azimuth-radius-sm);
+  background: rgb(0 0 0 / 12%);
+}
+
+.pre {
+  margin-bottom: 0;
+  padding: var(--azimuth-space-sm);
+  border-radius: var(--azimuth-radius-sm);
+  background: rgb(0 0 0 / 12%);
+  overflow-x: auto;
+}
+
+.pre code {
+  font-family: var(--azimuth-font-mono, ui-monospace, monospace);
+  font-size: 0.9em;
+  background: none;
+  padding: 0;
+}
+
 .inputRow {
   display: flex;
   align-items: flex-end;

@@ -71,6 +71,34 @@ export const CustomHeaderAndEmptyState: Story = {
   },
 };
 
+export const Markdown: Story = {
+  args: {
+    messages: [
+      { id: '1', text: 'Can you explain `map` vs `forEach`?', sender: 'user' },
+      {
+        id: '2',
+        sender: 'other',
+        format: 'markdown',
+        text: [
+          '**Short version:**',
+          '',
+          '- `map` returns a new array',
+          '- `forEach` returns nothing (side effects only)',
+          '',
+          'Example:',
+          '',
+          '```',
+          'const doubled = nums.map((n) => n * 2);',
+          '```',
+          '',
+          'More in the [MDN docs](https://developer.mozilla.org/).',
+        ].join('\n'),
+      },
+    ],
+    onSend: (text: string) => console.log('Send:', text),
+  },
+};
+
 export const CustomBubbleContent: Story = {
   args: {
     messages: [

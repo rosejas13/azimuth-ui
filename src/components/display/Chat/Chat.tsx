@@ -10,6 +10,7 @@ import {
   useState,
 } from 'react';
 import { cn } from '@/utils/cn';
+import { renderMarkdown } from './markdown';
 import styles from './Chat.module.css';
 
 /** A single message within a chat conversation. */
@@ -18,6 +19,14 @@ export interface ChatMessage {
   text: string;
   sender: 'user' | 'other';
   timestamp?: Date;
+  /**
+   * How to render `text`. `'markdown'` renders a safe Markdown subset (bold,
+   * italic, lists, code, links) via a dependency-free renderer; raw HTML in
+   * the text is escaped, never executed. Per-message so a single conversation
+   * can mix plain and rich content.
+   * @default 'text'
+   */
+  format?: 'text' | 'markdown';
 }
 
 /** A chat conversation widget with message bubbles, auto-scroll, and a send interface. */
@@ -145,7 +154,11 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
               )}
             >
               <div className={styles.text}>
-                {renderMessage ? renderMessage(msg) : msg.text}
+                {renderMessage
+                  ? renderMessage(msg)
+                  : msg.format === 'markdown'
+                    ? renderMarkdown(msg.text)
+                    : msg.text}
               </div>
               {msg.timestamp && (
                 <div className={styles.time}>{formatTime(msg.timestamp)}</div>
