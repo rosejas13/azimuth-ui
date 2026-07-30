@@ -4,7 +4,7 @@
 
 ### Features
 
-- **Chat: production-grade conversation surface** — brought `Chat` from a plain-text demo widget up to a real LLM/chat surface. All additions are opt-in; existing plain-text usage is unchanged. Epic azimuth_ui-0ts.
+- **Chat: production-grade conversation component** — brought `Chat` from a plain-text demo widget up to something usable as the main UI of an LLM/chat app (markdown, streaming, rich in-bubble content, multiline input). All additions are opt-in; existing plain-text usage is unchanged. Epic azimuth_ui-0ts.
   - **Configurable header & empty state**: `title` (ReactNode), `headerActions`, `hideHeader`, and `emptyState` props so consumers supply their own header chrome and app-specific empty state. Closes azimuth_ui-0ts.5.
   - **Multiline composer**: the single-line input is now an auto-growing `textarea` (grows to a max height then scrolls). Enter sends, Shift+Enter inserts a newline. Preserves focus-on-mount, placeholder, and disabled-when-empty. Closes azimuth_ui-0ts.3.
   - **Custom bubble content**: `renderMessage(msg) => ReactNode` render prop for correction cards, citations, tool-call chips, TTS buttons, etc. Chat still owns layout, alignment, timestamps, auto-scroll, and aria-live; `msg.text` stays required as an a11y/copy fallback. Closes azimuth_ui-0ts.2.
