@@ -142,6 +142,93 @@ describe('Chat', () => {
     expect(onSend).toHaveBeenCalledWith('line one\nline two');
   });
 
+  it('shows a typing indicator and marks the surface busy when busy', () => {
+    const { container } = render(
+      <Chat messages={mockMessages} onSend={vi.fn()} busy />,
+    );
+    expect(screen.getByLabelText('Assistant is typing')).toBeInTheDocument();
+    expect(container.firstChild).toHaveAttribute('aria-busy', 'true');
+    expect(screen.getByLabelText('Message input')).toHaveAttribute(
+      'aria-busy',
+      'true',
+    );
+  });
+
+  it('uses a custom busyLabel', () => {
+    render(<Chat messages={[]} onSend={vi.fn()} busy busyLabel="Pensando…" />);
+    expect(screen.getByLabelText('Pensando…')).toBeInTheDocument();
+  });
+
+  it('hides the typing indicator and busy state when not busy', () => {
+    const { container } = render(
+      <Chat messages={mockMessages} onSend={vi.fn()} />,
+    );
+    expect(screen.queryByLabelText('Assistant is typing')).toBeNull();
+    expect(container.firstChild).not.toHaveAttribute('aria-busy');
+  });
+
+  it('announces the assistant reply only once streaming completes', () => {
+    const streaming: ChatMessage[] = [
+      { id: '1', text: 'Hi', sender: 'user' },
+      { id: '2', text: 'Once upon', sender: 'other' },
+    ];
+    const { container, rerender } = render(
+      <Chat messages={streaming} onSend={vi.fn()} busy />,
+    );
+    const live = container.querySelector('[role="status"][aria-live="polite"]');
+    // Nothing announced while streaming.
+    expect(live).not.toHaveTextContent('Once upon');
+
+    // A later chunk arrives (still streaming) — still no announcement.
+    rerender(
+      <Chat
+        messages={[streaming[0], { ...streaming[1], text: 'Once upon a time' }]}
+        onSend={vi.fn()}
+        busy
+      />,
+    );
+    expect(live).not.toHaveTextContent('Once upon');
+
+    // Streaming completes.
+    rerender(
+      <Chat
+        messages={[
+          streaming[0],
+          { ...streaming[1], text: 'Once upon a time.' },
+        ]}
+        onSend={vi.fn()}
+      />,
+    );
+    expect(live).toHaveTextContent('Once upon a time.');
+  });
+
+  it('does not force-scroll to the bottom when the user has scrolled up', () => {
+    const { container, rerender } = render(
+      <Chat messages={mockMessages} onSend={vi.fn()} />,
+    );
+    const list = container.querySelector('.list') as HTMLElement;
+    // Simulate a tall, scrolled-up list.
+    Object.defineProperty(list, 'scrollHeight', {
+      value: 1000,
+      writable: true,
+    });
+    Object.defineProperty(list, 'clientHeight', {
+      value: 300,
+      configurable: true,
+    });
+    list.scrollTop = 100; // far from the bottom
+    fireEvent.scroll(list);
+
+    rerender(
+      <Chat
+        messages={[...mockMessages, { id: '4', text: 'new', sender: 'other' }]}
+        onSend={vi.fn()}
+      />,
+    );
+    // Viewport was not yanked to the bottom.
+    expect(list.scrollTop).toBe(100);
+  });
+
   it('renders markdown formatting as HTML elements', () => {
     const msgs: ChatMessage[] = [
       {
@@ -157,8 +244,10 @@ describe('Chat', () => {
     expect(container.querySelectorAll('li')).toHaveLength(2);
     const link = container.querySelector('a');
     expect(link).toHaveAttribute('href', 'https://example.com');
-    // No literal markdown syntax leaks through.
-    expect(screen.queryByText(/\*\*bold\*\*/)).not.toBeInTheDocument();
+    // Rendered bubble text shows "bold", not literal "**bold**".
+    const bubble = container.querySelector('.text');
+    expect(bubble?.textContent).toContain('bold');
+    expect(bubble?.textContent).not.toContain('**bold**');
   });
 
   it('renders format:text as a literal string (no markdown)', () => {

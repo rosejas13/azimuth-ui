@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Chat } from '../Chat';
+import { useEffect, useState } from 'react';
+import { Chat, type ChatMessage } from '../Chat';
 
 const meta: Meta<typeof Chat> = {
   title: 'Components/Chat',
@@ -144,6 +145,59 @@ export const NoHeader: Story = {
     ],
     hideHeader: true,
     onSend: (text: string) => console.log('Send:', text),
+  },
+};
+
+const STREAM_REPLY =
+  'Sure! Here is the plan:\n\n1. Warm up with greetings\n2. Practice past tense\n3. Free conversation\n\nReady when you are.';
+
+/** Demonstrates the streaming contract: mutate the last message and pass a new
+ *  array reference on each chunk, toggling `busy` while the reply streams. */
+export const StreamingReply: Story = {
+  render: (args) => {
+    const [messages, setMessages] = useState<ChatMessage[]>([
+      { id: 'u1', text: 'Can you plan a lesson?', sender: 'user' },
+    ]);
+    const [busy, setBusy] = useState(false);
+
+    function send(text: string) {
+      const userMsg: ChatMessage = {
+        id: `u${Date.now()}`,
+        text,
+        sender: 'user',
+      };
+      const replyId = `a${Date.now()}`;
+      setMessages((prev) => [...prev, userMsg]);
+      setBusy(true);
+
+      let i = 0;
+      const timer = setInterval(() => {
+        i += 3;
+        const chunk = STREAM_REPLY.slice(0, i);
+        setMessages((prev) => {
+          const withoutReply = prev.filter((m) => m.id !== replyId);
+          return [
+            ...withoutReply,
+            { id: replyId, text: chunk, sender: 'other', format: 'markdown' },
+          ];
+        });
+        if (i >= STREAM_REPLY.length) {
+          clearInterval(timer);
+          setBusy(false);
+        }
+      }, 40);
+    }
+
+    // Auto-start one stream on mount for the docs preview.
+    useEffect(() => {
+      send('Can you plan a lesson?');
+    }, []);
+
+    return (
+      <div style={{ height: 420 }}>
+        <Chat {...args} messages={messages} busy={busy} onSend={send} />
+      </div>
+    );
   },
 };
 

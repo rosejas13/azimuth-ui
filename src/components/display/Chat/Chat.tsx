@@ -10,6 +10,7 @@ import {
   useState,
 } from 'react';
 import { cn } from '@/utils/cn';
+import { Loader } from '../Loader';
 import { renderMarkdown } from './markdown';
 import styles from './Chat.module.css';
 
@@ -60,6 +61,21 @@ export interface ChatProps extends Omit<
    * accessibility/copy fallback.
    */
   renderMessage?: (msg: ChatMessage) => ReactNode;
+  /**
+   * Marks the conversation as awaiting/receiving an assistant reply. Shows a
+   * typing indicator at the end of the list and sets `aria-busy` on the
+   * surface and composer.
+   *
+   * Streaming contract: to stream a reply, mutate the last message's `text`
+   * and pass a **new `messages` array reference** on each chunk so Chat
+   * re-renders and keeps the view pinned to the bottom (only when the user is
+   * already near the bottom). Set `busy` to true while streaming and back to
+   * false when the turn completes; the completed assistant message is
+   * announced once via a polite live region rather than on every token.
+   */
+  busy?: boolean;
+  /** Accessible label for the typing indicator. @default 'Assistant is typing' */
+  busyLabel?: string;
 }
 
 /**
@@ -80,20 +96,46 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
       hideHeader = false,
       emptyState = 'No messages yet. Start the conversation!',
       renderMessage,
+      busy = false,
+      busyLabel = 'Assistant is typing',
       className,
       ...props
     },
     ref,
   ) => {
     const [input, setInput] = useState('');
+    const [announcement, setAnnouncement] = useState('');
     const listRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
+    // Whether the user is scrolled to (or near) the bottom of the list. Used to
+    // decide whether incoming messages should force-scroll the viewport.
+    const nearBottomRef = useRef(true);
 
+    function handleListScroll() {
+      const el = listRef.current;
+      if (!el) return;
+      nearBottomRef.current =
+        el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+    }
+
+    // Keep pinned to the bottom on new/updated content, but only if the user
+    // hasn't scrolled up to read history.
     useEffect(() => {
-      if (listRef.current) {
-        listRef.current.scrollTop = listRef.current.scrollHeight;
+      const el = listRef.current;
+      if (el && nearBottomRef.current) {
+        el.scrollTop = el.scrollHeight;
       }
-    }, [messages]);
+    }, [messages, busy]);
+
+    // Announce the latest assistant message politely, but not on every
+    // streamed token: only update the live region when not actively streaming.
+    useEffect(() => {
+      const list = messages ?? [];
+      const last = list[list.length - 1];
+      if (!busy && last && last.sender === 'other') {
+        setAnnouncement(last.text);
+      }
+    }, [messages, busy]);
 
     useEffect(() => {
       inputRef.current?.focus();
@@ -132,7 +174,12 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
     }
 
     return (
-      <div ref={ref} className={cn(styles.chat, className)} {...props}>
+      <div
+        ref={ref}
+        className={cn(styles.chat, className)}
+        aria-busy={busy || undefined}
+        {...props}
+      >
         {!hideHeader && (
           <div className={styles.header}>
             <span className={styles.headerTitle}>{title}</span>
@@ -141,7 +188,7 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
             )}
           </div>
         )}
-        <div ref={listRef} className={styles.list} aria-live="polite">
+        <div ref={listRef} className={styles.list} onScroll={handleListScroll}>
           {(messages ?? []).length === 0 && (
             <div className={styles.empty}>{emptyState}</div>
           )}
@@ -165,6 +212,16 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
               )}
             </div>
           ))}
+          {busy && (
+            <div className={cn(styles.bubble, styles.other, styles.typing)}>
+              <Loader variant="bar" size="sm" label={busyLabel} />
+            </div>
+          )}
+        </div>
+        {/* Polite live region: announces the completed assistant reply once,
+            not on every streamed token. */}
+        <div className={styles.srOnly} aria-live="polite" role="status">
+          {announcement}
         </div>
         <div className={styles.inputRow}>
           <textarea
@@ -176,6 +233,7 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             aria-label="Message input"
+            aria-busy={busy || undefined}
           />
           <button
             type="button"
