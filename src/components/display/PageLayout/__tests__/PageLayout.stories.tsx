@@ -130,6 +130,54 @@ export const WithHeaderAndFooter: Story = {
   },
 };
 
+/**
+ * At mobile widths the sidebar collapses behind a hamburger toggle and opens as
+ * an overlay panel with a backdrop, focus trap, Escape-to-close, and polite
+ * open/closed announcements. Use the toolbar's viewport control (or the preset
+ * below) to see the mobile behavior.
+ */
+export const MobileSidebar: Story = {
+  parameters: {
+    viewport: { defaultViewport: 'mobile1' },
+  },
+  args: {
+    topNav: (
+      <strong
+        style={{
+          fontFamily: 'var(--azimuth-font-heading)',
+          padding: 'var(--azimuth-space-sm)',
+        }}
+      >
+        My App
+      </strong>
+    ),
+    sidebar: (
+      <nav
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--azimuth-space-xs)',
+          padding: 'var(--azimuth-space-md)',
+        }}
+      >
+        <a href="#dashboard">Dashboard</a>
+        <a href="#analytics">Analytics</a>
+        <a href="#settings">Settings</a>
+      </nav>
+    ),
+    children: (
+      <div style={{ padding: 'var(--azimuth-space-lg)', minHeight: '400px' }}>
+        <h2 style={{ margin: 0, fontFamily: 'var(--azimuth-font-heading)' }}>
+          Main Content
+        </h2>
+        <p style={{ color: 'var(--azimuth-color-text-secondary)' }}>
+          Tap the hamburger to open the sidebar overlay.
+        </p>
+      </div>
+    ),
+  },
+};
+
 export const FullLayout: Story = {
   args: {
     topNav: (
