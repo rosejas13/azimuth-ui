@@ -57,6 +57,30 @@ export const CustomPlaceholder: Story = {
   },
 };
 
+export const CustomHeaderAndEmptyState: Story = {
+  args: {
+    messages: [],
+    title: 'Spanish Tutor',
+    headerActions: (
+      <button type="button" style={{ fontSize: 12 }}>
+        Settings
+      </button>
+    ),
+    emptyState: '¡Hola! Ask me anything to start practicing.',
+    onSend: (text: string) => console.log('Send:', text),
+  },
+};
+
+export const NoHeader: Story = {
+  args: {
+    messages: [
+      { id: '1', text: 'This chat has no built-in header.', sender: 'other' },
+    ],
+    hideHeader: true,
+    onSend: (text: string) => console.log('Send:', text),
+  },
+};
+
 export const WithTimestamps: Story = {
   args: {
     messages: [

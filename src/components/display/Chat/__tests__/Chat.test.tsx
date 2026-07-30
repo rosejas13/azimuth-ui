@@ -116,4 +116,48 @@ describe('Chat', () => {
     );
     expect(container.firstChild).toHaveClass('my-chat');
   });
+
+  it('renders a custom title node in place of the default', () => {
+    render(
+      <Chat
+        messages={[]}
+        onSend={vi.fn()}
+        title={<span data-testid="custom-title">Tutor</span>}
+      />,
+    );
+    expect(screen.getByTestId('custom-title')).toHaveTextContent('Tutor');
+    expect(screen.queryByText('Chat')).not.toBeInTheDocument();
+  });
+
+  it('renders headerActions in the header', () => {
+    render(
+      <Chat
+        messages={[]}
+        onSend={vi.fn()}
+        headerActions={<button type="button">Settings</button>}
+      />,
+    );
+    expect(
+      screen.getByRole('button', { name: 'Settings' }),
+    ).toBeInTheDocument();
+  });
+
+  it('hides the header when hideHeader is set', () => {
+    render(<Chat messages={[]} onSend={vi.fn()} hideHeader />);
+    expect(screen.queryByText('Chat')).not.toBeInTheDocument();
+  });
+
+  it('renders a custom empty state', () => {
+    render(
+      <Chat
+        messages={[]}
+        onSend={vi.fn()}
+        emptyState={<div>Say hola to begin</div>}
+      />,
+    );
+    expect(screen.getByText('Say hola to begin')).toBeInTheDocument();
+    expect(
+      screen.queryByText('No messages yet. Start the conversation!'),
+    ).not.toBeInTheDocument();
+  });
 });

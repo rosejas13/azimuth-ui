@@ -1,6 +1,14 @@
 'use client';
 
-import { type ComponentPropsWithoutRef, type KeyboardEvent, forwardRef, useRef, useEffect, useState } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  type KeyboardEvent,
+  type ReactNode,
+  forwardRef,
+  useRef,
+  useEffect,
+  useState,
+} from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Chat.module.css';
 
@@ -13,11 +21,28 @@ export interface ChatMessage {
 }
 
 /** A chat conversation widget with message bubbles, auto-scroll, and a send interface. */
-export interface ChatProps extends ComponentPropsWithoutRef<'div'> {
+export interface ChatProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'title'
+> {
   messages: ChatMessage[];
   onSend: (text: string) => void;
   /** @default 'Type a message...' */
   placeholder?: string;
+  /**
+   * Header title. Pass a string or any node (e.g. a language/model selector).
+   * @default 'Chat'
+   */
+  title?: ReactNode;
+  /** Right-aligned actions rendered in the header (buttons, menus, etc.). */
+  headerActions?: ReactNode;
+  /** Hide the header entirely when the consumer supplies its own chrome. */
+  hideHeader?: boolean;
+  /**
+   * Content shown when there are no messages.
+   * @default 'No messages yet. Start the conversation!'
+   */
+  emptyState?: ReactNode;
 }
 
 /**
@@ -28,7 +53,20 @@ export interface ChatProps extends ComponentPropsWithoutRef<'div'> {
  * Automatically scrolls to the latest message when new messages arrive.
  */
 export const Chat = forwardRef<HTMLDivElement, ChatProps>(
-  ({ messages, onSend, placeholder = 'Type a message...', className, ...props }, ref) => {
+  (
+    {
+      messages,
+      onSend,
+      placeholder = 'Type a message...',
+      title = 'Chat',
+      headerActions,
+      hideHeader = false,
+      emptyState = 'No messages yet. Start the conversation!',
+      className,
+      ...props
+    },
+    ref,
+  ) => {
     const [input, setInput] = useState('');
     const listRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -58,22 +96,33 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
     }
 
     function formatTime(date: Date): string {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return date.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
     }
 
     return (
       <div ref={ref} className={cn(styles.chat, className)} {...props}>
-        <div className={styles.header}>
-          <span className={styles.headerTitle}>Chat</span>
-        </div>
+        {!hideHeader && (
+          <div className={styles.header}>
+            <span className={styles.headerTitle}>{title}</span>
+            {headerActions && (
+              <div className={styles.headerActions}>{headerActions}</div>
+            )}
+          </div>
+        )}
         <div ref={listRef} className={styles.list} aria-live="polite">
           {(messages ?? []).length === 0 && (
-            <div className={styles.empty}>No messages yet. Start the conversation!</div>
+            <div className={styles.empty}>{emptyState}</div>
           )}
           {(messages ?? []).map((msg) => (
             <div
               key={msg.id}
-              className={cn(styles.bubble, msg.sender === 'user' ? styles.user : styles.other)}
+              className={cn(
+                styles.bubble,
+                msg.sender === 'user' ? styles.user : styles.other,
+              )}
             >
               <div className={styles.text}>{msg.text}</div>
               {msg.timestamp && (
