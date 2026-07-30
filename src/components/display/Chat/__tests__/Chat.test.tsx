@@ -117,6 +117,31 @@ describe('Chat', () => {
     expect(container.firstChild).toHaveClass('my-chat');
   });
 
+  it('uses a textarea so it can hold multiple lines', () => {
+    render(<Chat messages={[]} onSend={vi.fn()} />);
+    expect(screen.getByLabelText('Message input').tagName).toBe('TEXTAREA');
+  });
+
+  it('inserts a newline on Shift+Enter without sending', async () => {
+    const onSend = vi.fn();
+    const user = userEvent.setup();
+    render(<Chat messages={[]} onSend={onSend} />);
+    const input = screen.getByLabelText<HTMLTextAreaElement>('Message input');
+    await user.type(input, 'line one{Shift>}{Enter}{/Shift}line two');
+    expect(input.value).toBe('line one\nline two');
+    expect(onSend).not.toHaveBeenCalled();
+  });
+
+  it('sends the full multiline text on Enter', async () => {
+    const onSend = vi.fn();
+    const user = userEvent.setup();
+    render(<Chat messages={[]} onSend={onSend} />);
+    const input = screen.getByLabelText('Message input');
+    await user.type(input, 'line one{Shift>}{Enter}{/Shift}line two');
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onSend).toHaveBeenCalledWith('line one\nline two');
+  });
+
   it('renders a custom title node in place of the default', () => {
     render(
       <Chat

@@ -69,7 +69,7 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
   ) => {
     const [input, setInput] = useState('');
     const listRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
       if (listRef.current) {
@@ -81,6 +81,17 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
       inputRef.current?.focus();
     }, []);
 
+    // Auto-grow the textarea to fit its content, up to a max height (set via
+    // CSS max-height) after which it scrolls internally.
+    function autosize(el: HTMLTextAreaElement) {
+      el.style.height = 'auto';
+      el.style.height = `${el.scrollHeight}px`;
+    }
+
+    useEffect(() => {
+      if (inputRef.current) autosize(inputRef.current);
+    }, [input]);
+
     function handleSend() {
       const text = input.trim();
       if (!text) return;
@@ -88,7 +99,7 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
       setInput('');
     }
 
-    function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         handleSend();
@@ -132,10 +143,10 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
           ))}
         </div>
         <div className={styles.inputRow}>
-          <input
+          <textarea
             ref={inputRef}
             className={styles.input}
-            type="text"
+            rows={1}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}

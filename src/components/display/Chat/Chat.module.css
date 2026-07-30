@@ -81,6 +81,7 @@
 
 .inputRow {
   display: flex;
+  align-items: flex-end;
   border-top: 1px solid var(--azimuth-color-border);
   padding: var(--azimuth-space-sm);
   gap: var(--azimuth-space-sm);
@@ -94,8 +95,12 @@
   padding: var(--azimuth-space-xs) var(--azimuth-space-md);
   font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-base);
+  line-height: var(--azimuth-lh-base);
   background: var(--azimuth-color-surface);
   color: var(--azimuth-color-text);
+  resize: none;
+  overflow-y: auto;
+  max-height: 8rem;
 }
 
 .input:focus {
