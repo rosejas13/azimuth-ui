@@ -11,7 +11,7 @@
   position: fixed;
   background: var(--azimuth-color-surface);
   border: 1px solid var(--azimuth-color-border);
-  box-shadow: var(--azimuth-shadow-lg);
+  box-shadow: var(--azimuth-shadow-xl);
   display: flex;
   flex-direction: column;
   animation-duration: var(--azimuth-transition-base);

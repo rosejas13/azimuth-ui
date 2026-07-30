@@ -38,6 +38,33 @@ describe('ThemeProvider', () => {
     expect(radius).toBe('8px');
   });
 
+  it('emits the shadow-xl token (raised elevation by default)', () => {
+    render(
+      <ThemeProvider>
+        <div />
+      </ThemeProvider>,
+    );
+    const xl = document.documentElement.style.getPropertyValue(
+      '--azimuth-shadow-xl',
+    );
+    expect(xl).toBe('0 8px 32px 0 rgb(0 0 0 / 0.10)');
+  });
+
+  it('scales shadow-xl above shadow-lg for the floating elevation', () => {
+    render(
+      <ThemeProvider config={{ elevation: 'floating' }}>
+        <div />
+      </ThemeProvider>,
+    );
+    const root = document.documentElement;
+    expect(root.style.getPropertyValue('--azimuth-shadow-xl')).toBe(
+      '0 20px 64px 0 rgb(0 0 0 / 0.18)',
+    );
+    expect(root.style.getPropertyValue('--azimuth-shadow-lg')).toBe(
+      '0 12px 48px 0 rgb(0 0 0 / 0.15)',
+    );
+  });
+
   it('injects light/dark style tags', () => {
     render(
       <ThemeProvider config={{ mode: 'light' }}>

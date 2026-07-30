@@ -61,16 +61,18 @@ const MOTION_MAP = {
 } as const;
 
 const SHADOW_MAP = {
-  flat: { sm: 'none', md: 'none', lg: 'none' },
+  flat: { sm: 'none', md: 'none', lg: 'none', xl: 'none' },
   raised: {
     sm: '0 1px 2px 0 rgb(0 0 0 / 0.04)',
     md: '0 2px 8px 0 rgb(0 0 0 / 0.06)',
     lg: '0 4px 16px 0 rgb(0 0 0 / 0.08)',
+    xl: '0 8px 32px 0 rgb(0 0 0 / 0.10)',
   },
   floating: {
     sm: '0 2px 8px 0 rgb(0 0 0 / 0.10)',
     md: '0 6px 24px 0 rgb(0 0 0 / 0.12)',
     lg: '0 12px 48px 0 rgb(0 0 0 / 0.15)',
+    xl: '0 20px 64px 0 rgb(0 0 0 / 0.18)',
   },
 } as const;
 
@@ -216,6 +218,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     setCSSVar('--azimuth-shadow-sm', shadows.sm);
     setCSSVar('--azimuth-shadow-md', shadows.md);
     setCSSVar('--azimuth-shadow-lg', shadows.lg);
+    setCSSVar('--azimuth-shadow-xl', shadows.xl);
 
     const savedMode =
       (localStorage.getItem('azimuth-theme-mode') as ColorMode) || null;
