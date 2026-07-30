@@ -71,6 +71,44 @@ export const CustomHeaderAndEmptyState: Story = {
   },
 };
 
+export const CustomBubbleContent: Story = {
+  args: {
+    messages: [
+      { id: '1', text: 'Yo quiero practicar', sender: 'user' },
+      {
+        id: '2',
+        text: 'Great! A small correction below.',
+        sender: 'other',
+      },
+    ],
+    renderMessage: (msg) =>
+      msg.sender === 'other' ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <span>{msg.text}</span>
+          <span
+            style={{
+              fontSize: 13,
+              padding: '4px 8px',
+              borderRadius: 6,
+              background: 'rgba(0,0,0,0.08)',
+            }}
+          >
+            ✏️ «quiero» → «quisiera» (more polite)
+          </span>
+          <button
+            type="button"
+            style={{ alignSelf: 'flex-start', fontSize: 12 }}
+          >
+            🔊 Speak
+          </button>
+        </div>
+      ) : (
+        msg.text
+      ),
+    onSend: (text: string) => console.log('Send:', text),
+  },
+};
+
 export const NoHeader: Story = {
   args: {
     messages: [

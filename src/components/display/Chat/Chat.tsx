@@ -43,6 +43,14 @@ export interface ChatProps extends Omit<
    * @default 'No messages yet. Start the conversation!'
    */
   emptyState?: ReactNode;
+  /**
+   * Render the body of a message bubble yourself (correction cards, citations,
+   * tool-call chips, TTS buttons, etc.). When provided, Chat calls this instead
+   * of rendering `msg.text`, but still owns bubble layout, alignment,
+   * timestamp, auto-scroll, and aria-live. `msg.text` remains required as an
+   * accessibility/copy fallback.
+   */
+  renderMessage?: (msg: ChatMessage) => ReactNode;
 }
 
 /**
@@ -62,6 +70,7 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
       headerActions,
       hideHeader = false,
       emptyState = 'No messages yet. Start the conversation!',
+      renderMessage,
       className,
       ...props
     },
@@ -135,7 +144,9 @@ export const Chat = forwardRef<HTMLDivElement, ChatProps>(
                 msg.sender === 'user' ? styles.user : styles.other,
               )}
             >
-              <div className={styles.text}>{msg.text}</div>
+              <div className={styles.text}>
+                {renderMessage ? renderMessage(msg) : msg.text}
+              </div>
               {msg.timestamp && (
                 <div className={styles.time}>{formatTime(msg.timestamp)}</div>
               )}

@@ -142,6 +142,39 @@ describe('Chat', () => {
     expect(onSend).toHaveBeenCalledWith('line one\nline two');
   });
 
+  it('renders custom bubble content via renderMessage', () => {
+    render(
+      <Chat
+        messages={mockMessages}
+        onSend={vi.fn()}
+        renderMessage={(msg) => (
+          <div data-testid={`custom-${msg.id}`}>custom: {msg.text}</div>
+        )}
+      />,
+    );
+    expect(screen.getByTestId('custom-1')).toHaveTextContent('custom: Hello');
+    expect(screen.getByTestId('custom-2')).toHaveTextContent(
+      'custom: Hi there!',
+    );
+  });
+
+  it('still renders timestamps alongside custom content', () => {
+    render(
+      <Chat
+        messages={mockMessages}
+        onSend={vi.fn()}
+        renderMessage={(msg) => <span>{msg.text.toUpperCase()}</span>}
+      />,
+    );
+    expect(screen.getByText('HI THERE!')).toBeInTheDocument();
+    expect(screen.getByText('10:00 AM')).toBeInTheDocument();
+  });
+
+  it('falls back to msg.text when renderMessage is omitted', () => {
+    render(<Chat messages={mockMessages} onSend={vi.fn()} />);
+    expect(screen.getByText('Hello')).toBeInTheDocument();
+  });
+
   it('renders a custom title node in place of the default', () => {
     render(
       <Chat
