@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.10.0 (2026-07-29)
+
+### Features
+
+- **Chat: production-grade conversation surface** — brought `Chat` from a plain-text demo widget up to a real LLM/chat surface. All additions are opt-in; existing plain-text usage is unchanged. Epic azimuth_ui-0ts.
+  - **Configurable header & empty state**: `title` (ReactNode), `headerActions`, `hideHeader`, and `emptyState` props so consumers supply their own header chrome and app-specific empty state. Closes azimuth_ui-0ts.5.
+  - **Multiline composer**: the single-line input is now an auto-growing `textarea` (grows to a max height then scrolls). Enter sends, Shift+Enter inserts a newline. Preserves focus-on-mount, placeholder, and disabled-when-empty. Closes azimuth_ui-0ts.3.
+  - **Custom bubble content**: `renderMessage(msg) => ReactNode` render prop for correction cards, citations, tool-call chips, TTS buttons, etc. Chat still owns layout, alignment, timestamps, auto-scroll, and aria-live; `msg.text` stays required as an a11y/copy fallback. Closes azimuth_ui-0ts.2.
+  - **Opt-in markdown**: per-message `format?: 'text' | 'markdown'` renders a safe subset (bold, italic, lists, fenced/inline code, links) via a new dependency-free renderer that builds React elements only — never `dangerouslySetInnerHTML` — so raw HTML in model output is escaped and cannot execute. Link hrefs are scheme-checked (strips `javascript:`/`data:`/control-char obfuscation). Closes azimuth_ui-0ts.1.
+  - **Streaming / busy state**: `busy` + `busyLabel` props show a typing indicator and set `aria-busy`. Auto-scroll only pins to the bottom when the user is already near it, so streamed chunks don't yank the viewport during scrollback. A polite live region announces the completed reply once, not on every token. Closes azimuth_ui-0ts.4.
+
+### Design Tokens
+
+- **`--azimuth-shadow-xl` rollout**: `Drawer`, `Modal`, `SlideSheet`, and `CommandPalette` now use `--azimuth-shadow-xl` instead of `shadow-lg` for correct elevation hierarchy. Added an elevation-aware `xl` step to the shadow scale and emit it from `ThemeProvider` (previously only sm/md/lg were emitted), so `xl` stays larger than `lg` under every elevation preset. Closes azimuth_ui-24g.
+
+### Fixes
+
+- **Theming: consumer stylesheets can now override any `--azimuth-*` token.** Previously radius/space/shadow/font/ease tokens were set via inline `documentElement.style`, which beats any stylesheet rule by specificity and could only be worked around with imperative JS. All Azimuth token CSS now lives in an `azimuth` cascade layer (`tokens.css` defaults in `azimuth.base`; `ThemeProvider` runtime output — colors plus the now-injected non-color tokens — in `azimuth.runtime`). Any consumer CSS **outside a layer** beats every token regardless of specificity or stylesheet load order, no imperative `style.setProperty` needed. Documented in the README. Closes azimuth_ui-lqj.
+  - **Note**: requires CSS cascade layer support (Chrome/Edge 99+, Firefox 97+, Safari 15.4+ — all shipped 2022). In older engines the layered token rules are ignored; use `ThemeProvider` config for those consumers.
+
+### Quality
+
+- **PageLayout mobile sidebar** now has test coverage — hamburger toggle (mobile-only), open/close, backdrop dismiss, Escape-to-close with focus return, `Tab`/`Shift+Tab` focus trapping, body-scroll lock, and polite open/closed announcements — plus a `MobileSidebar` Storybook story at the mobile viewport. Closes azimuth_ui-ebz.
+- **Theming regression tests**: jsdom asserts tokens are emitted into the runtime layer (not inline) and reflect config; a real-browser Playwright spec (`theming-override.a11y.spec.ts`) loads the actual `tokens.css` and proves an unlayered consumer `:root` override wins for radius/space/shadow tokens, including when loaded before Azimuth.
+
 ## 0.9.3 (2026-07-17)
 
 ### Accessibility (WCAG 2.2 AA)
