@@ -18,6 +18,26 @@
   position: relative;
 }
 
+/* Label rendered inside the field box, above the input text. */
+.innerLabel {
+  position: absolute;
+  top: var(--azimuth-space-xs);
+  left: var(--azimuth-space-md);
+  z-index: 1;
+  font-size: var(--azimuth-fs-xs);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--azimuth-color-text-secondary);
+}
+
+.wrapperInnerLabel .input {
+  /* Reserve room above the text for the absolutely-positioned label. */
+  padding-top: calc(
+    var(--azimuth-space-xs) + var(--azimuth-fs-xs) * 1.2 +
+      var(--azimuth-space-xs)
+  );
+}
+
 .headerArea {
   display: flex;
   flex-direction: column;
@@ -226,9 +246,52 @@
   font-size: var(--azimuth-fs-lg);
 }
 
+.xl .input {
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
+  font-size: var(--azimuth-fs-lg);
+}
+
+/* Inner-label offsets track each size's horizontal input padding. */
+.sm .innerLabel {
+  left: var(--azimuth-space-sm);
+}
+
+.lg .innerLabel,
+.xl .innerLabel {
+  left: var(--azimuth-space-lg);
+}
+
+.xl .innerLabel {
+  top: var(--azimuth-space-sm);
+}
+
+.xl.wrapperInnerLabel .input {
+  padding-top: calc(
+    var(--azimuth-space-sm) + var(--azimuth-fs-xs) * 1.2 +
+      var(--azimuth-space-xs)
+  );
+}
+
 /* Character count */
 .charCount {
   font-size: var(--azimuth-fs-xs);
   color: var(--azimuth-color-text-muted);
   text-align: right;
+}
+
+/* Char count rendered inside the field box (inner label position). */
+.charCountInner {
+  position: absolute;
+  top: var(--azimuth-space-xs);
+  right: var(--azimuth-space-md);
+  z-index: 1;
+}
+
+.sm .charCountInner {
+  right: var(--azimuth-space-sm);
+}
+
+.lg .charCountInner,
+.xl .charCountInner {
+  right: var(--azimuth-space-lg);
 }

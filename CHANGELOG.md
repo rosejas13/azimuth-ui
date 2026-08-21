@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.11.1 (2026-08-21)
+
+### Features
+
+- **Input: `labelPosition="inner"` actually renders inside the field box.** Previously the inner-position label rendered above the input, identical to `top`. It now sits at the top-left inside the border — small, semibold, and secondary-colored so it reads as a field caption distinct from the input text — and the input reserves vertical room for it. The character counter follows it into the box.
+- **New `xl` size across the text-input family.** Input, Select, and TextArea accept `size="xl"`, and `Form`/`InputGroup` group defaults now include it. `xl` pairs with `labelPosition="inner"` for label-inside-the-box layouts with extra headroom.
+
+### Fixes
+
+- **Input `label` accepts a plain string or a structured object** (`{ text, subtitle?, position?, required? }`). Simple usage stays flat; customization stays inline. Top-level `subtitle`/`labelPosition`/`required` props win over the object's fields when both are provided.
+- Fixed a conditional `useId()` hook call in Input (`id || useId()`) that violated hook ordering rules and could crash if an explicit `id` was added or removed between renders of the same instance.
+
 ## 0.11.0 (2026-08-21)
 
 ### Features

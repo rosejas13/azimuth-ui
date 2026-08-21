@@ -21,6 +21,18 @@ import styles from './Input.module.css';
 
 const NO_SUGGESTIONS: string[] = [];
 
+/** Structured label customization. Pass a plain string to `label` when defaults suffice. */
+export interface LabelConfig {
+  /** Label text. */
+  text: string;
+  /** Helper text rendered below the label. */
+  subtitle?: string;
+  /** @default 'top' */
+  position?: 'top' | 'left' | 'inner';
+  /** @default false */
+  required?: boolean;
+}
+
 /** A text input component with label, validation, autocomplete, and stepper support. */
 export interface InputProps {
   /** Controlled value. Pair with `onChange`. When omitted the input is uncontrolled. */
@@ -36,8 +48,11 @@ export interface InputProps {
   /** @default false */
   readOnly?: boolean;
 
-  /** Label text above the input (or beside/inside it per `labelPosition`). */
-  label?: string;
+  /**
+   * Label text above the input (or beside/inside it per `labelPosition`).
+   * Pass a `LabelConfig` object to also set subtitle, position, or required inline.
+   */
+  label?: string | LabelConfig;
   /** Helper text rendered below the label. */
   subtitle?: string;
   /** Validation error rendered below the input. Sets `aria-invalid`. */
@@ -45,7 +60,7 @@ export interface InputProps {
   /** @default 'top' */
   labelPosition?: 'top' | 'left' | 'inner';
   /** @default 'md' */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 
   /** Show increment/decrement buttons for `type="number"`. @default false */
   stepper?: boolean;
@@ -128,7 +143,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const { size: configSize, labelPosition: configLabelPosition } =
       useInputConfig();
-    const resolvedLabelPosition = labelPosition ?? configLabelPosition ?? 'top';
+    const labelConfig =
+      typeof label === 'object' && label !== null ? label : undefined;
+    const labelText = typeof label === 'string' ? label : labelConfig?.text;
+    const resolvedSubtitle = subtitle ?? labelConfig?.subtitle;
+    const resolvedLabelPosition =
+      labelPosition ?? labelConfig?.position ?? configLabelPosition ?? 'top';
+    const isRequired = required || (labelConfig?.required ?? false);
     const resolvedSize = size ?? configSize ?? 'md';
     const isNumber = type === 'number';
     const internalRefV = useRef<HTMLInputElement>(null);
@@ -147,7 +168,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     const currentValue = isControlled ? String(value) : localValue;
     const hasSteppers = isNumber && showSteppers;
-    const generatedId = id || useId();
+    const autoId = useId();
+    const generatedId = id || autoId;
 
     const suggestionOptions = suggestions?.options ?? NO_SUGGESTIONS;
     const hasSuggestions = suggestionOptions.length > 0;
@@ -253,6 +275,21 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     const inputElement = (
       <div className={styles.inputContainer}>
+        {labelText && resolvedLabelPosition === 'inner' && (
+          <label
+            htmlFor={generatedId}
+            className={cn(styles.innerLabel, isRequired && styles.required)}
+          >
+            {labelText}
+          </label>
+        )}
+        {showCharCount &&
+          maxLength !== undefined &&
+          resolvedLabelPosition === 'inner' && (
+            <span className={cn(styles.charCount, styles.charCountInner)}>
+              {currentValue.length}/{maxLength}
+            </span>
+          )}
         <input
           ref={inputRef}
           id={generatedId}
@@ -278,7 +315,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             className,
           )}
           disabled={disabled}
-          required={required}
+          required={isRequired}
           min={min}
           max={max}
           step={step}
@@ -287,7 +324,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           aria-describedby={
             error
               ? `${generatedId}-error`
-              : subtitle
+              : resolvedSubtitle
                 ? `${generatedId}-subtitle`
                 : undefined
           }
@@ -365,27 +402,29 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       </div>
     );
 
-    const hasHeader = label || subtitle;
+    const hasHeader =
+      Boolean(labelText && resolvedLabelPosition !== 'inner') ||
+      Boolean(resolvedSubtitle);
     const hasFooter = error;
 
     return (
       <div
         className={cn(
           styles.wrapper,
-          resolvedSize && styles[resolvedSize],
+          styles[resolvedSize],
           resolvedLabelPosition === 'left' && styles.wrapperHorizontal,
           resolvedLabelPosition === 'inner' && styles.wrapperInnerLabel,
         )}
       >
         {hasHeader && (
           <div className={styles.headerArea}>
-            {label && resolvedLabelPosition !== 'inner' && (
+            {labelText && resolvedLabelPosition !== 'inner' && (
               <div className={styles.labelRow}>
                 <label
                   htmlFor={generatedId}
-                  className={cn(styles.label, required && styles.required)}
+                  className={cn(styles.label, isRequired && styles.required)}
                 >
-                  {label}
+                  {labelText}
                 </label>
                 {showCharCount && maxLength !== undefined && (
                   <span className={styles.charCount}>
@@ -394,17 +433,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 )}
               </div>
             )}
-            {label && resolvedLabelPosition === 'inner' && (
-              <label
-                htmlFor={generatedId}
-                className={cn(styles.label, required && styles.required)}
-              >
-                {label}
-              </label>
-            )}
-            {subtitle && (
+            {resolvedSubtitle && (
               <span id={`${generatedId}-subtitle`} className={styles.subtitle}>
-                {subtitle}
+                {resolvedSubtitle}
               </span>
             )}
           </div>

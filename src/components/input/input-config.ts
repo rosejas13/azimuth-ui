@@ -4,7 +4,7 @@ import { createContext, useContext } from 'react';
 
 /** Group-level defaults inherited by child inputs. Set once on `<Form>` or `<InputGroup>`. */
 export interface InputConfig {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   labelPosition?: 'top' | 'left' | 'inner';
 }
 

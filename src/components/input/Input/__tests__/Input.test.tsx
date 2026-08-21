@@ -178,6 +178,63 @@ describe('Input', () => {
     expect(wrapper?.className).toContain('wrapperInnerLabel');
   });
 
+  it('renders inner label inside the input container, wired via htmlFor', () => {
+    render(<Input label="Name" labelPosition="inner" />);
+    const input = screen.getByLabelText('Name');
+    const container = input.parentElement as HTMLElement;
+    const innerLabel = Array.from(container.children).find((el) =>
+      el.className.includes('innerLabel'),
+    );
+    expect(innerLabel).toBeDefined();
+    expect(innerLabel?.tagName).toBe('LABEL');
+  });
+
+  it('applies the xl size class and inherits it from Form config', () => {
+    render(<Input label="Name" size="xl" />);
+    const wrapper = screen.getByText('Name').closest('[class*="wrapper"]');
+    expect(wrapper?.className).toMatch(/xl/);
+  });
+
+  it('accepts a structured label object with subtitle, position, and required', () => {
+    render(
+      <Input
+        label={{
+          text: 'Work email',
+          subtitle: 'Company address',
+          required: true,
+        }}
+      />,
+    );
+    const input = screen.getByLabelText('Work email');
+    expect(input).toHaveAttribute('required');
+    expect(screen.getByText('Company address')).toBeInTheDocument();
+    expect(screen.getByText('Work email').className).toContain('required');
+  });
+
+  it('lets top-level subtitle override the label object subtitle', () => {
+    render(
+      <Input
+        label={{ text: 'Email', subtitle: 'from object' }}
+        subtitle="top level wins"
+      />,
+    );
+    expect(screen.getByText('top level wins')).toBeInTheDocument();
+    expect(screen.queryByText('from object')).not.toBeInTheDocument();
+  });
+
+  it('shows char count inside the box for inner position', () => {
+    render(
+      <Input
+        label="Bio"
+        labelPosition="inner"
+        maxLength={10}
+        showCharCount
+        value="Hello"
+      />,
+    );
+    expect(screen.getByText('5/10')).toBeInTheDocument();
+  });
+
   it('updates the displayed value when selecting a suggestion uncontrolled', async () => {
     const user = userEvent.setup();
     render(

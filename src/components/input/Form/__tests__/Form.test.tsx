@@ -272,4 +272,16 @@ describe('Form', () => {
     expect(input?.className).toContain('sm');
     expect(select?.className).toContain('sm');
   });
+
+  it('inherits xl size and inner labelPosition to child inputs', () => {
+    render(
+      <Form size="xl" labelPosition="inner">
+        <Input label="Project" />
+      </Form>,
+    );
+    const input = screen.getByLabelText('Project');
+    const wrapper = input.closest('[class*="wrapper"]');
+    expect(wrapper?.className).toMatch(/xl/);
+    expect(wrapper?.className).toContain('wrapperInnerLabel');
+  });
 });

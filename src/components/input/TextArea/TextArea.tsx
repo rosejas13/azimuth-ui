@@ -40,7 +40,7 @@ export interface TextAreaProps {
   /** Validation error rendered below the textarea. Sets `aria-invalid`. */
   error?: string;
   /** @default 'md' */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 
   /** Maximum character length. Enforced on the native textarea element. */
   maxLength?: number;

@@ -41,7 +41,7 @@ export interface SelectProps {
   /** Validation error rendered below the select. Sets `aria-invalid`. */
   error?: string;
   /** @default 'md' */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 
   /** Disabled placeholder option rendered first, e.g. "Choose...". */
   placeholder?: string;

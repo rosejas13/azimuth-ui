@@ -40,7 +40,7 @@ export interface FormProps extends Omit<
   /** @default 'md' */
   spacing?: 'sm' | 'md' | 'lg';
   /** Default `size` inherited by every child input, unless overridden. @default 'md' */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   /** Default `labelPosition` inherited by every child input, unless overridden. @default 'top' */
   labelPosition?: 'top' | 'left' | 'inner';
   children?: React.ReactNode;

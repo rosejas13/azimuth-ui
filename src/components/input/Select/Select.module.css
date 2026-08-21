@@ -101,3 +101,9 @@
   padding-right: calc(var(--azimuth-space-lg) + 24px);
   font-size: var(--azimuth-fs-lg);
 }
+
+.xl .select {
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
+  padding-right: calc(var(--azimuth-space-lg) + 24px);
+  font-size: var(--azimuth-fs-lg);
+}

@@ -91,3 +91,9 @@
   font-size: var(--azimuth-fs-lg);
   min-height: 120px;
 }
+
+.xl .textarea {
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
+  font-size: var(--azimuth-fs-lg);
+  min-height: 140px;
+}

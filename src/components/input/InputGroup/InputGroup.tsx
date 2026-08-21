@@ -13,7 +13,7 @@ export interface InputGroupProps extends Omit<
   /** The input elements to group together. */
   children?: React.ReactNode;
   /** Default `size` for child inputs in this group, unless each overrides it. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   /** Default `labelPosition` for child inputs in this group, unless each overrides it. */
   labelPosition?: 'top' | 'left' | 'inner';
 }

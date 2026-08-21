@@ -62,3 +62,32 @@ export const WithSuggestions: Story = {
     suggestions: { options: ['Apple', 'Banana', 'Avocado'] },
   },
 };
+export const ObjectLabel: Story = {
+  args: {
+    label: {
+      text: 'Work email',
+      subtitle: 'Use your company address.',
+      required: true,
+    },
+    type: 'email',
+    placeholder: 'you@company.com',
+  },
+};
+export const InnerLabel: Story = {
+  args: { label: 'Search', labelPosition: 'inner', placeholder: 'Type here' },
+};
+export const ExtraLarge: Story = {
+  args: {
+    label: 'Project name',
+    size: 'xl',
+    placeholder: 'Something memorable',
+  },
+};
+export const ExtraLargeInner: Story = {
+  args: {
+    label: 'Project name',
+    size: 'xl',
+    labelPosition: 'inner',
+    placeholder: 'Something memorable',
+  },
+};
