@@ -82,7 +82,9 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(
             <header className={styles.header}>
               {subtitle && (
                 <Text
-                  element={{ as: 'p', size: 'sm', variant: 'heading' }}
+                  as="p"
+                  size="sm"
+                  variant="heading"
                   color="accent"
                   className={styles.subtitle}
                 >
@@ -91,32 +93,34 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(
               )}
               {title && <h2 className={styles.title}>{title}</h2>}
               {description && (
-                <Text element={{ as: 'p', size: 'base' }}>{description}</Text>
+                <Text as="p" size="base">
+                  {description}
+                </Text>
               )}
             </header>
           )}
           <div className={styles.grid}>
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
               <Input
-                label={{ text: 'Name', required: true }}
+                label="Name"
                 name="name"
                 placeholder="Your name"
                 required
               />
               <Input
-                label={{ text: 'Email', required: true }}
+                label="Email"
                 name="email"
                 type="email"
                 placeholder="you@example.com"
                 required
               />
               <Input
-                label={{ text: 'Subject' }}
+                label="Subject"
                 name="subject"
                 placeholder="How can we help?"
               />
               <TextArea
-                label={{ text: 'Message', required: true }}
+                label="Message"
                 name="message"
                 placeholder="Tell us more about your inquiry..."
                 rows={5}
@@ -152,23 +156,17 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(
               <aside className={styles.info}>
                 {contactInfo.address && (
                   <div className={styles.infoItem}>
-                    <Text
-                      element={{ as: 'p', size: 'sm', variant: 'heading' }}
-                      weight="semibold"
-                    >
+                    <Text as="p" size="sm" variant="heading" weight="semibold">
                       Address
                     </Text>
-                    <Text element={{ as: 'p', size: 'base' }}>
+                    <Text as="p" size="base">
                       {contactInfo.address}
                     </Text>
                   </div>
                 )}
                 {contactInfo.email && (
                   <div className={styles.infoItem}>
-                    <Text
-                      element={{ as: 'p', size: 'sm', variant: 'heading' }}
-                      weight="semibold"
-                    >
+                    <Text as="p" size="sm" variant="heading" weight="semibold">
                       Email
                     </Text>
                     <a
@@ -181,10 +179,7 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(
                 )}
                 {contactInfo.phone && (
                   <div className={styles.infoItem}>
-                    <Text
-                      element={{ as: 'p', size: 'sm', variant: 'heading' }}
-                      weight="semibold"
-                    >
+                    <Text as="p" size="sm" variant="heading" weight="semibold">
                       Phone
                     </Text>
                     <a
@@ -199,7 +194,9 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(
                   contactInfo.socialLinks.length > 0 && (
                     <div className={styles.infoItem}>
                       <Text
-                        element={{ as: 'p', size: 'sm', variant: 'heading' }}
+                        as="p"
+                        size="sm"
+                        variant="heading"
                         weight="semibold"
                       >
                         Follow Us

@@ -353,6 +353,13 @@ export type {
   CountryCode,
 } from './components/input/PhoneInput';
 
+export { AddressInput } from './components/input/AddressInput';
+export type {
+  AddressInputProps,
+  AddressSuggestion,
+  AddressValue,
+} from './components/input/AddressInput';
+
 export { PriceDisplay } from './components/display/PriceDisplay';
 export type { PriceDisplayProps } from './components/display/PriceDisplay';
 

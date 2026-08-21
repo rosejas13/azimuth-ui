@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { InputGroup } from '../InputGroup';
+import { Input } from '../../Input/Input';
+import { Select } from '../../Select/Select';
 
 describe('InputGroup', () => {
   it('renders children', () => {
@@ -59,5 +61,49 @@ describe('InputGroup', () => {
     expect(screen.getByText('Left')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Middle')).toBeInTheDocument();
     expect(screen.getByText('Right')).toBeInTheDocument();
+  });
+
+  it('inherits labelPosition to child inputs', () => {
+    render(
+      <InputGroup labelPosition="left">
+        <Input label="First" />
+        <Input label="Second" />
+      </InputGroup>,
+    );
+    const first = screen.getByLabelText('First').closest('[class*="wrapper"]');
+    const second = screen
+      .getByLabelText('Second')
+      .closest('[class*="wrapper"]');
+    expect(first?.className).toContain('wrapperHorizontal');
+    expect(second?.className).toContain('wrapperHorizontal');
+  });
+
+  it('inherits size to a child select', () => {
+    render(
+      <InputGroup size="lg">
+        <Select label="Second" options={[{ value: 'a', label: 'A' }]} />
+      </InputGroup>,
+    );
+    const wrapper = screen
+      .getByLabelText('Second')
+      .closest('[class*="wrapper"]');
+    expect(wrapper?.className).toContain('lg');
+  });
+
+  it('lets a child input override the group size', () => {
+    render(
+      <InputGroup labelPosition="left">
+        <Input label="Default" />
+        <Input label="Override" labelPosition="top" />
+      </InputGroup>,
+    );
+    const wrapper = screen
+      .getByLabelText('Default')
+      .closest('[class*="wrapper"]');
+    const override = screen
+      .getByLabelText('Override')
+      .closest('[class*="wrapper"]');
+    expect(wrapper?.className).toContain('wrapperHorizontal');
+    expect(override?.className).not.toContain('wrapperHorizontal');
   });
 });

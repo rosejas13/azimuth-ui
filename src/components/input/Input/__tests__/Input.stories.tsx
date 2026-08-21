@@ -10,16 +10,55 @@ const meta: Meta<typeof Input> = {
       control: 'select',
       options: ['text', 'email', 'password', 'number', 'search'],
     },
+    labelPosition: {
+      control: 'select',
+      options: ['top', 'left', 'inner'],
+    },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof Input>;
 
-export const Text: Story = { args: { label: { text: 'Username' }, placeholder: 'Enter username' } };
-export const Email: Story = { args: { label: { text: 'Email' }, type: 'email', placeholder: 'you@example.com' } };
-export const Password: Story = { args: { label: { text: 'Password' }, type: 'password', placeholder: '••••••••' } };
-export const WithSubtitle: Story = { args: { label: { text: 'Email', subtitle: "We'll never share your email." } } };
-export const WithError: Story = { args: { label: { text: 'Username', error: 'Username is taken' } } };
-export const NumberWithSteppers: Story = { args: { label: { text: 'Quantity' }, type: 'number', stepper: { enabled: true, min: 0, max: 100 }, defaultValue: 50 } };
-export const Disabled: Story = { args: { label: { text: 'Disabled' }, value: { disabled: true }, placeholder: 'Cannot edit' } };
+export const Text: Story = {
+  args: { label: 'Username', placeholder: 'Enter username' },
+};
+export const Email: Story = {
+  args: { label: 'Email', type: 'email', placeholder: 'you@example.com' },
+};
+export const Password: Story = {
+  args: { label: 'Password', type: 'password', placeholder: '••••••••' },
+};
+export const WithSubtitle: Story = {
+  args: { label: 'Email', subtitle: "We'll never share your email." },
+};
+export const WithError: Story = {
+  args: { label: 'Username', error: 'Username is taken' },
+};
+export const NumberWithSteppers: Story = {
+  args: {
+    label: 'Quantity',
+    type: 'number',
+    stepper: true,
+    defaultValue: 50,
+    min: 0,
+    max: 100,
+  },
+};
+export const Disabled: Story = {
+  args: { label: 'Disabled', disabled: true, placeholder: 'Cannot edit' },
+};
+export const WithCharCount: Story = {
+  args: {
+    label: 'Bio',
+    maxLength: 40,
+    showCharCount: true,
+    defaultValue: 'Short bio',
+  },
+};
+export const WithSuggestions: Story = {
+  args: {
+    label: 'Fruit',
+    suggestions: { options: ['Apple', 'Banana', 'Avocado'] },
+  },
+};

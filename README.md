@@ -59,7 +59,7 @@ All 103 components live under `src/components/` grouped by category.
 
 ### Input (19)
 
-`Button` `Checkbox` `Combobox` `DropdownList` `FileUpload` `Form` `Input` `InputGroup` `OTPInput` `PhoneInput` `QuantityStepper` `Radio` `Rating` `SearchBar` `Select` `Slider` `TextArea` `TextBox` `Toggle`
+`AddressInput` `Button` `Checkbox` `Combobox` `DropdownList` `FileUpload` `Form` `Input` `InputGroup` `OTPInput` `PhoneInput` `QuantityStepper` `Radio` `Rating` `SearchBar` `Select` `Slider` `TextArea` `TextBox` `Toggle`
 
 ### Display (44)
 
@@ -120,6 +120,52 @@ import 'azimuth-ui/styles.css';
   <App />
 </ThemeProvider>;
 ```
+
+### A form with an address field
+
+```tsx
+import { useState } from 'react';
+import { AddressInput, Form, ThemeProvider } from 'azimuth-ui';
+import type { AddressSuggestion, AddressValue } from 'azimuth-ui';
+import 'azimuth-ui/styles.css';
+
+function SignupForm() {
+  const [address, setAddress] = useState<AddressValue | undefined>();
+  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
+
+  // Debounced lookup against YOUR geocoding service (any debounce helper works).
+  // azimuth ships no geocoding client — you pick the service and own its
+  // attribution/terms. Do NOT point this at the public
+  // nominatim.openstreetmap.org endpoint: its usage policy forbids
+  // autocomplete and caps at 1 request/second across all your users.
+  // Use a self-hosted Nominatim instance, Photon, or a commercial provider.
+  const onSearch = useDebouncedCallback( // 300ms debounce wrapper of your choice
+    async (query: string) => {
+      const results = await myGeocoder.search(query); // YOUR service
+      setSuggestions(
+        results.map((r) => ({ label: r.formatted, value: r.address })),
+      );
+    },
+    300,
+  );
+
+  return (
+    <Form labelPosition="left">
+      <AddressInput
+        layout="single"                    // or "multi" for structured fields
+        label="Business address"
+        required
+        value={address}
+        onChange={setAddress}
+        onSearch={onSearch}
+        suggestions={{ options: suggestions }}
+      />
+    </Form>
+  );
+}
+```
+
+`<Form>` sets `size`/`labelPosition` once for every field inside it; any field can still override. `AddressInput` always produces a structured value — `{ line1, line2?, city, state, postalCode, country }` — in either layout.
 
 ## Theme Config
 

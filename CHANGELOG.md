@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.11.0 (2026-08-21)
+
+### Features
+
+- **AddressInput: address entry with injectable suggestion data.** Two layouts over one structured value: `layout="single"` renders a search field with suggestion selection, `layout="multi"` renders the six standard fields (line1, line2, city, state, postal code, country). The value is always `{ line1, line2?, city, state, postalCode, country }` whichever layout is used. azimuth ships no geocoding client — suggestions arrive via the `suggestions` prop and lookups via `onSearch`, so consumers bring their own service (self-hosted Nominatim, Photon, Smarty, Google…) and own any attribution its license requires. Inherits `size` from `Form`/`InputGroup` group defaults; `label`, `subtitle`, `error`, `required`, `disabled` follow the flat input conventions.
+- **Group defaults via context.** `<Form size labelPosition>` and `<InputGroup size labelPosition>` set once and every descendant input inherits them as defaults (instance prop > InputGroup > Form > built-in). Proven in the call-intake reference app, where 15 repeated `labelPosition='left'` props collapsed to one.
+
+### Breaking
+
+- **Input, TextArea, and Select props are now flat and idiomatic; Slider's `value` object is flattened.** The structured object props from the 0.8-era "prop consolidation" (`label={{ text }}`, `value={{ value, onChange }}`, `charCount={{ }}`, `stepper={{ }}`, `autocomplete={{ }}`) regressed the API the README, demo, and older consumers already documented and used. Input, TextArea, and Select now accept:
+  - `label="Email"`, `labelPosition` (Input), plus independent `subtitle`, `error`, `required`
+  - top-level `value`/`defaultValue`/`onChange` where `onChange` receives the raw value (`(value: string) => void`) — `onChange={setText}` typechecks directly
+  - `stepper` (boolean), `showCharCount`, and `suggestions={{ options, onSelect, filter? }}` on Input
+  - curated native prop surfaces plus `inputProps`/`textareaProps`/`selectProps` escape hatches, so editors no longer suggest ~150 inherited attributes per component
+  - Slider flattens `value={{ value, defaultValue, onChange, disabled }}` to top-level props and keeps its cohesive `range`/`display` objects; its native attribute surface is unchanged for now
+  - Migration: `label={{ text: X, position }}` → `label={X} labelPosition={position}`; `value={{ value: v, onChange: (e) => ... }}` → `value={v} onChange={(v) => ...}`
+- **DateTimePicker props are flat** to match DateRangePicker: `value`/`defaultValue`/`onChange` (was `value={{ ... }}`), `showTime`/`showSeconds` (was `display={{ ... }}`), `minDate`/`maxDate`/`hourStep`/`minuteStep` (was `constraints={{ ... }}`).
+- **Text props are flat**: `element={{ as, size, variant }}` → `as`/`size`/`variant` top-level, with a curated native surface replacing the `ComponentPropsWithoutRef<'p'>` inheritance.
+
+### Fixes
+
+- **Input `defaultValue` now actually renders.** It was declared but never passed to the native input, so the uncontrolled path was silently broken; `defaultValue` now reaches the DOM whenever `value` is undefined.
+- **Selecting a suggestion updates the field** even in uncontrolled Inputs (the suggestion is now applied through state instead of only firing `onSelect`).
+- **Accessibility is default-on, not opt-in** (from the 0.11.0 a11y audit):
+  - Input and DateTimePicker stepper buttons are keyboard-reachable (removed `tabIndex={-1}`).
+  - Input and Select generate stable unique DOM ids via `useId()` — two fields sharing a label text (e.g. billing + shipping address) no longer produce duplicate ids that break label association.
+  - Input's suggestion list implements the combobox pattern: `role="combobox"`, `aria-expanded`, `aria-activedescendant`, non-tabbable options.
+  - DateTimePicker time values announce changes via `aria-live="polite"`.
+  - AddressInput renders a real `fieldset`/`legend` group; in `multi` layout every field gets `aria-invalid` + `aria-describedby` wired to the single group error; `disabled` on the group disables all fields natively.
+- **Input `suggestions` gains `filter: false`** so consumer-provided ranked results (e.g. from a geocoder) are shown as returned instead of being substring-filtered against the typed text.
+- **Missing theme CSS is now loud.** `ThemeProvider` emits a one-time dev `console.warn` when `azimuth-ui/styles.css` is not imported — the #1 cause of "no theme is applied". Base-only `--azimuth-radius` is the canary.
+- **`@keyframes` now ship in the package.** `build-css.mjs` was silently dropping `animations.css` from `dist/index.css`, so entry animations referenced by component CSS modules had no definitions for consumers.
+
+### Quality
+
+- Input suite expanded to 23 cases (controlled `onChange={setX}` pattern, uncontrolled `defaultValue`, controlled-value immutability, combobox ARIA wiring, unfiltered suggestions, unique ids); TextArea/Select/Slider suites rewritten to the flat API (15/10/14 cases) with `defaultValue` and controlled coverage added.
+- New `InputConfigContext` coverage: Form/InputGroup inheritance, descendant overrides, Select inheriting `size`.
+- AddressInput ships with 18 tests covering both layouts, controlled/uncontrolled use (including controlled→uncontrolled fallback and layout switching), suggestion selection applying the structured value, group-config inheritance, error aria wiring, and no-props plug-and-play.
+- Accessibility verified against WCAG 2.2 AA with an adversarial audit pass; contrast ratios computed from tokens for light and dark themes.
+
 ## 0.10.0 (2026-07-29)
 
 ### Features

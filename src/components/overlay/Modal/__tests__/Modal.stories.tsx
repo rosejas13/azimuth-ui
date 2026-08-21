@@ -18,14 +18,16 @@ function ModalDemo() {
         }}
         footer={
           <Stack direction="horizontal" justify="end" spacing="sm">
-            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
             <Button onClick={() => setOpen(false)}>Save Changes</Button>
           </Stack>
         }
       >
         <Stack spacing="md">
-          <Input label={{ text: 'Full Name' }} defaultValue="John Doe" />
-          <Input label={{ text: 'Email' }} type="email" defaultValue="john@example.com" />
+          <Input label="Full Name" defaultValue="John Doe" />
+          <Input label="Email" type="email" defaultValue="john@example.com" />
         </Stack>
       </Modal>
     </>

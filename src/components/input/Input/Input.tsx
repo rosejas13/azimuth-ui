@@ -1,61 +1,123 @@
 'use client';
 
 import {
-  type ComponentPropsWithoutRef,
   forwardRef,
   useCallback,
   useState,
   useRef,
   useEffect,
+  useId,
+  type ClipboardEventHandler,
+  type CSSProperties,
+  type FocusEventHandler,
+  type FormEventHandler,
+  type HTMLInputTypeAttribute,
+  type InputHTMLAttributes,
+  type KeyboardEventHandler,
 } from 'react';
 import { cn } from '@/utils/cn';
+import { useInputConfig } from '../input-config';
 import styles from './Input.module.css';
 
-type InputBaseProps = ComponentPropsWithoutRef<'input'>;
+const NO_SUGGESTIONS: string[] = [];
 
 /** A text input component with label, validation, autocomplete, and stepper support. */
-export interface InputProps extends Omit<InputBaseProps, 'size' | 'value' | 'disabled' | 'min' | 'max' | 'step' | 'maxLength'> {
-  /** Props spread directly onto the underlying <input> element. Overrides other native attribute props. */
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
-  label?: { text?: string; subtitle?: string; error?: string; /** @default false */ required?: boolean; /** @default 'top' */ position?: 'top' | 'left' | 'inner' };
-  value?: { value?: string; onChange?: React.ChangeEventHandler<HTMLInputElement>; disabled?: boolean };
-  charCount?: { maxLength?: number; /** @default false */ showCharCount?: boolean };
-  stepper?: { /** @default false */ enabled?: boolean; min?: number; max?: number; step?: number };
-  autocomplete?: { options?: string[]; onSelect?: (value: string) => void };
+export interface InputProps {
+  /** Controlled value. Pair with `onChange`. When omitted the input is uncontrolled. */
+  value?: string | number;
+  /** Initial value for an uncontrolled input. Ignored while `value` is set. */
+  defaultValue?: string | number;
+  /** Called with the input's current string value on every change. */
+  onChange?: (value: string) => void;
+  /** @default false */
+  disabled?: boolean;
+  /** @default false */
+  required?: boolean;
+  /** @default false */
+  readOnly?: boolean;
+
+  /** Label text above the input (or beside/inside it per `labelPosition`). */
+  label?: string;
+  /** Helper text rendered below the label. */
+  subtitle?: string;
+  /** Validation error rendered below the input. Sets `aria-invalid`. */
+  error?: string;
+  /** @default 'top' */
+  labelPosition?: 'top' | 'left' | 'inner';
   /** @default 'md' */
   size?: 'sm' | 'md' | 'lg';
+
+  /** Show increment/decrement buttons for `type="number"`. @default false */
+  stepper?: boolean;
+  /** Live `n/maxLength` character counter. Requires `maxLength`. @default false */
+  showCharCount?: boolean;
+
+  /**
+   * Suggestion list shown while typing. `onSelect` receives the chosen string.
+   * Set `filter: false` when the options come from your own ranked lookup
+   * (e.g. a geocoder) so results are shown as returned instead of substring-filtered.
+   */
+  suggestions?: {
+    options: string[];
+    onSelect?: (value: string) => void;
+    /** Filter options locally against the typed text. @default true */
+    filter?: boolean;
+  };
+
+  // Curated native attributes. Anything not listed here goes through `inputProps`.
+  id?: string;
+  name?: string;
+  type?: HTMLInputTypeAttribute;
+  placeholder?: string;
+  autoComplete?: string;
+  autoFocus?: boolean;
+  pattern?: string;
+  inputMode?: InputHTMLAttributes<HTMLInputElement>['inputMode'];
+  min?: number;
+  max?: number;
+  step?: number;
+  maxLength?: number;
+  tabIndex?: number;
+  style?: CSSProperties;
+  'data-testid'?: string;
+  'aria-describedby'?: string;
+  'aria-invalid'?: boolean | 'true' | 'false';
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+  onFocus?: FocusEventHandler<HTMLInputElement>;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  onKeyUp?: KeyboardEventHandler<HTMLInputElement>;
+  onKeyPress?: KeyboardEventHandler<HTMLInputElement>;
+  onPaste?: ClipboardEventHandler<HTMLInputElement>;
+  onInput?: FormEventHandler<HTMLInputElement>;
+
+  /** Escape hatch for any native attribute not listed above. Spread last, wins over other props. */
+  inputProps?: InputHTMLAttributes<HTMLInputElement>;
+  /** Styling for the underlying `<input>` element. */
+  className?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
-      label: {
-        text: label,
-        subtitle,
-        error,
-        required = false,
-        position: labelPosition = 'top',
-      } = {},
-      value: {
-        value,
-        onChange,
-        disabled,
-      } = {},
-      charCount: {
-        maxLength,
-        showCharCount = false,
-      } = {},
-      stepper: {
-        enabled: showSteppers = false,
-        min,
-        max,
-        step,
-      } = {},
-      autocomplete: {
-        options: autocompleteOptions,
-        onSelect: onAutocompleteSelect,
-      } = {},
-      size = 'md',
+      label,
+      subtitle,
+      error,
+      required = false,
+      labelPosition,
+      value,
+      defaultValue,
+      onChange,
+      disabled,
+      stepper: showSteppers = false,
+      min,
+      max,
+      step,
+      maxLength,
+      showCharCount = false,
+      suggestions,
+      size,
       type = 'text',
       className,
       id,
@@ -64,25 +126,41 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
+    const { size: configSize, labelPosition: configLabelPosition } =
+      useInputConfig();
+    const resolvedLabelPosition = labelPosition ?? configLabelPosition ?? 'top';
+    const resolvedSize = size ?? configSize ?? 'md';
     const isNumber = type === 'number';
     const internalRefV = useRef<HTMLInputElement>(null);
     const inputRef = ref || internalRefV;
-    const [localValue, setLocalValue] = useState(value ?? '');
+    const isControlled = value !== undefined;
+    const [localValue, setLocalValue] = useState<string>(() =>
+      isControlled
+        ? String(value)
+        : defaultValue !== undefined
+          ? String(defaultValue)
+          : '',
+    );
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
     const suggestionsRef = useRef<HTMLDivElement>(null);
 
-    const currentValue = value !== undefined ? String(value) : localValue;
+    const currentValue = isControlled ? String(value) : localValue;
     const hasSteppers = isNumber && showSteppers;
-    const generatedId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+    const generatedId = id || useId();
 
-    const filteredSuggestions = autocompleteOptions?.filter((opt) =>
-      opt.toLowerCase().includes(String(currentValue).toLowerCase()),
-    ) ?? [];
+    const suggestionOptions = suggestions?.options ?? NO_SUGGESTIONS;
+    const hasSuggestions = suggestionOptions.length > 0;
+    const filteredSuggestions =
+      suggestions?.filter === false
+        ? suggestionOptions
+        : suggestionOptions.filter((opt) =>
+            opt.toLowerCase().includes(currentValue.toLowerCase()),
+          );
 
     useEffect(() => {
       if (value !== undefined) {
-        setLocalValue(value);
+        setLocalValue(String(value));
       }
     }, [value]);
 
@@ -100,7 +178,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         }
       }
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      return () =>
+        document.removeEventListener('mousedown', handleClickOutside);
     }, [inputRef]);
 
     const handleChange = useCallback(
@@ -109,13 +188,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         if (value === undefined) {
           setLocalValue(newValue);
         }
-        if (autocompleteOptions) {
-          setShowSuggestions(newValue.length > 0);
+        if (suggestionOptions.length > 0) {
+          setShowSuggestions(
+            newValue.length > 0 || suggestions?.filter === false,
+          );
           setHighlightedIndex(-1);
         }
-        onChange?.(e);
+        onChange?.(newValue);
       },
-      [value, onChange, autocompleteOptions],
+      [value, onChange, suggestionOptions],
     );
 
     const handleKeyDown = useCallback(
@@ -137,12 +218,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           const selected = filteredSuggestions[highlightedIndex];
           setLocalValue(selected);
           setShowSuggestions(false);
-          onAutocompleteSelect?.(selected);
+          suggestions?.onSelect?.(selected);
         } else if (e.key === 'Escape') {
           setShowSuggestions(false);
         }
       },
-      [showSuggestions, filteredSuggestions, highlightedIndex, onAutocompleteSelect],
+      [showSuggestions, filteredSuggestions, highlightedIndex, suggestions],
     );
 
     const stepUp = () => {
@@ -151,6 +232,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       input?.dispatchEvent(new Event('input', { bubbles: true }));
       if (input) {
         setLocalValue(input.value);
+        onChange?.(input.value);
       }
     };
 
@@ -160,11 +242,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       input?.dispatchEvent(new Event('input', { bubbles: true }));
       if (input) {
         setLocalValue(input.value);
+        onChange?.(input.value);
       }
     };
 
-    const isAtMax = isNumber && max !== undefined && Number(currentValue) >= max;
-    const isAtMin = isNumber && min !== undefined && Number(currentValue) <= min;
+    const isAtMax =
+      isNumber && max !== undefined && Number(currentValue) >= max;
+    const isAtMin =
+      isNumber && min !== undefined && Number(currentValue) <= min;
 
     const inputElement = (
       <div className={styles.inputContainer}>
@@ -172,11 +257,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={inputRef}
           id={generatedId}
           type={type}
-          value={currentValue}
+          value={isControlled || hasSuggestions ? currentValue : undefined}
+          defaultValue={
+            isControlled || hasSuggestions ? undefined : defaultValue
+          }
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           onFocus={() => {
-            if (autocompleteOptions && String(currentValue).length > 0) {
+            if (
+              hasSuggestions &&
+              (currentValue.length > 0 || suggestions?.filter === false)
+            ) {
               setShowSuggestions(true);
             }
           }}
@@ -200,9 +291,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 ? `${generatedId}-subtitle`
                 : undefined
           }
-          aria-autocomplete={autocompleteOptions ? 'list' : undefined}
-          aria-controls={autocompleteOptions && showSuggestions ? `${generatedId}-suggestions` : undefined}
-          autoComplete={autocompleteOptions ? 'off' : undefined}
+          aria-autocomplete={hasSuggestions ? 'list' : undefined}
+          aria-expanded={hasSuggestions ? showSuggestions : undefined}
+          aria-controls={
+            hasSuggestions && showSuggestions
+              ? `${generatedId}-suggestions`
+              : undefined
+          }
+          aria-activedescendant={
+            hasSuggestions && showSuggestions && highlightedIndex >= 0
+              ? `${generatedId}-suggestions-${highlightedIndex}`
+              : undefined
+          }
+          role={hasSuggestions ? 'combobox' : undefined}
+          autoComplete={hasSuggestions ? 'off' : undefined}
           {...props}
           {...inputProps}
         />
@@ -215,7 +317,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               onClick={stepUp}
               disabled={disabled || isAtMax}
               aria-label="Increment"
-              tabIndex={-1}
             >
               ▴
             </button>
@@ -225,7 +326,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               onClick={stepDown}
               disabled={disabled || isAtMin}
               aria-label="Decrement"
-              tabIndex={-1}
             >
               ▾
             </button>
@@ -233,11 +333,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
 
         {showSuggestions && filteredSuggestions.length > 0 && (
-          <div ref={suggestionsRef} className={styles.suggestions} role="listbox" id={`${generatedId}-suggestions`}>
+          <div
+            ref={suggestionsRef}
+            className={styles.suggestions}
+            role="listbox"
+            id={`${generatedId}-suggestions`}
+          >
             {filteredSuggestions.map((suggestion, i) => (
               <button
                 key={suggestion}
                 type="button"
+                id={`${generatedId}-suggestions-${i}`}
+                tabIndex={-1}
                 className={cn(
                   styles.suggestion,
                   i === highlightedIndex && styles.suggestionHighlighted,
@@ -245,7 +352,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 onClick={() => {
                   setLocalValue(suggestion);
                   setShowSuggestions(false);
-                  onAutocompleteSelect?.(suggestion);
+                  suggestions?.onSelect?.(suggestion);
                 }}
                 role="option"
                 aria-selected={i === highlightedIndex}
@@ -265,14 +372,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <div
         className={cn(
           styles.wrapper,
-          size && styles[size],
-          labelPosition === 'left' && styles.wrapperHorizontal,
-          labelPosition === 'inner' && styles.wrapperInnerLabel,
+          resolvedSize && styles[resolvedSize],
+          resolvedLabelPosition === 'left' && styles.wrapperHorizontal,
+          resolvedLabelPosition === 'inner' && styles.wrapperInnerLabel,
         )}
       >
         {hasHeader && (
           <div className={styles.headerArea}>
-            {label && labelPosition !== 'inner' && (
+            {label && resolvedLabelPosition !== 'inner' && (
               <div className={styles.labelRow}>
                 <label
                   htmlFor={generatedId}
@@ -282,12 +389,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 </label>
                 {showCharCount && maxLength !== undefined && (
                   <span className={styles.charCount}>
-                    {String(currentValue).length}/{maxLength}
+                    {currentValue.length}/{maxLength}
                   </span>
                 )}
               </div>
             )}
-            {label && labelPosition === 'inner' && (
+            {label && resolvedLabelPosition === 'inner' && (
               <label
                 htmlFor={generatedId}
                 className={cn(styles.label, required && styles.required)}
@@ -306,7 +413,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {hasFooter && (
           <div className={styles.footerArea}>
             {error && (
-              <span id={`${generatedId}-error`} className={styles.errorMessage} role="alert">
+              <span
+                id={`${generatedId}-error`}
+                className={styles.errorMessage}
+                role="alert"
+              >
                 {error}
               </span>
             )}

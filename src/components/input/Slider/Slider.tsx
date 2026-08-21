@@ -12,8 +12,28 @@ import { cn } from '@/utils/cn';
 import styles from './Slider.module.css';
 
 /** Props for the Slider component. */
-export interface SliderProps
-  extends Omit<ComponentPropsWithoutRef<'input'>, 'type' | 'onChange' | 'size' | 'value' | 'min' | 'max' | 'step' | 'disabled' | 'aria-orientation'> {
+export interface SliderProps extends Omit<
+  ComponentPropsWithoutRef<'input'>,
+  | 'type'
+  | 'onChange'
+  | 'size'
+  | 'value'
+  | 'defaultValue'
+  | 'min'
+  | 'max'
+  | 'step'
+  | 'disabled'
+  | 'aria-orientation'
+> {
+  /** Controlled value. Pair with `onChange`. When omitted the slider is uncontrolled. */
+  value?: number;
+  /** Initial value for an uncontrolled slider. Ignored while `value` is set. */
+  defaultValue?: number;
+  /** Called with the snapped value on every change. */
+  onChange?: (value: number) => void;
+  /** @default false */
+  disabled?: boolean;
+  /** Min/max/step bounds for the range. */
   range?: {
     /** @default 0 */
     min?: number;
@@ -22,13 +42,7 @@ export interface SliderProps
     /** @default 1 */
     step?: number;
   };
-  value?: {
-    value?: number;
-    defaultValue?: number;
-    onChange?: (value: number) => void;
-    /** @default false */
-    disabled?: boolean;
-  };
+  /** Visual configuration. */
   display?: {
     /** @default 'horizontal' */
     orientation?: 'horizontal' | 'vertical';
@@ -43,17 +57,11 @@ export interface SliderProps
 export const Slider = forwardRef<HTMLInputElement, SliderProps>(
   (
     {
-      range: {
-        min = 0,
-        max = 100,
-        step = 1,
-      } = {},
-      value: {
-        value: controlledValue,
-        defaultValue,
-        onChange,
-        disabled = false,
-      } = {},
+      range: { min = 0, max = 100, step = 1 } = {},
+      value,
+      defaultValue,
+      onChange,
+      disabled = false,
       display: {
         orientation = 'horizontal',
         showValue = false,
@@ -65,14 +73,12 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
     },
     ref,
   ) => {
-    const isControlled = controlledValue !== undefined;
+    const isControlled = value !== undefined;
     const isVertical = orientation === 'vertical';
 
-    const [internalValue, setInternalValue] = useState(
-      defaultValue ?? min,
-    );
+    const [internalValue, setInternalValue] = useState(defaultValue ?? min);
 
-    const currentValue = isControlled ? controlledValue : internalValue;
+    const currentValue = isControlled ? value : internalValue;
     const clampedValue = Math.min(max, Math.max(min, currentValue));
 
     const pct = ((clampedValue - min) / (max - min)) * 100;
@@ -82,7 +88,10 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
 
     const setValue = useCallback(
       (val: number) => {
-        const clamped = Math.min(max, Math.max(min, Math.round(val / step) * step));
+        const clamped = Math.min(
+          max,
+          Math.max(min, Math.round(val / step) * step),
+        );
         if (!isControlled) {
           setInternalValue(clamped);
         }
@@ -134,10 +143,10 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
     }, []);
 
     useEffect(() => {
-      if (isControlled && controlledValue !== undefined) {
-        setInternalValue(controlledValue);
+      if (isControlled && value !== undefined) {
+        setInternalValue(value);
       }
-    }, [isControlled, controlledValue]);
+    }, [isControlled, value]);
 
     const handleKeyDownLocal = useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -148,7 +157,10 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
 
         if (e.key === directionKey.up || e.key === directionKey.down) {
           e.preventDefault();
-          newVal = e.key === directionKey.up ? currentValue + step : currentValue - step;
+          newVal =
+            e.key === directionKey.up
+              ? currentValue + step
+              : currentValue - step;
         } else if (e.key === 'Home') {
           e.preventDefault();
           newVal = min;
@@ -170,9 +182,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
       ? { bottom: `${pct}%` }
       : { left: `${pct}%` };
 
-    const fillStyle = isVertical
-      ? { height: `${pct}%` }
-      : { width: `${pct}%` };
+    const fillStyle = isVertical ? { height: `${pct}%` } : { width: `${pct}%` };
 
     return (
       <div
@@ -214,24 +224,25 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
             className={cn(
               styles.track,
               isVertical && styles.trackVertical,
-              size !== 'md' && styles[`track${size.charAt(0).toUpperCase() + size.slice(1)}`],
+              size !== 'md' &&
+                styles[`track${size.charAt(0).toUpperCase() + size.slice(1)}`],
             )}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
           >
             <div
-              className={cn(
-                styles.fill,
-                isVertical && styles.fillVertical,
-              )}
+              className={cn(styles.fill, isVertical && styles.fillVertical)}
               style={fillStyle}
             />
             <div
               className={cn(
                 styles.thumb,
                 isVertical && styles.thumbVertical,
-                size !== 'md' && styles[`thumb${size.charAt(0).toUpperCase() + size.slice(1)}`],
+                size !== 'md' &&
+                  styles[
+                    `thumb${size.charAt(0).toUpperCase() + size.slice(1)}`
+                  ],
               )}
               style={thumbOffset}
               onPointerDown={handlePointerDown}

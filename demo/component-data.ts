@@ -88,6 +88,111 @@ export const COMPONENT_DATA = [
     ],
   },
   {
+    name: 'AddressInput',
+    description:
+      'An address input with single-line search and multi-line structured layouts. Always produces a structured AddressValue; suggestion data is injected by the consumer (no geocoding client ships with the library).',
+    category: 'composite',
+    features: [
+      'Single-line search layout with suggestions',
+      'Multi-line structured layout (line1, line2, city, state, postal code, country)',
+      'Identical structured value in both layouts',
+      'Consumer-supplied suggestion data — bring your own geocoder',
+      'Inherits size from Form/InputGroup group defaults',
+      'Optional required indicator and group error message',
+    ],
+    variants: ['single', 'multi'],
+    props: [
+      {
+        name: 'layout',
+        type: '"single" | "multi"',
+        default: 'multi',
+        description: 'One search field or six structured fields',
+      },
+      {
+        name: 'value',
+        type: 'AddressValue',
+        description:
+          'Controlled address ({ line1, line2?, city, state, postalCode, country })',
+      },
+      {
+        name: 'defaultValue',
+        type: 'AddressValue',
+        description: 'Initial address (uncontrolled)',
+      },
+      {
+        name: 'onChange',
+        type: '(value: AddressValue) => void',
+        description: 'Callback fired with the full structured address',
+      },
+      {
+        name: 'suggestions',
+        type: '{ options: AddressSuggestion[]; onSelect?: (s: AddressSuggestion) => void }',
+        description:
+          'Address suggestions shown while typing (single layout); you supply the data',
+      },
+      {
+        name: 'onSearch',
+        type: '(query: string) => void',
+        description:
+          'Fired on each keystroke in single layout so you can run your lookup (debounce on your side)',
+      },
+      {
+        name: 'label',
+        type: 'string',
+        description: 'Label for the address group (rendered as a legend)',
+      },
+      {
+        name: 'subtitle',
+        type: 'string',
+        description: 'Helper text below the group label',
+      },
+      {
+        name: 'error',
+        type: 'string',
+        description:
+          'Validation error rendered once and associated with all fields',
+      },
+      {
+        name: 'required',
+        type: 'boolean',
+        default: 'false',
+        description: 'Marks the group required; line 2 stays optional',
+      },
+      {
+        name: 'disabled',
+        type: 'boolean',
+        default: 'false',
+        description: 'Disables every field via the fieldset',
+      },
+      {
+        name: 'name',
+        type: 'string',
+        description:
+          'Base name for native form serialization (name.line1, name.city, ...)',
+      },
+      {
+        name: 'placeholder',
+        type: 'string',
+        description: 'Placeholder for the single-layout search field',
+      },
+      {
+        name: 'size',
+        type: 'string',
+        default: 'md',
+        description:
+          'Inherited by all fields; falls back to Form/InputGroup size',
+      },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-text', description: 'Group label color' },
+      {
+        name: '--azimuth-color-error-text',
+        description: 'Error message color',
+      },
+      { name: '--azimuth-space-sm', description: 'Field grid gap' },
+    ],
+  },
+  {
     name: 'Avatar',
     description:
       'An image avatar with automatic initials fallback on load failure.',
@@ -828,6 +933,18 @@ export const COMPONENT_DATA = [
       },
       { name: 'minDate', type: 'Date', description: 'Minimum selectable date' },
       { name: 'maxDate', type: 'Date', description: 'Maximum selectable date' },
+      {
+        name: 'hourStep',
+        type: 'number',
+        default: '1',
+        description: 'Step for the hour steppers',
+      },
+      {
+        name: 'minuteStep',
+        type: 'number',
+        default: '1',
+        description: 'Step for the minute steppers',
+      },
     ],
     cssVars: [
       { name: '--azimuth-color-border', description: 'Picker border color' },
@@ -1389,16 +1506,22 @@ export const COMPONENT_DATA = [
         description: 'The position of the label relative to the input',
       },
       {
-        name: 'showSteppers',
+        name: 'stepper',
         type: 'boolean',
         default: 'false',
         description:
           'Whether to show increment/decrement steppers for number inputs',
       },
       {
-        name: 'autocompleteOptions',
-        type: 'string[]',
-        description: 'List of autocomplete suggestions',
+        name: 'showCharCount',
+        type: 'boolean',
+        default: 'false',
+        description: 'Show a live character counter when maxLength is set',
+      },
+      {
+        name: 'suggestions',
+        type: '{ options: string[]; onSelect?: (value: string) => void }',
+        description: 'Autocomplete-style suggestion dropdown while typing',
       },
     ],
     cssVars: [
@@ -2139,14 +2262,44 @@ export const COMPONENT_DATA = [
     props: [
       {
         name: 'label',
-        type: '{ text: string; subtitle?: string; error?: string; required?: boolean }',
-        description: 'Label configuration',
+        type: 'string',
+        description: 'Label text displayed above the select',
       },
       {
-        name: 'size',
+        name: 'subtitle',
         type: 'string',
-        default: 'md',
-        description: 'The size of the select',
+        description: 'Subtitle text displayed below the label',
+      },
+      {
+        name: 'error',
+        type: 'string',
+        description: 'Error message displayed below the select',
+      },
+      {
+        name: 'required',
+        type: 'boolean',
+        default: 'false',
+        description: 'Whether the field is marked as required',
+      },
+      {
+        name: 'value',
+        type: 'string',
+        description: 'Controlled value of the select',
+      },
+      {
+        name: 'defaultValue',
+        type: 'string',
+        description: 'Initial value of the select (uncontrolled)',
+      },
+      {
+        name: 'onChange',
+        type: '(value: string) => void',
+        description: 'Callback fired when the selected value changes',
+      },
+      {
+        name: 'options',
+        type: 'Array<{ value: string; label: string; disabled?: boolean }>',
+        description: 'The list of options to display',
       },
       {
         name: 'placeholder',
@@ -2154,9 +2307,10 @@ export const COMPONENT_DATA = [
         description: 'Placeholder option text',
       },
       {
-        name: 'options',
-        type: 'Array<{ value: string; label: string; disabled?: boolean }>',
-        description: 'The list of options to display',
+        name: 'size',
+        type: 'string',
+        default: 'md',
+        description: 'The size of the select',
       },
     ],
     cssVars: [
@@ -2226,24 +2380,6 @@ export const COMPONENT_DATA = [
     variants: [],
     props: [
       {
-        name: 'min',
-        type: 'number',
-        default: '0',
-        description: 'Minimum value of the slider',
-      },
-      {
-        name: 'max',
-        type: 'number',
-        default: '100',
-        description: 'Maximum value of the slider',
-      },
-      {
-        name: 'step',
-        type: 'number',
-        default: '1',
-        description: 'Step increment for the slider',
-      },
-      {
         name: 'value',
         type: 'number',
         description: 'Current slider value (controlled)',
@@ -2259,16 +2395,20 @@ export const COMPONENT_DATA = [
         description: 'Callback fired when the slider value changes',
       },
       {
-        name: 'orientation',
-        type: 'string',
-        default: 'horizontal',
-        description: 'Orientation of the slider',
-      },
-      {
-        name: 'showValue',
+        name: 'disabled',
         type: 'boolean',
         default: 'false',
-        description: 'Whether to display the current value as a label',
+        description: 'Whether the slider is disabled',
+      },
+      {
+        name: 'range',
+        type: '{ min?: number; max?: number; step?: number }',
+        description: 'Min/max/step bounds, defaults 0, 100, 1',
+      },
+      {
+        name: 'display',
+        type: '{ orientation?: "horizontal" | "vertical"; showValue?: boolean; size?: string }',
+        description: 'Orientation, value label, and size settings',
       },
     ],
     cssVars: [
@@ -2648,6 +2788,27 @@ export const COMPONENT_DATA = [
         type: 'boolean',
         default: 'false',
         description: 'Whether the field is marked as required',
+      },
+      {
+        name: 'value',
+        type: 'string',
+        description: 'Controlled value of the textarea',
+      },
+      {
+        name: 'defaultValue',
+        type: 'string',
+        description: 'Default value of the textarea (uncontrolled)',
+      },
+      {
+        name: 'onChange',
+        type: '(value: string) => void',
+        description: 'Callback fired when the textarea value changes',
+      },
+      {
+        name: 'disabled',
+        type: 'boolean',
+        default: 'false',
+        description: 'Whether the textarea is disabled',
       },
       {
         name: 'maxLength',

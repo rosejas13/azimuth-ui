@@ -16,13 +16,13 @@ describe('DateTimePicker', () => {
   });
 
   it('hides time steppers when showTime is false', () => {
-    render(<DateTimePicker display={{ showTime: false }} />);
+    render(<DateTimePicker showTime={false} />);
     expect(screen.queryByRole('group', { name: 'Hour' })).toBeNull();
     expect(screen.queryByRole('group', { name: 'Minute' })).toBeNull();
   });
 
   it('shows seconds when showSeconds is true', () => {
-    render(<DateTimePicker display={{ showSeconds: true }} />);
+    render(<DateTimePicker showSeconds />);
     expect(screen.getByRole('group', { name: 'Second' })).toBeInTheDocument();
   });
 
@@ -31,7 +31,8 @@ describe('DateTimePicker', () => {
     const user = userEvent.setup();
     render(
       <DateTimePicker
-        value={{ onChange, defaultValue: new Date(2024, 5, 15, 12, 30) }}
+        onChange={onChange}
+        defaultValue={new Date(2024, 5, 15, 12, 30)}
       />,
     );
     await user.click(screen.getByRole('button', { name: 'Increment hour' }));
@@ -46,7 +47,8 @@ describe('DateTimePicker', () => {
     const user = userEvent.setup();
     render(
       <DateTimePicker
-        value={{ onChange, defaultValue: new Date(2024, 5, 15, 12, 30) }}
+        onChange={onChange}
+        defaultValue={new Date(2024, 5, 15, 12, 30)}
       />,
     );
     await user.click(screen.getByRole('button', { name: 'Increment minute' }));
@@ -59,7 +61,8 @@ describe('DateTimePicker', () => {
     const user = userEvent.setup();
     render(
       <DateTimePicker
-        value={{ onChange, defaultValue: new Date(2024, 5, 15, 12, 30) }}
+        onChange={onChange}
+        defaultValue={new Date(2024, 5, 15, 12, 30)}
       />,
     );
     await user.click(screen.getByRole('button', { name: 'Decrement hour' }));
@@ -72,7 +75,8 @@ describe('DateTimePicker', () => {
     const user = userEvent.setup();
     render(
       <DateTimePicker
-        value={{ onChange, defaultValue: new Date(2024, 5, 15, 12, 30) }}
+        onChange={onChange}
+        defaultValue={new Date(2024, 5, 15, 12, 30)}
       />,
     );
     await user.click(screen.getByRole('button', { name: 'Decrement minute' }));
@@ -87,7 +91,7 @@ describe('DateTimePicker', () => {
 
   it('works controlled', () => {
     const date = new Date(2024, 5, 15, 10, 30);
-    render(<DateTimePicker value={{ value: date }} />);
+    render(<DateTimePicker value={date} />);
     const hourGroup = screen.getByRole('group', { name: 'Hour' });
     const minuteGroup = screen.getByRole('group', { name: 'Minute' });
     expect(hourGroup).toHaveTextContent('10');
@@ -99,7 +103,8 @@ describe('DateTimePicker', () => {
     const user = userEvent.setup();
     render(
       <DateTimePicker
-        value={{ onChange, defaultValue: new Date(2024, 5, 15, 23, 30) }}
+        onChange={onChange}
+        defaultValue={new Date(2024, 5, 15, 23, 30)}
       />,
     );
     await user.click(screen.getByRole('button', { name: 'Increment hour' }));
@@ -111,7 +116,8 @@ describe('DateTimePicker', () => {
     const user = userEvent.setup();
     render(
       <DateTimePicker
-        value={{ onChange, defaultValue: new Date(2024, 5, 15, 12, 59) }}
+        onChange={onChange}
+        defaultValue={new Date(2024, 5, 15, 12, 59)}
       />,
     );
     await user.click(screen.getByRole('button', { name: 'Increment minute' }));
@@ -123,8 +129,9 @@ describe('DateTimePicker', () => {
     const user = userEvent.setup();
     render(
       <DateTimePicker
-        value={{ onChange, defaultValue: new Date(2024, 5, 15, 0, 30) }}
-        constraints={{ hourStep: 2 }}
+        onChange={onChange}
+        defaultValue={new Date(2024, 5, 15, 0, 30)}
+        hourStep={2}
       />,
     );
     await user.click(screen.getByRole('button', { name: 'Increment hour' }));
@@ -136,8 +143,9 @@ describe('DateTimePicker', () => {
     const user = userEvent.setup();
     render(
       <DateTimePicker
-        value={{ onChange, defaultValue: new Date(2024, 5, 15, 12, 0) }}
-        constraints={{ minuteStep: 5 }}
+        onChange={onChange}
+        defaultValue={new Date(2024, 5, 15, 12, 0)}
+        minuteStep={5}
       />,
     );
     await user.click(screen.getByRole('button', { name: 'Increment minute' }));
@@ -147,8 +155,9 @@ describe('DateTimePicker', () => {
   it('passes minDate and maxDate to Calendar', () => {
     render(
       <DateTimePicker
-        value={{ defaultValue: new Date(2024, 5, 15) }}
-        constraints={{ minDate: new Date(2024, 5, 1), maxDate: new Date(2024, 5, 10) }}
+        defaultValue={new Date(2024, 5, 15)}
+        minDate={new Date(2024, 5, 1)}
+        maxDate={new Date(2024, 5, 10)}
       />,
     );
     const cells = screen.getAllByRole('gridcell');

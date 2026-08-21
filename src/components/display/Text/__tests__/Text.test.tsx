@@ -10,19 +10,19 @@ describe('Text', () => {
   });
 
   it('renders h1 for size h1', () => {
-    render(<Text element={{ size: 'h1' }}>Heading</Text>);
+    render(<Text size="h1">Heading</Text>);
     const el = screen.getByText('Heading');
     expect(el.tagName).toBe('H1');
   });
 
   it('renders h2 for size h2', () => {
-    render(<Text element={{ size: 'h2' }}>Heading</Text>);
+    render(<Text size="h2">Heading</Text>);
     const el = screen.getByText('Heading');
     expect(el.tagName).toBe('H2');
   });
 
   it('accepts custom element via as prop', () => {
-    render(<Text element={{ as: 'span' }}>Span text</Text>);
+    render(<Text as="span">Span text</Text>);
     const el = screen.getByText('Span text');
     expect(el.tagName).toBe('SPAN');
   });
@@ -56,7 +56,7 @@ describe('Text', () => {
       'xs',
     ] as const;
     for (const size of sizes) {
-      const { unmount } = render(<Text element={{ size }}>text</Text>);
+      const { unmount } = render(<Text size={size}>text</Text>);
       expect(screen.getByText('text')).toBeInTheDocument();
       unmount();
     }
@@ -121,7 +121,7 @@ describe('CSS structure', () => {
     ] as const;
     const classStrings = new Set<string>();
     for (const size of sizes) {
-      const { unmount } = render(<Text element={{ size }}>Content</Text>);
+      const { unmount } = render(<Text size={size}>Content</Text>);
       classStrings.add(screen.getByText('Content').className);
       unmount();
     }
@@ -166,7 +166,7 @@ describe('CSS structure', () => {
   it('applies variant CSS module classes', () => {
     const variants = ['display', 'heading', 'body', 'mono'] as const;
     for (const variant of variants) {
-      const { unmount } = render(<Text element={{ variant }}>V</Text>);
+      const { unmount } = render(<Text variant={variant}>V</Text>);
       expect(screen.getByText('V').className).toContain(variant);
       unmount();
     }

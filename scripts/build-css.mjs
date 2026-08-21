@@ -6,6 +6,11 @@ const distCss = resolve(root, 'dist/index.css');
 
 const tokens = readFileSync(resolve(root, 'src/styles/tokens.css'), 'utf8');
 const reset = readFileSync(resolve(root, 'src/styles/reset.css'), 'utf8');
+const animations = readFileSync(resolve(root, 'src/styles/animations.css'), 'utf8');
 const components = readFileSync(distCss, 'utf8');
 
-writeFileSync(distCss, `${tokens}\n\n${reset}\n\n${components}`, 'utf8');
+writeFileSync(
+  distCss,
+  `${tokens}\n\n${reset}\n\n${animations}\n\n${components}`,
+  'utf8',
+);

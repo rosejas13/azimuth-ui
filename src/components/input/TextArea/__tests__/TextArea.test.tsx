@@ -10,29 +10,29 @@ describe('TextArea', () => {
   });
 
   it('renders with a label', () => {
-    render(<TextArea label={{ text: 'Bio' }} />);
+    render(<TextArea label="Bio" />);
     expect(screen.getByLabelText('Bio')).toBeInTheDocument();
   });
 
   it('shows required indicator', () => {
-    render(<TextArea label={{ text: 'Bio', required: true }} />);
+    render(<TextArea label="Bio" required />);
     const label = screen.getByText('Bio');
     expect(label.className).toContain('required');
   });
 
   it('shows error message with role alert', () => {
-    render(<TextArea label={{ text: 'Bio', error: 'Too short' }} />);
+    render(<TextArea label="Bio" error="Too short" />);
     const alert = screen.getByRole('alert');
     expect(alert).toHaveTextContent('Too short');
   });
 
   it('applies aria-invalid when error present', () => {
-    render(<TextArea label={{ error: 'Bad' }} />);
+    render(<TextArea error="Bad" />);
     expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
   });
 
   it('is disabled', () => {
-    render(<TextArea value={{ disabled: true }} />);
+    render(<TextArea disabled />);
     expect(screen.getByRole('textbox')).toBeDisabled();
   });
 
@@ -41,26 +41,44 @@ describe('TextArea', () => {
     expect(document.querySelector('.my-textarea')).toBeInTheDocument();
   });
 
-  it('fires onChange', async () => {
+  it('fires onChange with the string value', async () => {
     const handleChange = vi.fn();
     const user = userEvent.setup();
-    render(<TextArea value={{ onChange: handleChange }} />);
+    render(<TextArea onChange={handleChange} />);
     await user.type(screen.getByRole('textbox'), 'a');
-    expect(handleChange).toHaveBeenCalled();
+    expect(handleChange).toHaveBeenCalledWith('a');
+  });
+
+  it('honors defaultValue for an uncontrolled textarea', async () => {
+    const user = userEvent.setup();
+    render(<TextArea defaultValue="Bio" />);
+    const textarea = screen.getByRole('textbox');
+    expect(textarea).toHaveValue('Bio');
+    await user.type(textarea, ' here');
+    expect(textarea).toHaveValue('Bio here');
+  });
+
+  it('supports a controlled value', () => {
+    const { rerender } = render(<TextArea value="one" onChange={() => {}} />);
+    expect(screen.getByRole('textbox')).toHaveValue('one');
+    rerender(<TextArea value="two" onChange={() => {}} />);
+    expect(screen.getByRole('textbox')).toHaveValue('two');
   });
 
   it('renders subtitle', () => {
-    render(<TextArea label={{ text: 'Bio', subtitle: 'Tell us about yourself' }} />);
+    render(<TextArea label="Bio" subtitle="Tell us about yourself" />);
     expect(screen.getByText('Tell us about yourself')).toBeInTheDocument();
   });
 
   it('shows character count when maxLength and showCharCount provided', () => {
-    render(<TextArea label={{ text: 'Bio' }} charCount={{ maxLength: 100, showCharCount: true }} value={{ value: 'Hello' }} />);
+    render(
+      <TextArea label="Bio" maxLength={100} showCharCount value="Hello" />,
+    );
     expect(screen.getByText('5/100')).toBeInTheDocument();
   });
 
   it('does not show character count when showCharCount is false', () => {
-    render(<TextArea label={{ text: 'Bio' }} charCount={{ maxLength: 100 }} value={{ value: 'Hello' }} />);
+    render(<TextArea label="Bio" maxLength={100} value="Hello" />);
     expect(screen.queryByText('5/100')).toBeNull();
   });
 

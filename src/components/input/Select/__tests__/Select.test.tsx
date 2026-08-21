@@ -17,7 +17,7 @@ describe('Select', () => {
   });
 
   it('renders with label', () => {
-    render(<Select label={{ text: 'Country' }} options={options} />);
+    render(<Select label="Country" options={options} />);
     expect(screen.getByLabelText('Country')).toBeInTheDocument();
   });
 
@@ -26,16 +26,17 @@ describe('Select', () => {
     expect(screen.getByText('Choose...')).toBeInTheDocument();
   });
 
-  it('fires onChange', async () => {
+  it('fires onChange with the selected value', async () => {
     const handleChange = vi.fn();
     const user = userEvent.setup();
     render(<Select options={options} onChange={handleChange} />);
     await user.selectOptions(screen.getByRole('combobox'), '2');
     expect(handleChange).toHaveBeenCalledOnce();
+    expect(handleChange).toHaveBeenCalledWith('2');
   });
 
   it('shows error message', () => {
-    render(<Select label={{ error: 'Required field' }} options={options} />);
+    render(<Select error="Required field" options={options} />);
     expect(screen.getByRole('alert')).toHaveTextContent('Required field');
   });
 
@@ -47,6 +48,11 @@ describe('Select', () => {
   it('applies custom className', () => {
     render(<Select options={options} className="my-select" />);
     expect(screen.getByRole('combobox').className).toContain('my-select');
+  });
+
+  it('honors defaultValue for an uncontrolled select', () => {
+    render(<Select options={options} defaultValue="2" />);
+    expect(screen.getByRole('combobox')).toHaveValue('2');
   });
 
   it('respects controlled value prop', () => {

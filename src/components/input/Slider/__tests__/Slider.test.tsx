@@ -9,7 +9,7 @@ describe('Slider', () => {
   });
 
   it('has correct aria attributes', () => {
-    render(<Slider range={{ min: 10, max: 90 }} value={{ value: 50 }} />);
+    render(<Slider range={{ min: 10, max: 90 }} value={50} />);
     const slider = screen.getByRole('slider');
     expect(slider).toHaveAttribute('aria-valuemin', '10');
     expect(slider).toHaveAttribute('aria-valuemax', '90');
@@ -17,18 +17,18 @@ describe('Slider', () => {
   });
 
   it('uses defaultValue', () => {
-    render(<Slider range={{ min: 0, max: 100 }} value={{ defaultValue: 42 }} />);
+    render(<Slider range={{ min: 0, max: 100 }} defaultValue={42} />);
     expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '42');
   });
 
   it('renders value label when showValue is true', () => {
-    render(<Slider value={{ value: 75 }} display={{ showValue: true }} />);
+    render(<Slider value={75} display={{ showValue: true }} />);
     expect(screen.getByText('75')).toBeInTheDocument();
   });
 
   it('calls onChange on keyboard interaction', () => {
     const onChange = vi.fn();
-    render(<Slider value={{ value: 50, onChange }} range={{ step: 10 }} />);
+    render(<Slider value={50} onChange={onChange} range={{ step: 10 }} />);
     const slider = screen.getByRole('slider');
     fireEvent.keyDown(slider, { key: 'ArrowRight' });
     expect(onChange).toHaveBeenCalledWith(60);
@@ -36,7 +36,7 @@ describe('Slider', () => {
 
   it('ArrowLeft decreases value', () => {
     const onChange = vi.fn();
-    render(<Slider value={{ value: 50, onChange }} range={{ step: 10 }} />);
+    render(<Slider value={50} onChange={onChange} range={{ step: 10 }} />);
     const slider = screen.getByRole('slider');
     fireEvent.keyDown(slider, { key: 'ArrowLeft' });
     expect(onChange).toHaveBeenCalledWith(40);
@@ -44,7 +44,9 @@ describe('Slider', () => {
 
   it('Home sets value to min', () => {
     const onChange = vi.fn();
-    render(<Slider range={{ min: 10, max: 100 }} value={{ value: 50, onChange }} />);
+    render(
+      <Slider range={{ min: 10, max: 100 }} value={50} onChange={onChange} />,
+    );
     const slider = screen.getByRole('slider');
     fireEvent.keyDown(slider, { key: 'Home' });
     expect(onChange).toHaveBeenCalledWith(10);
@@ -52,7 +54,9 @@ describe('Slider', () => {
 
   it('End sets value to max', () => {
     const onChange = vi.fn();
-    render(<Slider range={{ min: 10, max: 100 }} value={{ value: 50, onChange }} />);
+    render(
+      <Slider range={{ min: 10, max: 100 }} value={50} onChange={onChange} />,
+    );
     const slider = screen.getByRole('slider');
     fireEvent.keyDown(slider, { key: 'End' });
     expect(onChange).toHaveBeenCalledWith(100);
@@ -61,7 +65,12 @@ describe('Slider', () => {
   it('vertical orientation uses ArrowUp/Down', () => {
     const onChange = vi.fn();
     render(
-      <Slider value={{ value: 50, onChange }} range={{ step: 10 }} display={{ orientation: 'vertical' }} />,
+      <Slider
+        value={50}
+        onChange={onChange}
+        range={{ step: 10 }}
+        display={{ orientation: 'vertical' }}
+      />,
     );
     const slider = screen.getByRole('slider');
     fireEvent.keyDown(slider, { key: 'ArrowUp' });
@@ -71,7 +80,7 @@ describe('Slider', () => {
   });
 
   it('clamps value between min and max', () => {
-    render(<Slider range={{ min: 0, max: 100 }} value={{ value: 150 }} />);
+    render(<Slider range={{ min: 0, max: 100 }} value={150} />);
     expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '100');
   });
 
@@ -81,7 +90,7 @@ describe('Slider', () => {
   });
 
   it('renders disabled state', () => {
-    render(<Slider value={{ disabled: true }} />);
+    render(<Slider disabled />);
     expect(screen.getByRole('slider')).toBeDisabled();
   });
 

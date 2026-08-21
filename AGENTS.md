@@ -183,4 +183,10 @@ Read both before generating new components. Key facts:
 - **Elevation**: flat at rest, lift on interaction (4 shadow tiers: sm/md/lg/xl)
 - **Easing**: `cubic-bezier(0.16, 1, 0.3, 1)` (exponential ease-out)
 - **Anti-references**: bloated UI libs (MUI, AntD, Chakra) and generic SaaS-cream
-- **Do not**: side-stripe borders, gradient text, glassmorphism defaults, hero-metric templates, identical card grids, modals as first thought<!-- END BEADS INTEGRATION -->
+- **Do not**: side-stripe borders, gradient text, glassmorphism defaults, hero-metric templates, identical card grids, modals as first thought
+
+### Prop design (input & field components)
+
+- **Flat, idiomatic props**: `label="Email"`, top-level `value`/`defaultValue`/`onChange` where `onChange` takes the raw value (`(value: string | number) => void`) so `onChange={setState}` typechecks. No blanket `extends ComponentPropsWithoutRef<'element'>` — curate the surface and add a `<element>Props` escape hatch spread last.
+- **Structured objects only when cohesive**: fields that always travel together and read as a noun (`suggestions`, `range`, `display`, `constraints`, domain values like PhoneInput's `{code, number}`). `label`/`value`/`onChange` are never objects.
+- **Group defaults via context**: `<Form>` and `<InputGroup>` accept `size`/`labelPosition` and publish them through `InputConfigContext` (`src/components/input/input-config.ts`); inputs consume as defaults (instance > group > form > built-in) and may ignore settings their layout doesn't support (e.g. Select ignores `labelPosition`).<!-- END BEADS INTEGRATION -->

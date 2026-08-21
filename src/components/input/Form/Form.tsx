@@ -5,6 +5,7 @@ import {
   forwardRef,
   useCallback,
   useId,
+  useMemo,
   createContext,
   useContext,
   cloneElement,
@@ -13,6 +14,7 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Form.module.css';
 import type { UseFormReturn } from '@/hooks/useForm';
+import { InputConfigProvider } from '../input-config';
 
 interface FormContextValue {
   errors: Record<string, string | undefined>;
@@ -37,12 +39,28 @@ export interface FormProps extends Omit<
   form?: UseFormReturn<Record<string, unknown>>;
   /** @default 'md' */
   spacing?: 'sm' | 'md' | 'lg';
+  /** Default `size` inherited by every child input, unless overridden. @default 'md' */
+  size?: 'sm' | 'md' | 'lg';
+  /** Default `labelPosition` inherited by every child input, unless overridden. @default 'top' */
+  labelPosition?: 'top' | 'left' | 'inner';
   children?: React.ReactNode;
 }
 
 /** A form wrapper that serializes submissions into a key-value record and prevents default browser validation. */
 const FormRoot = forwardRef<HTMLFormElement, FormProps>(
-  ({ onSubmit, form, spacing = 'md', className, children, ...props }, ref) => {
+  (
+    {
+      onSubmit,
+      form,
+      spacing = 'md',
+      size,
+      labelPosition,
+      className,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
     const handleFormSubmit = useCallback(
       (e: React.FormEvent<HTMLFormElement>) => {
         if (form) {
@@ -78,25 +96,32 @@ const FormRoot = forwardRef<HTMLFormElement, FormProps>(
         }
       : null;
 
+    const config = useMemo(
+      () => ({ size, labelPosition }),
+      [size, labelPosition],
+    );
+
     return (
-      <FormContext.Provider value={ctx}>
-        <form
-          ref={ref}
-          noValidate
-          onSubmit={handleFormSubmit}
-          className={cn(
-            styles.form,
-            spacing === 'sm' && styles.spacingSm,
-            spacing === 'md' && styles.spacingMd,
-            spacing === 'lg' && styles.spacingLg,
-            className,
-          )}
-          aria-errormessage={undefined}
-          {...props}
-        >
-          {children}
-        </form>
-      </FormContext.Provider>
+      <InputConfigProvider value={config}>
+        <FormContext.Provider value={ctx}>
+          <form
+            ref={ref}
+            noValidate
+            onSubmit={handleFormSubmit}
+            className={cn(
+              styles.form,
+              spacing === 'sm' && styles.spacingSm,
+              spacing === 'md' && styles.spacingMd,
+              spacing === 'lg' && styles.spacingLg,
+              className,
+            )}
+            aria-errormessage={undefined}
+            {...props}
+          >
+            {children}
+          </form>
+        </FormContext.Provider>
+      </InputConfigProvider>
     );
   },
 );

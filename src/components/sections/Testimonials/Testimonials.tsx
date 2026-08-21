@@ -100,7 +100,9 @@ export const Testimonials = forwardRef<HTMLElement, TestimonialsProps>(
             <header className={styles.header}>
               {subtitle && (
                 <Text
-                  element={{ as: 'p', size: 'sm', variant: 'heading' }}
+                  as="p"
+                  size="sm"
+                  variant="heading"
                   color="accent"
                   className={styles.subtitle}
                 >

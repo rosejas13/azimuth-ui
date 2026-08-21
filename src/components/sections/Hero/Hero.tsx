@@ -100,12 +100,14 @@ export const Hero = forwardRef<HTMLElement, HeroProps>(
             <div className={cn(styles.content, styles[layout])}>
               <h1 className={styles.title}>{title}</h1>
               {subtitle && (
-                <Text element={{ as: 'p', size: 'lg', variant: 'heading' }}>
+                <Text as="p" size="lg" variant="heading">
                   {subtitle}
                 </Text>
               )}
               {description && (
-                <Text element={{ as: 'p', size: 'base' }}>{description}</Text>
+                <Text as="p" size="base">
+                  {description}
+                </Text>
               )}
               {(primaryAction || secondaryAction) && (
                 <div className={styles.actions}>

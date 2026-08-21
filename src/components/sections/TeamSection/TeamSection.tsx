@@ -53,7 +53,9 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(
             <header className={styles.header}>
               {subtitle && (
                 <Text
-                  element={{ as: 'p', size: 'sm', variant: 'heading' }}
+                  as="p"
+                  size="sm"
+                  variant="heading"
                   color="accent"
                   className={styles.subtitle}
                 >
@@ -62,7 +64,9 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(
               )}
               {title && <h2 className={styles.title}>{title}</h2>}
               {description && (
-                <Text element={{ as: 'p', size: 'base' }}>{description}</Text>
+                <Text as="p" size="base">
+                  {description}
+                </Text>
               )}
             </header>
           )}
@@ -76,17 +80,11 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(
                   size="xl"
                 />
                 <h3 className={styles.memberName}>{member.name}</h3>
-                <Text
-                  element={{ as: 'p', size: 'sm', variant: 'heading' }}
-                  color="accent"
-                >
+                <Text as="p" size="sm" variant="heading" color="accent">
                   {member.role}
                 </Text>
                 {member.bio && (
-                  <Text
-                    element={{ as: 'p', size: 'sm' }}
-                    className={styles.bio}
-                  >
+                  <Text as="p" size="sm" className={styles.bio}>
                     {member.bio}
                   </Text>
                 )}

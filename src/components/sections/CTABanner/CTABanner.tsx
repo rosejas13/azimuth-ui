@@ -65,7 +65,9 @@ export const CTABanner = forwardRef<HTMLElement, CTABannerProps>(
           <div className={styles.inner}>
             <h2 className={styles.title}>{title}</h2>
             {description && (
-              <Text element={{ as: 'p', size: 'lg' }}>{description}</Text>
+              <Text as="p" size="lg">
+                {description}
+              </Text>
             )}
             <div className={styles.actions}>
               {renderAction(primaryAction, 'primary')}

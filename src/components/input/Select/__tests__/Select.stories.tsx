@@ -13,11 +13,12 @@ function SelectDemo() {
   const [value, setValue] = useState('');
   return (
     <Select
-      label={{ text: 'Favorite fruit', subtitle: 'Pick one' }}
+      label="Favorite fruit"
+      subtitle="Pick one"
       options={fruitOptions}
       placeholder="Select a fruit..."
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={setValue}
     />
   );
 }
@@ -39,23 +40,48 @@ export const Default: Story = {
 };
 
 export const WithLabelAndSubtitle: Story = {
-  args: { label: { text: 'Favorite fruit', subtitle: 'Pick one' }, options: fruitOptions, placeholder: 'Select a fruit...' },
+  args: {
+    label: 'Favorite fruit',
+    subtitle: 'Pick one',
+    options: fruitOptions,
+    placeholder: 'Select a fruit...',
+  },
 };
 
 export const SizeSm: Story = {
-  args: { label: { text: 'Size SM' }, size: 'sm', options: fruitOptions, placeholder: 'Select...' },
+  args: {
+    label: 'Size SM',
+    size: 'sm',
+    options: fruitOptions,
+    placeholder: 'Select...',
+  },
 };
 
 export const SizeMd: Story = {
-  args: { label: { text: 'Size MD' }, size: 'md', options: fruitOptions, placeholder: 'Select...' },
+  args: {
+    label: 'Size MD',
+    size: 'md',
+    options: fruitOptions,
+    placeholder: 'Select...',
+  },
 };
 
 export const SizeLg: Story = {
-  args: { label: { text: 'Size LG' }, size: 'lg', options: fruitOptions, placeholder: 'Select...' },
+  args: {
+    label: 'Size LG',
+    size: 'lg',
+    options: fruitOptions,
+    placeholder: 'Select...',
+  },
 };
 
 export const Error: Story = {
-  args: { label: { text: 'Favorite fruit', error: 'Please select a fruit' }, options: fruitOptions, placeholder: 'Select...' },
+  args: {
+    label: 'Favorite fruit',
+    error: 'Please select a fruit',
+    options: fruitOptions,
+    placeholder: 'Select...',
+  },
 };
 
 export const Demo: Story = {

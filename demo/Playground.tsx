@@ -6,20 +6,20 @@ import type { ComponentDoc } from './component-data';
 function generateDefaultCode(componentName: string): string {
   const templates: Record<string, string> = {
     Button: `return React.createElement(Button, { variant: 'primary', size: 'md' }, 'Click Me')`,
-    Text: `return React.createElement(Text, { element: { size: 'h2' }, color: 'primary' }, 'Heading Text')`,
+    Text: `return React.createElement(Text, { size: 'h2', color: 'primary' }, 'Heading Text')`,
     Badge: `return React.createElement(Badge, { variant: 'accent' }, 'New')`,
     Tag: `return React.createElement(Tag, { variant: 'success' }, 'Approved')`,
     Chip: `return React.createElement(Chip, { variant: 'accent', onClick: () => alert('Clicked!') }, 'Filter')`,
     Toggle: `return React.createElement(Toggle, { label: 'Enable feature', defaultChecked: true })`,
     Checkbox: `return React.createElement(Checkbox, { label: 'Agree to terms', defaultChecked: true })`,
     Input: `return React.createElement(Input, { label: 'Email', placeholder: 'you@example.com', size: 'md' })`,
-    Select: `return React.createElement(Select, { label: { text: 'Framework' }, placeholder: 'Choose...', options: [{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }], size: 'md' })`,
-    Slider: `return React.createElement(Slider, { defaultValue: 50, showValue: true })`,
+    Select: `return React.createElement(Select, { label: 'Framework', placeholder: 'Choose...', options: [{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }], size: 'md' })`,
+    Slider: `return React.createElement(Slider, { defaultValue: 50, display: { showValue: true } })`,
     ProgressBar: `return React.createElement(ProgressBar, { value: 65, color: 'success' })`,
     Loader: `return React.createElement(Loader, { variant: 'circle', size: 'md', label: 'Loading...' })`,
     Avatar: `return React.createElement(Avatar, { fallback: 'JD', size: 'lg' })`,
     Alert: `return React.createElement(Alert, { variant: 'info', title: 'Notice' }, 'This is an informational alert.')`,
-    Card: `return React.createElement(Card, { header: React.createElement(Text, { weight: 'semibold' }, 'Card Title') }, React.createElement(Text, { element: { size: 'sm' }, color: 'secondary' }, 'Card body content here.'))`,
+    Card: `return React.createElement(Card, { header: React.createElement(Text, { weight: 'semibold' }, 'Card Title') }, React.createElement(Text, { size: 'sm', color: 'secondary' }, 'Card body content here.'))`,
     Kbd: `return React.createElement(Kbd, null, 'Ctrl + K')`,
     Skeleton: `return React.createElement(Skeleton, { width: '60%', height: '16px' })`,
     Toast: `return React.createElement(Toast, { title: 'Notification', message: 'This is a toast message.', variant: 'info' })`,
@@ -90,7 +90,7 @@ export function Playground({ doc }: { doc: ComponentDoc }) {
     <Stack spacing="lg">
       <Card>
         <Stack spacing="md">
-          <Text element={{ size: 'sm' }} weight="semibold">
+          <Text size="sm" weight="semibold">
             Import
           </Text>
           <div
@@ -106,7 +106,7 @@ export function Playground({ doc }: { doc: ComponentDoc }) {
           >
             {importCode}
           </div>
-          <Text element={{ size: 'xs' }} color="muted">
+          <Text size="xs" color="muted">
             You can add other components to the import line above to use them
             together.
           </Text>
@@ -122,7 +122,7 @@ export function Playground({ doc }: { doc: ComponentDoc }) {
               alignItems: 'center',
             }}
           >
-            <Text element={{ size: 'sm' }} weight="semibold">
+            <Text size="sm" weight="semibold">
               Code Editor
             </Text>
             <Button size="sm" onClick={handleRun}>
@@ -154,10 +154,7 @@ export function Playground({ doc }: { doc: ComponentDoc }) {
 
       {error && (
         <Card style={{ borderColor: 'var(--azimuth-color-error-text)' }}>
-          <Text
-            element={{ size: 'sm' }}
-            style={{ color: 'var(--azimuth-color-error-text)' }}
-          >
+          <Text size="sm" style={{ color: 'var(--azimuth-color-error-text)' }}>
             {error}
           </Text>
         </Card>
@@ -165,7 +162,7 @@ export function Playground({ doc }: { doc: ComponentDoc }) {
 
       <Card>
         <Stack spacing="md">
-          <Text element={{ size: 'sm' }} weight="semibold">
+          <Text size="sm" weight="semibold">
             Rendered Output
           </Text>
           <div
@@ -180,7 +177,7 @@ export function Playground({ doc }: { doc: ComponentDoc }) {
             }}
           >
             {output || (
-              <Text element={{ size: 'sm' }} color="muted">
+              <Text size="sm" color="muted">
                 Run the code to see the component
               </Text>
             )}

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { ThemeProvider } from '../ThemeProvider';
 import { useTheme } from '../useTheme';
 
@@ -138,5 +138,50 @@ describe('ThemeProvider', () => {
     ]) {
       expect(inline.getPropertyValue(name)).toBe('');
     }
+  });
+});
+
+describe('ThemeProvider base-styles warning', () => {
+  async function freshProvider() {
+    vi.resetModules();
+    const mod = await import('../ThemeProvider');
+    return mod.ThemeProvider;
+  }
+
+  it('warns once when the base stylesheet is missing', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.stubGlobal('getComputedStyle', () => ({
+      getPropertyValue: () => '',
+    }));
+
+    const Provider = await freshProvider();
+    render(
+      <Provider>
+        <div />
+      </Provider>,
+    );
+
+    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledWith(
+      expect.stringContaining('azimuth-ui/styles.css'),
+    );
+    vi.unstubAllGlobals();
+  });
+
+  it('stays silent when the base stylesheet is present', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.stubGlobal('getComputedStyle', () => ({
+      getPropertyValue: () => '8px',
+    }));
+
+    const Provider = await freshProvider();
+    render(
+      <Provider>
+        <div />
+      </Provider>,
+    );
+
+    expect(console.warn).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
   });
 });

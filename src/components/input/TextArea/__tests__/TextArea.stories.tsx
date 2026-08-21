@@ -4,16 +4,19 @@ import { TextArea } from '../TextArea';
 
 function TextAreaDemo() {
   const [value, setValue] = useState('');
-  return <TextArea label={{ text: 'Bio' }} value={{ value, onChange: (e) => setValue(e.target.value) }} />;
+  return <TextArea label="Bio" value={value} onChange={setValue} />;
 }
 
 function CharCountDemo() {
   const [value, setValue] = useState('');
   return (
     <TextArea
-      label={{ text: 'Bio', subtitle: 'Tell us about yourself' }}
-      value={{ value, onChange: (e) => setValue(e.target.value) }}
-      charCount={{ showCharCount: true, maxLength: 200 }}
+      label="Bio"
+      subtitle="Tell us about yourself"
+      value={value}
+      onChange={setValue}
+      maxLength={200}
+      showCharCount
     />
   );
 }
@@ -35,11 +38,19 @@ export const Default: Story = {
 };
 
 export const WithLabel: Story = {
-  args: { label: { text: 'Description', subtitle: 'Provide a brief description' }, placeholder: 'Type here...' },
+  args: {
+    label: 'Description',
+    subtitle: 'Provide a brief description',
+    placeholder: 'Type here...',
+  },
 };
 
 export const Error: Story = {
-  args: { label: { text: 'Message', error: 'Message is required' }, placeholder: 'Type here...' },
+  args: {
+    label: 'Message',
+    error: 'Message is required',
+    placeholder: 'Type here...',
+  },
 };
 
 export const CharCount: Story = {

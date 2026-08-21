@@ -1,21 +1,33 @@
 import {
-  type ComponentPropsWithoutRef,
   type ElementType,
+  type CSSProperties,
+  type FocusEventHandler,
+  type MouseEventHandler,
   createElement,
   forwardRef,
 } from 'react';
+import type { AriaRole } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Text.module.css';
 
-type TextSize = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'lg' | 'base' | 'sm' | 'xs';
+export type TextSize =
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'lg'
+  | 'base'
+  | 'sm'
+  | 'xs';
 
-type TextWeight = 'bold' | 'semibold' | 'medium' | 'normal' | 'light';
+export type TextWeight = 'bold' | 'semibold' | 'medium' | 'normal' | 'light';
 
-type TextColor = 'primary' | 'secondary' | 'muted' | 'accent';
+export type TextColor = 'primary' | 'secondary' | 'muted' | 'accent';
 
-type TextAlign = 'left' | 'center' | 'right' | 'justify';
+export type TextAlign = 'left' | 'center' | 'right' | 'justify';
 
-type TextVariant = 'display' | 'heading' | 'body' | 'mono';
+export type TextVariant = 'display' | 'heading' | 'body' | 'mono';
 
 const AS_MAP: Record<string, ElementType> = {
   h1: 'h1',
@@ -26,36 +38,57 @@ const AS_MAP: Record<string, ElementType> = {
 };
 
 /** A typography component for rendering text with size, weight, color, variant, and utility classes. */
-export interface TextProps extends ComponentPropsWithoutRef<'p'> {
-  element?: {
-    /** HTML element to render. Auto-detected from size if not provided. */
-    as?: ElementType;
-    /** @default 'base' */
-    size?: TextSize;
-    /** @default 'body' */
-    variant?: TextVariant;
-  };
+export interface TextProps {
+  /** HTML element to render. Auto-detected from size if not provided. */
+  as?: ElementType;
+  /** @default 'base' */
+  size?: TextSize;
+  /** @default 'body' */
+  variant?: TextVariant;
   /** Font weight override. */
   weight?: TextWeight;
   /** Text color preset. */
   color?: TextColor;
+  /** Text alignment. */
+  align?: TextAlign;
   /** @default false */
   uppercase?: boolean;
   /** @default false */
   truncate?: boolean;
   /** @default false */
   nowrap?: boolean;
-  /** Text alignment. */
-  align?: TextAlign;
   /** Text content. */
   children?: React.ReactNode;
+
+  // Curated native attributes.
+  id?: string;
+  className?: string;
+  style?: CSSProperties;
+  title?: string;
+  lang?: string;
+  dir?: string;
+  tabIndex?: number;
+  role?: AriaRole;
+  'data-testid'?: string;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+  'aria-describedby'?: string;
+  'aria-hidden'?: boolean | 'true' | 'false';
+  'aria-live'?: 'off' | 'polite' | 'assertive';
+  onClick?: MouseEventHandler<HTMLElement>;
+  onMouseEnter?: MouseEventHandler<HTMLElement>;
+  onMouseLeave?: MouseEventHandler<HTMLElement>;
+  onFocus?: FocusEventHandler<HTMLElement>;
+  onBlur?: FocusEventHandler<HTMLElement>;
 }
 
 /** A typography component with predefined sizes, weights, colors, and text variants. */
 export const Text = forwardRef<HTMLElement, TextProps>(
   (
     {
-      element: { as, size = 'base', variant = 'body' } = {},
+      as,
+      size = 'base',
+      variant = 'body',
       weight,
       color,
       align,

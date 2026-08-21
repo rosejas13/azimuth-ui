@@ -14,26 +14,20 @@ export const Default: Story = {};
 
 export const WithSeconds: Story = {
   args: {
-    display: {
-      showSeconds: true,
-    },
+    showSeconds: true,
   },
 };
 
 export const WithConstraints: Story = {
   args: {
-    constraints: {
-      minDate: new Date(2026, 5, 1),
-      maxDate: new Date(2026, 5, 20),
-    },
+    minDate: new Date(2026, 5, 1),
+    maxDate: new Date(2026, 5, 20),
   },
 };
 
 export const WithCustomSteps: Story = {
   args: {
-    constraints: {
-      hourStep: 2,
-      minuteStep: 15,
-    },
+    hourStep: 2,
+    minuteStep: 15,
   },
 };

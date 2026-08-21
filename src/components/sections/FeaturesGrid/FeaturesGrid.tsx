@@ -66,7 +66,9 @@ export const FeaturesGrid = forwardRef<HTMLElement, FeaturesGridProps>(
             <header className={styles.header}>
               {subtitle && (
                 <Text
-                  element={{ as: 'p', size: 'sm', variant: 'heading' }}
+                  as="p"
+                  size="sm"
+                  variant="heading"
                   color="accent"
                   className={styles.subtitle}
                 >
@@ -75,7 +77,9 @@ export const FeaturesGrid = forwardRef<HTMLElement, FeaturesGridProps>(
               )}
               {title && <h2 className={styles.title}>{title}</h2>}
               {description && (
-                <Text element={{ as: 'p', size: 'base' }}>{description}</Text>
+                <Text as="p" size="base">
+                  {description}
+                </Text>
               )}
             </header>
           )}

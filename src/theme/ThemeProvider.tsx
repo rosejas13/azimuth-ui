@@ -76,6 +76,30 @@ const SHADOW_MAP = {
   },
 } as const;
 
+/**
+ * Warns once, at runtime, when the base azimuth stylesheet is not loaded.
+ * ThemeProvider only emits runtime token overrides; the base tokens and every
+ * component's styles ship in `azimuth-ui/styles.css`. Without that import the
+ * whole library renders unstyled, so we make the missing import obvious.
+ */
+let warnedMissingStyles = false;
+function warnIfStylesMissing(): void {
+  if (warnedMissingStyles) return;
+  warnedMissingStyles = true;
+  if (typeof document === 'undefined') return;
+  // `--azimuth-radius` is defined by tokens.css (base) but not re-defined by
+  // anything ThemeProvider injects, so its absence means styles.css is missing.
+  const baseLoaded =
+    getComputedStyle(document.documentElement)
+      .getPropertyValue('--azimuth-radius')
+      .trim() !== '';
+  if (!baseLoaded) {
+    console.warn(
+      '[azimuth-ui] Base styles not found. Import "azimuth-ui/styles.css" once at your app entry (e.g. `import \'azimuth-ui/styles.css\';`) so components render styled.',
+    );
+  }
+}
+
 /** Converts a hex color string to normalized sRGB components (0–1). Returns null for invalid input. */
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const clean = hex.replace('#', '');
@@ -180,6 +204,8 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
   }, [config]);
 
   useEffect(() => {
+    warnIfStylesMissing();
+
     const c: Required<ThemeConfig> = { ...DEFAULT_THEME, ...config };
     const radii = RADIUS_MAP[c.borderRadius];
     const spaces = SPACING_MAP[c.spacing];

@@ -1,0 +1,50 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-sm);
+  margin: 0;
+  padding: 0;
+  border: none;
+  min-width: 0;
+}
+
+.group:disabled {
+  border: none;
+}
+
+.groupLabel {
+  padding: 0;
+  font-family: var(--azimuth-font-body);
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 600;
+  color: var(--azimuth-color-text);
+  line-height: 1.5;
+}
+
+.requiredIndicator {
+  color: var(--azimuth-color-error-text);
+}
+
+.subtitle {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-secondary);
+  line-height: 1.5;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--azimuth-space-sm);
+}
+
+.errorMessage {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-error-text);
+  line-height: 1.5;
+}
+
+@media (width <= 480px) {
+  .fields {
+    grid-template-columns: 1fr;
+  }
+}

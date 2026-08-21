@@ -2,6 +2,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Form } from '../Form';
+import { Input } from '../../Input/Input';
+import { InputGroup } from '../../InputGroup/InputGroup';
+import { Select } from '../../Select/Select';
 
 describe('Form', () => {
   it('renders a form element', () => {
@@ -74,7 +77,11 @@ describe('Form', () => {
   it('does not show help text when error exists', () => {
     render(
       <Form>
-        <Form.Field label="Email" helpText="Enter your email" error="Invalid email">
+        <Form.Field
+          label="Email"
+          helpText="Enter your email"
+          error="Invalid email"
+        >
           <input type="email" />
         </Form.Field>
       </Form>,
@@ -230,5 +237,39 @@ describe('Form', () => {
 
   it('renders Form.Field displayName correctly', () => {
     expect(Form.Field.displayName).toBe('Form.Field');
+  });
+
+  it('inherits labelPosition to child inputs as the default', () => {
+    render(
+      <Form labelPosition="left">
+        <Input label="First Name" />
+        <Input label="Last Name" labelPosition="top" />
+      </Form>,
+    );
+    const defaulted = screen
+      .getByLabelText('First Name')
+      .closest('[class*="wrapper"]');
+    const overridden = screen
+      .getByLabelText('Last Name')
+      .closest('[class*="wrapper"]');
+    expect(defaulted?.className).toContain('wrapperHorizontal');
+    expect(overridden?.className).not.toContain('wrapperHorizontal');
+  });
+
+  it('inherits size down to a nested InputGroup and Select', () => {
+    render(
+      <Form size="sm">
+        <InputGroup>
+          <Input label="Nested" />
+          <Select label="Country" options={[{ value: 'us', label: 'US' }]} />
+        </InputGroup>
+      </Form>,
+    );
+    const input = screen.getByLabelText('Nested').closest('[class*="wrapper"]');
+    const select = screen
+      .getByLabelText('Country')
+      .closest('[class*="wrapper"]');
+    expect(input?.className).toContain('sm');
+    expect(select?.className).toContain('sm');
   });
 });

@@ -1,24 +1,91 @@
 import { useState } from 'react';
 import {
-  Button, Text, Input, Checkbox, Radio, Select, Toggle,
-  Container, Grid, Stack, Divider, Badge, Tag, Chip, Avatar,
-  Card, Modal, Drawer, Dialog, Alert, Tooltip, Flyout, Menu,
-  Navbar, Tabs, Pagination, Breadcrumbs, DataTable, Table, List,
-  SearchBar, Slider, ProgressBar, Loader, Skeleton, EmptyState,
-  CodeBlock, Calendar, DateTimePicker, DateRangePicker, Carousel,
-  SectionView, SegmentedButton, Kbd, TextArea, TextBox, PageLayout,
-  ResizablePanel, TreeList, DropdownList, LoginSignup, Chat, FileUpload,
-  SlideSheet, Icon, useToast,
-  Rating, Timeline, NotificationBadge, OTPInput, SplitButton,
-  BreadcrumbPageHeader, Combobox, Sidebar, ColorPicker,
+  Button,
+  Text,
+  Input,
+  Checkbox,
+  Radio,
+  Select,
+  Toggle,
+  Container,
+  Grid,
+  Stack,
+  Divider,
+  Badge,
+  Tag,
+  Chip,
+  Avatar,
+  Card,
+  Modal,
+  Drawer,
+  Dialog,
+  Alert,
+  Tooltip,
+  Flyout,
+  Menu,
+  Navbar,
+  Tabs,
+  Pagination,
+  Breadcrumbs,
+  DataTable,
+  Table,
+  List,
+  SearchBar,
+  Slider,
+  ProgressBar,
+  Loader,
+  Skeleton,
+  EmptyState,
+  CodeBlock,
+  Calendar,
+  DateTimePicker,
+  DateRangePicker,
+  Carousel,
+  SectionView,
+  SegmentedButton,
+  Kbd,
+  TextArea,
+  TextBox,
+  PageLayout,
+  ResizablePanel,
+  TreeList,
+  DropdownList,
+  LoginSignup,
+  Chat,
+  FileUpload,
+  SlideSheet,
+  Icon,
+  useToast,
+  Rating,
+  Timeline,
+  NotificationBadge,
+  OTPInput,
+  SplitButton,
+  BreadcrumbPageHeader,
+  Combobox,
+  Sidebar,
+  ColorPicker,
   DiffViewer,
-  Clock, Accordion, ErrorPage,
-  MediaPlayer, SimpleChart, MapDisplay,
+  Clock,
+  Accordion,
+  ErrorPage,
+  MediaPlayer,
+  SimpleChart,
+  MapDisplay,
+  AddressInput,
 } from '../src';
 import { COMPONENT_DATA, type ComponentDoc } from './component-data';
 import { Playground } from './Playground';
 
-function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShowSheet, onShowToast, onShowAlert }: {
+function ComponentPreview({
+  doc,
+  onShowModal,
+  onShowDrawer,
+  onShowDialog,
+  onShowSheet,
+  onShowToast,
+  onShowAlert,
+}: {
   doc: ComponentDoc;
   onShowModal: () => void;
   onShowDrawer: () => void;
@@ -30,51 +97,85 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
   const previews: Record<string, React.ReactNode> = {
     Button: (
       <Stack direction="horizontal" spacing="sm" wrap>
-        {['primary', 'secondary', 'tertiary', 'link', 'danger'].map(v => (
-          <Button key={v} variant={v as any} size="sm">{v}</Button>
+        {['primary', 'secondary', 'tertiary', 'link', 'danger'].map((v) => (
+          <Button key={v} variant={v as any} size="sm">
+            {v}
+          </Button>
         ))}
-        <Button size="sm" icon={<span>+</span>}>Icon</Button>
-        <Button size="sm" fullWidth>Full Width</Button>
+        <Button size="sm" icon={<span>+</span>}>
+          Icon
+        </Button>
+        <Button size="sm" fullWidth>
+          Full Width
+        </Button>
       </Stack>
     ),
     Text: (
       <Stack spacing="sm">
-        <Text element={{ size: "h1" }}>Heading 1</Text>
-        <Text element={{ size: "h2" }}>Heading 2</Text>
-        <Text element={{ size: "base" }}>Body text</Text>
-        <Text element={{ size: "sm" }} color="secondary">Secondary small text</Text>
+        <Text size="h1">Heading 1</Text>
+        <Text size="h2">Heading 2</Text>
+        <Text size="base">Body text</Text>
+        <Text size="sm" color="secondary">
+          Secondary small text
+        </Text>
       </Stack>
     ),
     Badge: (
       <Stack direction="horizontal" spacing="xs" wrap>
-        {['neutral', 'accent', 'success', 'warning', 'danger', 'info'].map(v => (
-          <Badge key={v} variant={v as any}>{v}</Badge>
-        ))}
+        {['neutral', 'accent', 'success', 'warning', 'danger', 'info'].map(
+          (v) => (
+            <Badge key={v} variant={v as any}>
+              {v}
+            </Badge>
+          ),
+        )}
       </Stack>
     ),
     Tag: (
       <Stack direction="horizontal" spacing="xs" wrap>
-        {['neutral', 'accent', 'success', 'warning', 'danger', 'info'].map(v => (
-          <Tag key={v} variant={v as any}>{v}</Tag>
-        ))}
+        {['neutral', 'accent', 'success', 'warning', 'danger', 'info'].map(
+          (v) => (
+            <Tag key={v} variant={v as any}>
+              {v}
+            </Tag>
+          ),
+        )}
       </Stack>
     ),
     Chip: (
       <Stack direction="horizontal" spacing="xs" wrap>
-        <Chip variant="neutral" onClick={() => {}}>Filter</Chip>
-        <Chip variant="accent" selected onClick={() => {}}>Selected</Chip>
-        <Chip variant="success" onClick={() => {}}>Active</Chip>
-        <Chip variant="neutral" deletable onDelete={() => {}}>Removable</Chip>
+        <Chip variant="neutral" onClick={() => {}}>
+          Filter
+        </Chip>
+        <Chip variant="accent" selected onClick={() => {}}>
+          Selected
+        </Chip>
+        <Chip variant="success" onClick={() => {}}>
+          Active
+        </Chip>
+        <Chip variant="neutral" deletable onDelete={() => {}}>
+          Removable
+        </Chip>
       </Stack>
     ),
     Card: (
       <Grid cols={2} gap="md">
         <Card header={<Text weight="semibold">Basic Card</Text>}>
-          <Text element={{ size: "sm" }} color="secondary">Card body content with description text.</Text>
+          <Text size="sm" color="secondary">
+            Card body content with description text.
+          </Text>
         </Card>
-        <Card header={<Text weight="semibold">With Footer</Text>}
-          footer={<Button size="sm" fullWidth>Action</Button>}>
-          <Text element={{ size: "sm" }} color="secondary">Card with a footer action button.</Text>
+        <Card
+          header={<Text weight="semibold">With Footer</Text>}
+          footer={
+            <Button size="sm" fullWidth>
+              Action
+            </Button>
+          }
+        >
+          <Text size="sm" color="secondary">
+            Card with a footer action button.
+          </Text>
         </Card>
       </Grid>
     ),
@@ -100,8 +201,11 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Slider: (
       <div style={{ padding: 'var(--azimuth-space-md)' }}>
-        <Slider value={{ defaultValue: 50 }} display={{ showValue: true }} />
-        <Slider value={{ defaultValue: 30 }} display={{ orientation: 'vertical', size: 'sm' }} />
+        <Slider defaultValue={50} display={{ showValue: true }} />
+        <Slider
+          defaultValue={30}
+          display={{ orientation: 'vertical', size: 'sm' }}
+        />
       </div>
     ),
     ProgressBar: (
@@ -123,26 +227,38 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     Alert: (
       <Stack spacing="md">
         <Stack direction="horizontal" spacing="sm" wrap>
-          {(['info', 'success', 'warning', 'caution'] as const).map(v => (
-            <Button key={v} size="sm" variant={v === 'caution' ? 'danger' : 'secondary'}
-              onClick={() => onShowAlert?.(v)}>
+          {(['info', 'success', 'warning', 'caution'] as const).map((v) => (
+            <Button
+              key={v}
+              size="sm"
+              variant={v === 'caution' ? 'danger' : 'secondary'}
+              onClick={() => onShowAlert?.(v)}
+            >
               Show {v}
             </Button>
           ))}
         </Stack>
-        <Text element={{ size: "xs" }} color="muted">Click a button above to see the alert appear on the page.</Text>
+        <Text size="xs" color="muted">
+          Click a button above to see the alert appear on the page.
+        </Text>
       </Stack>
     ),
     Tooltip: (
       <Stack direction="horizontal" spacing="md">
         <Tooltip content="Tooltip on top" position="top">
-          <Button variant="secondary" size="sm">Hover top</Button>
+          <Button variant="secondary" size="sm">
+            Hover top
+          </Button>
         </Tooltip>
         <Tooltip content="Tooltip on bottom">
-          <Button variant="secondary" size="sm">Hover bottom</Button>
+          <Button variant="secondary" size="sm">
+            Hover bottom
+          </Button>
         </Tooltip>
         <Tooltip content="Tooltip on left" position="left">
-          <Button variant="secondary" size="sm">Hover left</Button>
+          <Button variant="secondary" size="sm">
+            Hover left
+          </Button>
         </Tooltip>
       </Stack>
     ),
@@ -158,9 +274,12 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Kbd: (
       <Stack direction="horizontal" spacing="sm" align="center">
-        <Kbd>Ctrl</Kbd> <Text element={{ size: "sm" }}>+</Text> <Kbd>C</Kbd>
-        <Text element={{ size: "sm" }} style={{ margin: '0 var(--azimuth-space-sm)' }}>|</Text>
-        <Kbd>Cmd</Kbd> <Text element={{ size: "sm" }}>+</Text> <Kbd>Shift</Kbd> <Text element={{ size: "sm" }}>+</Text> <Kbd>Z</Kbd>
+        <Kbd>Ctrl</Kbd> <Text size="sm">+</Text> <Kbd>C</Kbd>
+        <Text size="sm" style={{ margin: '0 var(--azimuth-space-sm)' }}>
+          |
+        </Text>
+        <Kbd>Cmd</Kbd> <Text size="sm">+</Text> <Kbd>Shift</Kbd>{' '}
+        <Text size="sm">+</Text> <Kbd>Z</Kbd>
       </Stack>
     ),
     Skeleton: (
@@ -168,7 +287,13 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
         <Skeleton width="60%" height="16px" />
         <Skeleton width="40%" height="16px" />
         <Skeleton width="80%" height="16px" />
-        <div style={{ display: 'flex', gap: 'var(--azimuth-space-sm)', alignItems: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 'var(--azimuth-space-sm)',
+            alignItems: 'center',
+          }}
+        >
           <Skeleton variant="circle" width="40px" height="40px" />
           <Stack spacing="xs">
             <Skeleton width="120px" height="12px" />
@@ -181,15 +306,32 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       <EmptyState
         title="No results found"
         description="Try adjusting your search or filter criteria."
-        action={<Button size="sm" variant="secondary">Clear Filters</Button>}
+        action={
+          <Button size="sm" variant="secondary">
+            Clear Filters
+          </Button>
+        }
       />
     ),
     Tabs: (
       <Tabs
         tabs={[
-          { id: 'a', label: 'Tab A', content: <Text element={{ size: "sm" }}>Content A</Text> },
-          { id: 'b', label: 'Tab B', content: <Text element={{ size: "sm" }}>Content B</Text> },
-          { id: 'c', label: 'Tab C', disabled: true, content: <Text element={{ size: "sm" }}>Content C</Text> },
+          {
+            id: 'a',
+            label: 'Tab A',
+            content: <Text size="sm">Content A</Text>,
+          },
+          {
+            id: 'b',
+            label: 'Tab B',
+            content: <Text size="sm">Content B</Text>,
+          },
+          {
+            id: 'c',
+            label: 'Tab C',
+            disabled: true,
+            content: <Text size="sm">Content C</Text>,
+          },
         ]}
         variant="underline"
       />
@@ -207,86 +349,228 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     List: (
       <Grid cols={2} gap="md">
-        <Card header={<Text weight="semibold" element={{ size: "sm" }}>Bulleted</Text>}>
-          <List bulleted><List.Item>Item one</List.Item><List.Item>Item two</List.Item></List>
+        <Card
+          header={
+            <Text weight="semibold" size="sm">
+              Bulleted
+            </Text>
+          }
+        >
+          <List bulleted>
+            <List.Item>Item one</List.Item>
+            <List.Item>Item two</List.Item>
+          </List>
         </Card>
-        <Card header={<Text weight="semibold" element={{ size: "sm" }}>Ordered</Text>}>
-          <List ordered><List.Item>First</List.Item><List.Item>Second</List.Item></List>
+        <Card
+          header={
+            <Text weight="semibold" size="sm">
+              Ordered
+            </Text>
+          }
+        >
+          <List ordered>
+            <List.Item>First</List.Item>
+            <List.Item>Second</List.Item>
+          </List>
         </Card>
       </Grid>
     ),
     Table: (
       <Table striped size="sm">
-        <Table.Head><Table.Row>
-          <Table.HeadCell>Name</Table.HeadCell><Table.HeadCell>Role</Table.HeadCell><Table.HeadCell>Status</Table.HeadCell>
-        </Table.Row></Table.Head>
+        <Table.Head>
+          <Table.Row>
+            <Table.HeadCell>Name</Table.HeadCell>
+            <Table.HeadCell>Role</Table.HeadCell>
+            <Table.HeadCell>Status</Table.HeadCell>
+          </Table.Row>
+        </Table.Head>
         <Table.Body>
-          <Table.Row><Table.Cell>Alice</Table.Cell><Table.Cell>Engineer</Table.Cell><Table.Cell><Badge variant="success">Active</Badge></Table.Cell></Table.Row>
-          <Table.Row><Table.Cell>Bob</Table.Cell><Table.Cell>Designer</Table.Cell><Table.Cell><Badge variant="warning">Away</Badge></Table.Cell></Table.Row>
+          <Table.Row>
+            <Table.Cell>Alice</Table.Cell>
+            <Table.Cell>Engineer</Table.Cell>
+            <Table.Cell>
+              <Badge variant="success">Active</Badge>
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Bob</Table.Cell>
+            <Table.Cell>Designer</Table.Cell>
+            <Table.Cell>
+              <Badge variant="warning">Away</Badge>
+            </Table.Cell>
+          </Table.Row>
         </Table.Body>
       </Table>
     ),
     Input: (
       <Stack spacing="sm">
-        <Input label={{ text: 'Email' }} type="email" placeholder="you@example.com" size="sm" />
-        <Input label={{ text: 'Password' }} type="password" placeholder="Enter password" size="sm" />
-        <Input label={{ text: 'With Error', error: 'Invalid value' }} size="sm" />
-        <Input label={{ text: 'Number' }} type="number" stepper={{ enabled: true, min: 0, max: 100 }} size="sm" />
+        <Input
+          label="Email"
+          type="email"
+          placeholder="you@example.com"
+          size="sm"
+        />
+        <Input
+          label="Password"
+          type="password"
+          placeholder="Enter password"
+          size="sm"
+        />
+        <Input label="With Error" error="Invalid value" size="sm" />
+        <Input
+          label="Number"
+          type="number"
+          stepper
+          min={0}
+          max={100}
+          size="sm"
+        />
       </Stack>
     ),
     Select: (
       <Select
-        label={{ text: 'Framework' }} placeholder="Choose..."
-        options={[{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }, { value: 'svelte', label: 'Svelte' }]}
+        label="Framework"
+        placeholder="Choose..."
+        options={[
+          { value: 'react', label: 'React' },
+          { value: 'vue', label: 'Vue' },
+          { value: 'svelte', label: 'Svelte' },
+        ]}
         size="sm"
       />
     ),
     TextArea: (
-      <TextArea label={{ text: 'Message' }} placeholder="Type your message..." rows={3} size="sm" />
+      <TextArea
+        label="Message"
+        placeholder="Type your message..."
+        rows={3}
+        size="sm"
+      />
+    ),
+    AddressInput: (
+      <AddressInput
+        label="Site address"
+        layout="single"
+        placeholder="Start typing an address..."
+        size="sm"
+        onChange={() => {}}
+        onSearch={() => {}}
+        suggestions={{
+          options: [
+            {
+              label: '1600 Amphitheatre Pkwy, Mountain View, CA 94043',
+              value: {
+                line1: '1600 Amphitheatre Pkwy',
+                city: 'Mountain View',
+                state: 'CA',
+                postalCode: '94043',
+                country: 'United States',
+              },
+            },
+            {
+              label: '1600 Court Pl, Denver, CO 80202',
+              value: {
+                line1: '1600 Court Pl',
+                city: 'Denver',
+                state: 'CO',
+                postalCode: '80202',
+                country: 'United States',
+              },
+            },
+          ],
+        }}
+      />
     ),
     SearchBar: (
       <SearchBar placeholder="Search..." onSearch={() => {}} clearable />
     ),
     Pagination: (
-      <Pagination currentPage={3} totalPages={10} onPageChange={() => {}} showFirstLast size="sm" />
+      <Pagination
+        currentPage={3}
+        totalPages={10}
+        onPageChange={() => {}}
+        showFirstLast
+        size="sm"
+      />
     ),
     Breadcrumbs: (
-      <Breadcrumbs items={[{ label: 'Home' }, { label: 'Section' }, { label: 'Current' }]} />
+      <Breadcrumbs
+        items={[{ label: 'Home' }, { label: 'Section' }, { label: 'Current' }]}
+      />
     ),
-    Calendar: (
-      <Calendar onChange={() => {}} />
-    ),
+    Calendar: <Calendar onChange={() => {}} />,
     Chat: (
       <div style={{ height: '220px' }}>
         <Chat
           messages={[
             { id: '1', text: 'Hello!', sender: 'other', timestamp: new Date() },
-            { id: '2', text: 'How can I help?', sender: 'user', timestamp: new Date() },
+            {
+              id: '2',
+              text: 'How can I help?',
+              sender: 'user',
+              timestamp: new Date(),
+            },
           ]}
           onSend={() => {}}
         />
       </div>
     ),
     FileUpload: (
-      <FileUpload onFilesSelected={() => {}} accept="image/*,.pdf" maxSize={5} />
+      <FileUpload
+        onFilesSelected={() => {}}
+        accept="image/*,.pdf"
+        maxSize={5}
+      />
     ),
     CodeBlock: (
       <CodeBlock
-        language="tsx" showCopyButton highlight
+        language="tsx"
+        showCopyButton
+        highlight
         code={`function Hello() {\n  return <Text>Hi</Text>;\n}`}
         maxHeight="120px"
       />
     ),
     Carousel: (
       <Carousel showArrows showDots>
-        <div style={{ padding: 'var(--azimuth-space-lg)', textAlign: 'center', background: 'var(--azimuth-color-surface-hover)', borderRadius: 'var(--azimuth-radius-md)' }}>
-          <Text element={{ size: "h4" }}>Slide 1</Text><Text element={{ size: "sm" }} color="secondary">First slide content</Text>
+        <div
+          style={{
+            padding: 'var(--azimuth-space-lg)',
+            textAlign: 'center',
+            background: 'var(--azimuth-color-surface-hover)',
+            borderRadius: 'var(--azimuth-radius-md)',
+          }}
+        >
+          <Text size="h4">Slide 1</Text>
+          <Text size="sm" color="secondary">
+            First slide content
+          </Text>
         </div>
-        <div style={{ padding: 'var(--azimuth-space-lg)', textAlign: 'center', background: 'var(--azimuth-color-surface-hover)', borderRadius: 'var(--azimuth-radius-md)' }}>
-          <Text element={{ size: "h4" }}>Slide 2</Text><Text element={{ size: "sm" }} color="secondary">Second slide content</Text>
+        <div
+          style={{
+            padding: 'var(--azimuth-space-lg)',
+            textAlign: 'center',
+            background: 'var(--azimuth-color-surface-hover)',
+            borderRadius: 'var(--azimuth-radius-md)',
+          }}
+        >
+          <Text size="h4">Slide 2</Text>
+          <Text size="sm" color="secondary">
+            Second slide content
+          </Text>
         </div>
-        <div style={{ padding: 'var(--azimuth-space-lg)', textAlign: 'center', background: 'var(--azimuth-color-surface-hover)', borderRadius: 'var(--azimuth-radius-md)' }}>
-          <Text element={{ size: "h4" }}>Slide 3</Text><Text element={{ size: "sm" }} color="secondary">Third slide content</Text>
+        <div
+          style={{
+            padding: 'var(--azimuth-space-lg)',
+            textAlign: 'center',
+            background: 'var(--azimuth-color-surface-hover)',
+            borderRadius: 'var(--azimuth-radius-md)',
+          }}
+        >
+          <Text size="h4">Slide 3</Text>
+          <Text size="sm" color="secondary">
+            Third slide content
+          </Text>
         </div>
       </Carousel>
     ),
@@ -307,35 +591,61 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
         }}
         search={{ enabled: true }}
         pagination={{ pageSize: 5 }}
-        actions={<Button size="sm" variant="secondary">Export</Button>}
+        actions={
+          <Button size="sm" variant="secondary">
+            Export
+          </Button>
+        }
       />
     ),
     DropdownList: (
-      <DropdownList label="Choose"
-        data={{ options: [{ value: 'a', label: 'Option A' }, { value: 'b', label: 'Option B' }, { value: 'c', label: 'Option C', disabled: true }], placeholder: 'Select...' }}
+      <DropdownList
+        label="Choose"
+        data={{
+          options: [
+            { value: 'a', label: 'Option A' },
+            { value: 'b', label: 'Option B' },
+            { value: 'c', label: 'Option C', disabled: true },
+          ],
+          placeholder: 'Select...',
+        }}
         selection={{}}
       />
     ),
     SectionView: (
       <SectionView title="Click to expand">
-        <Text element={{ size: "sm" }} color="secondary">This content is collapsible with smooth animation.</Text>
+        <Text size="sm" color="secondary">
+          This content is collapsible with smooth animation.
+        </Text>
       </SectionView>
     ),
     ResizablePanel: (
       <div style={{ height: '100px' }}>
         <ResizablePanel direction="horizontal" minSize={30}>
-          <div style={{ padding: 'var(--azimuth-space-sm)' }}><Text element={{ size: "sm" }}>Left panel</Text></div>
-          <div style={{ padding: 'var(--azimuth-space-sm)' }}><Text element={{ size: "sm" }}>Right panel</Text></div>
+          <div style={{ padding: 'var(--azimuth-space-sm)' }}>
+            <Text size="sm">Left panel</Text>
+          </div>
+          <div style={{ padding: 'var(--azimuth-space-sm)' }}>
+            <Text size="sm">Right panel</Text>
+          </div>
         </ResizablePanel>
       </div>
     ),
     TreeList: (
       <TreeList
         data={[
-          { id: '1', label: 'Parent', children: [{ id: '1a', label: 'Child 1' }, { id: '1b', label: 'Child 2' }] },
+          {
+            id: '1',
+            label: 'Parent',
+            children: [
+              { id: '1a', label: 'Child 1' },
+              { id: '1b', label: 'Child 2' },
+            ],
+          },
           { id: '2', label: 'Item 2' },
         ]}
-        showLines onSelect={() => {}}
+        showLines
+        onSelect={() => {}}
       />
     ),
     Stack: (
@@ -347,30 +657,45 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Grid: (
       <Grid cols={3} gap="sm">
-        <Card><Text element={{ size: "sm" }}>A</Text></Card>
-        <Card><Text element={{ size: "sm" }}>B</Text></Card>
-        <Card><Text element={{ size: "sm" }}>C</Text></Card>
+        <Card>
+          <Text size="sm">A</Text>
+        </Card>
+        <Card>
+          <Text size="sm">B</Text>
+        </Card>
+        <Card>
+          <Text size="sm">C</Text>
+        </Card>
       </Grid>
     ),
     Container: (
-      <Container><Text element={{ size: "sm" }} color="secondary">Centered content container with max-width constraint.</Text></Container>
+      <Container>
+        <Text size="sm" color="secondary">
+          Centered content container with max-width constraint.
+        </Text>
+      </Container>
     ),
     Divider: (
       <Stack spacing="sm">
-        <Text element={{ size: "sm" }}>Above</Text>
+        <Text size="sm">Above</Text>
         <Divider />
-        <Text element={{ size: "sm" }}>Below</Text>
+        <Text size="sm">Below</Text>
         <Stack direction="horizontal" spacing="sm" align="center">
-          <Text element={{ size: "sm" }}>Left</Text>
+          <Text size="sm">Left</Text>
           <Divider orientation="vertical" />
-          <Text element={{ size: "sm" }}>Right</Text>
+          <Text size="sm">Right</Text>
         </Stack>
       </Stack>
     ),
     Toast: (
       <Stack direction="horizontal" spacing="sm" wrap>
-        {(['success', 'error', 'warning', 'info'] as const).map(v => (
-          <Button key={v} size="sm" variant={v === 'error' ? 'danger' : 'secondary'} onClick={() => onShowToast(v)}>
+        {(['success', 'error', 'warning', 'info'] as const).map((v) => (
+          <Button
+            key={v}
+            size="sm"
+            variant={v === 'error' ? 'danger' : 'secondary'}
+            onClick={() => onShowToast(v)}
+          >
             Show {v}
           </Button>
         ))}
@@ -378,8 +703,13 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Dialog: (
       <Stack direction="horizontal" spacing="sm" wrap>
-        {(['info', 'warning', 'danger'] as const).map(v => (
-          <Button key={v} size="sm" variant={v === 'danger' ? 'danger' : 'secondary'} onClick={onShowDialog}>
+        {(['info', 'warning', 'danger'] as const).map((v) => (
+          <Button
+            key={v}
+            size="sm"
+            variant={v === 'danger' ? 'danger' : 'secondary'}
+            onClick={onShowDialog}
+          >
             {v === 'danger' ? 'Delete' : v === 'warning' ? 'Confirm' : 'Info'}
           </Button>
         ))}
@@ -387,51 +717,110 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     ),
     Modal: (
       <Stack direction="horizontal" spacing="sm">
-        <Button size="sm" onClick={onShowModal}>Open Modal</Button>
-        <Button size="sm" variant="secondary">Default</Button>
+        <Button size="sm" onClick={onShowModal}>
+          Open Modal
+        </Button>
+        <Button size="sm" variant="secondary">
+          Default
+        </Button>
       </Stack>
     ),
     LoginSignup: (
       <div style={{ maxWidth: '320px' }}>
-        <LoginSignup defaultView="login"
-          social={{ providers: [{ id: 'github', label: 'GitHub' }, { id: 'google', label: 'Google' }] }}
+        <LoginSignup
+          defaultView="login"
+          social={{
+            providers: [
+              { id: 'github', label: 'GitHub' },
+              { id: 'google', label: 'Google' },
+            ],
+          }}
         />
       </div>
     ),
     Navbar: (
-      <div style={{ border: '1px solid var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-md)' }}>
+      <div
+        style={{
+          border: '1px solid var(--azimuth-color-border)',
+          borderRadius: 'var(--azimuth-radius-md)',
+        }}
+      >
         <Navbar
-          branding={{ logo: <Text weight="bold" element={{ size: "sm" }}>Logo</Text> }}
-          nav={{ items: [{ key: 'a', label: 'Home' }, { key: 'b', label: 'About' }] }}
+          branding={{
+            logo: (
+              <Text weight="bold" size="sm">
+                Logo
+              </Text>
+            ),
+          }}
+          nav={{
+            items: [
+              { key: 'a', label: 'Home' },
+              { key: 'b', label: 'About' },
+            ],
+          }}
           actions={<Button size="sm">Action</Button>}
         />
       </div>
     ),
     Drawer: (
       <Stack direction="horizontal" spacing="sm">
-        <Button size="sm" onClick={onShowDrawer}>Open Drawer</Button>
-        <Button size="sm" variant="secondary">Right Side</Button>
+        <Button size="sm" onClick={onShowDrawer}>
+          Open Drawer
+        </Button>
+        <Button size="sm" variant="secondary">
+          Right Side
+        </Button>
       </Stack>
     ),
     SlideSheet: (
       <Stack direction="horizontal" spacing="sm">
-        <Button size="sm" onClick={onShowSheet}>Open Sheet</Button>
-        <Button size="sm" variant="secondary">Bottom</Button>
+        <Button size="sm" onClick={onShowSheet}>
+          Open Sheet
+        </Button>
+        <Button size="sm" variant="secondary">
+          Bottom
+        </Button>
       </Stack>
     ),
     PageLayout: (
       <PageLayout
-        sidebar={<div style={{ padding: 'var(--azimuth-space-sm)' }}><Text element={{ size: "sm" }}>Sidebar</Text></div>}
+        sidebar={
+          <div style={{ padding: 'var(--azimuth-space-sm)' }}>
+            <Text size="sm">Sidebar</Text>
+          </div>
+        }
       >
-        <Text element={{ size: "sm" }}>Main content area with sidebar layout.</Text>
+        <Text size="sm">Main content area with sidebar layout.</Text>
       </PageLayout>
     ),
     Flyout: (
       <Stack direction="horizontal" spacing="md">
-        <Flyout trigger={<Button variant="secondary" size="sm">Hover me</Button>}
-          content={<div style={{ padding: 'var(--azimuth-space-md)' }}><Text element={{ size: "sm" }}>Flyout content here</Text></div>} />
-        <Flyout trigger={<Button variant="secondary" size="sm">Top</Button>} side="top"
-          content={<div style={{ padding: 'var(--azimuth-space-md)' }}><Text element={{ size: "sm" }}>Top flyout</Text></div>} />
+        <Flyout
+          trigger={
+            <Button variant="secondary" size="sm">
+              Hover me
+            </Button>
+          }
+          content={
+            <div style={{ padding: 'var(--azimuth-space-md)' }}>
+              <Text size="sm">Flyout content here</Text>
+            </div>
+          }
+        />
+        <Flyout
+          trigger={
+            <Button variant="secondary" size="sm">
+              Top
+            </Button>
+          }
+          side="top"
+          content={
+            <div style={{ padding: 'var(--azimuth-space-md)' }}>
+              <Text size="sm">Top flyout</Text>
+            </div>
+          }
+        />
       </Stack>
     ),
     Menu: (
@@ -448,55 +837,105 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       </Stack>
     ),
     Navbar2: (
-      <div style={{ border: '1px solid var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-md)' }}>
+      <div
+        style={{
+          border: '1px solid var(--azimuth-color-border)',
+          borderRadius: 'var(--azimuth-radius-md)',
+        }}
+      >
         <Navbar
-          branding={{ logo: <Text weight="bold" element={{ size: "sm" }}>Logo</Text> }}
-          nav={{ items: [{ key: 'a', label: 'Home' }, { key: 'b', label: 'About' }] }}
+          branding={{
+            logo: (
+              <Text weight="bold" size="sm">
+                Logo
+              </Text>
+            ),
+          }}
+          nav={{
+            items: [
+              { key: 'a', label: 'Home' },
+              { key: 'b', label: 'About' },
+            ],
+          }}
           actions={<Button size="sm">Action</Button>}
         />
       </div>
     ),
 
     DateTimePicker: (
-      <DateTimePicker value={{ onChange: () => {} }} display={{ showTime: true, showSeconds: false }} constraints={{ minuteStep: 15 }} />
+      <DateTimePicker
+        onChange={() => {}}
+        showTime
+        showSeconds={false}
+        minuteStep={15}
+      />
     ),
-    DateRangePicker: (
-      <DateRangePicker label="Range" onChange={() => {}} />
-    ),
+    DateRangePicker: <DateRangePicker label="Range" onChange={() => {}} />,
     TextBox: (
       <Stack spacing="sm">
-        <TextBox variant="plain">Plain text box content with standard styling.</TextBox>
+        <TextBox variant="plain">
+          Plain text box content with standard styling.
+        </TextBox>
         <TextBox variant="code">const x = 42;</TextBox>
       </Stack>
     ),
     Icon: (
       <Stack direction="horizontal" spacing="sm" align="center">
-        <Icon size="sm"><span>icon</span></Icon>
-        <Icon size="md"><span>icon</span></Icon>
-        <Icon size="lg"><span>icon</span></Icon>
-        <Icon size="xl"><span>icon</span></Icon>
+        <Icon size="sm">
+          <span>icon</span>
+        </Icon>
+        <Icon size="md">
+          <span>icon</span>
+        </Icon>
+        <Icon size="lg">
+          <span>icon</span>
+        </Icon>
+        <Icon size="xl">
+          <span>icon</span>
+        </Icon>
       </Stack>
     ),
     Rating: <Rating onChange={() => {}} />,
     Timeline: (
       <Timeline
         items={[
-          { id: '1', title: 'Event 1', date: '2026', description: 'First event.' },
-          { id: '2', title: 'Event 2', date: '2026', description: 'Second event.' },
-          { id: '3', title: 'Event 3', date: '2026', description: 'Third event.' },
+          {
+            id: '1',
+            title: 'Event 1',
+            date: '2026',
+            description: 'First event.',
+          },
+          {
+            id: '2',
+            title: 'Event 2',
+            date: '2026',
+            description: 'Second event.',
+          },
+          {
+            id: '3',
+            title: 'Event 3',
+            date: '2026',
+            description: 'Third event.',
+          },
         ]}
       />
     ),
     NotificationBadge: (
       <Stack direction="horizontal" spacing="xl" align="center">
         <NotificationBadge count={5}>
-          <Button variant="secondary" size="sm">Inbox</Button>
+          <Button variant="secondary" size="sm">
+            Inbox
+          </Button>
         </NotificationBadge>
         <NotificationBadge count={120} max={99}>
-          <Button variant="secondary" size="sm">Notifications</Button>
+          <Button variant="secondary" size="sm">
+            Notifications
+          </Button>
         </NotificationBadge>
         <NotificationBadge count={0} dot>
-          <Button variant="secondary" size="sm">Alerts</Button>
+          <Button variant="secondary" size="sm">
+            Alerts
+          </Button>
         </NotificationBadge>
       </Stack>
     ),
@@ -515,25 +954,46 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
       <BreadcrumbPageHeader
         title="Page Title"
         description="Page description text."
-        breadcrumbs={[{ label: 'Home' }, { label: 'Section' }, { label: 'Current' }]}
+        breadcrumbs={[
+          { label: 'Home' },
+          { label: 'Section' },
+          { label: 'Current' },
+        ]}
         actions={<Button size="sm">Action</Button>}
       />
     ),
     Combobox: (
       <Combobox
-        data={{ options: [
-          { value: 'react', label: 'React' },
-          { value: 'vue', label: 'Vue' },
-          { value: 'svelte', label: 'Svelte' },
-        ]}}
+        data={{
+          options: [
+            { value: 'react', label: 'React' },
+            { value: 'vue', label: 'Vue' },
+            { value: 'svelte', label: 'Svelte' },
+          ],
+        }}
         selection={{ value: '', onChange: () => {}, onSelect: () => {} }}
         label="Framework"
       />
     ),
     Sidebar: (
-      <div style={{ height: '200px', border: '1px solid var(--azimuth-color-border)', borderRadius: 'var(--azimuth-radius-md)', overflow: 'hidden' }}>
+      <div
+        style={{
+          height: '200px',
+          border: '1px solid var(--azimuth-color-border)',
+          borderRadius: 'var(--azimuth-radius-md)',
+          overflow: 'hidden',
+        }}
+      >
         <Sidebar
-          header={<Text weight="bold" element={{ size: "sm" }} style={{ padding: 'var(--azimuth-space-sm)' }}>Logo</Text>}
+          header={
+            <Text
+              weight="bold"
+              size="sm"
+              style={{ padding: 'var(--azimuth-space-sm)' }}
+            >
+              Logo
+            </Text>
+          }
           items={[
             { key: 'a', label: 'Home', icon: <span>H</span> },
             { key: 'b', label: 'Settings', icon: <span>S</span>, badge: 3 },
@@ -545,9 +1005,24 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
         />
       </div>
     ),
-    ColorPicker: <ColorPicker value="#2563eb" presets={['#2563eb', '#e8734a', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']} onChange={() => {}} />,
+    ColorPicker: (
+      <ColorPicker
+        value="#2563eb"
+        presets={[
+          '#2563eb',
+          '#e8734a',
+          '#10b981',
+          '#f59e0b',
+          '#ef4444',
+          '#8b5cf6',
+        ]}
+        onChange={() => {}}
+      />
+    ),
     CommandPalette: (
-      <Button variant="secondary" size="sm" onClick={() => {}}>Press Ctrl+K to open</Button>
+      <Button variant="secondary" size="sm" onClick={() => {}}>
+        Press Ctrl+K to open
+      </Button>
     ),
     DiffViewer: (
       <DiffViewer
@@ -561,32 +1036,73 @@ function ComponentPreview({ doc, onShowModal, onShowDrawer, onShowDialog, onShow
     Accordion: (
       <Accordion
         items={[
-          { id: '1', title: 'Section 1', content: <Text element={{ size: "sm" }}>First section content.</Text> },
-          { id: '2', title: 'Section 2', content: <Text element={{ size: "sm" }}>Second section content.</Text> },
-          { id: '3', title: 'Section 3', content: <Text element={{ size: "sm" }}>Third section content.</Text> },
+          {
+            id: '1',
+            title: 'Section 1',
+            content: <Text size="sm">First section content.</Text>,
+          },
+          {
+            id: '2',
+            title: 'Section 2',
+            content: <Text size="sm">Second section content.</Text>,
+          },
+          {
+            id: '3',
+            title: 'Section 3',
+            content: <Text size="sm">Third section content.</Text>,
+          },
         ]}
       />
     ),
-    ImageViewer: <Button variant="secondary" size="sm" onClick={() => {}}>Open Image Viewer</Button>,
+    ImageViewer: (
+      <Button variant="secondary" size="sm" onClick={() => {}}>
+        Open Image Viewer
+      </Button>
+    ),
     ErrorPage: (
-      <ErrorPage status={404} title="Page not found"
+      <ErrorPage
+        status={404}
+        title="Page not found"
         description="The page you are looking for does not exist."
         action={<Button size="sm">Go Home</Button>}
       />
     ),
-    MediaPlayer: <MediaPlayer source={{ src: '' }} title="Demo video" playback={{ controls: false }} />,
+    MediaPlayer: (
+      <MediaPlayer
+        source={{ src: '' }}
+        title="Demo video"
+        playback={{ controls: false }}
+      />
+    ),
     SimpleChart: (
       <SimpleChart
-        chart={{ type: 'bar', data: [{ label: 'A', value: 30 }, { label: 'B', value: 50 }, { label: 'C', value: 20 }] }}
+        chart={{
+          type: 'bar',
+          data: [
+            { label: 'A', value: 30 },
+            { label: 'B', value: 50 },
+            { label: 'C', value: 20 },
+          ],
+        }}
         dimensions={{ width: 300, height: 200 }}
       />
     ),
-    MapDisplay: <MapDisplay source={{ title: 'Demo map' }} dimensions={{ height: '200px' }} />,
+    MapDisplay: (
+      <MapDisplay
+        source={{ title: 'Demo map' }}
+        dimensions={{ height: '200px' }}
+      />
+    ),
   };
 
   return (
     <div style={{ minHeight: '120px' }}>
-      {doc && (previews[doc.name] || <Text element={{ size: "sm" }} color="muted">Preview not available for {doc.name}</Text>)}
+      {doc &&
+        (previews[doc.name] || (
+          <Text size="sm" color="muted">
+            Preview not available for {doc.name}
+          </Text>
+        ))}
     </div>
   );
 }
@@ -599,40 +1115,92 @@ export function ComponentsPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [alerts, setAlerts] = useState<Array<{ id: string; variant: 'info' | 'success' | 'warning' | 'caution'; title: string; message: string }>>([]);
+  const [alerts, setAlerts] = useState<
+    Array<{
+      id: string;
+      variant: 'info' | 'success' | 'warning' | 'caution';
+      title: string;
+      message: string;
+    }>
+  >([]);
   const [exitingAlerts, setExitingAlerts] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
-  const doc = COMPONENT_DATA.filter(Boolean).find((d: any) => d.name === selected) as ComponentDoc | undefined;
+  const doc = COMPONENT_DATA.filter(Boolean).find(
+    (d: any) => d.name === selected,
+  ) as ComponentDoc | undefined;
   if (!doc) return <Text>Loading...</Text>;
 
   return (
-    <div style={{ display: 'flex', gap: 0, minHeight: 'calc(100vh - 200px)', padding: 'var(--azimuth-space-xl) 0' }}>
-      <div style={{
-        width: sidebarCollapsed ? '48px' : '240px',
-        minWidth: sidebarCollapsed ? '48px' : '240px',
-        borderRight: '1px solid var(--azimuth-color-border)',
-        overflowY: 'auto',
-        padding: sidebarCollapsed ? 'var(--azimuth-space-sm)' : 'var(--azimuth-space-md)',
-        transition: 'width var(--azimuth-transition-base), min-width var(--azimuth-transition-base)',
-      }}>
-        <Stack direction="horizontal" justify="between" align="center" style={{ marginBottom: 'var(--azimuth-space-md)' }}>
-          {!sidebarCollapsed && <Text weight="semibold" element={{ size: "sm" }}>Components</Text>}
-          <Button variant="tertiary" size="sm" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}>{sidebarCollapsed ? '>' : '<'}
+    <div
+      style={{
+        display: 'flex',
+        gap: 0,
+        minHeight: 'calc(100vh - 200px)',
+        padding: 'var(--azimuth-space-xl) 0',
+      }}
+    >
+      <div
+        style={{
+          width: sidebarCollapsed ? '48px' : '240px',
+          minWidth: sidebarCollapsed ? '48px' : '240px',
+          borderRight: '1px solid var(--azimuth-color-border)',
+          overflowY: 'auto',
+          padding: sidebarCollapsed
+            ? 'var(--azimuth-space-sm)'
+            : 'var(--azimuth-space-md)',
+          transition:
+            'width var(--azimuth-transition-base), min-width var(--azimuth-transition-base)',
+        }}
+      >
+        <Stack
+          direction="horizontal"
+          justify="between"
+          align="center"
+          style={{ marginBottom: 'var(--azimuth-space-md)' }}
+        >
+          {!sidebarCollapsed && (
+            <Text weight="semibold" size="sm">
+              Components
+            </Text>
+          )}
+          <Button
+            variant="tertiary"
+            size="sm"
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            aria-label={
+              sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'
+            }
+          >
+            {sidebarCollapsed ? '>' : '<'}
           </Button>
         </Stack>
         {COMPONENT_DATA.map((item: any) => (
-          <button key={item.name}
+          <button
+            key={item.name}
             onClick={() => setSelected(item.name)}
             style={{
-              display: 'block', width: '100%', textAlign: 'left',
-              padding: sidebarCollapsed ? 'var(--azimuth-space-xs)' : 'var(--azimuth-space-xs) var(--azimuth-space-sm)',
-              border: 'none', borderRadius: 'var(--azimuth-radius-sm)',
-              background: selected === item.name ? 'var(--azimuth-color-primary-subtle)' : 'transparent',
-              color: selected === item.name ? 'var(--azimuth-color-primary)' : 'var(--azimuth-color-text)',
-              fontSize: 'var(--azimuth-fs-sm)', fontWeight: selected === item.name ? 600 : 400,
-              cursor: 'pointer', fontFamily: 'var(--azimuth-font-body)', marginBottom: '2px',
+              display: 'block',
+              width: '100%',
+              textAlign: 'left',
+              padding: sidebarCollapsed
+                ? 'var(--azimuth-space-xs)'
+                : 'var(--azimuth-space-xs) var(--azimuth-space-sm)',
+              border: 'none',
+              borderRadius: 'var(--azimuth-radius-sm)',
+              background:
+                selected === item.name
+                  ? 'var(--azimuth-color-primary-subtle)'
+                  : 'transparent',
+              color:
+                selected === item.name
+                  ? 'var(--azimuth-color-primary)'
+                  : 'var(--azimuth-color-text)',
+              fontSize: 'var(--azimuth-fs-sm)',
+              fontWeight: selected === item.name ? 600 : 400,
+              cursor: 'pointer',
+              fontFamily: 'var(--azimuth-font-body)',
+              marginBottom: '2px',
             }}
           >
             {sidebarCollapsed ? item.name.slice(0, 2) : item.name}
@@ -640,43 +1208,77 @@ export function ComponentsPage() {
         ))}
       </div>
 
-      <div style={{ flex: 1, padding: '0 var(--azimuth-space-xl)', overflowY: 'auto' }}>
+      <div
+        style={{
+          flex: 1,
+          padding: '0 var(--azimuth-space-xl)',
+          overflowY: 'auto',
+        }}
+      >
         <Stack spacing="lg">
           <div>
-            <Stack direction="horizontal" spacing="sm" align="center" style={{ marginBottom: 'var(--azimuth-space-xs)' }}>
-              <Text element={{ size: "h2" }} style={{ margin: 0 }}>{doc.name}</Text>
+            <Stack
+              direction="horizontal"
+              spacing="sm"
+              align="center"
+              style={{ marginBottom: 'var(--azimuth-space-xs)' }}
+            >
+              <Text size="h2" style={{ margin: 0 }}>
+                {doc.name}
+              </Text>
               <Badge variant="neutral">{doc.category}</Badge>
             </Stack>
-            <Text element={{ size: "sm" }} color="secondary">{doc.description}</Text>
+            <Text size="sm" color="secondary">
+              {doc.description}
+            </Text>
           </div>
 
-          <Tabs variant="pills" activeTab={tab} onChange={setTab}
+          <Tabs
+            variant="pills"
+            activeTab={tab}
+            onChange={setTab}
             tabs={[
               {
-                id: 'preview', label: 'Preview',
+                id: 'preview',
+                label: 'Preview',
                 content: (
                   <Card>
-                    <ComponentPreview doc={doc}
+                    <ComponentPreview
+                      doc={doc}
                       onShowModal={() => setModalOpen(true)}
                       onShowDrawer={() => setDrawerOpen(true)}
                       onShowDialog={() => setDialogOpen(true)}
                       onShowSheet={() => setSheetOpen(true)}
                       onShowToast={(v) => {
-                        toast({ title: `${v} notification`, message: 'This is a demonstration toast.', variant: v, duration: 4000 });
+                        toast({
+                          title: `${v} notification`,
+                          message: 'This is a demonstration toast.',
+                          variant: v,
+                          duration: 4000,
+                        });
                       }}
                       onShowAlert={(v) => {
                         const id = Date.now().toString();
-                        setAlerts(prev => [...prev, {
-                          id,
-                          variant: v,
-                          title: v.charAt(0).toUpperCase() + v.slice(1),
-                          message: `This is a ${v} alert demonstration. It shows how alerts appear on the page.`,
-                        }]);
+                        setAlerts((prev) => [
+                          ...prev,
+                          {
+                            id,
+                            variant: v,
+                            title: v.charAt(0).toUpperCase() + v.slice(1),
+                            message: `This is a ${v} alert demonstration. It shows how alerts appear on the page.`,
+                          },
+                        ]);
                         setTimeout(() => {
-                          setExitingAlerts(prev => new Set(prev).add(id));
+                          setExitingAlerts((prev) => new Set(prev).add(id));
                           setTimeout(() => {
-                            setAlerts(prev => prev.filter(a => a.id !== id));
-                            setExitingAlerts(prev => { const n = new Set(prev); n.delete(id); return n; });
+                            setAlerts((prev) =>
+                              prev.filter((a) => a.id !== id),
+                            );
+                            setExitingAlerts((prev) => {
+                              const n = new Set(prev);
+                              n.delete(id);
+                              return n;
+                            });
                           }, 300);
                         }, 6000);
                       }}
@@ -685,17 +1287,44 @@ export function ComponentsPage() {
                 ),
               },
               {
-                id: 'features', label: 'Features',
+                id: 'features',
+                label: 'Features',
                 content: (
                   <Card>
-                    <Text element={{ size: "sm" }} weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Features</Text>
+                    <Text
+                      size="sm"
+                      weight="semibold"
+                      style={{ marginBottom: 'var(--azimuth-space-sm)' }}
+                    >
+                      Features
+                    </Text>
                     {doc.features.length > 0 ? (
-                      <List bulleted>{doc.features.map(f => <List.Item key={f}>{f}</List.Item>)}</List>
-                    ) : <Text element={{ size: "sm" }} color="muted">No features listed.</Text>}
+                      <List bulleted>
+                        {doc.features.map((f) => (
+                          <List.Item key={f}>{f}</List.Item>
+                        ))}
+                      </List>
+                    ) : (
+                      <Text size="sm" color="muted">
+                        No features listed.
+                      </Text>
+                    )}
                     {doc.variants.length > 0 && (
-                      <><Divider /><Text element={{ size: "sm" }} weight="semibold" style={{ marginBottom: 'var(--azimuth-space-sm)' }}>Variants</Text>
+                      <>
+                        <Divider />
+                        <Text
+                          size="sm"
+                          weight="semibold"
+                          style={{ marginBottom: 'var(--azimuth-space-sm)' }}
+                        >
+                          Variants
+                        </Text>
                         <Stack direction="horizontal" spacing="xs" wrap>
-                          {doc.variants.map(v => <Tag key={v} variant="accent">{v}</Tag>)}
+                          {doc.variants.map((v) => (
+                            <Tag key={v} variant="accent">
+                              {v}
+                            </Tag>
+                          ))}
                         </Stack>
                       </>
                     )}
@@ -703,51 +1332,104 @@ export function ComponentsPage() {
                 ),
               },
               {
-                id: 'api', label: 'API',
+                id: 'api',
+                label: 'API',
                 content: (
-                    <Card header={<Text weight="semibold">Props</Text>}>
-                      {doc.props.length > 0 ? (
+                  <Card header={<Text weight="semibold">Props</Text>}>
+                    {doc.props.length > 0 ? (
                       <Table striped size="sm">
-                        <Table.Head><Table.Row>
-                          <Table.HeadCell>Name</Table.HeadCell><Table.HeadCell>Type</Table.HeadCell><Table.HeadCell>Default</Table.HeadCell><Table.HeadCell>Description</Table.HeadCell>
-                        </Table.Row></Table.Head>
+                        <Table.Head>
+                          <Table.Row>
+                            <Table.HeadCell>Name</Table.HeadCell>
+                            <Table.HeadCell>Type</Table.HeadCell>
+                            <Table.HeadCell>Default</Table.HeadCell>
+                            <Table.HeadCell>Description</Table.HeadCell>
+                          </Table.Row>
+                        </Table.Head>
                         <Table.Body>
-                          {doc.props.map(p => (
+                          {doc.props.map((p) => (
                             <Table.Row key={p.name}>
-                              <Table.Cell><Text element={{ size: "sm" }} weight="semibold">{p.name}</Text></Table.Cell>
-                              <Table.Cell><CodeBlock code={p.type} language="ts" maxHeight="none" highlight={false} /></Table.Cell>
-                              <Table.Cell>{p.default ? <Tag variant="neutral">{p.default}</Tag> : '-'}</Table.Cell>
-                              <Table.Cell><Text element={{ size: "sm" }}>{p.description}</Text></Table.Cell>
+                              <Table.Cell>
+                                <Text size="sm" weight="semibold">
+                                  {p.name}
+                                </Text>
+                              </Table.Cell>
+                              <Table.Cell>
+                                <CodeBlock
+                                  code={p.type}
+                                  language="ts"
+                                  maxHeight="none"
+                                  highlight={false}
+                                />
+                              </Table.Cell>
+                              <Table.Cell>
+                                {p.default ? (
+                                  <Tag variant="neutral">{p.default}</Tag>
+                                ) : (
+                                  '-'
+                                )}
+                              </Table.Cell>
+                              <Table.Cell>
+                                <Text size="sm">{p.description}</Text>
+                              </Table.Cell>
                             </Table.Row>
                           ))}
                         </Table.Body>
                       </Table>
-                    ) : <Text element={{ size: "sm" }} color="muted">No props documented.</Text>}
+                    ) : (
+                      <Text size="sm" color="muted">
+                        No props documented.
+                      </Text>
+                    )}
                   </Card>
                 ),
               },
               {
-                id: 'css', label: 'CSS Vars',
+                id: 'css',
+                label: 'CSS Vars',
                 content: (
-                  <Card header={<Text weight="semibold">CSS Custom Properties</Text>}>
+                  <Card
+                    header={
+                      <Text weight="semibold">CSS Custom Properties</Text>
+                    }
+                  >
                     {doc.cssVars.length > 0 ? (
                       <Table striped size="sm">
-                        <Table.Head><Table.Row><Table.HeadCell>Variable</Table.HeadCell><Table.HeadCell>Description</Table.HeadCell></Table.Row></Table.Head>
+                        <Table.Head>
+                          <Table.Row>
+                            <Table.HeadCell>Variable</Table.HeadCell>
+                            <Table.HeadCell>Description</Table.HeadCell>
+                          </Table.Row>
+                        </Table.Head>
                         <Table.Body>
-                          {doc.cssVars.map(v => (
+                          {doc.cssVars.map((v) => (
                             <Table.Row key={v.name}>
-                              <Table.Cell><CodeBlock code={v.name} language="css" maxHeight="none" highlight={false} /></Table.Cell>
-                              <Table.Cell><Text element={{ size: "sm" }}>{v.description}</Text></Table.Cell>
+                              <Table.Cell>
+                                <CodeBlock
+                                  code={v.name}
+                                  language="css"
+                                  maxHeight="none"
+                                  highlight={false}
+                                />
+                              </Table.Cell>
+                              <Table.Cell>
+                                <Text size="sm">{v.description}</Text>
+                              </Table.Cell>
                             </Table.Row>
                           ))}
                         </Table.Body>
                       </Table>
-                    ) : <Text element={{ size: "sm" }} color="muted">No CSS variables documented.</Text>}
+                    ) : (
+                      <Text size="sm" color="muted">
+                        No CSS variables documented.
+                      </Text>
+                    )}
                   </Card>
                 ),
               },
               {
-                id: 'playground', label: 'Playground',
+                id: 'playground',
+                label: 'Playground',
                 content: <Playground doc={doc} />,
               },
             ]}
@@ -755,62 +1437,134 @@ export function ComponentsPage() {
         </Stack>
       </div>
 
-      <Modal visible={{ open: modalOpen, onClose: () => setModalOpen(false) }} content={{ title: 'Demo Modal', subtitle: 'This demonstrates the Modal component' }}
-        footer={<Stack direction="horizontal" justify="end" spacing="sm">
-          <Button variant="secondary" onClick={() => setModalOpen(false)}>Cancel</Button>
-          <Button onClick={() => setModalOpen(false)}>Save</Button>
-        </Stack>}
+      <Modal
+        visible={{ open: modalOpen, onClose: () => setModalOpen(false) }}
+        content={{
+          title: 'Demo Modal',
+          subtitle: 'This demonstrates the Modal component',
+        }}
+        footer={
+          <Stack direction="horizontal" justify="end" spacing="sm">
+            <Button variant="secondary" onClick={() => setModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setModalOpen(false)}>Save</Button>
+          </Stack>
+        }
       >
         <Stack spacing="md">
-          <Input label={{ text: 'Name' }} defaultValue="Jane Doe" />
-          <Input label={{ text: 'Email' }} type="email" defaultValue="jane@example.com" />
+          <Input label="Name" defaultValue="Jane Doe" />
+          <Input label="Email" type="email" defaultValue="jane@example.com" />
         </Stack>
       </Modal>
 
-      <Drawer visible={{ open: drawerOpen, onClose: () => setDrawerOpen(false) }} config={{ title: 'Demo Drawer', side: 'right', size: 'sm' }}
-        footer={<Stack direction="horizontal" spacing="sm">
-          <Button variant="secondary" onClick={() => setDrawerOpen(false)} fullWidth>Cancel</Button>
-          <Button onClick={() => setDrawerOpen(false)} fullWidth>Apply</Button>
-        </Stack>}
+      <Drawer
+        visible={{ open: drawerOpen, onClose: () => setDrawerOpen(false) }}
+        config={{ title: 'Demo Drawer', side: 'right', size: 'sm' }}
+        footer={
+          <Stack direction="horizontal" spacing="sm">
+            <Button
+              variant="secondary"
+              onClick={() => setDrawerOpen(false)}
+              fullWidth
+            >
+              Cancel
+            </Button>
+            <Button onClick={() => setDrawerOpen(false)} fullWidth>
+              Apply
+            </Button>
+          </Stack>
+        }
       >
         <Stack spacing="md">
           <Toggle label="Option A" defaultChecked />
           <Toggle label="Option B" />
-          <Select label={{ text: 'Category' }} options={[{ value: 'a', label: 'All' }, { value: 'b', label: 'Tech' }]} />
+          <Select
+            label="Category"
+            options={[
+              { value: 'a', label: 'All' },
+              { value: 'b', label: 'Tech' },
+            ]}
+          />
         </Stack>
       </Drawer>
 
-      <Dialog visible={{ open: dialogOpen, onClose: () => setDialogOpen(false) }}
-        content={{ title: 'Confirm Action', description: 'Are you sure you want to proceed? This action can be undone.', variant: 'warning' }}
-        actions={{ confirm: { label: 'Confirm', onConfirm: () => setDialogOpen(false) }, cancel: { label: 'Cancel', onCancel: () => setDialogOpen(false) } }}
+      <Dialog
+        visible={{ open: dialogOpen, onClose: () => setDialogOpen(false) }}
+        content={{
+          title: 'Confirm Action',
+          description:
+            'Are you sure you want to proceed? This action can be undone.',
+          variant: 'warning',
+        }}
+        actions={{
+          confirm: { label: 'Confirm', onConfirm: () => setDialogOpen(false) },
+          cancel: { label: 'Cancel', onCancel: () => setDialogOpen(false) },
+        }}
       />
 
-      <SlideSheet visible={{ open: sheetOpen, onClose: () => setSheetOpen(false) }} config={{ title: 'Demo Sheet', side: 'bottom', height: '40vh', snapPoints: ['25vh', '40vh'] }}
+      <SlideSheet
+        visible={{ open: sheetOpen, onClose: () => setSheetOpen(false) }}
+        config={{
+          title: 'Demo Sheet',
+          side: 'bottom',
+          height: '40vh',
+          snapPoints: ['25vh', '40vh'],
+        }}
       >
         <Stack spacing="md">
-          <Text element={{ size: "sm" }}>Slide sheet content with drag handle for resizing.</Text>
+          <Text size="sm">
+            Slide sheet content with drag handle for resizing.
+          </Text>
           <Input placeholder="Type something..." />
         </Stack>
       </SlideSheet>
 
-      <div style={{ position: 'fixed', top: 'var(--azimuth-space-lg)', left: '50%', transform: 'translateX(-50%)', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: 'var(--azimuth-space-sm)', pointerEvents: 'none' }}>
-        {alerts.map(a => (
-          <div key={a.id} style={{
-            pointerEvents: 'auto',
-            transition: 'opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease, margin 0.3s ease',
-            opacity: exitingAlerts.has(a.id) ? 0 : 1,
-            transform: exitingAlerts.has(a.id) ? 'translateX(-100%)' : 'translateX(0)',
-            maxHeight: exitingAlerts.has(a.id) ? '0' : '200px',
-            marginBottom: exitingAlerts.has(a.id) ? '0' : '',
-            overflow: 'hidden',
-          }}>
-            <Alert variant={a.variant} title={a.title} dismissible onDismiss={() => {
-              setExitingAlerts(prev => new Set(prev).add(a.id));
-              setTimeout(() => {
-                setAlerts(prev => prev.filter(x => x.id !== a.id));
-                setExitingAlerts(prev => { const n = new Set(prev); n.delete(a.id); return n; });
-              }, 300);
-            }}>
+      <div
+        style={{
+          position: 'fixed',
+          top: 'var(--azimuth-space-lg)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1000,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--azimuth-space-sm)',
+          pointerEvents: 'none',
+        }}
+      >
+        {alerts.map((a) => (
+          <div
+            key={a.id}
+            style={{
+              pointerEvents: 'auto',
+              transition:
+                'opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease, margin 0.3s ease',
+              opacity: exitingAlerts.has(a.id) ? 0 : 1,
+              transform: exitingAlerts.has(a.id)
+                ? 'translateX(-100%)'
+                : 'translateX(0)',
+              maxHeight: exitingAlerts.has(a.id) ? '0' : '200px',
+              marginBottom: exitingAlerts.has(a.id) ? '0' : '',
+              overflow: 'hidden',
+            }}
+          >
+            <Alert
+              variant={a.variant}
+              title={a.title}
+              dismissible
+              onDismiss={() => {
+                setExitingAlerts((prev) => new Set(prev).add(a.id));
+                setTimeout(() => {
+                  setAlerts((prev) => prev.filter((x) => x.id !== a.id));
+                  setExitingAlerts((prev) => {
+                    const n = new Set(prev);
+                    n.delete(a.id);
+                    return n;
+                  });
+                }, 300);
+              }}
+            >
               {a.message}
             </Alert>
           </div>
