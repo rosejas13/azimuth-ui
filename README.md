@@ -167,6 +167,30 @@ function SignupForm() {
 
 `<Form>` sets `size`/`labelPosition` once for every field inside it; any field can still override. `AddressInput` always produces a structured value — `{ line1, line2?, city, state, postalCode, country }` — in either layout.
 
+### Input labels and sizes
+
+Inputs follow flat prop conventions: `label`, `subtitle`, `error`, `required`, `value`, `onChange` at the top level, with `onChange` receiving the raw value.
+
+```tsx
+// Plain string label — the common case
+<Input label="Email" value={email} onChange={setEmail} />
+
+// Structured label when you need more inline
+<Input
+  label={{ text: 'Work email', subtitle: 'Use your company address.', required: true }}
+/>
+
+// Label positions: 'top' (default), 'left', or 'inner'
+<Input label="Search" labelPosition="inner" placeholder="Type here" />
+
+// Sizes: 'sm' | 'md' | 'lg' | 'xl'. xl pairs with inner for a label inside the box.
+<Form size="xl" labelPosition="inner">
+  <Input label="Project name" />
+</Form>
+```
+
+With `labelPosition="inner"` the label renders inside the field box at the top-left — small and muted so it reads as a field caption distinct from the input text. The character counter (when `showCharCount`) follows it into the box.
+
 ## Theme Config
 
 ```ts
@@ -240,7 +264,7 @@ import { ThemeProvider, COLOR_PRESETS } from 'azimuth-ui';
 git clone https://github.com/rosejas13/azimuth-ui.git
 cd azimuth-ui
 npm install
-npm run test          # 1427 tests across 112 files (vitest)
+npm run test          # vitest unit suite
 npm run test:a11y     # Playwright + axe-core a11y tests (starts Storybook)
 npm run ci            # Full pipeline: lint → typecheck → test → build → a11y
 npm run typecheck     # Strict TypeScript

@@ -1474,8 +1474,9 @@ export const COMPONENT_DATA = [
     props: [
       {
         name: 'label',
-        type: 'string',
-        description: 'The label text for the input',
+        type: 'string | LabelConfig',
+        description:
+          'Label text, or a { text, subtitle?, position?, required? } object for inline customization',
       },
       {
         name: 'subtitle',
@@ -1495,15 +1496,17 @@ export const COMPONENT_DATA = [
       },
       {
         name: 'size',
-        type: 'string',
+        type: "'sm' | 'md' | 'lg' | 'xl'",
         default: 'md',
-        description: 'The size of the input',
+        description:
+          "The size of the input; 'xl' pairs with labelPosition='inner' for a label inside the box",
       },
       {
         name: 'labelPosition',
-        type: 'string',
+        type: "'top' | 'left' | 'inner'",
         default: 'top',
-        description: 'The position of the label relative to the input',
+        description:
+          "The position of the label relative to the input; 'inner' renders it inside the field box at the top",
       },
       {
         name: 'stepper',
