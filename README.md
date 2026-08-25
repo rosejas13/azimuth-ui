@@ -191,6 +191,58 @@ Inputs follow flat prop conventions: `label`, `subtitle`, `error`, `required`, `
 
 With `labelPosition="inner"` the label renders inside the field box at the top-left — small and muted so it reads as a field caption distinct from the input text. The character counter (when `showCharCount`) follows it into the box.
 
+### Controlled vs uncontrolled inputs
+
+Every input works both ways.
+
+**Controlled** — React state is the source of truth; you re-render on every change. Use this when UI depends on live values (instant validation, conditional fields, clear buttons):
+
+```tsx
+const [role, setRole] = useState<string | null>(null); // null = nothing selected
+
+<Input label="Email" value={email} onChange={setEmail} />
+<Select
+  label="Role"
+  options={roleOptions}
+  value={role}
+  onChange={setRole}   // receives string (string[] with multiple)
+/>
+<Button onClick={() => setRole(null)}>Clear</Button>
+```
+
+**Uncontrolled** — the DOM owns the state. Omit `value`/`checked` (optionally pass `defaultValue`/`defaultChecked`), give each field a `name`, and read everything in one place at submit time:
+
+```tsx
+function Signup() {
+  const handleSubmit = (data: Record<string, FormDataEntryValue | FormDataEntryValue[]>) => {
+    // { email: '...', role: 'designer', newsletters: ['weekly'] }
+  };
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Input name="email" label="Email" defaultValue="" />
+      <Select name="role" label="Role" options={roleOptions} />
+      <Select name="newsletters" label="Digests" multiple options={digestOptions} />
+      <Button type="submit">Sign up</Button>
+    </Form>
+  );
+}
+```
+
+Repeated names and multi-selects arrive as arrays. Uncontrolled fields skip per-keystroke re-renders entirely, which is why it is the low-ceremony default for plain forms.
+
+**Hybrid (`useForm`)** — for schema validation with controlled ergonomics, `useForm` supplies `values`/`setValue`, zod-backed `errors` gated on touch, and a submit handler; `<Form form={form}>` wires error display to `Form.Field` automatically:
+
+```tsx
+const form = useForm({ schema: signupSchema, defaultValues: { email: '' }, onSubmit: signup });
+
+<Form form={form}>
+  {/* Form.Field resolves errors from its label, matching the schema key */}
+  <Form.Field label="email">
+    <Input value={form.values.email} onChange={(v) => form.setValue('email', v)} />
+  </Form.Field>
+</Form>
+```
+
 ### Raw layout primitives
 
 `Row`, `Column`, `Box`, and `Spacer` are raw building blocks alongside `Stack`/`Grid`. `Row` is context-aware: anywhere it is a wrapping flex row with a token gap, but inside a `<Form>` its children share width evenly, align by their input boxes, and wrap on narrow screens.

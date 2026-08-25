@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.4 (2026-08-25)
+
+### Features
+
+- **`Select` accepts a cleared state.** Single-mode `value`/`defaultValue` now take `string | null`: passing `null`, `''` (or rerendering from a value to `null`) shows no selection — same visual as having no default option — via an injected hidden empty option, so the blank state survives user interaction and form submission.
+
 ## 0.11.3 (2026-08-25)
 
 ### Fixes

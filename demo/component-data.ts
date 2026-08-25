@@ -2307,13 +2307,15 @@ export const COMPONENT_DATA = [
       },
       {
         name: 'value',
-        type: 'string | string[]',
-        description: 'Controlled value; an array when multiple is set',
+        type: 'string | string[] | null',
+        description:
+          'Controlled value; an array when multiple is set; null clears the selection',
       },
       {
         name: 'defaultValue',
-        type: 'string | string[]',
-        description: 'Initial value of the select (uncontrolled)',
+        type: 'string | string[] | null',
+        description:
+          'Initial value of the select (uncontrolled); null starts blank',
       },
       {
         name: 'onChange',

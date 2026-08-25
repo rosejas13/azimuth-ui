@@ -105,3 +105,37 @@ describe('Select (multiple)', () => {
     expect(screen.getByRole('listbox')).toBeInTheDocument();
   });
 });
+
+describe('Select (cleared state)', () => {
+  it('accepts null as a controlled value and shows no selection', () => {
+    render(<Select options={options} value={null} onChange={() => {}} />);
+    const select = screen.getByRole('combobox');
+    expect(select.value).toBe('');
+    expect(select.querySelector('option[value=""][hidden]')).not.toBeNull();
+  });
+
+  it('clears when rerendered from a value to null', () => {
+    const { rerender } = render(
+      <Select options={options} value="2" onChange={() => {}} />,
+    );
+    expect(screen.getByRole('combobox').value).toBe('2');
+    rerender(<Select options={options} value={null} onChange={() => {}} />);
+    expect(screen.getByRole('combobox').value).toBe('');
+  });
+
+  it('starts blank for uncontrolled with null defaultValue', () => {
+    render(<Select options={options} defaultValue={null} />);
+    expect(screen.getByRole('combobox').value).toBe('');
+  });
+
+  it('still fires onChange normally after a cleared render', async () => {
+    const handleChange = vi.fn();
+    const user = userEvent.setup();
+    const { rerender } = render(
+      <Select options={options} value={null} onChange={handleChange} />,
+    );
+    rerender(<Select options={options} value="" onChange={handleChange} />);
+    await user.selectOptions(screen.getByRole('combobox'), '1');
+    expect(handleChange).toHaveBeenCalledWith('1');
+  });
+});

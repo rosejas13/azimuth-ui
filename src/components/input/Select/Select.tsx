@@ -64,10 +64,13 @@ interface SelectBaseProps {
 /** Single-select mode: `value` and `onChange` carry one string. */
 export interface SelectSingleProps extends SelectBaseProps {
   multiple?: false;
-  /** Controlled selected value. Pair with `onChange`. When omitted the select is uncontrolled. */
-  value?: string;
-  /** Initial value for an uncontrolled select. Ignored while `value` is set. */
-  defaultValue?: string;
+  /**
+   * Controlled selected value. Pair with `onChange`. When omitted the select is uncontrolled.
+   * Pass `null`, `''`, or leave unset to show no selection.
+   */
+  value?: string | null;
+  /** Initial value for an uncontrolled select. Ignored while `value` is set. `null` shows no selection. */
+  defaultValue?: string | null;
   /** Called with the selected value on change. */
   onChange?: (value: string) => void;
 }
@@ -88,8 +91,8 @@ export type SelectProps = SelectSingleProps | SelectMultipleProps;
 
 type SelectImplProps = SelectBaseProps & {
   multiple?: boolean;
-  value?: string | string[];
-  defaultValue?: string | string[];
+  value?: string | string[] | null;
+  defaultValue?: string | string[] | null;
   onChange?: (value: never) => void;
 };
 
@@ -119,6 +122,12 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const fieldId = id || generatedId;
     const hasHeader = Boolean(label) || Boolean(subtitle);
     const hasFooter = Boolean(error);
+    const controlled = value !== undefined;
+    const blankValue =
+      !multiple &&
+      (controlled
+        ? value === null || value === ''
+        : defaultValue === null || defaultValue === '');
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -157,8 +166,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={fieldId}
             className={cn(styles.select, error && styles.hasError, className)}
-            value={value}
-            defaultValue={value !== undefined ? undefined : defaultValue}
+            value={controlled ? (value ?? '') : undefined}
+            defaultValue={!controlled ? (defaultValue ?? '') : undefined}
             onChange={handleChange}
             disabled={disabled}
             required={required}
@@ -174,11 +183,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             multiple={multiple}
             {...selectProps}
           >
-            {placeholder && (
+            {placeholder ? (
               <option value="" disabled>
                 {placeholder}
               </option>
-            )}
+            ) : blankValue ? (
+              <option value="" hidden />
+            ) : null}
             {options.map((opt) => (
               <option key={opt.value} value={opt.value} disabled={opt.disabled}>
                 {opt.label}
