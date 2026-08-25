@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { cn } from '@/utils/cn';
 import { useInputConfig } from '../input-config';
+import { useAutoWireProps } from '../auto-wire';
 import styles from './Select.module.css';
 
 export interface SelectOption {
@@ -112,34 +113,46 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       placeholder,
       className,
       id,
+      name,
+      onBlur,
       selectProps,
       ...rest
     } = props as SelectImplProps;
     const { multiple } = rest;
+    const autoWire = useAutoWireProps({
+      name,
+      value,
+      onChange,
+      onBlur,
+      kind: multiple ? 'raw' : 'string',
+    });
+    const effValue = (autoWire.value as typeof value) ?? value;
+    const effOnChange = (autoWire.onChange as typeof onChange) ?? onChange;
+    const effOnBlur = autoWire.onBlur as typeof onBlur | undefined;
     const { size: configSize } = useInputConfig();
     const resolvedSize = size ?? configSize ?? 'md';
     const generatedId = useId();
     const fieldId = id || generatedId;
     const hasHeader = Boolean(label) || Boolean(subtitle);
     const hasFooter = Boolean(error);
-    const controlled = value !== undefined;
+    const controlled = effValue !== undefined;
     const blankValue =
       !multiple &&
       (controlled
-        ? value === null || value === ''
+        ? effValue === null || effValue === ''
         : defaultValue === null || defaultValue === '');
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLSelectElement>) => {
         if (multiple) {
-          onChange?.(
+          effOnChange?.(
             Array.from(e.target.selectedOptions, (opt) => opt.value) as never,
           );
         } else {
-          onChange?.(e.target.value as never);
+          effOnChange?.(e.target.value as never);
         }
       },
-      [onChange, multiple],
+      [effOnChange, multiple],
     );
 
     return (
@@ -166,7 +179,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={fieldId}
             className={cn(styles.select, error && styles.hasError, className)}
-            value={controlled ? (value ?? '') : undefined}
+            value={controlled ? (effValue ?? '') : undefined}
             defaultValue={!controlled ? (defaultValue ?? '') : undefined}
             onChange={handleChange}
             disabled={disabled}
@@ -179,6 +192,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
                   ? `${fieldId}-subtitle`
                   : undefined
             }
+            onBlur={effOnBlur}
+            name={name}
             {...rest}
             multiple={multiple}
             {...selectProps}

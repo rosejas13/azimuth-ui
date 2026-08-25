@@ -8,6 +8,7 @@ import {
   type ComponentPropsWithoutRef,
 } from 'react';
 import { cn } from '@/utils/cn';
+import { useAutoWireProps } from '../auto-wire';
 import styles from './Toggle.module.css';
 
 /** Props for the Toggle component. */
@@ -50,6 +51,8 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     {
       label,
       size = 'md',
+      name,
+      onBlur,
       checked,
       defaultChecked,
       onChange,
@@ -66,10 +69,20 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     const generatedId = id || autoId;
     const labelContent = label || children;
 
-    const isControlled = checked !== undefined;
+    const autoWire = useAutoWireProps({
+      name,
+      value: checked,
+      onChange,
+      onBlur,
+      kind: 'boolean',
+    });
+    const effChecked = (autoWire.checked as typeof checked) ?? checked;
+    const effOnChange = (autoWire.onChange as typeof onChange) ?? onChange;
+    const effOnBlur = autoWire.onBlur as typeof onBlur | undefined;
+    const isControlled = effChecked !== undefined;
     const [uncontrolled, setUncontrolled] = useState(defaultChecked ?? false);
 
-    const isChecked = isControlled ? checked : uncontrolled;
+    const isChecked = isControlled ? effChecked : uncontrolled;
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,7 +90,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
         if (!isControlled) {
           setUncontrolled(next);
         }
-        onChange?.(next);
+        effOnChange?.(next);
       },
       [isControlled, onChange],
     );
@@ -96,6 +109,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
           ref={ref}
           type="checkbox"
           id={generatedId}
+          name={name}
           className={styles.input}
           disabled={disabled}
           checked={isChecked}
@@ -103,6 +117,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
           onChange={handleChange}
           role="switch"
           aria-checked={isChecked}
+          onBlur={effOnBlur}
           {...props}
           {...toggleProps}
         />

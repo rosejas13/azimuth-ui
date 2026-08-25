@@ -16,6 +16,7 @@ import {
 } from 'react';
 import { cn } from '@/utils/cn';
 import { useInputConfig } from '../input-config';
+import { useAutoWireProps } from '../auto-wire';
 import styles from './TextArea.module.css';
 
 /** A multi-line text input with label, character count, and error state support. */
@@ -94,37 +95,43 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       showCharCount = false,
       className,
       id,
+      name,
+      onBlur,
       textareaProps,
       ...props
     },
     ref,
   ) => {
     const { size: configSize } = useInputConfig();
+    const autoWire = useAutoWireProps({ name, value, onChange, onBlur });
+    const effOnBlur = autoWire.onBlur as typeof onBlur | undefined;
+    const effValue = (autoWire.value as typeof value) ?? value;
+    const effOnChange = (autoWire.onChange as typeof onChange) ?? onChange;
     const resolvedSize = size ?? configSize ?? 'md';
     const internalRef = useRef<HTMLTextAreaElement>(null);
     const textareaRef = ref || internalRef;
-    const isControlled = value !== undefined;
+    const isControlled = effValue !== undefined;
     const [localValue, setLocalValue] = useState<string>(() =>
-      isControlled ? value : (defaultValue ?? ''),
+      isControlled ? effValue : (defaultValue ?? ''),
     );
     const generatedId = useId();
     const fieldId = id || generatedId;
 
     useEffect(() => {
-      if (value !== undefined) {
-        setLocalValue(value);
+      if (effValue !== undefined) {
+        setLocalValue(effValue);
       }
-    }, [value, isControlled]);
+    }, [effValue, isControlled]);
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = e.target.value;
-        if (value === undefined) {
+        if (effValue === undefined) {
           setLocalValue(newValue);
         }
-        onChange?.(newValue);
+        effOnChange?.(newValue);
       },
-      [value, onChange],
+      [effValue, effOnChange],
     );
 
     const currentValue = isControlled ? value : localValue;
@@ -160,9 +167,11 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         <textarea
           ref={textareaRef}
           id={fieldId}
+          name={name}
           value={isControlled ? currentValue : undefined}
           defaultValue={isControlled ? undefined : defaultValue}
           onChange={handleChange}
+          onBlur={effOnBlur}
           className={cn(styles.textarea, error && styles.hasError)}
           disabled={disabled}
           required={required}

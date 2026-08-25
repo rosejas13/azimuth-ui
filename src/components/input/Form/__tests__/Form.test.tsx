@@ -5,6 +5,7 @@ import { Form } from '../Form';
 import { Input } from '../../Input/Input';
 import { InputGroup } from '../../InputGroup/InputGroup';
 import { Select } from '../../Select/Select';
+import { DatePicker } from '../../../data/DatePicker/DatePicker';
 import { Toggle } from '../../Toggle/Toggle';
 import { useForm } from '../../../../hooks/useForm';
 import { z } from 'zod';
@@ -421,5 +422,72 @@ describe('Form.Field auto-wiring', () => {
     await user.click(screen.getByRole('switch'));
     await user.click(screen.getByText('go'));
     expect(submitted).toEqual({ notify: true });
+  });
+});
+
+describe('self-registering fields (bare inputs with name)', () => {
+  const schema = z.object({
+    email: z.string().email(),
+    notify: z.boolean(),
+    when: z.date(),
+  });
+
+  it('wires a bare Input by name and submits typed values', async () => {
+    const onSubmit = vi.fn();
+    const user = userEvent.setup();
+    function Harness() {
+      const form = useForm({
+        schema,
+        defaultValues: {
+          email: '',
+          notify: false,
+          when: new Date(2026, 0, 15),
+        },
+        onSubmit,
+      });
+      return (
+        <Form form={form}>
+          <Input name="email" placeholder="email" />
+          <Toggle name="notify" label="Notify" />
+          <button type="submit">go</button>
+        </Form>
+      );
+    }
+    render(<Harness />);
+    await user.type(screen.getByPlaceholderText('email'), 'a@b.co');
+    await user.click(screen.getByRole('switch'));
+    await user.click(screen.getByText('go'));
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({ email: 'a@b.co', notify: true }),
+    );
+  });
+
+  it('wires a bare DatePicker by name', () => {
+    const onSubmit = vi.fn();
+    function Harness() {
+      const form = useForm({
+        schema: z.object({ when: z.date() }),
+        defaultValues: { when: new Date(2026, 0, 15) },
+        onSubmit,
+      });
+      return (
+        <Form form={form}>
+          <DatePicker name="when" />
+          <button type="submit">go</button>
+        </Form>
+      );
+    }
+    render(<Harness />);
+    expect(screen.getByDisplayValue('January 15, 2026')).toBeInTheDocument();
+  });
+
+  it('stays inert without the form prop', () => {
+    render(
+      <Form>
+        <Input name="email" placeholder="email" />
+      </Form>,
+    );
+    const input = screen.getByPlaceholderText('email');
+    expect(input).not.toHaveAttribute('value');
   });
 });

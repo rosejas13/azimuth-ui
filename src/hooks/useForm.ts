@@ -98,11 +98,10 @@ function getFieldErrors<T>(
 /**
  * Controlled-form state: values, touch-gated zod validation, and submit handling.
  *
- * Inside `<Form form={form}>`, fields wire **themselves**: give `Form.Field`
- * a `name` (or a label) and value/onChange/onBlur are injected automatically.
- * Manual wiring stays available for custom behavior.
+ * Inside `<Form form={form}>`, **named controls wire themselves** — no wrapper,
+ * no handlers:
  *
- * @example Automatic wiring — zero per-field ceremony
+ * @example Self-registering fields
  * ```tsx
  * const signupSchema = z.object({
  *   email: z.string().email('Enter a valid email'),
@@ -117,27 +116,17 @@ function getFieldErrors<T>(
  *
  *   return (
  *     <Form form={form}>
- *       // Field key comes from name (or lowercased label); error + value
- *       // wiring are injected; blur marks the field touched
- *       <Form.Field name="email">
- *         <Input />
- *       </Form.Field>
- *       <Button type="submit" disabled={form.isSubmitting}>
- *         {form.isSubmitting ? 'Signing up…' : 'Sign up'}
- *       </Button>
+ *       // `name` is the field key; value/onChange/onBlur are injected
+ *       <Input name="email" />
+ *       <Button type="submit">Sign up</Button>
  *     </Form>
  *   );
  * }
  * ```
  *
- * @example Manual wiring when you need it
- * ```tsx
- * <Input
- *   value={form.values.email}
- *   onChange={(v) => form.setValue('email', v)}
- *   onBlur={() => form.setTouched('email')}
- * />
- * ```
+ * Works for Input, TextArea, Select, Toggle, Checkbox, and DatePicker.
+ * `<Form.Field name="…">` still adds label/error display around a child;
+ * passing explicit `value`/`onChange` opts any control out of auto-wiring.
  *
  * @remarks
  * Validation is **lazy by design**: errors exist only for touched fields, and a

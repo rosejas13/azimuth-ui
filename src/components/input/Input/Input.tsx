@@ -17,6 +17,7 @@ import {
 } from 'react';
 import { cn } from '@/utils/cn';
 import { useInputConfig } from '../input-config';
+import { useAutoWireProps } from '../auto-wire';
 import styles from './Input.module.css';
 
 const NO_SUGGESTIONS: string[] = [];
@@ -134,6 +135,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       suggestions,
       size,
       type = 'text',
+      name,
       className,
       id,
       inputProps,
@@ -143,6 +145,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const { size: configSize, labelPosition: configLabelPosition } =
       useInputConfig();
+    const autoWire = useAutoWireProps({
+      name,
+      value,
+      onChange,
+      kind: 'string',
+    });
+    const effValue = (autoWire.value as typeof value) ?? value;
+    const effOnChange = (autoWire.onChange as typeof onChange) ?? onChange;
+    const effOnBlur = autoWire.onBlur as
+      | React.FocusEventHandler<HTMLInputElement>
+      | undefined;
     const labelConfig =
       typeof label === 'object' && label !== null ? label : undefined;
     const labelText = typeof label === 'string' ? label : labelConfig?.text;
@@ -154,10 +167,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const isNumber = type === 'number';
     const internalRefV = useRef<HTMLInputElement>(null);
     const inputRef = ref || internalRefV;
-    const isControlled = value !== undefined;
+    const isControlled = effValue !== undefined;
     const [localValue, setLocalValue] = useState<string>(() =>
       isControlled
-        ? String(value)
+        ? String(effValue)
         : defaultValue !== undefined
           ? String(defaultValue)
           : '',
@@ -166,7 +179,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
     const suggestionsRef = useRef<HTMLDivElement>(null);
 
-    const currentValue = isControlled ? String(value) : localValue;
+    const currentValue = isControlled ? String(effValue) : localValue;
     const hasSteppers = isNumber && showSteppers;
     const autoId = useId();
     const generatedId = id || autoId;
@@ -182,7 +195,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     useEffect(() => {
       if (value !== undefined) {
-        setLocalValue(String(value));
+        setLocalValue(String(effValue));
       }
     }, [value]);
 
@@ -207,7 +220,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
-        if (value === undefined) {
+        if (effValue === undefined) {
           setLocalValue(newValue);
         }
         if (suggestionOptions.length > 0) {
@@ -216,9 +229,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           );
           setHighlightedIndex(-1);
         }
-        onChange?.(newValue);
+        effOnChange?.(newValue);
       },
-      [value, onChange, suggestionOptions],
+      [effValue, effOnChange, suggestionOptions],
     );
 
     const handleKeyDown = useCallback(
@@ -254,7 +267,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       input?.dispatchEvent(new Event('input', { bubbles: true }));
       if (input) {
         setLocalValue(input.value);
-        onChange?.(input.value);
+        effOnChange?.(input.value);
       }
     };
 
@@ -264,7 +277,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       input?.dispatchEvent(new Event('input', { bubbles: true }));
       if (input) {
         setLocalValue(input.value);
-        onChange?.(input.value);
+        effOnChange?.(input.value);
       }
     };
 
@@ -293,6 +306,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={inputRef}
           id={generatedId}
+          name={name}
           type={type}
           value={isControlled || hasSuggestions ? currentValue : undefined}
           defaultValue={
@@ -342,6 +356,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           }
           role={hasSuggestions ? 'combobox' : undefined}
           autoComplete={hasSuggestions ? 'off' : undefined}
+          onBlur={effOnBlur}
           {...props}
           {...inputProps}
         />

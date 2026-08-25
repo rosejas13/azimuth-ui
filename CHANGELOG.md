@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.11.9 (2026-08-25)
+
+### Features
+
+- **Self-registering fields.** Inside `<Form form={form}>`, any control with a `name` wires itself — value, change, and touched handling injected, no wrapper needed:
+
+  ```tsx
+  <Form form={form}>
+    <Input name="email" />
+    <Select name="role" options={roles} />
+    <Toggle name="notify" label="Notify me" />
+    <DatePicker name="when" />
+  </Form>
+  ```
+
+  Works for Input, TextArea, Select, Toggle, Checkbox, and DatePicker (`Toggle`/`Checkbox` receive boolean state; `DatePicker` dates; multi-`Select` arrays). Passing explicit `value`/`onChange` opts a control out. `<Form.Field>` remains for label/error display slots and arbitrary children. The wiring lives in a new shared context (`src/components/input/auto-wire.ts`) consumed by each input; forms without the `form` prop are completely unaffected.
+
 ## 0.11.8 (2026-08-25)
 
 ### Features

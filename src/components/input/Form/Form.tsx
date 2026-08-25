@@ -15,6 +15,7 @@ import { cn } from '@/utils/cn';
 import styles from './Form.module.css';
 import type { UseFormReturn } from '@/hooks/useForm';
 import { InputConfigProvider } from '../input-config';
+import { AutoWireContext } from '../auto-wire';
 
 interface FormContextValue {
   errors: Record<string, string | undefined>;
@@ -41,10 +42,12 @@ export interface FormProps extends Omit<
   /** useForm return object for auto-wiring validation and errors.
    *
    * @remarks
-   * Accepts any `UseFormReturn<T>` regardless of your concrete field type:
-   * `<Form>` only reads `handleSubmit`, `errors`, and `setTouched`, which are
-   * keyed by strings at this boundary. Your schema type stays intact on the
-   * hook itself for `values`/`setValue`.
+   * Accepts any `UseFormReturn<T>` regardless of your concrete field type.
+   * When set, **named controls self-register**: `<Input name="email" />`
+   * inside this form reads and writes `form.values.email` automatically —
+   * same for Select, TextArea, Toggle, Checkbox, and DatePicker. Passing a
+   * control its own `value`/`onChange` opts it out. Your schema type stays
+   * intact on the hook for `values`/`setValue`.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- generic boundary; see remarks
   form?: UseFormReturn<any>;
@@ -122,22 +125,24 @@ const FormRoot = forwardRef<HTMLFormElement, FormProps>(
     return (
       <InputConfigProvider value={config}>
         <FormContext.Provider value={ctx}>
-          <form
-            ref={ref}
-            noValidate
-            onSubmit={handleFormSubmit}
-            className={cn(
-              styles.form,
-              spacing === 'sm' && styles.spacingSm,
-              spacing === 'md' && styles.spacingMd,
-              spacing === 'lg' && styles.spacingLg,
-              className,
-            )}
-            aria-errormessage={undefined}
-            {...props}
-          >
-            {children}
-          </form>
+          <AutoWireContext.Provider value={ctx}>
+            <form
+              ref={ref}
+              noValidate
+              onSubmit={handleFormSubmit}
+              className={cn(
+                styles.form,
+                spacing === 'sm' && styles.spacingSm,
+                spacing === 'md' && styles.spacingMd,
+                spacing === 'lg' && styles.spacingLg,
+                className,
+              )}
+              aria-errormessage={undefined}
+              {...props}
+            >
+              {children}
+            </form>
+          </AutoWireContext.Provider>
         </FormContext.Provider>
       </InputConfigProvider>
     );

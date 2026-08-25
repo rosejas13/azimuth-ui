@@ -13,6 +13,7 @@ import { Calendar } from '@/components/data/Calendar';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { formatDate } from './formatDate';
+import { useAutoWireProps } from '../../input/auto-wire';
 import styles from './DatePicker.module.css';
 
 /** Props for the DatePicker component. */
@@ -48,6 +49,8 @@ export interface DatePickerProps extends Omit<
   /** Whether the input is disabled. */
   disabled?: boolean;
   id?: string;
+  /** Field key for `<Form form={form}>` auto-wiring and native form serialization. */
+  name?: string;
   className?: string;
 }
 
@@ -63,6 +66,7 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
       value: controlledValue,
       defaultValue,
       onChange,
+      name,
       label,
       placeholder = 'Select date',
       minDate,
@@ -77,7 +81,18 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
     },
     ref,
   ) => {
-    const isControlled = controlledValue !== undefined;
+    const autoWire = useAutoWireProps({
+      name,
+      value: controlledValue,
+      onChange,
+      kind: 'raw',
+    });
+    const wiredControlled = autoWire.value as Date | undefined;
+    const wiredOnChange = autoWire.onChange as
+      | ((date: Date | undefined) => void)
+      | undefined;
+    const isControlled =
+      controlledValue !== undefined || wiredOnChange !== undefined;
     const [internalValue, setInternalValue] = useState<Date | undefined>(
       defaultValue,
     );
@@ -87,7 +102,9 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
     const wrapperRef = useRef<HTMLDivElement>(null);
     const popupRef = useRef<HTMLDivElement>(null);
 
-    const selectedDate = isControlled ? controlledValue : internalValue;
+    const selectedDate = isControlled
+      ? (controlledValue ?? wiredControlled)
+      : internalValue;
 
     useClickOutside(wrapperRef, () => setIsOpen(false), isOpen);
     useFocusTrap(popupRef, isOpen);
@@ -97,9 +114,9 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
         if (!isControlled) {
           setInternalValue(date);
         }
-        onChange?.(date);
+        (wiredOnChange ?? onChange)?.(date);
       },
-      [isControlled, onChange],
+      [isControlled, onChange, wiredOnChange],
     );
 
     const updatePosition = useCallback(() => {

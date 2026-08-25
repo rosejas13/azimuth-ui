@@ -8,6 +8,7 @@ import {
   type ComponentPropsWithoutRef,
 } from 'react';
 import { cn } from '@/utils/cn';
+import { useAutoWireProps } from '../auto-wire';
 import styles from './Checkbox.module.css';
 
 /** Props for the Checkbox component. */
@@ -55,6 +56,8 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (
     {
       label,
+      name,
+      onBlur,
       checked,
       defaultChecked,
       onChange,
@@ -72,10 +75,20 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     const generatedId = id || autoId;
     const labelContent = label || children;
 
-    const isControlled = checked !== undefined;
+    const autoWire = useAutoWireProps({
+      name,
+      value: checked,
+      onChange,
+      onBlur,
+      kind: 'boolean',
+    });
+    const effChecked = (autoWire.checked as typeof checked) ?? checked;
+    const effOnChange = (autoWire.onChange as typeof onChange) ?? onChange;
+    const effOnBlur = autoWire.onBlur as typeof onBlur | undefined;
+    const isControlled = effChecked !== undefined;
     const [uncontrolled, setUncontrolled] = useState(defaultChecked ?? false);
 
-    const isChecked = isControlled ? checked : uncontrolled;
+    const isChecked = isControlled ? effChecked : uncontrolled;
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +96,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         if (!isControlled) {
           setUncontrolled(next);
         }
-        onChange?.(next);
+        effOnChange?.(next);
       },
       [isControlled, onChange],
     );
@@ -100,11 +113,13 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         <input
           type="checkbox"
           id={generatedId}
+          name={name}
           className={styles.checkbox}
           disabled={disabled}
           checked={isChecked}
           defaultChecked={isControlled ? undefined : defaultChecked}
           onChange={handleChange}
+          onBlur={effOnBlur}
           {...props}
           {...checkboxProps}
           ref={(el) => {
