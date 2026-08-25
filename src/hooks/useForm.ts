@@ -2,24 +2,79 @@
 import { useState, useCallback, useRef, useMemo } from 'react';
 import type { z } from 'zod';
 
+/**
+ * Options for {@link useForm}.
+ *
+ * @typeParam T - Record mapping field names to value types, e.g. `{ email: string }`.
+ */
 export interface UseFormOptions<T extends Record<string, unknown>> {
+  /**
+   * Zod schema validated against `values` on every change. Errors surface
+   * per-field once a field is touched (see {@link UseFormReturn.errors}).
+   * Omit for forms that don't need client-side validation.
+   */
   schema?: z.ZodType<T>;
+  /** Initial values. Also the target of {@link UseFormReturn.reset} when called without arguments. */
   defaultValues: T;
+  /**
+   * Called with the parsed values after a successful submit
+   * ({@link UseFormReturn.handleSubmit} skips it when validation fails).
+   */
   onSubmit?: (values: T) => void | Promise<void>;
 }
 
+/**
+ * Everything {@link useForm} hands back for wiring controlled inputs.
+ *
+ * Pair with `<Form form={form}>` so `<Form.Field>` picks up `errors`
+ * automatically, or drive plain `<form onSubmit={form.handleSubmit}>` yourself.
+ */
 export interface UseFormReturn<T> {
+  /** Current field values. Source of truth for controlled inputs. */
   values: T;
+  /**
+   * Validation messages keyed by field name, **gated on touch**: a field's
+   * error appears only after it has been touched via
+   * {@link UseFormReturn.setTouched} — or after a failed submit, which marks
+   * every field touched at once. This keeps pristine forms quiet.
+   *
+   * `<Form.Field>` resolves its error by matching its `label` prop against
+   * these keys (case-insensitive), so schema keys should match labels.
+   */
   errors: Partial<Record<keyof T, string>>;
+  /** Fields marked touched so far. */
   touched: Set<keyof T>;
+  /** `true` when the whole `values` object passes `schema`. Always `true` without a schema. */
   isValid: boolean;
+  /** `true` when any value differs from `defaultValues`. */
   isDirty: boolean;
+  /** `true` while the promise returned from `onSubmit` is in flight. */
   isSubmitting: boolean;
+  /**
+   * Update one field's value. Does **not** mark it touched — wire it to your
+   * input's flat `onChange` and let blur/submit handle touch:
+   *
+   * ```tsx
+   * <Input value={form.values.email} onChange={(v) => form.setValue('email', v)} />
+   * ```
+   */
   setValue: (field: keyof T, value: T[keyof T]) => void;
+  /** Mark a field touched (typically on blur) to reveal its validation message. */
   setTouched: (field: keyof T) => void;
+  /**
+   * Submit handler: prevents default, marks **all** fields touched, validates,
+   * and calls `onSubmit(values)` only when valid. Pass it straight to
+   * `<Form form={form}>` (which invokes it) or `<form onSubmit={form.handleSubmit}>`.
+   */
   handleSubmit: (e: React.FormEvent) => void;
+  /**
+   * Back to initial values and clear touched/submitting state. Passing
+   * `newValues` also makes those the new reset target.
+   */
   reset: (newValues?: T) => void;
+  /** Validate one field against the schema right now; returns its first message or `undefined`. */
   validateField: (field: keyof T) => string | undefined;
+  /** Validate everything now; `true` when valid (or schema-less). Does not touch `errors` gating. */
   validateAll: () => boolean;
 }
 
@@ -40,6 +95,50 @@ function getFieldErrors<T>(
   return parsed;
 }
 
+/**
+ * Controlled-form state: values, touch-gated zod validation, and submit handling.
+ *
+ * Inputs stay standard azimuth controlled components — you wire `value`/`onChange`
+ * yourself — while the hook owns validation timing (quiet until touched), submit
+ * gating, and dirty/reset bookkeeping.
+ *
+ * @example Full wiring with `<Form>` and `<Form.Field>`
+ * ```tsx
+ * const signupSchema = z.object({
+ *   email: z.string().email('Enter a valid email'),
+ * });
+ *
+ * function Signup() {
+ *   const form = useForm({
+ *     schema: signupSchema,
+ *     defaultValues: { email: '' },
+ *     onSubmit: async (values) => api.signup(values),
+ *   });
+ *
+ *   return (
+ *     // <Form form={form}> routes submits through form.handleSubmit
+ *     // and feeds form.errors to Form.Field
+ *     <Form form={form}>
+ *       // Form.Field resolves its error by matching label to schema key
+ *       <Form.Field label="email" onBlur={() => form.setTouched('email')}>
+ *         <Input value={form.values.email} onChange={(v) => form.setValue('email', v)} />
+ *       </Form.Field>
+ *       <Button type="submit" disabled={!form.isValid || form.isSubmitting}>
+ *         {form.isSubmitting ? 'Signing up…' : 'Sign up'}
+ *       </Button>
+ *     </Form>
+ *   );
+ * }
+ * ```
+ *
+ * @remarks
+ * Validation is **lazy by design**: errors exist only for touched fields, and a
+ * failed submit touches everything so the full picture appears at once. If you
+ * need eager messages, render `form.validateField('email')` directly.
+ *
+ * @param options - {@link UseFormOptions}
+ * @typeParam T - Record mapping field names to value types.
+ */
 export function useForm<T extends Record<string, unknown>>(
   options: UseFormOptions<T>,
 ): UseFormReturn<T> {

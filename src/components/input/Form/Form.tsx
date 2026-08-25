@@ -35,8 +35,16 @@ export interface FormProps extends Omit<
   onSubmit?: (
     data: Record<string, FormDataEntryValue | FormDataEntryValue[]>,
   ) => void;
-  /** useForm return object for auto-wiring validation and errors */
-  form?: UseFormReturn<Record<string, unknown>>;
+  /** useForm return object for auto-wiring validation and errors.
+   *
+   * @remarks
+   * Accepts any `UseFormReturn<T>` regardless of your concrete field type:
+   * `<Form>` only reads `handleSubmit`, `errors`, and `setTouched`, which are
+   * keyed by strings at this boundary. Your schema type stays intact on the
+   * hook itself for `values`/`setValue`.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- generic boundary; see remarks
+  form?: UseFormReturn<any>;
   /** @default 'md' */
   spacing?: 'sm' | 'md' | 'lg';
   /** Default `size` inherited by every child input, unless overridden. @default 'md' */
@@ -130,7 +138,14 @@ FormRoot.displayName = 'Form';
 
 /** Props for the Form.Field sub-component. */
 export interface FormFieldProps extends ComponentPropsWithoutRef<'div'> {
-  /** Label text rendered above the field. */
+  /**
+   * Label text rendered above the field.
+   *
+   * @remarks
+   * When used inside `<Form form={form}>`, this label is also the **error
+   * lookup key**: it's matched case-insensitively against `useForm`'s schema
+   * field names, so a field named `email` needs `label="Email"` or similar.
+   */
   label?: string;
   /** @default false */
   required?: boolean;
