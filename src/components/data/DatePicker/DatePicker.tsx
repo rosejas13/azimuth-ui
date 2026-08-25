@@ -34,7 +34,12 @@ export interface DatePickerProps extends Omit<
   minDate?: Date;
   /** Maximum selectable date. */
   maxDate?: Date;
-  /** Display format token. @default 'PPP' */
+  /**
+   * Display format pattern. Tokens: `yyyy`/`yy`, `MMMM`/`MMM`/`MM`/`M`,
+   * `dd`/`d` — e.g. `'MM-dd-yy'` → `08-25-26`. Legacy presets `P`, `PP`,
+   * `PPP` still work; unknown patterns fall back to `PPP`.
+   * @default 'PPP'
+   */
   format?: string;
   /** Error message displayed below the input. */
   error?: string;

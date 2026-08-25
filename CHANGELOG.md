@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.8 (2026-08-25)
+
+### Features
+
+- **`DatePicker` accepts real format tokens.** The `format` prop previously supported only four hardcoded presets and **silently fell back to the default** for anything else — `format="MM-dd-yy"` just showed "August 25, 2026". It now parses date-fns-style tokens: `yyyy`/`yy`, `MMMM`/`MMM`/`MM`/`M`, `dd`/`d`. Legacy presets (`P`/`PP`/`PPP`) keep working; unknown patterns still fall back to `PPP`.
+
 ## 0.11.7 (2026-08-25)
 
 ### Features

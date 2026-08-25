@@ -117,3 +117,32 @@ describe('DatePicker', () => {
     expect(wrapper).toHaveClass('test-class');
   });
 });
+
+describe('DatePicker format tokens', () => {
+  const date = new Date(2026, 7, 25); // Aug 25 2026 — single-digit month/day
+
+  it('formats custom MM-dd-yy', () => {
+    render(<DatePicker value={date} format="MM-dd-yy" />);
+    expect(screen.getByDisplayValue('08-25-26')).toBeInTheDocument();
+  });
+
+  it('formats custom MM dd yyyy', () => {
+    render(<DatePicker value={date} format="MM dd yyyy" />);
+    expect(screen.getByDisplayValue('08 25 2026')).toBeInTheDocument();
+  });
+
+  it('formats ISO yyyy-MM-dd via tokens', () => {
+    render(<DatePicker value={date} format="yyyy-MM-dd" />);
+    expect(screen.getByDisplayValue('2026-08-25')).toBeInTheDocument();
+  });
+
+  it('keeps legacy presets working', () => {
+    render(<DatePicker value={new Date(2026, 0, 15)} format="P" />);
+    expect(screen.getByDisplayValue('01/15/2026')).toBeInTheDocument();
+  });
+
+  it('falls back to PPP for unknown formats', () => {
+    render(<DatePicker value={new Date(2026, 0, 15)} format="nonsense" />);
+    expect(screen.getByDisplayValue('January 15, 2026')).toBeInTheDocument();
+  });
+});
