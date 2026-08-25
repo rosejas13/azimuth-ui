@@ -107,9 +107,9 @@ const signupSchema = z.object({
 });
 
 /**
- * Fully controlled wiring: useForm owns values + validation, inputs stay
- * standard controlled azimuth components. Errors stay hidden until a field
- * is touched (blur) or the form is submitted.
+ * Fully controlled with zero per-field wiring: Form.Field injects
+ * value/onChange/onBlur from useForm automatically, keyed by `name`
+ * (or the lowercased label). Errors stay hidden until touch or submit.
  */
 export const WithUseForm: Story = {
   render: () => {
@@ -122,25 +122,13 @@ export const WithUseForm: Story = {
     });
 
     return (
-      // <Form form={form}> routes submits through handleSubmit and feeds
-      // form.errors to Form.Field (matched by label, case-insensitive)
       <Form form={form}>
         <Stack>
-          <Form.Field label="email">
-            <Input
-              placeholder="you@example.com"
-              value={form.values.email}
-              onChange={(v) => form.setValue('email', v)}
-              onBlur={() => form.setTouched('email')}
-            />
+          <Form.Field name="email">
+            <Input placeholder="you@example.com" />
           </Form.Field>
-          <Form.Field label="username">
-            <Input
-              placeholder="Choose a username"
-              value={form.values.username}
-              onChange={(v) => form.setValue('username', v)}
-              onBlur={() => form.setTouched('username')}
-            />
+          <Form.Field name="username">
+            <Input placeholder="Choose a username" />
           </Form.Field>
           <Stack direction="horizontal" justify="between" align="center">
             <Button type="submit" disabled={!form.isValid || form.isSubmitting}>

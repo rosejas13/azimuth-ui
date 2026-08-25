@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.11.6 (2026-08-25)
+
+### Features
+
+- **Automatic field wiring in `Form.Field`.** Inside `<Form form={form}>`, give a field a `name` (or just a label) and its value, change handler, and blur-touched marking are injected from the form hook — no per-field plumbing:
+
+  ```tsx
+  <Form form={form}>
+    <Form.Field name="email">
+      <Input />
+    </Form.Field>
+  </Form>
+  ```
+
+  Boolean controls (`Toggle`, `Checkbox`) receive `checked` instead of `value`. Passing your own `value`/`onChange` on the child opts it out per-field; forms without the `form` prop keep pure uncontrolled FormData behavior.
+
 ## 0.11.5 (2026-08-25)
 
 ### Features

@@ -5,6 +5,10 @@ import { Form } from '../Form';
 import { Input } from '../../Input/Input';
 import { InputGroup } from '../../InputGroup/InputGroup';
 import { Select } from '../../Select/Select';
+import { Toggle } from '../../Toggle/Toggle';
+import { useForm } from '../../../../hooks/useForm';
+import { z } from 'zod';
+import { useState } from 'react';
 
 describe('Form', () => {
   it('renders a form element', () => {
@@ -283,5 +287,139 @@ describe('Form', () => {
     const wrapper = input.closest('[class*="wrapper"]');
     expect(wrapper?.className).toMatch(/xl/);
     expect(wrapper?.className).toContain('wrapperInnerLabel');
+  });
+});
+
+describe('Form.Field auto-wiring', () => {
+  const schema = z.object({
+    email: z.string().email(),
+    username: z.string().min(3, 'At least 3 characters'),
+  });
+
+  it('injects value/onChange from the form hook by name and submits typed values', async () => {
+    const onSubmit = vi.fn();
+    const user = userEvent.setup();
+    function Harness() {
+      const form = useForm({
+        schema,
+        defaultValues: { email: '', username: '' },
+        onSubmit,
+      });
+      return (
+        <Form form={form}>
+          <Form.Field name="email">
+            <Input placeholder="email" />
+          </Form.Field>
+          <Form.Field name="username">
+            <Input placeholder="username" />
+          </Form.Field>
+          <button type="submit">go</button>
+        </Form>
+      );
+    }
+    render(<Harness />);
+    await user.type(screen.getByPlaceholderText('email'), 'jas@example.com');
+    await user.type(screen.getByPlaceholderText('username'), 'abc');
+    await user.click(screen.getByText('go'));
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({ email: 'jas@example.com', username: 'abc' }),
+    );
+  });
+
+  it('falls back to the lowercased label as the field key', async () => {
+    const user = userEvent.setup();
+    function Harness() {
+      const form = useForm({
+        schema: z.object({ email: z.string() }),
+        defaultValues: { email: '' },
+      });
+      return (
+        <Form form={form}>
+          <Form.Field label="Email">
+            <Input placeholder="email" />
+          </Form.Field>
+        </Form>
+      );
+    }
+    render(<Harness />);
+    const input = screen.getByPlaceholderText('email');
+    expect(input).toHaveValue('');
+    await user.type(input, 'x');
+    expect(input).toHaveValue('x');
+  });
+
+  it('reveals the validation error after blur via touched marking', async () => {
+    const user = userEvent.setup();
+    function Harness() {
+      const form = useForm({
+        schema: z.object({
+          username: z.string().min(3, 'At least 3 characters'),
+        }),
+        defaultValues: { username: '' },
+      });
+      return (
+        <Form form={form}>
+          <Form.Field name="username">
+            <Input placeholder="username" />
+          </Form.Field>
+        </Form>
+      );
+    }
+    render(<Harness />);
+    const input = screen.getByPlaceholderText('username');
+    await user.type(input, 'ab');
+    await user.tab();
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'At least 3 characters',
+    );
+  });
+
+  it('respects explicit value/onChange on the child (opt-out)', async () => {
+    const user = userEvent.setup();
+    function Harness() {
+      const form = useForm({
+        schema,
+        defaultValues: { email: 'from-form', username: '' },
+      });
+      const [local, setLocal] = useState('local');
+      return (
+        <Form form={form}>
+          <Form.Field name="email">
+            <Input placeholder="email" value={local} onChange={setLocal} />
+          </Form.Field>
+        </Form>
+      );
+    }
+    render(<Harness />);
+    const input = screen.getByPlaceholderText('email');
+    expect(input).toHaveValue('local');
+    await user.type(input, '!');
+    expect(input).toHaveValue('local!');
+  });
+
+  it('injects checked for boolean controls like Toggle', async () => {
+    const user = userEvent.setup();
+    let submitted: unknown;
+    function Harness() {
+      const form = useForm({
+        schema: z.object({ notify: z.boolean() }),
+        defaultValues: { notify: false },
+        onSubmit: (v) => {
+          submitted = v;
+        },
+      });
+      return (
+        <Form form={form}>
+          <Form.Field name="notify">
+            <Toggle label="Notify me" />
+          </Form.Field>
+          <button type="submit">go</button>
+        </Form>
+      );
+    }
+    render(<Harness />);
+    await user.click(screen.getByRole('switch'));
+    await user.click(screen.getByText('go'));
+    expect(submitted).toEqual({ notify: true });
   });
 });

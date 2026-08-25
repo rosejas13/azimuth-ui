@@ -19,6 +19,9 @@ import { InputConfigProvider } from '../input-config';
 interface FormContextValue {
   errors: Record<string, string | undefined>;
   setTouched: (field: string) => void;
+  /** Present only when the `form` prop is set; enables Form.Field auto-wiring. */
+  values?: Record<string, unknown>;
+  setValue?: (field: string, value: unknown) => void;
 }
 
 const FormContext = createContext<FormContextValue | null>(null);
@@ -97,12 +100,19 @@ const FormRoot = forwardRef<HTMLFormElement, FormProps>(
       [onSubmit, form],
     );
 
-    const ctx = form
-      ? {
-          errors: form.errors as Record<string, string | undefined>,
-          setTouched: (field: string) => form.setTouched(field),
-        }
-      : null;
+    const ctx = useMemo(
+      () =>
+        form
+          ? {
+              errors: form.errors,
+              setTouched: (field: string) => form.setTouched(field),
+              values: form.values as Record<string, unknown>,
+              setValue: (field: string, value: unknown) =>
+                form.setValue(field, value),
+            }
+          : null,
+      [form],
+    );
 
     const config = useMemo(
       () => ({ size, labelPosition, inForm: true as const }),
@@ -142,11 +152,16 @@ export interface FormFieldProps extends ComponentPropsWithoutRef<'div'> {
    * Label text rendered above the field.
    *
    * @remarks
-   * When used inside `<Form form={form}>`, this label is also the **error
-   * lookup key**: it's matched case-insensitively against `useForm`'s schema
-   * field names, so a field named `email` needs `label="Email"` or similar.
+   * When used inside `<Form form={form}>`, this label doubles as the field
+   * key unless {@link FormFieldProps.name} is set: it drives both value
+   * auto-wiring and error lookup (case-insensitive against schema names).
    */
   label?: string;
+  /**
+   * Field key for `<Form form={form}>` auto-wiring and error lookup.
+   * Falls back to the lowercased `label` when omitted.
+   */
+  name?: string;
   /** @default false */
   required?: boolean;
   /** Validation error message displayed below the field. */
@@ -156,11 +171,31 @@ export interface FormFieldProps extends ComponentPropsWithoutRef<'div'> {
   children?: React.ReactNode;
 }
 
-/** A labeled form field with validation error and help text support. */
+/** Controls whose flat state prop is `checked` (boolean) rather than `value`. */
+const BOOLEAN_CONTROLS = new Set(['Toggle', 'Checkbox']);
+
+/**
+ * A labeled form field with validation error and help text support.
+ *
+ * @remarks
+ * Inside `<Form form={form}>`, the single child control is **auto-wired**:
+ * its value, change handler, and blur-touched marking are injected from the
+ * form hook, keyed by `name` (or the lowercased label). Pass your own
+ * `value`/`onChange` on the child to opt out per-field.
+ *
+ * @example
+ * ```tsx
+ * const form = useForm({ schema, defaultValues: { email: '' } });
+ * <Form form={form}>
+ *   <Form.Field label="Email"><Input /></Form.Field>
+ * </Form>
+ * ```
+ */
 const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
   (
     {
       label,
+      name,
       required = false,
       error: explicitError,
       helpText,
@@ -175,20 +210,61 @@ const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
     const errorId = `${id}-error`;
     const helpId = `${id}-help`;
     const ctx = useFormContext();
-    const ctxError = label && ctx ? ctx.errors[label.toLowerCase()] : undefined;
+    const fieldName = name ?? (label ? label.toLowerCase() : undefined);
+    const ctxError = fieldName && ctx ? ctx.errors[fieldName] : undefined;
     const error = explicitError ?? ctxError;
 
     const child = Children.only(children);
+    const childProps = ((child as React.ReactElement).props ?? {}) as Record<
+      string,
+      unknown
+    >;
+
+    // Auto-wiring: inject controlled value/change/touched from the form hook.
+    const injected: Record<string, unknown> = {};
+    if (
+      ctx?.values &&
+      ctx.setValue &&
+      fieldName &&
+      childProps.value === undefined &&
+      childProps.checked === undefined &&
+      childProps.onChange === undefined
+    ) {
+      const wired = ctx.values[fieldName] ?? '';
+      injected.onChange = (v: unknown) => ctx.setValue!(fieldName, v);
+      const childType = (child as React.ReactElement).type as
+        | { displayName?: string }
+        | string;
+      const displayName =
+        typeof childType === 'string' ? undefined : childType.displayName;
+      if (BOOLEAN_CONTROLS.has(displayName ?? '')) {
+        injected.checked = Boolean(wired);
+      } else {
+        injected.value = wired;
+      }
+    }
+    if (ctx?.setTouched && fieldName) {
+      const userOnBlur = childProps.onBlur as
+        | ((...args: unknown[]) => void)
+        | undefined;
+      injected.onBlur = (...args: unknown[]) => {
+        ctx.setTouched(fieldName);
+        userOnBlur?.(...args);
+      };
+    }
+
     const childWithId = cloneElement(
       child as React.ReactElement<{
         id?: string;
         'aria-invalid'?: string;
         'aria-describedby'?: string;
+        [key: string]: unknown;
       }>,
       {
         id: fieldId,
         'aria-invalid': error ? 'true' : undefined,
         'aria-describedby': error ? errorId : helpText ? helpId : undefined,
+        ...injected,
       },
     );
 

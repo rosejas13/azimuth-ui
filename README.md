@@ -230,16 +230,16 @@ function Signup() {
 
 Repeated names and multi-selects arrive as arrays. Uncontrolled fields skip per-keystroke re-renders entirely, which is why it is the low-ceremony default for plain forms.
 
-**Hybrid (`useForm`)** — for schema validation with controlled ergonomics, `useForm` supplies `values`/`setValue`, zod-backed `errors` gated on touch, and a submit handler; `<Form form={form}>` wires error display to `Form.Field` automatically:
+**Hybrid (`useForm`)** — schema validation with controlled ergonomics, and **zero per-field wiring**: give each `Form.Field` a `name` (or rely on its label) and the field's value, change handler, and touched-marking are injected automatically. Pass your own `value`/`onChange` on any child to opt out:
 
 ```tsx
 const form = useForm({ schema: signupSchema, defaultValues: { email: '' }, onSubmit: signup });
 
 <Form form={form}>
-  {/* Form.Field resolves errors from its label, matching the schema key */}
-  <Form.Field label="email">
-    <Input value={form.values.email} onChange={(v) => form.setValue('email', v)} />
+  <Form.Field name="email">
+    <Input />
   </Form.Field>
+  <Button type="submit" disabled={!form.isValid || form.isSubmitting}>Sign up</Button>
 </Form>
 ```
 

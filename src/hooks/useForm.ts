@@ -98,11 +98,11 @@ function getFieldErrors<T>(
 /**
  * Controlled-form state: values, touch-gated zod validation, and submit handling.
  *
- * Inputs stay standard azimuth controlled components — you wire `value`/`onChange`
- * yourself — while the hook owns validation timing (quiet until touched), submit
- * gating, and dirty/reset bookkeeping.
+ * Inside `<Form form={form}>`, fields wire **themselves**: give `Form.Field`
+ * a `name` (or a label) and value/onChange/onBlur are injected automatically.
+ * Manual wiring stays available for custom behavior.
  *
- * @example Full wiring with `<Form>` and `<Form.Field>`
+ * @example Automatic wiring — zero per-field ceremony
  * ```tsx
  * const signupSchema = z.object({
  *   email: z.string().email('Enter a valid email'),
@@ -116,19 +116,27 @@ function getFieldErrors<T>(
  *   });
  *
  *   return (
- *     // <Form form={form}> routes submits through form.handleSubmit
- *     // and feeds form.errors to Form.Field
  *     <Form form={form}>
- *       // Form.Field resolves its error by matching label to schema key
- *       <Form.Field label="email" onBlur={() => form.setTouched('email')}>
- *         <Input value={form.values.email} onChange={(v) => form.setValue('email', v)} />
+ *       // Field key comes from name (or lowercased label); error + value
+ *       // wiring are injected; blur marks the field touched
+ *       <Form.Field name="email">
+ *         <Input />
  *       </Form.Field>
- *       <Button type="submit" disabled={!form.isValid || form.isSubmitting}>
+ *       <Button type="submit" disabled={form.isSubmitting}>
  *         {form.isSubmitting ? 'Signing up…' : 'Sign up'}
  *       </Button>
  *     </Form>
  *   );
  * }
+ * ```
+ *
+ * @example Manual wiring when you need it
+ * ```tsx
+ * <Input
+ *   value={form.values.email}
+ *   onChange={(v) => form.setValue('email', v)}
+ *   onBlur={() => form.setTouched('email')}
+ * />
  * ```
  *
  * @remarks
