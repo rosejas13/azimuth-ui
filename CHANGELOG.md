@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.11.5 (2026-08-25)
+
+### Features
+
+- **In-editor documentation.** `useForm` is now fully documented in-code — hook and interface docs with `@example` wiring, plus `@remarks` on the non-obvious behaviors: errors are touch-gated until blur or submit, a failed submit marks every field touched, and `Form.Field` resolves its error by matching its `label` to the schema key (case-insensitive). All of it surfaces in VSCode hover/IntelliSense via the shipped `.d.ts`.
+
+### Fixes
+
+- **`<Form form={form}>` now accepts concretely typed forms.** The prop was typed `UseFormReturn<Record<string, unknown>>`, so any real `useForm({ defaultValues: { email: '' } })` failed assignment. It takes `UseFormReturn<any>` at the boundary — your schema type stays intact on the hook for `values`/`setValue`.
+- New **WithUseForm** Storybook story: a runnable zod-validated signup form showing the complete wiring (schema → `useForm` → controlled inputs → `Form.Field` errors).
+
 ## 0.11.4 (2026-08-25)
 
 ### Features
