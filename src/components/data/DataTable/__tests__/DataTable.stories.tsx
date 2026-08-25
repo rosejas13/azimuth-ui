@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { DataTable } from '../DataTable';
-import type { Column } from '../DataTable';
+import type { DataTableColumn } from '../DataTable';
 
 const sampleData: Record<string, unknown>[] = [
   { name: 'Alice', email: 'alice@example.com', role: 'Engineer', active: true },
@@ -20,14 +20,14 @@ const defaultColumns = [
   { key: 'email', title: 'Email' },
   { key: 'role', title: 'Role' },
   { key: 'active', title: 'Active' },
-] as Column<unknown>[];
+] as DataTableColumn<unknown>[];
 
 const sortableColumns = [
   { key: 'name', title: 'Name', sortable: true },
   { key: 'email', title: 'Email', sortable: true },
   { key: 'role', title: 'Role', sortable: true },
   { key: 'active', title: 'Active', sortable: true },
-] as Column<unknown>[];
+] as DataTableColumn<unknown>[];
 
 const customColumns = [
   { key: 'name', title: 'Name', sortable: true },
@@ -57,7 +57,7 @@ const customColumns = [
       </span>
     ),
   },
-] as Column<unknown>[];
+] as DataTableColumn<unknown>[];
 
 const meta: Meta<typeof DataTable> = {
   title: 'Components/DataTable',

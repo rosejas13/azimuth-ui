@@ -7,12 +7,14 @@ type GridBreakpoint = 'base' | 'sm' | 'md' | 'lg' | 'xl';
 type GridCols = GridColsValue | Partial<Record<GridBreakpoint, GridColsValue>>;
 type GridAlign = 'start' | 'center' | 'end' | 'stretch';
 type GridVariant = 'auto' | 'highlight' | 'sidebar';
+type GridGap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 /** Props for the Grid layout component. */
 export interface GridProps extends ComponentPropsWithoutRef<'div'> {
   /** @default 'auto' */
   cols?: GridCols;
-  gap?: string;
+  /** Azimuth space token applied to the grid gap. */
+  gap?: GridGap;
   align?: GridAlign;
   /** @default 'auto' */
   variant?: GridVariant;

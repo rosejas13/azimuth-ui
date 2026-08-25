@@ -36,7 +36,7 @@ function App() {
 
 ## Features
 
-- **103 components**: 14 data, 44 display, 19 input, 4 layout, 5 navigation, 8 overlay, 9 sections
+- **109 components**: 14 data, 46 display, 19 input, 8 layout, 5 navigation, 8 overlay, 9 sections
 - **860 SVG icons**: Tree-shakeable React icon components (Font Awesome subset, regular + brands)
 - **ThemeProvider**: Single config controls every component's appearance
 - **CSS custom properties**: All styling via `--azimuth-*` tokens
@@ -55,23 +55,23 @@ function App() {
 
 ## Components
 
-All 103 components live under `src/components/` grouped by category.
+All 109 components live under `src/components/` grouped by category.
 
 ### Input (19)
 
 `AddressInput` `Button` `Checkbox` `Combobox` `DropdownList` `FileUpload` `Form` `Input` `InputGroup` `OTPInput` `PhoneInput` `QuantityStepper` `Radio` `Rating` `SearchBar` `Select` `Slider` `TextArea` `TextBox` `Toggle`
 
-### Display (44)
+### Display (46)
 
-`Accordion` `ActivityFeed` `Alert` `AspectRatio` `Avatar` `Badge` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `Cursor` `EmptyState` `ErrorBoundary` `ErrorPage` `FanMenu` `Icon` `IconButton` `ImageViewer` `InfoButton` `Kbd` `KPICard` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `NotificationBadge` `PageLayout` `PriceDisplay` `ProductCard` `ProgressBar` `ProgressSteps` `ResizablePanel` `ScrollArea` `SectionView` `SegmentedButton` `Skeleton` `SkipLink` `SplitButton` `Tag` `Text` `Toast` `VisuallyHidden`
+`Accordion` `ActivityFeed` `Alert` `AspectRatio` `Avatar` `Badge` `Card` `Carousel` `Chat` `Chip` `Clock` `CodeBlock` `Cursor` `DescriptionList` `EmptyState` `ErrorBoundary` `ErrorPage` `FanMenu` `Icon` `IconButton` `ImageViewer` `InfoButton` `Kbd` `KPICard` `Loader` `LoginSignup` `MapDisplay` `MediaPlayer` `Meter` `NotificationBadge` `PageLayout` `PriceDisplay` `ProductCard` `ProgressBar` `ProgressSteps` `ResizablePanel` `ScrollArea` `SectionView` `SegmentedButton` `Skeleton` `SkipLink` `SplitButton` `Tag` `Text` `Toast` `VisuallyHidden`
 
 ### Data (14)
 
 `Calendar` `ColorPicker` `DataFilterBar` `DataTable` `DatePicker` `DateRangePicker` `DateTimePicker` `DiffViewer` `List` `Pagination` `SimpleChart` `Table` `Timeline` `TreeList`
 
-### Layout (4)
+### Layout (8)
 
-`Container` `Divider` `Grid` `Stack`
+`Box` `Column` `Container` `Divider` `Grid` `Row` `Spacer` `Stack`
 
 ### Navigation (5)
 
@@ -190,6 +190,39 @@ Inputs follow flat prop conventions: `label`, `subtitle`, `error`, `required`, `
 ```
 
 With `labelPosition="inner"` the label renders inside the field box at the top-left — small and muted so it reads as a field caption distinct from the input text. The character counter (when `showCharCount`) follows it into the box.
+
+### Raw layout primitives
+
+`Row`, `Column`, `Box`, and `Spacer` are raw building blocks alongside `Stack`/`Grid`. `Row` is context-aware: anywhere it is a wrapping flex row with a token gap, but inside a `<Form>` its children share width evenly, align by their input boxes, and wrap on narrow screens.
+
+```tsx
+// Anywhere: a wrapping flex row
+<Row gap="md">
+  <Button>Cancel</Button>
+  <Button variant="primary">Save</Button>
+</Row>
+
+// Inside Form: fields in a shared row that collapses on mobile
+<Form>
+  <Row>
+    <Input label="City" />
+    <Input label="State" />
+    <Input label="ZIP" />
+  </Row>
+</Form>
+
+// Column is the vertical counterpart; Box is an unstyled surface with opt-in
+// token-driven padding/border/radius/background/shadow; Spacer fills free space.
+<Box border radius="md" background="surface" padding="lg" shadow="sm">
+  <Stack direction="horizontal" justify="between">
+    <Text weight="semibold">Storage</Text>
+    <Spacer />
+    <Meter value={82} low={20} high={80} showValue />
+  </Stack>
+</Box>
+```
+
+Choosing between them: `Stack`/`Grid` for content flow and responsive column layouts; `Row`/`Column` when you want the HTML mental model or form-row behavior; `Box` when `Card` carries too much opinion. Using them interchangeably is harmless — tree-shaking drops whatever you don't import. `DescriptionList` pairs semantic terms with descriptions (settings pages, spec sheets), and `Meter` renders a value within a known range (`role="meter"`) with threshold tones.
 
 ## Theme Config
 

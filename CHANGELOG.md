@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.11.2 (2026-08-25)
+
+### Features
+
+- **Raw layout primitives: `Row` and `Column`.** Flexbox building blocks with token gaps matching the HTML mental model. `Row` is context-aware: anywhere it is a wrapping flex row, but inside a `<Form>` its children share width evenly (`flex: 1 1 12rem`), align by their input boxes, and wrap on narrow screens — form fields in a shared row with zero configuration. An explicit `align` always wins over the form default.
+- **`Box` — the raw surface primitive.** A bare `<Box>` renders an unstyled element; every visual prop is opt-in and token-driven: `padding`/`paddingX`/`paddingY`, `border`, `radius`, `background`, `shadow`, plus polymorphic `as`.
+- **`Spacer`** — an aria-hidden flex-grow filler for pushing content apart in rows and toolbars.
+- **`DescriptionList`** — semantic term/description pairs (compound: `DescriptionList.Item`), term column collapsing on narrow screens, optional row separators.
+- **`Meter`** — a scalar gauge within a known range (`role="meter"` with full value ARIA), distinct from `ProgressBar`: threshold tones via `low`/`high`, optional `n/max` readout.
+
+### Breaking
+
+- **DataTable's column-definition type renamed `Column` → `DataTableColumn`.** The new layout component takes the `Column` name at the package root; module semantics allow only one binding per export. Migration: `import type { Column } from 'azimuth-ui'` → `import type { DataTableColumn }`.
+
+### Fixes
+
+- Audit remediation: previously unreachable public API is now exported from the package root (`useFormContext`, `InputConfigContext`/`InputConfigProvider`/`useInputConfig`, `LabelConfig`, `SelectOption`, `Text*` unions, Card sub-component prop types); dead category barrels removed; `Grid.gap` tightened from bare `string` to the spacing-token union; knip configured with the icon-generation script as an entry.
+- `Meter` guards against `min === max` division-by-zero when computing fill width.
+
 ## 0.11.1 (2026-08-21)
 
 ### Features

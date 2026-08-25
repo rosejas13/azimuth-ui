@@ -18,7 +18,7 @@ import { Table } from '@/components/data/Table';
 import styles from './DataTable.module.css';
 
 /** A single column definition for the DataTable component. */
-export interface Column<T> {
+export interface DataTableColumn<T> {
   key: string;
   title: string;
   /** @default false */
@@ -36,7 +36,7 @@ export interface Column<T> {
  * Supports sorting, search (with optional column selector), pagination,
  * custom cell rendering, inline editing, and row click handlers.
  *
- * **Column auto-detection:** When `columns` is not provided, columns are
+ * **DataTableColumn auto-detection:** When `columns` is not provided, columns are
  * generated automatically from the keys of the first data object. Each key becomes
  * a column with the title derived from the key (capitalized). Auto-generated
  * columns are searchable and sortable by default.
@@ -51,38 +51,41 @@ export interface Column<T> {
  * - `null` / `undefined` → empty cell
  * - All other types → `String(value)`
  */
-export interface DataTableProps<T> extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+export interface DataTableProps<T> extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'onChange'
+> {
   data: {
-    columns?: Column<T>[]
-    data?: T[]
-    emptyMessage?: string
+    columns?: DataTableColumn<T>[];
+    data?: T[];
+    emptyMessage?: string;
     edit?: {
-      enabled?: boolean
-      onEdit?: (row: T, index: number) => void
-    }
-  }
+      enabled?: boolean;
+      onEdit?: (row: T, index: number) => void;
+    };
+  };
   search?: {
-    enabled?: boolean
-    placeholder?: string
-    columns?: string[]
-    columnSelector?: boolean
-    onSearch?: (query: string) => void
-  }
+    enabled?: boolean;
+    placeholder?: string;
+    columns?: string[];
+    columnSelector?: boolean;
+    onSearch?: (query: string) => void;
+  };
   pagination?: {
-    pageSize?: number
-    defaultPageSize?: number
-    pageSizeOptions?: number[]
+    pageSize?: number;
+    defaultPageSize?: number;
+    pageSizeOptions?: number[];
     virtual?: {
-      enabled?: boolean
-      threshold?: number
-      maxHeight?: number
-    }
-  }
-  title?: string
-  actions?: React.ReactNode
-  loading?: boolean
-  error?: string
-  onRowClick?: (row: T, index: number) => void
+      enabled?: boolean;
+      threshold?: number;
+      maxHeight?: number;
+    };
+  };
+  title?: string;
+  actions?: React.ReactNode;
+  loading?: boolean;
+  error?: string;
+  onRowClick?: (row: T, index: number) => void;
 }
 
 type SortDirection = 'asc' | 'desc';
@@ -138,7 +141,7 @@ function DataTableInner<T>(
       placeholder: searchPlaceholder = 'Search...',
       columns: searchColumns,
       columnSelector: searchColumnSelector = false,
-      onSearch
+      onSearch,
     } = {},
     pagination: {
       pageSize: controlledPageSize,
@@ -147,7 +150,7 @@ function DataTableInner<T>(
       virtual: {
         enabled: virtualized,
         threshold: virtualizedThreshold = 100,
-        maxHeight: virtualizedMaxHeight = 400
+        maxHeight: virtualizedMaxHeight = 400,
       } = {},
     } = {},
     title,
@@ -180,7 +183,7 @@ function DataTableInner<T>(
     ? controlledPageSize
     : internalPageSize;
 
-  const resolvedColumns: Column<T>[] = useMemo(() => {
+  const resolvedColumns: DataTableColumn<T>[] = useMemo(() => {
     if (columns) return columns;
     if (!data || data.length === 0) return [];
     return Object.keys(data[0] as Record<string, unknown>).map((key) => ({
@@ -689,56 +692,57 @@ function DataTableInner<T>(
                       );
                     })()
                   : paginatedRows.map(({ row, index }, rowIndex) => (
-                    <Table.Row
-                      key={index}
-                      className={cn(onRowClick && styles.trClickable)}
-                      onClick={
-                        onRowClick ? () => handleRowClick(rowIndex) : undefined
-                      }
-                      onKeyDown={
-                        onRowClick
-                          ? (e) => {
-                              if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                handleRowClick(rowIndex);
+                      <Table.Row
+                        key={index}
+                        className={cn(onRowClick && styles.trClickable)}
+                        onClick={
+                          onRowClick
+                            ? () => handleRowClick(rowIndex)
+                            : undefined
+                        }
+                        onKeyDown={
+                          onRowClick
+                            ? (e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  handleRowClick(rowIndex);
+                                }
                               }
-                            }
-                          : undefined
-                      }
-                      tabIndex={onRowClick ? 0 : undefined}
-                      role={onRowClick ? 'button' : undefined}
-                    >
-                      {resolvedColumns.map((col) => (
-                        <Table.Cell key={col.key}>
-                          {col.render
-                            ? col.render(
-                                (row as Record<string, unknown>)[col.key],
-                                row,
-                                index,
-                              )
-                            : formatCellValue(
-                                (row as Record<string, unknown>)[col.key],
-                              )}
-                        </Table.Cell>
-                      ))}
-                      {editable && (
-                        <Table.Cell>
-                          <button
-                            type="button"
-                            className={styles.editBtn}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEdit(rowIndex);
-                            }}
-                            aria-label={`Edit row ${index + 1}`}
-                          >
-                            {'\u270E'}
-                          </button>
-                        </Table.Cell>
-                      )}
-                    </Table.Row>
-                  ),
-                )}
+                            : undefined
+                        }
+                        tabIndex={onRowClick ? 0 : undefined}
+                        role={onRowClick ? 'button' : undefined}
+                      >
+                        {resolvedColumns.map((col) => (
+                          <Table.Cell key={col.key}>
+                            {col.render
+                              ? col.render(
+                                  (row as Record<string, unknown>)[col.key],
+                                  row,
+                                  index,
+                                )
+                              : formatCellValue(
+                                  (row as Record<string, unknown>)[col.key],
+                                )}
+                          </Table.Cell>
+                        ))}
+                        {editable && (
+                          <Table.Cell>
+                            <button
+                              type="button"
+                              className={styles.editBtn}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEdit(rowIndex);
+                              }}
+                              aria-label={`Edit row ${index + 1}`}
+                            >
+                              {'\u270E'}
+                            </button>
+                          </Table.Cell>
+                        )}
+                      </Table.Row>
+                    ))}
               </Table.Body>
             </Table>
           </div>

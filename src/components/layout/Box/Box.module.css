@@ -1,0 +1,115 @@
+/* Padding (paddingX/paddingY declared after `padding` so side rules win by source order) */
+.paddingXs {
+  padding: var(--azimuth-space-xs);
+}
+.paddingSm {
+  padding: var(--azimuth-space-sm);
+}
+.paddingMd {
+  padding: var(--azimuth-space-md);
+}
+.paddingLg {
+  padding: var(--azimuth-space-lg);
+}
+.paddingXl {
+  padding: var(--azimuth-space-xl);
+}
+.padding2xl {
+  padding: var(--azimuth-space-2xl);
+}
+
+/* Horizontal padding overrides left/right of `padding` */
+.paddingXXs {
+  padding-left: var(--azimuth-space-xs);
+  padding-right: var(--azimuth-space-xs);
+}
+.paddingXSm {
+  padding-left: var(--azimuth-space-sm);
+  padding-right: var(--azimuth-space-sm);
+}
+.paddingXMd {
+  padding-left: var(--azimuth-space-md);
+  padding-right: var(--azimuth-space-md);
+}
+.paddingXLg {
+  padding-left: var(--azimuth-space-lg);
+  padding-right: var(--azimuth-space-lg);
+}
+.paddingXXl {
+  padding-left: var(--azimuth-space-xl);
+  padding-right: var(--azimuth-space-xl);
+}
+.paddingX2xl {
+  padding-left: var(--azimuth-space-2xl);
+  padding-right: var(--azimuth-space-2xl);
+}
+
+/* Vertical padding overrides top/bottom of `padding` */
+.paddingYXs {
+  padding-top: var(--azimuth-space-xs);
+  padding-bottom: var(--azimuth-space-xs);
+}
+.paddingYSm {
+  padding-top: var(--azimuth-space-sm);
+  padding-bottom: var(--azimuth-space-sm);
+}
+.paddingYMd {
+  padding-top: var(--azimuth-space-md);
+  padding-bottom: var(--azimuth-space-md);
+}
+.paddingYLg {
+  padding-top: var(--azimuth-space-lg);
+  padding-bottom: var(--azimuth-space-lg);
+}
+.paddingYXl {
+  padding-top: var(--azimuth-space-xl);
+  padding-bottom: var(--azimuth-space-xl);
+}
+.paddingY2xl {
+  padding-top: var(--azimuth-space-2xl);
+  padding-bottom: var(--azimuth-space-2xl);
+}
+
+/* Border */
+.border {
+  border: 1px solid var(--azimuth-color-border);
+}
+
+/* Radius */
+.radiusNone {
+  border-radius: var(--azimuth-radius-none);
+}
+.radiusSm {
+  border-radius: var(--azimuth-radius-sm);
+}
+.radiusMd {
+  border-radius: var(--azimuth-radius-md);
+}
+.radiusLg {
+  border-radius: var(--azimuth-radius-lg);
+}
+.radiusFull {
+  border-radius: var(--azimuth-radius-full);
+}
+
+/* Background */
+.bgSurface {
+  background: var(--azimuth-color-surface);
+}
+.bgSubtle {
+  background: var(--azimuth-color-surface-hover);
+}
+
+/* Shadow */
+.shadowSm {
+  box-shadow: var(--azimuth-shadow-sm);
+}
+.shadowMd {
+  box-shadow: var(--azimuth-shadow-md);
+}
+.shadowLg {
+  box-shadow: var(--azimuth-shadow-lg);
+}
+.shadowXl {
+  box-shadow: var(--azimuth-shadow-xl);
+}

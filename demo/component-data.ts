@@ -775,7 +775,7 @@ export const COMPONENT_DATA = [
       'A feature-rich data table with sorting, searching, pagination, and editable rows.',
     category: 'composite',
     features: [
-      'Column-based data display',
+      'DataTableColumn-based data display',
       'Client-side and server-side sorting',
       'Client-side and server-side search',
       'Pagination with configurable page size',
@@ -792,8 +792,8 @@ export const COMPONENT_DATA = [
       },
       {
         name: 'columns',
-        type: 'Column<T>[]',
-        description: 'Column definitions for the table',
+        type: 'DataTableColumn<T>[]',
+        description: 'DataTableColumn definitions for the table',
       },
       { name: 'data', type: 'T[]', description: 'Array of data rows' },
       {
@@ -2489,6 +2489,255 @@ export const COMPONENT_DATA = [
         description: 'Backdrop overlay color',
       },
       { name: '--azimuth-shadow-lg', description: 'Sheet shadow' },
+    ],
+  },
+  {
+    name: 'Row',
+    description:
+      'A horizontal flexbox row. Inside a Form, children share width evenly and align by their input boxes, wrapping on narrow screens.',
+    category: 'layout',
+    features: [
+      'Wrapping flex row with token gap',
+      'Context-aware field-row alignment inside Form',
+      'Explicit align overrides form default',
+    ],
+    variants: [],
+    props: [
+      {
+        name: 'gap',
+        type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'",
+        default: 'md',
+        description: 'The gap between row items',
+      },
+      {
+        name: 'align',
+        type: "'start' | 'center' | 'end' | 'stretch' | 'baseline'",
+        description: 'Cross-axis alignment; defaults to flex-end inside Form',
+      },
+      {
+        name: 'justify',
+        type: "'start' | 'center' | 'end' | 'between' | 'around'",
+        description: 'Main-axis distribution of row items',
+      },
+      {
+        name: 'wrap',
+        type: 'boolean',
+        default: 'true',
+        description: 'Whether row items wrap to the next line',
+      },
+    ],
+    cssVars: [
+      {
+        name: '--azimuth-color-border',
+        description: 'Divider color within groups',
+      },
+    ],
+  },
+  {
+    name: 'Column',
+    description:
+      'A vertical flexbox column with token gap — the raw counterpart to Row.',
+    category: 'layout',
+    features: [
+      'Vertical stacking with token gap',
+      'Cross-axis alignment',
+      'Main-axis distribution',
+    ],
+    variants: [],
+    props: [
+      {
+        name: 'gap',
+        type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'",
+        default: 'md',
+        description: 'The gap between column items',
+      },
+      {
+        name: 'align',
+        type: "'start' | 'center' | 'end' | 'stretch'",
+        description: 'Cross-axis alignment',
+      },
+      {
+        name: 'justify',
+        type: "'start' | 'center' | 'end' | 'between' | 'around'",
+        description: 'Main-axis distribution',
+      },
+    ],
+    cssVars: [],
+  },
+  {
+    name: 'Box',
+    description:
+      'A raw, unstyled surface primitive. Every visual prop is opt-in: padding, border, radius, background, shadow via azimuth tokens.',
+    category: 'layout',
+    features: [
+      'Polymorphic via as prop',
+      'Token-driven padding (all/X/Y)',
+      'Opt-in border, radius, background, elevation',
+      'Renders unstyled when bare',
+    ],
+    variants: [],
+    props: [
+      {
+        name: 'as',
+        type: 'keyof JSX.IntrinsicElements',
+        default: "'div'",
+        description: 'The HTML element to render',
+      },
+      {
+        name: 'padding',
+        type: 'spacing token',
+        description: 'Padding on all sides',
+      },
+      {
+        name: 'paddingX',
+        type: 'spacing token',
+        description: 'Horizontal padding; overrides padding sides',
+      },
+      {
+        name: 'paddingY',
+        type: 'spacing token',
+        description: 'Vertical padding; overrides padding sides',
+      },
+      {
+        name: 'border',
+        type: 'boolean',
+        default: 'false',
+        description: 'Show a 1px token-colored border',
+      },
+      {
+        name: 'radius',
+        type: "'none' | 'sm' | 'md' | 'lg' | 'full'",
+        description: 'Corner radius token',
+      },
+      {
+        name: 'background',
+        type: "'surface' | 'subtle'",
+        description: 'Background token',
+      },
+      {
+        name: 'shadow',
+        type: "'sm' | 'md' | 'lg' | 'xl'",
+        description: 'Elevation tier',
+      },
+    ],
+    cssVars: [],
+  },
+  {
+    name: 'Spacer',
+    description:
+      'An aria-hidden flex-grow filler for pushing content apart in rows, toolbars, and stacks.',
+    category: 'layout',
+    features: ['Axis-agnostic flex filler', 'Configurable grow factor'],
+    variants: [],
+    props: [
+      {
+        name: 'flex',
+        type: 'number',
+        default: '1',
+        description: 'The flex-grow factor',
+      },
+    ],
+    cssVars: [],
+  },
+  {
+    name: 'DescriptionList',
+    description:
+      'Semantic term/description pairs for settings pages and spec sheets. Compound component with DescriptionList.Item.',
+    category: 'display',
+    features: [
+      'Semantic dl/dt/dd markup',
+      'Term column collapses on narrow screens',
+      'Optional row separators',
+    ],
+    variants: [],
+    props: [
+      {
+        name: 'bordered',
+        type: 'boolean',
+        default: 'false',
+        description: 'Show separators between items',
+      },
+      {
+        name: 'Item.term',
+        type: 'string',
+        description: 'The term being described',
+      },
+      {
+        name: 'Item.children',
+        type: 'ReactNode',
+        description: 'The description content',
+      },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-border', description: 'Row separator color' },
+    ],
+  },
+  {
+    name: 'Meter',
+    description:
+      'A scalar gauge within a known range with threshold tones — distinct from ProgressBar, which tracks task completion.',
+    category: 'display',
+    features: [
+      'role="meter" with full value ARIA',
+      'ok / warn / critical threshold tones',
+      'Optional value readout (n/max)',
+    ],
+    variants: [],
+    props: [
+      {
+        name: 'value',
+        type: 'number',
+        description: 'Current measured value (clamped)',
+      },
+      {
+        name: 'min',
+        type: 'number',
+        default: '0',
+        description: 'Range minimum',
+      },
+      {
+        name: 'max',
+        type: 'number',
+        default: '100',
+        description: 'Range maximum',
+      },
+      {
+        name: 'label',
+        type: 'string',
+        description: 'Accessible name for the meter',
+      },
+      {
+        name: 'showValue',
+        type: 'boolean',
+        default: 'false',
+        description: 'Render an n/max readout',
+      },
+      {
+        name: 'low',
+        type: 'number',
+        description: 'At or below renders critical tone',
+      },
+      {
+        name: 'high',
+        type: 'number',
+        description: 'At or above renders warn tone',
+      },
+      {
+        name: 'optimum',
+        type: 'number',
+        description: 'Informational hint mirroring native meter',
+      },
+    ],
+    cssVars: [
+      { name: '--azimuth-color-primary', description: 'Fill color in ok tone' },
+      {
+        name: '--azimuth-color-warning-text',
+        description: 'Fill color in warn tone',
+      },
+      {
+        name: '--azimuth-color-error-text',
+        description: 'Fill color in critical tone',
+      },
     ],
   },
   {

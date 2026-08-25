@@ -40,16 +40,23 @@ export { IconButton } from './components/display/IconButton';
 export type { IconButtonProps } from './components/display/IconButton';
 
 export { Input } from './components/input/Input';
-export type { InputProps } from './components/input/Input';
+export type { InputProps, LabelConfig } from './components/input/Input';
 
 export { Radio } from './components/input/Radio';
 export type { RadioProps } from './components/input/Radio';
 
 export { Select } from './components/input/Select';
-export type { SelectProps } from './components/input/Select';
+export type { SelectProps, SelectOption } from './components/input/Select';
 
 export { Text } from './components/display/Text';
-export type { TextProps } from './components/display/Text';
+export type {
+  TextProps,
+  TextSize,
+  TextWeight,
+  TextColor,
+  TextAlign,
+  TextVariant,
+} from './components/display/Text';
 
 export { Toggle } from './components/input/Toggle';
 export type { ToggleProps } from './components/input/Toggle';
@@ -65,6 +72,18 @@ export type { GridProps } from './components/layout/Grid';
 
 export { Stack } from './components/layout/Stack';
 export type { StackProps } from './components/layout/Stack';
+
+export { Row } from './components/layout/Row';
+export type { RowProps } from './components/layout/Row';
+
+export { Column } from './components/layout/Column';
+export type { ColumnProps } from './components/layout/Column';
+
+export { Box } from './components/layout/Box';
+export type { BoxProps } from './components/layout/Box';
+
+export { Spacer } from './components/layout/Spacer';
+export type { SpacerProps } from './components/layout/Spacer';
 
 export { Accordion } from './components/display/Accordion';
 export type {
@@ -98,6 +117,9 @@ export type {
   CardProps,
   CardHeaderProps,
   CardFooterProps,
+  CardTitleProps,
+  CardDescriptionProps,
+  CardContentProps,
 } from './components/display/Card';
 
 export { Carousel } from './components/display/Carousel';
@@ -128,7 +150,10 @@ export { Cursor, useCursor } from './components/display/Cursor';
 export type { CursorProps } from './components/display/Cursor';
 
 export { DataTable } from './components/data/DataTable';
-export type { DataTableProps, Column } from './components/data/DataTable';
+export type {
+  DataTableProps,
+  DataTableColumn,
+} from './components/data/DataTable';
 
 export { DateTimePicker } from './components/data/DateTimePicker';
 export type { DateTimePickerProps } from './components/data/DateTimePicker';
@@ -163,8 +188,15 @@ export type { FanMenuProps, FanMenuOption } from './components/display/FanMenu';
 export { Flyout } from './components/overlay/Flyout';
 export type { FlyoutProps } from './components/overlay/Flyout';
 
-export { Form } from './components/input/Form';
+export { Form, useFormContext } from './components/input/Form';
 export type { FormProps, FormFieldProps } from './components/input/Form';
+
+export {
+  InputConfigContext,
+  InputConfigProvider,
+  useInputConfig,
+} from './components/input/input-config';
+export type { InputConfig } from './components/input/input-config';
 
 export { InputGroup } from './components/input/InputGroup';
 export type { InputGroupProps } from './components/input/InputGroup';
@@ -217,6 +249,18 @@ export type { PaginationProps } from './components/data/Pagination';
 
 export { ProgressBar } from './components/display/ProgressBar';
 export type { ProgressBarProps } from './components/display/ProgressBar';
+
+export {
+  DescriptionList,
+  DescriptionListItem,
+} from './components/display/DescriptionList';
+export type {
+  DescriptionListProps,
+  DescriptionListItemProps,
+} from './components/display/DescriptionList';
+
+export { Meter } from './components/display/Meter';
+export type { MeterProps } from './components/display/Meter';
 
 export { Rating } from './components/input/Rating';
 export type { RatingProps } from './components/input/Rating';

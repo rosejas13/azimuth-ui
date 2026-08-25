@@ -97,7 +97,7 @@ const FormRoot = forwardRef<HTMLFormElement, FormProps>(
       : null;
 
     const config = useMemo(
-      () => ({ size, labelPosition }),
+      () => ({ size, labelPosition, inForm: true as const }),
       [size, labelPosition],
     );
 

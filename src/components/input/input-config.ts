@@ -6,6 +6,8 @@ import { createContext, useContext } from 'react';
 export interface InputConfig {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   labelPosition?: 'top' | 'left' | 'inner';
+  /** Internal marker set by `<Form>`; lets Row apply field-row alignment. */
+  inForm?: true;
 }
 
 export const InputConfigContext = createContext<InputConfig>({});

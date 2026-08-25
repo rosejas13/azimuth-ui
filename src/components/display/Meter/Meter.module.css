@@ -1,0 +1,47 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--azimuth-space-sm);
+  width: 100%;
+}
+
+.meter {
+  flex: 1;
+  min-width: 0;
+}
+
+.track {
+  height: 8px;
+  background: var(--azimuth-color-surface-hover);
+  border-radius: var(--azimuth-radius-md);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--azimuth-radius-md);
+  background: var(--azimuth-color-primary);
+  transition: width var(--azimuth-transition-base);
+}
+
+.warn .fill {
+  background: var(--azimuth-color-warning-text);
+}
+
+.critical .fill {
+  background: var(--azimuth-color-error-text);
+}
+
+.value {
+  font-family: var(
+    --azimuth-font-mono,
+    ui-monospace,
+    'Cascadia Code',
+    'Fira Code',
+    monospace
+  );
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}

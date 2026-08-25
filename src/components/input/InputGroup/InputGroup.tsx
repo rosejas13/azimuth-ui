@@ -26,8 +26,9 @@ export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
       () => ({
         size: size ?? parent.size,
         labelPosition: labelPosition ?? parent.labelPosition,
+        inForm: parent.inForm,
       }),
-      [size, labelPosition, parent.size, parent.labelPosition],
+      [size, labelPosition, parent.size, parent.labelPosition, parent.inForm],
     );
 
     return (

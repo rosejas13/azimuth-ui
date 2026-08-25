@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { DataTable } from '../DataTable';
-import type { Column } from '../DataTable';
+import type { DataTableColumn } from '../DataTable';
 
 interface TestRow {
   id: number;
@@ -10,7 +10,7 @@ interface TestRow {
   email: string;
 }
 
-const DEFAULT_COLUMNS: Column<TestRow>[] = [
+const DEFAULT_COLUMNS: DataTableColumn<TestRow>[] = [
   { key: 'id', title: 'ID' },
   { key: 'name', title: 'Name', sortable: true, searchable: true },
   { key: 'email', title: 'Email', sortable: true },
@@ -24,7 +24,9 @@ const DEFAULT_DATA: TestRow[] = [
 
 describe('DataTable', () => {
   it('renders columns and data', () => {
-    render(<DataTable data={{ columns: DEFAULT_COLUMNS, data: DEFAULT_DATA }} />);
+    render(
+      <DataTable data={{ columns: DEFAULT_COLUMNS, data: DEFAULT_DATA }} />,
+    );
 
     expect(screen.getByText('ID')).toBeInTheDocument();
     expect(screen.getByText('Name')).toBeInTheDocument();
@@ -38,7 +40,11 @@ describe('DataTable', () => {
   it('renders empty state when data is empty', () => {
     render(
       <DataTable
-        data={{ columns: DEFAULT_COLUMNS, data: [], emptyMessage: 'Nothing to show' }}
+        data={{
+          columns: DEFAULT_COLUMNS,
+          data: [],
+          emptyMessage: 'Nothing to show',
+        }}
       />,
     );
 
@@ -76,7 +82,9 @@ describe('DataTable', () => {
     );
 
     expect(screen.getByText('Users')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Add User' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Add User' }),
+    ).toBeInTheDocument();
   });
 
   it('applies custom className', () => {
@@ -102,8 +110,9 @@ describe('DataTable', () => {
 
     await user.click(nameHeader);
 
-    const rows = within(screen.getByRole('table').querySelector('tbody')!)
-      .getAllByRole('row');
+    const rows = within(
+      screen.getByRole('table').querySelector('tbody')!,
+    ).getAllByRole('row');
     const firstRowName = within(rows[0]).getByText('Alice');
     expect(firstRowName).toBeInTheDocument();
   });
@@ -198,7 +207,11 @@ describe('DataTable', () => {
 
     render(
       <DataTable
-        data={{ columns: DEFAULT_COLUMNS, data: DEFAULT_DATA, edit: { enabled: true, onEdit } }}
+        data={{
+          columns: DEFAULT_COLUMNS,
+          data: DEFAULT_DATA,
+          edit: { enabled: true, onEdit },
+        }}
       />,
     );
 
@@ -217,9 +230,7 @@ describe('DataTable', () => {
       <DataTable data={{ columns: DEFAULT_COLUMNS, data: DEFAULT_DATA }} />,
     );
 
-    expect(
-      screen.queryByRole('button', { name: /Edit row/ }),
-    ).toBeNull();
+    expect(screen.queryByRole('button', { name: /Edit row/ })).toBeNull();
   });
 
   it('calls onRowClick when row is clicked', async () => {
@@ -336,7 +347,9 @@ describe('DataTable', () => {
   });
 
   it('uses column header scope attributes', () => {
-    render(<DataTable data={{ columns: DEFAULT_COLUMNS, data: DEFAULT_DATA }} />);
+    render(
+      <DataTable data={{ columns: DEFAULT_COLUMNS, data: DEFAULT_DATA }} />,
+    );
 
     const headers = screen.getAllByRole('columnheader');
     for (const header of headers) {
@@ -436,7 +449,12 @@ describe('DataTable', () => {
         name: `User ${i + 1}`,
         email: `user${i + 1}@example.com`,
       }));
-      render(<DataTable data={{ columns: DEFAULT_COLUMNS, data }} pagination={{ virtual: { enabled: true } }} />);
+      render(
+        <DataTable
+          data={{ columns: DEFAULT_COLUMNS, data }}
+          pagination={{ virtual: { enabled: true } }}
+        />,
+      );
       expect(screen.getByText('User 1')).toBeInTheDocument();
       expect(screen.getByText('User 10')).toBeInTheDocument();
     });
@@ -447,7 +465,12 @@ describe('DataTable', () => {
         name: `User ${i + 1}`,
         email: `user${i + 1}@example.com`,
       }));
-      render(<DataTable data={{ columns: DEFAULT_COLUMNS, data }} pagination={{ virtual: { enabled: true } }} />);
+      render(
+        <DataTable
+          data={{ columns: DEFAULT_COLUMNS, data }}
+          pagination={{ virtual: { enabled: true } }}
+        />,
+      );
       expect(screen.getByText(/150 results/)).toBeInTheDocument();
     });
 
@@ -473,7 +496,12 @@ describe('DataTable', () => {
         name: `User ${String(150 - i).padStart(3, '0')}`,
         email: `user${i + 1}@example.com`,
       }));
-      render(<DataTable data={{ columns: DEFAULT_COLUMNS, data }} pagination={{ virtual: { enabled: true } }} />);
+      render(
+        <DataTable
+          data={{ columns: DEFAULT_COLUMNS, data }}
+          pagination={{ virtual: { enabled: true } }}
+        />,
+      );
       const nameHeader = screen.getByRole('columnheader', { name: /Name/ });
       await user.click(nameHeader);
       expect(nameHeader).toHaveAttribute('aria-sort', 'ascending');
