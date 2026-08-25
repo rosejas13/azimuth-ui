@@ -452,6 +452,12 @@ export const COMPONENT_DATA = [
     variants: [],
     props: [
       {
+        name: 'title',
+        type: 'string',
+        description:
+          'Title rendered as a styled heading in the header row; ignored when header is set',
+      },
+      {
         name: 'header',
         type: 'ReactNode',
         description: 'Header content rendered above the body',

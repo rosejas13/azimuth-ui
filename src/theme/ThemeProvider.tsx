@@ -54,6 +54,14 @@ const SPACING_MAP = {
   },
 } as const;
 
+/** Maps cardPadding presets to the --azimuth-card-padding token. */
+const CARD_PADDING_MAP = {
+  none: '0',
+  compact: 'var(--azimuth-space-sm)',
+  normal: 'var(--azimuth-space-md)',
+  spacious: 'var(--azimuth-space-lg)',
+} as const;
+
 const MOTION_MAP = {
   snappy: 'cubic-bezier(0.16, 1, 0.3, 1)',
   smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
@@ -195,6 +203,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
       flat: c.flat,
       elevation: c.elevation,
       spacing: c.spacing,
+      cardPadding: c.cardPadding,
       animations: c.animations,
       motion: c.motion,
       mode: c.mode,
@@ -209,6 +218,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     const c: Required<ThemeConfig> = { ...DEFAULT_THEME, ...config };
     const radii = RADIUS_MAP[c.borderRadius];
     const spaces = SPACING_MAP[c.spacing];
+    const cardPadding = CARD_PADDING_MAP[c.cardPadding];
     const ease = MOTION_MAP[c.motion];
     const elevation = c.flat ? 'flat' : c.elevation;
     const shadows = SHADOW_MAP[elevation];
@@ -232,6 +242,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
       --azimuth-space-2xl: ${spaces['2xl']};
       --azimuth-space-3xl: ${spaces['3xl']};
       --azimuth-space-4xl: ${spaces['4xl']};
+      --azimuth-card-padding: ${cardPadding};
       --azimuth-font-display: ${c.fontDisplay};
       --azimuth-font-body: ${c.fontBody};
       --azimuth-ease: ${ease};

@@ -183,3 +183,52 @@ describe('CSS structure', () => {
     expect(body?.className).not.toContain('collapsed');
   });
 });
+
+describe('Card title prop and collapsed visibility', () => {
+  it('renders title as a styled heading in the header row', () => {
+    render(<Card title="Project Alpha">Body</Card>);
+    const heading = screen.getByRole('heading', { name: 'Project Alpha' });
+    expect(heading.tagName).toBe('H3');
+  });
+
+  it('header node takes precedence over title when both are set', () => {
+    render(
+      <Card title="Ignored" header={<span>Custom Header</span>}>
+        Body
+      </Card>,
+    );
+    expect(screen.getByText('Custom Header')).toBeInTheDocument();
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+  });
+
+  it('title coexists with the expandable toggle', async () => {
+    const user = userEvent.setup();
+    render(
+      <Card title="Collapsible" expandable defaultExpanded>
+        Content
+      </Card>,
+    );
+    expect(
+      screen.getByRole('heading', { name: 'Collapsible' }),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole('button'));
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
+  });
+
+  it('collapsed body is aria-hidden; expanded body is not', async () => {
+    const user = userEvent.setup();
+    render(
+      <Card expandable defaultExpanded={false}>
+        Hidden
+      </Card>,
+    );
+    const button = screen.getByRole('button');
+    const body = document.getElementById(button.getAttribute('aria-controls')!);
+    expect(body).toHaveAttribute('aria-hidden', 'true');
+    await user.click(button);
+    expect(body).not.toHaveAttribute('aria-hidden');
+  });
+});

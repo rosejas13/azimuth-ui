@@ -41,7 +41,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--azimuth-space-md);
+  padding: var(--azimuth-card-padding, var(--azimuth-space-md));
   border-bottom: 1px solid var(--azimuth-color-border);
   font-weight: 600;
   font-size: var(--azimuth-fs-base);
@@ -89,7 +89,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: var(--azimuth-space-md);
+  padding: var(--azimuth-card-padding, var(--azimuth-space-md));
   color: var(--azimuth-color-text);
   font-family: var(--azimuth-font-body, system-ui, sans-serif);
   font-size: var(--azimuth-fs-sm);
@@ -97,17 +97,33 @@
   transition:
     max-height var(--azimuth-transition-base),
     opacity var(--azimuth-transition-fast),
-    padding var(--azimuth-transition-base);
+    padding var(--azimuth-transition-base),
+    visibility 0s;
   max-height: 2000px;
   opacity: 1;
+
+  /* Overflow stays visible while expanded so in-card dropdowns and
+     suggestion popovers are not clipped by the collapse container. */
   overflow: visible;
 }
 
 .collapsed {
   max-height: 0;
   opacity: 0;
+
+  /* visibility removes collapsed content from painting, hit-testing, and
+     the accessibility tree — previously it kept rendering over whatever
+     followed the card. The delayed visibility transition lets the fade-out
+     finish before hiding; on expand, .body's 0s delay shows it instantly. */
+  visibility: hidden;
+  overflow: hidden;
   padding-top: 0;
   padding-bottom: 0;
+  transition:
+    max-height var(--azimuth-transition-base),
+    opacity var(--azimuth-transition-fast),
+    padding var(--azimuth-transition-base),
+    visibility 0s linear var(--azimuth-transition-base);
 }
 
 .body:first-child {
@@ -125,7 +141,7 @@
 }
 
 .footer {
-  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  padding: var(--azimuth-card-padding, var(--azimuth-space-md));
   border-top: 1px solid var(--azimuth-color-border);
   background: var(--azimuth-color-primary-subtle);
   color: var(--azimuth-color-text-secondary);
@@ -157,7 +173,7 @@
 }
 
 .content {
-  padding: var(--azimuth-space-md);
+  padding: var(--azimuth-card-padding, var(--azimuth-space-md));
   font-family: var(--azimuth-font-body, system-ui, sans-serif);
   color: var(--azimuth-color-text);
 }

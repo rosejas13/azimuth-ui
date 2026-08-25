@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.11.7 (2026-08-25)
+
+### Features
+
+- **`Card` gains a `title` prop.** Renders as a styled heading in the header row — `<Card title="Project Alpha">` now just works. A custom `header` node still takes precedence when both are set.
+- **ThemeProvider `cardPadding` config.** New `cardPadding?: 'none' | 'compact' | 'normal' | 'spacious'` (default `normal`) emits `--azimuth-card-padding`, consumed by Card's header, body, footer, and content areas. Per-surface density without touching the global spacing scale.
+
+### Fixes
+
+- **Collapsed card bodies no longer overlay neighboring content.** The collapse animation kept `overflow: visible` on the zero-height body, so hidden content kept painting over whatever followed the card. Collapsed bodies are now `visibility: hidden; overflow: hidden` (also removed from the accessibility tree and hit-testing), with `aria-hidden` synced in markup and the fade-out preserved via a delayed visibility transition.
+
 ## 0.11.6 (2026-08-25)
 
 ### Features

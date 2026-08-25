@@ -31,6 +31,8 @@ export interface ThemeConfig {
   elevation?: Elevation;
   /** Spacing density preset. @default 'normal' */
   spacing?: Spacing;
+  /** Inner padding for card surfaces (header, body, footer, content). Emitted as `--azimuth-card-padding`. @default 'normal' */
+  cardPadding?: 'none' | Spacing;
   /** Enable animation and transition styles. @default true */
   animations?: boolean;
   /** Motion easing preset. @default 'snappy' */
@@ -50,6 +52,7 @@ export interface ThemeTokens {
   flat: boolean;
   elevation: Elevation;
   spacing: Spacing;
+  cardPadding: 'none' | Spacing;
   animations: boolean;
   motion: Motion;
   mode: ColorMode;
@@ -67,6 +70,7 @@ export const DEFAULT_THEME: Required<ThemeConfig> = {
   flat: false,
   elevation: 'raised',
   spacing: 'normal',
+  cardPadding: 'normal',
   animations: true,
   motion: 'snappy',
   mode: 'system',

@@ -11,7 +11,13 @@ import styles from './Card.module.css';
 
 /** A flexible card container with header, collapsible body, footer, title, description, and content sub-components. */
 export interface CardProps extends ComponentPropsWithoutRef<'div'> {
+  /** Custom header node. Takes precedence over {@link CardProps.title} when both are set. */
   header?: React.ReactNode;
+  /**
+   * Title rendered as a styled heading in the card header row.
+   * Ignored when `header` is provided.
+   */
+  title?: string;
   footer?: React.ReactNode;
   /** @default false */
   expandable?: boolean;
@@ -29,6 +35,7 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
   (
     {
       header,
+      title,
       footer,
       expandable = false,
       defaultExpanded = true,
@@ -54,9 +61,15 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
         )}
         {...props}
       >
-        {(header || expandable) && (
+        {(header || title || expandable) && (
           <div className={styles.header}>
-            {header && <span className={styles.headerContent}>{header}</span>}
+            {!header && title ? (
+              <h3 className={cn(styles.title, styles.headerContent)}>
+                {title}
+              </h3>
+            ) : (
+              header && <span className={styles.headerContent}>{header}</span>
+            )}
             {expandable && (
               <button
                 type="button"
@@ -72,6 +85,7 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
         )}
         <div
           id={bodyId}
+          aria-hidden={!expanded || undefined}
           className={cn(styles.body, !expanded && styles.collapsed)}
         >
           {children}

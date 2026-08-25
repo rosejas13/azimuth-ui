@@ -185,3 +185,41 @@ describe('ThemeProvider base-styles warning', () => {
     vi.unstubAllGlobals();
   });
 });
+
+describe('cardPadding token', () => {
+  it('defaults to --azimuth-space-md (normal)', () => {
+    render(
+      <ThemeProvider>
+        <div>x</div>
+      </ThemeProvider>,
+    );
+    expect(injectedToken('--azimuth-card-padding')).toBe(
+      'var(--azimuth-space-md)',
+    );
+  });
+
+  it('maps none/compact/spacious presets', () => {
+    const { rerender } = render(
+      <ThemeProvider config={{ cardPadding: 'none' }}>
+        <div>x</div>
+      </ThemeProvider>,
+    );
+    expect(injectedToken('--azimuth-card-padding')).toBe('0');
+    rerender(
+      <ThemeProvider config={{ cardPadding: 'compact' }}>
+        <div>x</div>
+      </ThemeProvider>,
+    );
+    expect(injectedToken('--azimuth-card-padding')).toBe(
+      'var(--azimuth-space-sm)',
+    );
+    rerender(
+      <ThemeProvider config={{ cardPadding: 'spacious' }}>
+        <div>x</div>
+      </ThemeProvider>,
+    );
+    expect(injectedToken('--azimuth-card-padding')).toBe(
+      'var(--azimuth-space-lg)',
+    );
+  });
+});

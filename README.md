@@ -288,6 +288,7 @@ interface ThemeConfig {
   flat?: boolean; // true = no shadows
   elevation?: 'flat' | 'raised' | 'floating';
   spacing?: 'compact' | 'normal' | 'spacious';
+  cardPadding?: 'none' | 'compact' | 'normal' | 'spacious';
   animations?: boolean;
   motion?: 'snappy' | 'smooth' | 'reduced';
   mode?: 'light' | 'dark' | 'system';
