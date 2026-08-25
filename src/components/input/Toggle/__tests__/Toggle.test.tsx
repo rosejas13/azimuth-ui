@@ -71,7 +71,9 @@ describe('Toggle', () => {
   it('respects controlled checked prop', async () => {
     const handleChange = vi.fn();
     const user = userEvent.setup();
-    const { rerender } = render(<Toggle checked={false} onChange={handleChange} />);
+    const { rerender } = render(
+      <Toggle checked={false} onChange={handleChange} />,
+    );
     const toggle = screen.getByRole('switch');
     await user.click(toggle);
     expect(toggle).not.toBeChecked();
@@ -84,5 +86,28 @@ describe('Toggle', () => {
     expect(screen.getByRole('switch')).toHaveAttribute('aria-checked', 'true');
     rerender(<Toggle key="2" />);
     expect(screen.getByRole('switch')).toHaveAttribute('aria-checked', 'false');
+  });
+});
+
+describe('Toggle (flat checked API)', () => {
+  it('calls onChange with the new boolean state', async () => {
+    const handleChange = vi.fn();
+    const user = userEvent.setup();
+    render(<Toggle label="Notify" onChange={handleChange} />);
+    await user.click(screen.getByRole('switch'));
+    expect(handleChange).toHaveBeenCalledWith(true);
+    await user.click(screen.getByRole('switch'));
+    expect(handleChange).toHaveBeenLastCalledWith(false);
+  });
+
+  it('generates unique ids for toggles sharing a label', () => {
+    render(
+      <>
+        <Toggle label="Subscribe" />
+        <Toggle label="Subscribe" />
+      </>,
+    );
+    const [a, b] = screen.getAllByRole('switch').map((el) => el.id);
+    expect(a).not.toBe(b);
   });
 });

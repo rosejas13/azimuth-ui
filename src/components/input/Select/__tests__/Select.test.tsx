@@ -69,3 +69,39 @@ describe('Select', () => {
     expect(screen.getByRole('combobox')).toHaveValue('1');
   });
 });
+
+describe('Select (multiple)', () => {
+  it('fires onChange with the full array of selected values', async () => {
+    const handleChange = vi.fn();
+    const user = userEvent.setup();
+    render(<Select options={options} multiple onChange={handleChange} />);
+    await user.selectOptions(screen.getByRole('listbox'), ['1', '2']);
+    expect(handleChange).toHaveBeenCalledTimes(2);
+    expect(handleChange).toHaveBeenLastCalledWith(['1', '2']);
+  });
+
+  it('reflects a controlled array value', () => {
+    const { rerender } = render(
+      <Select options={options} multiple value={['1']} onChange={() => {}} />,
+    );
+    const selectedOf = () =>
+      screen
+        .getAllByRole('option', { selected: true })
+        .map((opt) => opt.getAttribute('value'));
+    expect(selectedOf()).toEqual(['1']);
+    rerender(
+      <Select
+        options={options}
+        multiple
+        value={['1', '2']}
+        onChange={() => {}}
+      />,
+    );
+    expect(selectedOf()).toEqual(['1', '2']);
+  });
+
+  it('renders a listbox role when multiple', () => {
+    render(<Select options={options} multiple />);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+  });
+});

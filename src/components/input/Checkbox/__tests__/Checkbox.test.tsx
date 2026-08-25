@@ -70,3 +70,26 @@ describe('Checkbox', () => {
     expect((checkbox as HTMLInputElement).indeterminate).toBe(true);
   });
 });
+
+describe('Checkbox (flat checked API)', () => {
+  it('calls onChange with the new boolean state', async () => {
+    const handleChange = vi.fn();
+    const user = userEvent.setup();
+    render(<Checkbox label="Accept" onChange={handleChange} />);
+    await user.click(screen.getByRole('checkbox'));
+    expect(handleChange).toHaveBeenCalledWith(true);
+    await user.click(screen.getByRole('checkbox'));
+    expect(handleChange).toHaveBeenLastCalledWith(false);
+  });
+
+  it('generates unique ids for checkboxes sharing a label', () => {
+    render(
+      <>
+        <Checkbox label="Same" />
+        <Checkbox label="Same" />
+      </>,
+    );
+    const [a, b] = screen.getAllByRole('checkbox').map((el) => el.id);
+    expect(a).not.toBe(b);
+  });
+});

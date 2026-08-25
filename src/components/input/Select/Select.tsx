@@ -19,16 +19,10 @@ export interface SelectOption {
   disabled?: boolean;
 }
 
-/** A native select element with label, validation, and custom chevron styling. */
-export interface SelectProps {
+/** Shared surface for both Select modes. */
+interface SelectBaseProps {
   /** The options to render inside the native `<select>`. */
   options: SelectOption[];
-  /** Controlled value. Pair with `onChange`. When omitted the select is uncontrolled. */
-  value?: string;
-  /** Initial value for an uncontrolled select. Ignored while `value` is set. */
-  defaultValue?: string;
-  /** Called with the selected value on change. */
-  onChange?: (value: string) => void;
   /** @default false */
   disabled?: boolean;
   /** @default false */
@@ -43,14 +37,13 @@ export interface SelectProps {
   /** @default 'md' */
   size?: 'sm' | 'md' | 'lg' | 'xl';
 
-  /** Disabled placeholder option rendered first, e.g. "Choose...". */
+  /** Disabled placeholder option rendered first, e.g. "Choose...". Single-select only. */
   placeholder?: string;
 
   // Curated native attributes. Anything not listed here goes through `selectProps`.
   id?: string;
   name?: string;
   autoFocus?: boolean;
-  multiple?: boolean;
   tabIndex?: number;
   style?: CSSProperties;
   'data-testid'?: string;
@@ -68,9 +61,41 @@ export interface SelectProps {
   className?: string;
 }
 
+/** Single-select mode: `value` and `onChange` carry one string. */
+export interface SelectSingleProps extends SelectBaseProps {
+  multiple?: false;
+  /** Controlled selected value. Pair with `onChange`. When omitted the select is uncontrolled. */
+  value?: string;
+  /** Initial value for an uncontrolled select. Ignored while `value` is set. */
+  defaultValue?: string;
+  /** Called with the selected value on change. */
+  onChange?: (value: string) => void;
+}
+
+/** Multi-select mode (`multiple`): `value` and `onChange` carry arrays of selected values, in selection order. */
+export interface SelectMultipleProps extends SelectBaseProps {
+  multiple: true;
+  /** Controlled array of selected values. Pair with `onChange`. When omitted the select is uncontrolled. */
+  value?: string[];
+  /** Initial array of selected values for an uncontrolled select. Ignored while `value` is set. */
+  defaultValue?: string[];
+  /** Called with the full array of selected values on change. */
+  onChange?: (value: string[]) => void;
+}
+
+/** A native select element with label, validation, and custom chevron styling. */
+export type SelectProps = SelectSingleProps | SelectMultipleProps;
+
+type SelectImplProps = SelectBaseProps & {
+  multiple?: boolean;
+  value?: string | string[];
+  defaultValue?: string | string[];
+  onChange?: (value: never) => void;
+};
+
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  (
-    {
+  function Select(props, ref) {
+    const {
       options,
       value,
       defaultValue,
@@ -85,39 +110,48 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       className,
       id,
       selectProps,
-      ...props
-    },
-    ref,
-  ) => {
+      ...rest
+    } = props as SelectImplProps;
+    const { multiple } = rest;
     const { size: configSize } = useInputConfig();
     const resolvedSize = size ?? configSize ?? 'md';
     const generatedId = useId();
     const fieldId = id || generatedId;
+    const hasHeader = Boolean(label) || Boolean(subtitle);
+    const hasFooter = Boolean(error);
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLSelectElement>) => {
-        onChange?.(e.target.value);
+        if (multiple) {
+          onChange?.(
+            Array.from(e.target.selectedOptions, (opt) => opt.value) as never,
+          );
+        } else {
+          onChange?.(e.target.value as never);
+        }
       },
-      [onChange],
+      [onChange, multiple],
     );
 
     return (
       <div className={cn(styles.wrapper, styles[resolvedSize])}>
-        <div className={styles.headerArea}>
-          {label && (
-            <label
-              htmlFor={fieldId}
-              className={cn(styles.label, required && styles.required)}
-            >
-              {label}
-            </label>
-          )}
-          {subtitle && (
-            <span id={`${fieldId}-subtitle`} className={styles.subtitle}>
-              {subtitle}
-            </span>
-          )}
-        </div>
+        {hasHeader && (
+          <div className={styles.headerArea}>
+            {label && (
+              <label
+                htmlFor={fieldId}
+                className={cn(styles.label, required && styles.required)}
+              >
+                {label}
+              </label>
+            )}
+            {subtitle && (
+              <span id={`${fieldId}-subtitle`} className={styles.subtitle}>
+                {subtitle}
+              </span>
+            )}
+          </div>
+        )}
         <div className={styles.selectContainer}>
           <select
             ref={ref}
@@ -136,7 +170,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
                   ? `${fieldId}-subtitle`
                   : undefined
             }
-            {...props}
+            {...rest}
+            multiple={multiple}
             {...selectProps}
           >
             {placeholder && (
@@ -154,17 +189,19 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ▾
           </span>
         </div>
-        <div className={styles.footerArea}>
-          {error && (
-            <span
-              id={`${fieldId}-error`}
-              className={styles.errorMessage}
-              role="alert"
-            >
-              {error}
-            </span>
-          )}
-        </div>
+        {hasFooter && (
+          <div className={styles.footerArea}>
+            {error && (
+              <span
+                id={`${fieldId}-error`}
+                className={styles.errorMessage}
+                role="alert"
+              >
+                {error}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     );
   },

@@ -2,18 +2,23 @@
 .paddingXs {
   padding: var(--azimuth-space-xs);
 }
+
 .paddingSm {
   padding: var(--azimuth-space-sm);
 }
+
 .paddingMd {
   padding: var(--azimuth-space-md);
 }
+
 .paddingLg {
   padding: var(--azimuth-space-lg);
 }
+
 .paddingXl {
   padding: var(--azimuth-space-xl);
 }
+
 .padding2xl {
   padding: var(--azimuth-space-2xl);
 }
@@ -23,22 +28,27 @@
   padding-left: var(--azimuth-space-xs);
   padding-right: var(--azimuth-space-xs);
 }
+
 .paddingXSm {
   padding-left: var(--azimuth-space-sm);
   padding-right: var(--azimuth-space-sm);
 }
+
 .paddingXMd {
   padding-left: var(--azimuth-space-md);
   padding-right: var(--azimuth-space-md);
 }
+
 .paddingXLg {
   padding-left: var(--azimuth-space-lg);
   padding-right: var(--azimuth-space-lg);
 }
+
 .paddingXXl {
   padding-left: var(--azimuth-space-xl);
   padding-right: var(--azimuth-space-xl);
 }
+
 .paddingX2xl {
   padding-left: var(--azimuth-space-2xl);
   padding-right: var(--azimuth-space-2xl);
@@ -49,22 +59,27 @@
   padding-top: var(--azimuth-space-xs);
   padding-bottom: var(--azimuth-space-xs);
 }
+
 .paddingYSm {
   padding-top: var(--azimuth-space-sm);
   padding-bottom: var(--azimuth-space-sm);
 }
+
 .paddingYMd {
   padding-top: var(--azimuth-space-md);
   padding-bottom: var(--azimuth-space-md);
 }
+
 .paddingYLg {
   padding-top: var(--azimuth-space-lg);
   padding-bottom: var(--azimuth-space-lg);
 }
+
 .paddingYXl {
   padding-top: var(--azimuth-space-xl);
   padding-bottom: var(--azimuth-space-xl);
 }
+
 .paddingY2xl {
   padding-top: var(--azimuth-space-2xl);
   padding-bottom: var(--azimuth-space-2xl);
@@ -79,15 +94,19 @@
 .radiusNone {
   border-radius: var(--azimuth-radius-none);
 }
+
 .radiusSm {
   border-radius: var(--azimuth-radius-sm);
 }
+
 .radiusMd {
   border-radius: var(--azimuth-radius-md);
 }
+
 .radiusLg {
   border-radius: var(--azimuth-radius-lg);
 }
+
 .radiusFull {
   border-radius: var(--azimuth-radius-full);
 }
@@ -96,6 +115,7 @@
 .bgSurface {
   background: var(--azimuth-color-surface);
 }
+
 .bgSubtle {
   background: var(--azimuth-color-surface-hover);
 }
@@ -104,12 +124,15 @@
 .shadowSm {
   box-shadow: var(--azimuth-shadow-sm);
 }
+
 .shadowMd {
   box-shadow: var(--azimuth-shadow-md);
 }
+
 .shadowLg {
   box-shadow: var(--azimuth-shadow-lg);
 }
+
 .shadowXl {
   box-shadow: var(--azimuth-shadow-xl);
 }

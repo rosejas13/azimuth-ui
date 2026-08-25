@@ -596,7 +596,7 @@ export const COMPONENT_DATA = [
       'Label support via label prop or children',
       'Indeterminate state for tri-state trees',
       'Disabled state',
-      'Custom ID generation from label',
+      'useId-based unique ids',
     ],
     variants: [],
     props: [
@@ -604,6 +604,22 @@ export const COMPONENT_DATA = [
         name: 'label',
         type: 'string',
         description: 'The label text displayed next to the checkbox',
+      },
+      {
+        name: 'checked',
+        type: 'boolean',
+        description: 'Controlled checked state',
+      },
+      {
+        name: 'defaultChecked',
+        type: 'boolean',
+        default: 'false',
+        description: 'Initial checked state (uncontrolled)',
+      },
+      {
+        name: 'onChange',
+        type: '(checked: boolean) => void',
+        description: 'Callback with the new checked state',
       },
       {
         name: 'indeterminate',
@@ -615,6 +631,11 @@ export const COMPONENT_DATA = [
         name: 'disabled',
         type: 'boolean',
         description: 'Whether the checkbox is disabled',
+      },
+      {
+        name: 'checkboxProps',
+        type: 'ComponentPropsWithoutRef<"input">',
+        description: 'Escape hatch for native input attributes',
       },
       {
         name: 'children',
@@ -2286,18 +2307,26 @@ export const COMPONENT_DATA = [
       },
       {
         name: 'value',
-        type: 'string',
-        description: 'Controlled value of the select',
+        type: 'string | string[]',
+        description: 'Controlled value; an array when multiple is set',
       },
       {
         name: 'defaultValue',
-        type: 'string',
+        type: 'string | string[]',
         description: 'Initial value of the select (uncontrolled)',
       },
       {
         name: 'onChange',
-        type: '(value: string) => void',
-        description: 'Callback fired when the selected value changes',
+        type: '(value: string | string[]) => void',
+        description:
+          'Callback with the selected value, or the full array when multiple is set',
+      },
+      {
+        name: 'multiple',
+        type: 'boolean',
+        default: 'false',
+        description:
+          'Allow selecting several options; switches value/onChange to arrays',
       },
       {
         name: 'options',
@@ -3158,8 +3187,13 @@ export const COMPONENT_DATA = [
       },
       {
         name: 'onChange',
-        type: '(e: ChangeEvent<HTMLInputElement>) => void',
-        description: 'Callback fired when the toggle value changes',
+        type: '(checked: boolean) => void',
+        description: 'Callback with the new toggled state',
+      },
+      {
+        name: 'toggleProps',
+        type: 'ComponentPropsWithoutRef<"input">',
+        description: 'Escape hatch for native input attributes',
       },
     ],
     cssVars: [

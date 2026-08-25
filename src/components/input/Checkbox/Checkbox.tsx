@@ -1,16 +1,53 @@
 'use client';
 
-import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useId,
+  useState,
+  type ComponentPropsWithoutRef,
+} from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Checkbox.module.css';
 
 /** Props for the Checkbox component. */
-export interface CheckboxProps
-  extends Omit<ComponentPropsWithoutRef<'input'>, 'size' | 'type'> {
+export interface CheckboxProps extends Omit<
+  ComponentPropsWithoutRef<'input'>,
+  | 'size'
+  | 'type'
+  | 'checked'
+  | 'defaultChecked'
+  | 'onChange'
+  | 'indeterminate'
+  | 'value'
+> {
   /** Text label displayed next to the checkbox. */
   label?: string;
-  /** @default false */
+  /** Controlled state. Pair with `onChange`. When omitted the checkbox is uncontrolled. */
+  checked?: boolean;
+  /** Initial state for an uncontrolled checkbox. Ignored while `checked` is set. */
+  defaultChecked?: boolean;
+  /** Called with the new checked state on every change. */
+  onChange?: (checked: boolean) => void;
+  /** Visual mixed state (e.g. a parent checkbox over partially-selected children). @default false */
   indeterminate?: boolean;
+
+  // Curated native attributes. Anything not listed here goes through `checkboxProps`.
+  id?: string;
+  name?: string;
+  disabled?: boolean;
+  required?: boolean;
+  autoFocus?: boolean;
+  form?: string;
+  'data-testid'?: string;
+  'aria-describedby'?: string;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+  onFocus?: ComponentPropsWithoutRef<'input'>['onFocus'];
+  onBlur?: ComponentPropsWithoutRef<'input'>['onBlur'];
+
+  /** Escape hatch for any native attribute not listed above. Spread last, wins over other props. */
+  checkboxProps?: ComponentPropsWithoutRef<'input'>;
 }
 
 /** A checkbox input with an optional label and indeterminate state support. */
@@ -18,17 +55,38 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (
     {
       label,
+      checked,
+      defaultChecked,
+      onChange,
+      disabled,
       indeterminate = false,
       className,
-      disabled,
       id,
       children,
+      checkboxProps,
       ...props
     },
     ref,
   ) => {
-    const generatedId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+    const autoId = useId();
+    const generatedId = id || autoId;
     const labelContent = label || children;
+
+    const isControlled = checked !== undefined;
+    const [uncontrolled, setUncontrolled] = useState(defaultChecked ?? false);
+
+    const isChecked = isControlled ? checked : uncontrolled;
+
+    const handleChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const next = e.target.checked;
+        if (!isControlled) {
+          setUncontrolled(next);
+        }
+        onChange?.(next);
+      },
+      [isControlled, onChange],
+    );
 
     return (
       <label
@@ -40,18 +98,22 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         )}
       >
         <input
-        type="checkbox"
-        id={generatedId}
-        className={styles.checkbox}
-        disabled={disabled}
-        {...props}
-        ref={(el) => {
-          if (typeof ref === 'function') ref(el);
-          else if (ref) ref.current = el;
-          if (el) el.indeterminate = indeterminate;
-          // indeterminate is not settable via HTML attribute; must be set imperatively on the DOM element
-        }}
-      />
+          type="checkbox"
+          id={generatedId}
+          className={styles.checkbox}
+          disabled={disabled}
+          checked={isChecked}
+          defaultChecked={isControlled ? undefined : defaultChecked}
+          onChange={handleChange}
+          {...props}
+          {...checkboxProps}
+          ref={(el) => {
+            if (typeof ref === 'function') ref(el);
+            else if (ref) ref.current = el;
+            if (el) el.indeterminate = indeterminate;
+            // indeterminate is not settable via HTML attribute; must be set imperatively on the DOM element
+          }}
+        />
         {labelContent && <span className={styles.label}>{labelContent}</span>}
       </label>
     );

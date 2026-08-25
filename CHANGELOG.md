@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.11.3 (2026-08-25)
+
+### Fixes
+
+- **Select no longer reserves blank space when it has no label or error.** The header/footer areas rendered unconditionally with reserved line heights; they are now conditional, matching Input's 0.11.1 behavior.
+
+### Breaking
+
+- **`Select` with `multiple` now returns arrays end to end.** Previously `onChange` handed back `e.target.value`, which for a multi-select is only the *first* selected option — a live bug. `value`/`defaultValue`/`onChange` now carry `string[]` in selection order whenever `multiple` is set (`SelectProps` is a discriminated union: single → `string`, multiple → `string[]`). Inside `<Form>`, submissions already serialize multi-selects as arrays.
+- **`Toggle` and `Checkbox` adopt the flat input conventions**: `checked`/`defaultChecked` stay boolean, but `onChange` now receives the raw state — `(checked: boolean) => void` instead of the change event, so `onChange={setEnabled}` typechecks directly. The inherited native `value` prop (whose `ReadonlyArray<string>` typing offered meaningless string arrays on a switch) is removed from the curated surface; native attributes remain available via `toggleProps`/`checkboxProps` escape hatches. Migration: `onChange={(e) => set(e.target.checked)}` → `onChange={set}`.
+- Fixed duplicate DOM ids in `Toggle`/`Checkbox`: ids were slugged from the label text, so two same-labeled toggles collided. Both now use React's `useId()`.
+
 ## 0.11.2 (2026-08-25)
 
 ### Features
