@@ -6,6 +6,7 @@ import {
   useId,
   useState,
   type ComponentPropsWithoutRef,
+  type CSSProperties,
 } from 'react';
 import { cn } from '@/utils/cn';
 import { useAutoWireProps } from '../auto-wire';
@@ -25,6 +26,9 @@ export interface ToggleProps extends Omit<
   defaultChecked?: boolean;
   /** Called with the new toggled state on every change. */
   onChange?: (checked: boolean) => void;
+
+  /** Width applied to the outer wrapper. Accepts any CSS width value. */
+  width?: CSSProperties['width'];
 
   // Curated native attributes. Anything not listed here goes through `toggleProps`.
   id?: string;
@@ -61,6 +65,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       id,
       children,
       toggleProps,
+      width,
       ...props
     },
     ref,
@@ -104,6 +109,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
           disabled && styles.wrapperDisabled,
           className,
         )}
+        style={width !== undefined ? { width } : undefined}
       >
         <input
           ref={ref}

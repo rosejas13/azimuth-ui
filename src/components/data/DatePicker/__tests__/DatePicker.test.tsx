@@ -116,6 +116,12 @@ describe('DatePicker', () => {
     const wrapper = screen.getByRole('textbox').parentElement?.parentElement;
     expect(wrapper).toHaveClass('test-class');
   });
+
+  it('applies width to the wrapper', () => {
+    render(<DatePicker width="240px" />);
+    const wrapper = screen.getByRole('textbox').parentElement?.parentElement;
+    expect(wrapper).toHaveStyle({ width: '240px' });
+  });
 });
 
 describe('DatePicker format tokens', () => {

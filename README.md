@@ -247,7 +247,7 @@ const form = useForm({ schema: signupSchema, defaultValues: { email: '' }, onSub
 
 ### Raw layout primitives
 
-`Row`, `Column`, `Box`, and `Spacer` are raw building blocks alongside `Stack`/`Grid`. `Row` is context-aware: anywhere it is a wrapping flex row with a token gap, but inside a `<Form>` its children share width evenly, align by their input boxes, and wrap on narrow screens.
+`Row`, `Column`, `Box`, and `Spacer` are raw building blocks alongside `Stack`/`Grid`. `Row` is context-aware: anywhere it is a wrapping flex row with a token gap, but inside a `<Form>` its children share width evenly, align by their input boxes, and wrap on narrow screens. Use `childWidths` to override the default equal-width behavior.
 
 ```tsx
 // Anywhere: a wrapping flex row
@@ -264,6 +264,12 @@ const form = useForm({ schema: signupSchema, defaultValues: { email: '' }, onSub
     <Input label="ZIP" />
   </Row>
 </Form>
+
+// Override equal-width with childWidths
+<Row childWidths={['min-content', 'auto']}>
+  <Toggle label="Enable" />
+  <Input label="Value" />
+</Row>
 
 // Column is the vertical counterpart; Box is an unstyled surface with opt-in
 // token-driven padding/border/radius/background/shadow; Spacer fills free space.

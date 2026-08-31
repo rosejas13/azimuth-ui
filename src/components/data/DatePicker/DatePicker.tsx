@@ -2,6 +2,7 @@
 
 import {
   type ComponentPropsWithoutRef,
+  type CSSProperties,
   forwardRef,
   useState,
   useRef,
@@ -48,6 +49,8 @@ export interface DatePickerProps extends Omit<
   helpText?: string;
   /** Whether the input is disabled. */
   disabled?: boolean;
+  /** Width applied to the outer wrapper. Accepts any CSS width value. */
+  width?: CSSProperties['width'];
   id?: string;
   /** Field key for `<Form form={form}>` auto-wiring and native form serialization. */
   name?: string;
@@ -75,6 +78,7 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
       error,
       helpText,
       disabled = false,
+      width,
       id,
       className,
       ...props
@@ -174,7 +178,12 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
     const inputValue = selectedDate ? formatDate(selectedDate, formatStr) : '';
 
     return (
-      <div ref={ref} className={cn(styles.wrapper, className)} {...props}>
+      <div
+        ref={ref}
+        className={cn(styles.wrapper, className)}
+        style={width !== undefined ? { width } : undefined}
+        {...props}
+      >
         {label && (
           <label className={styles.label} htmlFor={id}>
             {label}

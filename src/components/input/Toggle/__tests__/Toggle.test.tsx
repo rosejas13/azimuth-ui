@@ -110,4 +110,10 @@ describe('Toggle (flat checked API)', () => {
     const [a, b] = screen.getAllByRole('switch').map((el) => el.id);
     expect(a).not.toBe(b);
   });
+
+  it('applies width to the wrapper', () => {
+    render(<Toggle label="Notify" width="min-content" />);
+    const wrapper = screen.getByLabelText('Notify').closest('label');
+    expect(wrapper).toHaveStyle({ width: 'min-content' });
+  });
 });

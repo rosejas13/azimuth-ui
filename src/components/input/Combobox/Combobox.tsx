@@ -19,9 +19,19 @@ export interface ComboboxOption {
 }
 
 /** Props for the Combobox component. */
-export interface ComboboxProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'onSelect'> {
-  data: { options: ComboboxOption[]; /** @default 'No results found' */ emptyMessage?: string };
-  selection: { value: string; onChange: (value: string) => void; onSelect: (value: string) => void };
+export interface ComboboxProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'onChange' | 'onSelect'
+> {
+  data: {
+    options: ComboboxOption[];
+    /** @default 'No results found' */ emptyMessage?: string;
+  };
+  selection: {
+    value: string;
+    onChange: (value: string) => void;
+    onSelect: (value: string) => void;
+  };
   label?: string;
   /** @default 'Type to search...' */
   placeholder?: string;
@@ -30,6 +40,10 @@ export interface ComboboxProps extends Omit<ComponentPropsWithoutRef<'div'>, 'on
   /** @default false */
   disabled?: boolean;
   error?: string;
+  /** Custom filter function. Receives each option and the current query string.
+   *  Return `true` to include the option in the filtered list.
+   *  @default substring match (case-insensitive includes) */
+  filter?: (option: ComboboxOption, query: string) => boolean;
 }
 
 /** An autocomplete combobox with filtering, keyboard navigation, and ARIA support. */
@@ -43,6 +57,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
       size = 'md',
       disabled = false,
       error,
+      filter: customFilter,
       className,
       ...props
     },
@@ -57,8 +72,14 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
     const id = useId();
     const listboxId = `combobox-listbox-${id}`;
 
+    const filterFn =
+      customFilter ??
+      ((opt: ComboboxOption, q: string) => {
+        return (opt.label ?? '').toLowerCase().includes(q.toLowerCase());
+      });
+
     const filteredOptions = (options ?? []).filter((opt) =>
-      (opt.label ?? '').toLowerCase().includes((value ?? '').toLowerCase()),
+      filterFn(opt, value ?? ''),
     );
 
     const close = useCallback(() => {
@@ -80,7 +101,10 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
 
     useEffect(() => {
       function handleClickOutside(e: MouseEvent) {
-        if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        if (
+          wrapperRef.current &&
+          !wrapperRef.current.contains(e.target as Node)
+        ) {
           close();
         }
       }
@@ -110,9 +134,13 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
         onChange(e.target.value);
         updatePosition();
         setOpen(true);
-        setHighlightedIndex(0);
+        // Reset highlight to 0 only if there are options to highlight
+        const nextFiltered = (options ?? []).filter((opt) =>
+          filterFn(opt, e.target.value),
+        );
+        setHighlightedIndex(nextFiltered.length > 0 ? 0 : -1);
       },
-      [onChange, updatePosition],
+      [onChange, updatePosition, options, filterFn],
     );
 
     const handleSelect = useCallback(
@@ -142,21 +170,28 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
             break;
           case 'Enter':
             e.preventDefault();
-            if (highlightedIndex >= 0 && highlightedIndex < filteredOptions.length) {
+            if (
+              highlightedIndex >= 0 &&
+              highlightedIndex < filteredOptions.length
+            ) {
               handleSelect(filteredOptions[highlightedIndex].value);
             }
             break;
           case 'ArrowDown':
             e.preventDefault();
-            setHighlightedIndex((prev) =>
-              prev >= filteredOptions.length - 1 ? 0 : prev + 1,
-            );
+            if (filteredOptions.length > 0) {
+              setHighlightedIndex((prev) =>
+                prev >= filteredOptions.length - 1 ? 0 : prev + 1,
+              );
+            }
             break;
           case 'ArrowUp':
             e.preventDefault();
-            setHighlightedIndex((prev) =>
-              prev <= 0 ? filteredOptions.length - 1 : prev - 1,
-            );
+            if (filteredOptions.length > 0) {
+              setHighlightedIndex((prev) =>
+                prev <= 0 ? filteredOptions.length - 1 : prev - 1,
+              );
+            }
             break;
         }
       },
@@ -164,7 +199,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
     );
 
     const activeDescendantId =
-      open && highlightedIndex >= 0
+      open && highlightedIndex >= 0 && highlightedIndex < filteredOptions.length
         ? `combobox-option-${id}-${filteredOptions[highlightedIndex].value}`
         : undefined;
 

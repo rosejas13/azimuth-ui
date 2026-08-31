@@ -1,5 +1,54 @@
 # Changelog
 
+## 0.12.1 (2026-08-31)
+
+### Fixes
+
+- **Combobox no longer crashes when typing text with no matches.** Typing text that filters to zero results (e.g. `"zzz"`) previously threw `TypeError: Cannot read properties of undefined` because `highlightedIndex` was set to `0` even when the filtered list was empty. Now highlights reset to `-1` and the "No results found" empty state is shown correctly.
+
+- **Combobox gains a `filter` prop** for custom filter logic. The default is still case-insensitive substring match, but you can plug in fuzzy matching, prefix matching, or any other strategy:
+
+  ```tsx
+  <Combobox
+    filter={(opt, query) => opt.label.toLowerCase().startsWith(query.toLowerCase())}
+    // ...
+  />
+  ```
+
+## 0.12.0 (2026-08-28)
+
+### Features
+
+- **`width` prop on `Toggle` and `DatePicker`.** Both components now accept a `width` CSS property applied to their outer wrapper, letting you control sizing inline:
+
+  ```tsx
+  <Toggle label="Notify" width="min-content" />
+  <DatePicker width="240px" />
+  ```
+
+- **`childWidths` prop on `Row`.** Apply width to each child in a row — a single string applies the same width to all, an array applies widths left-to-right and cycles the last value for remaining children:
+
+  ```tsx
+  <Row childWidths="min-content">
+    <Toggle label="A" />
+    <Toggle label="B" />
+  </Row>
+
+  <Row childWidths={['min-content', 'max-content']}>
+    <Toggle label="A" />
+    <Toggle label="B" />
+    <Toggle label="C" /> {/* gets max-content */}
+  </Row>
+  ```
+
+  Inside a `<Form>`, `childWidths` overrides the default equal-width behavior.
+
+### Fixes
+
+- **Sourcemap ENOENT removed.** The build no longer emits `sourceMappingURL` comments pointing at `.map` files that were stripped before publish. Consumers using Vite dev server no longer crash on `ENOENT: dist/index.css.map`.
+
+- **Form-row children can now override width.** Changed `.formRow > *` from `flex: 1 1 12rem` to `flex: 1 1 auto; min-width: 12rem` so children can set their own `width` without fighting `flex-basis`.
+
 ## 0.11.9 (2026-08-25)
 
 ### Features

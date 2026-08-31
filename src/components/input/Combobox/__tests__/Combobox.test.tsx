@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useState } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { Combobox } from '../Combobox';
 
@@ -13,7 +14,7 @@ describe('Combobox', () => {
   it('renders input with label', () => {
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
         label="Fruit"
       />,
@@ -25,7 +26,7 @@ describe('Combobox', () => {
   it('shows dropdown on type', async () => {
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
       />,
     );
@@ -36,21 +37,25 @@ describe('Combobox', () => {
   it('filters options by input text', async () => {
     render(
       <Combobox
-        selection={{ value: "app", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: 'app', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
       />,
     );
     await userEvent.click(screen.getByRole('combobox'));
     expect(screen.getByRole('option', { name: 'Apple' })).toBeInTheDocument();
-    expect(screen.queryByRole('option', { name: 'Banana' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('option', { name: 'Cherry' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('option', { name: 'Banana' }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('option', { name: 'Cherry' }),
+    ).not.toBeInTheDocument();
   });
 
   it('selects option on click', async () => {
     const onSelect = vi.fn();
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect }}
+        selection={{ value: '', onChange: vi.fn(), onSelect }}
         data={{ options }}
       />,
     );
@@ -63,7 +68,7 @@ describe('Combobox', () => {
     const onSelect = vi.fn();
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect }}
+        selection={{ value: '', onChange: vi.fn(), onSelect }}
         data={{ options }}
       />,
     );
@@ -75,7 +80,7 @@ describe('Combobox', () => {
   it('navigates with ArrowDown and ArrowUp', async () => {
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
       />,
     );
@@ -93,7 +98,7 @@ describe('Combobox', () => {
   it('closes on Escape', async () => {
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
       />,
     );
@@ -107,7 +112,7 @@ describe('Combobox', () => {
     render(
       <div>
         <Combobox
-          selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+          selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
           data={{ options }}
         />
         <div data-testid="outside">Outside</div>
@@ -122,7 +127,7 @@ describe('Combobox', () => {
   it('shows empty message when no results', async () => {
     render(
       <Combobox
-        selection={{ value: "zzz", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: 'zzz', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
       />,
     );
@@ -133,7 +138,7 @@ describe('Combobox', () => {
   it('shows error state', () => {
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
         error="Invalid selection"
       />,
@@ -144,7 +149,7 @@ describe('Combobox', () => {
   it('handles disabled state', () => {
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
         disabled
       />,
@@ -155,7 +160,7 @@ describe('Combobox', () => {
   it('has role=combobox on input', () => {
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
       />,
     );
@@ -165,7 +170,7 @@ describe('Combobox', () => {
   it('has role=listbox on dropdown', async () => {
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
       />,
     );
@@ -176,7 +181,7 @@ describe('Combobox', () => {
   it('has role=option on items', async () => {
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
       />,
     );
@@ -188,18 +193,21 @@ describe('Combobox', () => {
   it('has aria-selected on selected item', async () => {
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
       />,
     );
     await userEvent.type(screen.getByRole('combobox'), 'a');
-    expect(screen.getAllByRole('option')[0]).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getAllByRole('option')[0]).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
   });
 
   it('has aria-controls linking input to list', async () => {
     render(
       <Combobox
-        selection={{ value: "", onChange: vi.fn(), onSelect: vi.fn() }}
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
         data={{ options }}
       />,
     );
@@ -207,5 +215,64 @@ describe('Combobox', () => {
     const input = screen.getByRole('combobox');
     const listbox = screen.getByRole('listbox');
     expect(input).toHaveAttribute('aria-controls', listbox.id);
+  });
+
+  it('does not crash when typing text with no matches', async () => {
+    function Wrapper() {
+      const [val, setVal] = useState('');
+      return (
+        <Combobox
+          selection={{ value: val, onChange: setVal, onSelect: vi.fn() }}
+          data={{ options }}
+        />
+      );
+    }
+    render(<Wrapper />);
+    await userEvent.type(screen.getByRole('combobox'), 'zzz');
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    expect(screen.getByText('No results found')).toBeInTheDocument();
+  });
+
+  it('shows empty message when typing non-matching text', async () => {
+    function Wrapper() {
+      const [val, setVal] = useState('');
+      return (
+        <Combobox
+          selection={{ value: val, onChange: setVal, onSelect: vi.fn() }}
+          data={{ options }}
+        />
+      );
+    }
+    render(<Wrapper />);
+    await userEvent.type(screen.getByRole('combobox'), 'xyz');
+    expect(screen.getByText('No results found')).toBeInTheDocument();
+    expect(screen.queryAllByRole('option')).toHaveLength(0);
+  });
+
+  it('accepts custom filter function', async () => {
+    const customFilter = vi.fn((opt: { label: string }, q: string) =>
+      opt.label.toLowerCase().startsWith(q.toLowerCase()),
+    );
+    function Wrapper() {
+      const [val, setVal] = useState('');
+      return (
+        <Combobox
+          selection={{ value: val, onChange: setVal, onSelect: vi.fn() }}
+          data={{ options }}
+          filter={customFilter}
+        />
+      );
+    }
+    render(<Wrapper />);
+    await userEvent.type(screen.getByRole('combobox'), 'ch');
+    // Starts with "ch" — Cherry matches, Apple/Banana do not
+    expect(screen.getByRole('option', { name: 'Cherry' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('option', { name: 'Apple' }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('option', { name: 'Banana' }),
+    ).not.toBeInTheDocument();
+    expect(customFilter).toHaveBeenCalled();
   });
 });

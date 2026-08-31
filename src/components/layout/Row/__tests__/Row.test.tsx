@@ -133,4 +133,43 @@ describe('Row', () => {
     expect(container.firstChild).toHaveClass('my-row');
     expect(screen.getByTestId('row')).toHaveAttribute('aria-label', 'toolbar');
   });
+
+  it('applies childWidths string to all children', () => {
+    const { container } = render(
+      <Row childWidths="min-content">
+        <span>A</span>
+        <span>B</span>
+      </Row>,
+    );
+    const children = container.querySelectorAll('.row > *');
+    expect(children[0]).toHaveStyle({ width: 'min-content' });
+    expect(children[1]).toHaveStyle({ width: 'min-content' });
+  });
+
+  it('applies childWidths array left-to-right and cycles last value', () => {
+    const { container } = render(
+      <Row childWidths={['min-content', 'max-content']}>
+        <span>A</span>
+        <span>B</span>
+        <span>C</span>
+      </Row>,
+    );
+    const children = container.querySelectorAll('.row > *');
+    expect(children[0]).toHaveStyle({ width: 'min-content' });
+    expect(children[1]).toHaveStyle({ width: 'max-content' });
+    expect(children[2]).toHaveStyle({ width: 'max-content' });
+  });
+
+  it('preserves existing child style when applying childWidths', () => {
+    const { container } = render(
+      <Row childWidths="min-content">
+        <span style={{ color: 'red' }}>A</span>
+      </Row>,
+    );
+    const child = container.querySelector('.row > span');
+    expect(child).toHaveStyle({ width: 'min-content' });
+    expect(child).toHaveAttribute('style');
+    expect(child?.getAttribute('style')).toContain('color');
+    expect(child?.getAttribute('style')).toContain('width: min-content');
+  });
 });
