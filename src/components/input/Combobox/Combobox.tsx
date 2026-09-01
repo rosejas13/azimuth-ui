@@ -90,9 +90,21 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
     const updatePosition = useCallback(() => {
       if (!inputRef.current) return;
       const rect = inputRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - rect.bottom;
+      // Measured once the listbox is mounted; before that, estimate with the
+      // CSS max-height (240px) so the first open can still flip correctly.
+      const listboxHeight =
+        listboxRef.current?.getBoundingClientRect().height || 240;
+      let top = rect.bottom + 4;
+      if (spaceBelow < listboxHeight + 4 && rect.top > spaceBelow) {
+        // Not enough room below and more space above: flip, clamped to the
+        // viewport so a very tall listbox never escapes off-screen.
+        top = Math.max(4, rect.top - listboxHeight - 4);
+      }
       setListboxStyle({
         position: 'fixed',
-        top: rect.bottom + 4,
+        top,
         left: rect.left,
         width: rect.width,
         zIndex: 50,
@@ -128,6 +140,13 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
         el?.scrollIntoView({ block: 'nearest' });
       }
     }, [highlightedIndex, open]);
+
+    // Re-measure after the listbox renders or its height changes (filtering
+    // adds/removes items) so a flipped listbox stays anchored to the input.
+    useEffect(() => {
+      if (!open) return;
+      updatePosition();
+    }, [open, filteredOptions.length, updatePosition]);
 
     const handleInputChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {

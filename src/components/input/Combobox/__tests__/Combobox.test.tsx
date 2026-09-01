@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useState } from 'react';
+import { act, useState } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { Combobox } from '../Combobox';
 
@@ -9,6 +9,21 @@ const options = [
   { value: 'banana', label: 'Banana' },
   { value: 'cherry', label: 'Cherry' },
 ];
+
+function rect(overrides: Partial<DOMRect>): DOMRect {
+  return {
+    x: 0,
+    y: 0,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: 0,
+    height: 0,
+    toJSON: () => ({}),
+    ...overrides,
+  };
+}
 
 describe('Combobox', () => {
   it('renders input with label', () => {
@@ -274,5 +289,91 @@ describe('Combobox', () => {
       screen.queryByRole('option', { name: 'Banana' }),
     ).not.toBeInTheDocument();
     expect(customFilter).toHaveBeenCalled();
+  });
+});
+
+describe('Combobox listbox positioning', () => {
+  function StatefulCombobox() {
+    const [val, setVal] = useState('');
+    return (
+      <Combobox
+        selection={{ value: val, onChange: setVal, onSelect: vi.fn() }}
+        data={{ options }}
+      />
+    );
+  }
+
+  async function openWithType() {
+    render(<StatefulCombobox />);
+    const input = screen.getByRole('combobox');
+    await userEvent.type(input, 'a');
+    return { input, listbox: screen.getByRole('listbox') };
+  }
+
+  it('keeps the listbox below the input when there is room', async () => {
+    const { input, listbox } = await openWithType();
+    vi.spyOn(input, 'getBoundingClientRect').mockReturnValue(
+      rect({ bottom: 100, top: 60, left: 8, width: 200 }),
+    );
+    vi.spyOn(listbox, 'getBoundingClientRect').mockReturnValue(
+      rect({ height: 100 }),
+    );
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    expect(listbox).toHaveStyle({ top: '104px' });
+  });
+
+  it('flips the listbox above the input when space below is insufficient', async () => {
+    const { input, listbox } = await openWithType();
+    // Input near the bottom of a 768px jsdom viewport; listbox is 100px tall.
+    vi.spyOn(input, 'getBoundingClientRect').mockReturnValue(
+      rect({ bottom: 700, top: 660, left: 8, width: 200 }),
+    );
+    vi.spyOn(listbox, 'getBoundingClientRect').mockReturnValue(
+      rect({ height: 100 }),
+    );
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    // 660 - 100 - 4 = 556 — above the input, inside the viewport.
+    expect(listbox).toHaveStyle({ top: '556px' });
+  });
+
+  it('re-anchors the flipped listbox when filtering changes its height', async () => {
+    const { input, listbox } = await openWithType();
+    let listboxHeight = 200;
+    vi.spyOn(input, 'getBoundingClientRect').mockReturnValue(
+      rect({ bottom: 700, top: 660, left: 8, width: 200 }),
+    );
+    vi.spyOn(listbox, 'getBoundingClientRect').mockImplementation(() =>
+      rect({ height: listboxHeight }),
+    );
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    // Flipped above: 660 - 200 - 4 = 456.
+    expect(listbox).toHaveStyle({ top: '456px' });
+
+    // Filtering shrinks the listbox to 40px — now it fits in the 68px below.
+    listboxHeight = 40;
+    await userEvent.type(input, 'p');
+    // Re-measured and reset below the input: 700 + 4.
+    expect(listbox).toHaveStyle({ top: '704px' });
+  });
+
+  it('clamps a very tall flipped listbox inside the viewport', async () => {
+    const { input, listbox } = await openWithType();
+    vi.spyOn(input, 'getBoundingClientRect').mockReturnValue(
+      rect({ bottom: 700, top: 660, left: 8, width: 200 }),
+    );
+    vi.spyOn(listbox, 'getBoundingClientRect').mockReturnValue(
+      rect({ height: 800 }),
+    );
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    // 660 - 800 - 4 is negative; clamped to the viewport top margin.
+    expect(listbox).toHaveStyle({ top: '4px' });
   });
 });

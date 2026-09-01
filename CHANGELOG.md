@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.3 (2026-08-31)
+
+### Fixes
+
+- **Combobox listbox no longer renders off-screen at the bottom of the viewport.** The popup is now measured against the available space below the input: when it doesn't fit and there's more room above, it flips above the input (clamped inside the viewport). Previously it always opened downward, going off-screen when the input sat near the page bottom — which forced consumer-side patches to reposition it.
+
+- **Flipped listbox stays anchored to the input while filtering.** Position is re-measured whenever the option count changes while open, so a listbox that shrinks as you type moves with its new height instead of drifting away from the input (the bug consumer flip patches exhibited). It also resets to below the input as soon as space allows.
+
 ## 0.12.2 (2026-08-31)
 
 ### Fixes
