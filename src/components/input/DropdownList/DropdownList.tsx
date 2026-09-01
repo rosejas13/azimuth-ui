@@ -12,9 +12,17 @@ import { cn } from '@/utils/cn';
 import styles from './DropdownList.module.css';
 
 /** Props for the DropdownList component. */
-export interface DropdownListProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+export interface DropdownListProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'onChange'
+> {
   data: {
-    options: Array<{ value: string; label: string; disabled?: boolean; separator?: boolean }>;
+    options: Array<{
+      value: string;
+      label: string;
+      disabled?: boolean;
+      separator?: boolean;
+    }>;
     /** @default 'Select...' */
     placeholder?: string;
     search?: {
@@ -41,7 +49,11 @@ const selectionDefault: DropdownListProps['selection'] = {};
 export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
   (
     {
-      data: { options, placeholder = 'Select...', search: { enabled: searchable = false } = {} } = dataDefault,
+      data: {
+        options,
+        placeholder = 'Select...',
+        search: { enabled: searchable = false } = {},
+      } = dataDefault,
       selection: { value, onChange, multiple = false } = selectionDefault,
       disabled = false,
       error,
@@ -65,7 +77,9 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
     const filteredOptions = searchable
       ? (options ?? []).filter((o) => {
           if (o.separator) return false;
-          return (o.label ?? '').toLowerCase().includes((search ?? '').toLowerCase());
+          return (o.label ?? '')
+            .toLowerCase()
+            .includes((search ?? '').toLowerCase());
         })
       : selectableOptions;
 
@@ -154,7 +168,10 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
 
         if (e.key === 'Enter') {
           e.preventDefault();
-          if (highlightedIndex >= 0 && highlightedIndex < filteredOptions.length) {
+          if (
+            highlightedIndex >= 0 &&
+            highlightedIndex < filteredOptions.length
+          ) {
             selectOption(filteredOptions[highlightedIndex].value);
           }
           return;
@@ -162,6 +179,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
 
         if (e.key === 'ArrowDown') {
           e.preventDefault();
+          if (filteredOptions.length === 0) return;
           setHighlightedIndex((prev) => {
             if (prev >= filteredOptions.length - 1) return 0;
             return prev + 1;
@@ -171,6 +189,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
 
         if (e.key === 'ArrowUp') {
           e.preventDefault();
+          if (filteredOptions.length === 0) return;
           setHighlightedIndex((prev) => {
             if (prev <= 0) return filteredOptions.length - 1;
             return prev - 1;
@@ -202,27 +221,35 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearch(e.target.value);
-      setHighlightedIndex(0);
+      const newSearch = e.target.value;
+      setSearch(newSearch);
+      const newFiltered = (options ?? []).filter(
+        (o) =>
+          !o.separator &&
+          (o.label ?? '').toLowerCase().includes(newSearch.toLowerCase()),
+      );
+      setHighlightedIndex(newFiltered.length > 0 ? 0 : -1);
     };
 
     return (
       <div
         ref={ref}
-        className={cn(
-          styles.wrapper,
-          error && styles.hasError,
-          className,
-        )}
+        className={cn(styles.wrapper, error && styles.hasError, className)}
         {...props}
       >
         <div ref={wrapperRef}>
           {label && (
-            <label className={styles.label} id={label.toLowerCase().replace(/\s+/g, '-')}>
+            <label
+              className={styles.label}
+              id={label.toLowerCase().replace(/\s+/g, '-')}
+            >
               {label}
             </label>
           )}
-          <div className={styles.control} aria-invalid={error ? 'true' : undefined}>
+          <div
+            className={styles.control}
+            aria-invalid={error ? 'true' : undefined}
+          >
             <button
               type="button"
               className={styles.trigger}
@@ -241,10 +268,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
                 {displayText}
               </span>
               <span
-                className={cn(
-                  styles.chevron,
-                  open && styles.chevronOpen,
-                )}
+                className={cn(styles.chevron, open && styles.chevronOpen)}
                 aria-hidden="true"
               >
                 ▾
@@ -253,106 +277,142 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
 
             {open && (
               <div style={panelStyle}>
-              <div className={styles.panel} role="listbox" aria-multiselectable={multiple}>
-              {searchable && (
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  className={styles.searchInput}
-                  value={search}
-                  onChange={handleSearchChange}
-                  onKeyDown={(e) => {
-                    if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Escape') {
-                      e.stopPropagation();
-                      handleKeyDown(e);
-                    }
-                    if (e.key === 'Enter') {
-                      e.stopPropagation();
-                      handleKeyDown(e);
-                    }
-                  }}
-                  placeholder="Search..."
-                  aria-label="Search options"
-                />
-              )}
-              <ul ref={listboxRef} className={styles.listbox} role="presentation">
-                {searchable && search.length > 0
-                  ? filteredOptions.map((opt, i) => (
-                      <li key={opt.value} role="option" aria-selected={selectedValues.includes(opt.value)}>
-                        <button
-                          type="button"
-                          className={cn(
-                            styles.option,
-                            i === highlightedIndex && styles.optionHighlighted,
-                            opt.disabled && styles.optionDisabled,
-                            selectedValues.includes(opt.value) && styles.optionSelected,
-                          )}
-                          onClick={() => !opt.disabled && selectOption(opt.value)}
-                          disabled={opt.disabled}
-                          tabIndex={-1}
-                        >
-                          {multiple && (
-                            <input
-                              type="checkbox"
-                              className={styles.checkbox}
-                              checked={selectedValues.includes(opt.value)}
-                              readOnly
-                              tabIndex={-1}
-                            />
-                          )}
-                          <span className={styles.optionLabel}>{opt.label}</span>
-                        </button>
-                      </li>
-                    ))
-                  : (options ?? []).map((opt, i) => {
-                      if (opt.separator) {
-                        return (
+                <div
+                  className={styles.panel}
+                  role="listbox"
+                  aria-multiselectable={multiple}
+                >
+                  {searchable && (
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      className={styles.searchInput}
+                      value={search}
+                      onChange={handleSearchChange}
+                      onKeyDown={(e) => {
+                        if (
+                          e.key === 'ArrowDown' ||
+                          e.key === 'ArrowUp' ||
+                          e.key === 'Escape'
+                        ) {
+                          e.stopPropagation();
+                          handleKeyDown(e);
+                        }
+                        if (e.key === 'Enter') {
+                          e.stopPropagation();
+                          handleKeyDown(e);
+                        }
+                      }}
+                      placeholder="Search..."
+                      aria-label="Search options"
+                    />
+                  )}
+                  <ul
+                    ref={listboxRef}
+                    className={styles.listbox}
+                    role="presentation"
+                  >
+                    {searchable && search.length > 0
+                      ? filteredOptions.map((opt, i) => (
                           <li
-                            key={`sep-${i}`}
-                            className={styles.separator}
-                            role="separator"
-                            aria-orientation="horizontal"
-                          />
-                        );
-                      }
-                      const optIndex = filteredOptions.findIndex(
-                        (f) => f.value === opt.value,
-                      );
-                      return (
-                        <li key={opt.value} role="option" aria-selected={selectedValues.includes(opt.value)}>
-                          <button
-                            type="button"
-                            className={cn(
-                              styles.option,
-                              opt.disabled && styles.optionDisabled,
-                              selectedValues.includes(opt.value) && styles.optionSelected,
-                              optIndex === highlightedIndex && styles.optionHighlighted,
-                            )}
-                            onClick={() => !opt.disabled && selectOption(opt.value)}
-                            disabled={opt.disabled}
-                            tabIndex={-1}
+                            key={opt.value}
+                            role="option"
+                            aria-selected={selectedValues.includes(opt.value)}
                           >
-                            {multiple && (
-                              <input
-                                type="checkbox"
-                                className={styles.checkbox}
-                                checked={selectedValues.includes(opt.value)}
-                                readOnly
-                                tabIndex={-1}
+                            <button
+                              type="button"
+                              className={cn(
+                                styles.option,
+                                i === highlightedIndex &&
+                                  styles.optionHighlighted,
+                                opt.disabled && styles.optionDisabled,
+                                selectedValues.includes(opt.value) &&
+                                  styles.optionSelected,
+                              )}
+                              onClick={() =>
+                                !opt.disabled && selectOption(opt.value)
+                              }
+                              disabled={opt.disabled}
+                              tabIndex={-1}
+                            >
+                              {multiple && (
+                                <input
+                                  type="checkbox"
+                                  className={styles.checkbox}
+                                  checked={selectedValues.includes(opt.value)}
+                                  readOnly
+                                  tabIndex={-1}
+                                />
+                              )}
+                              <span className={styles.optionLabel}>
+                                {opt.label}
+                              </span>
+                            </button>
+                          </li>
+                        ))
+                      : (options ?? []).map((opt, i) => {
+                          if (opt.separator) {
+                            return (
+                              <li
+                                key={`sep-${i}`}
+                                className={styles.separator}
+                                role="separator"
+                                aria-orientation="horizontal"
                               />
-                            )}
-                            <span className={styles.optionLabel}>{opt.label}</span>
-                          </button>
+                            );
+                          }
+                          const optIndex = filteredOptions.findIndex(
+                            (f) => f.value === opt.value,
+                          );
+                          return (
+                            <li
+                              key={opt.value}
+                              role="option"
+                              aria-selected={selectedValues.includes(opt.value)}
+                            >
+                              <button
+                                type="button"
+                                className={cn(
+                                  styles.option,
+                                  opt.disabled && styles.optionDisabled,
+                                  selectedValues.includes(opt.value) &&
+                                    styles.optionSelected,
+                                  optIndex === highlightedIndex &&
+                                    styles.optionHighlighted,
+                                )}
+                                onClick={() =>
+                                  !opt.disabled && selectOption(opt.value)
+                                }
+                                disabled={opt.disabled}
+                                tabIndex={-1}
+                              >
+                                {multiple && (
+                                  <input
+                                    type="checkbox"
+                                    className={styles.checkbox}
+                                    checked={selectedValues.includes(opt.value)}
+                                    readOnly
+                                    tabIndex={-1}
+                                  />
+                                )}
+                                <span className={styles.optionLabel}>
+                                  {opt.label}
+                                </span>
+                              </button>
+                            </li>
+                          );
+                        })}
+                    {searchable &&
+                      search.length > 0 &&
+                      filteredOptions.length === 0 && (
+                        <li className={styles.emptyMessage}>
+                          No results found
                         </li>
-                      );
-                    })}
-                {searchable && search.length > 0 && filteredOptions.length === 0 && (
-                  <li className={styles.emptyMessage}>No results found</li>
-                )}
-              </ul>
-            </div>
-            </div>
-          )}
+                      )}
+                  </ul>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

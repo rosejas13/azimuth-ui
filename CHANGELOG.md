@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.2 (2026-08-31)
+
+### Fixes
+
+- **DropdownList crash on empty search results.** Same root cause as the Combobox crash fixed in 0.12.1: `setHighlightedIndex(0)` fired on every keystroke even when the filtered list was empty, causing downstream accesses to `filteredOptions[0]` to throw. Now sets `-1` when no results match, and ArrowDown/ArrowUp are no-ops on empty lists.
+
 ## 0.12.1 (2026-08-31)
 
 ### Fixes
