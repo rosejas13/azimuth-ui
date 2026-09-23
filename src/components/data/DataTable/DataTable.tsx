@@ -31,6 +31,22 @@ export interface DataTableColumn<T> {
 }
 
 /**
+ * Context handed to a `rowEditor` renderer for the row currently being edited.
+ * The renderer hosts its own overlay (Modal, Drawer, SlideSheet…).
+ */
+export interface DataTableRowEditorContext<T> {
+  row: T;
+  index: number;
+  /** Dismisses the editor and clears the active row. */
+  close: () => void;
+}
+
+/** Row editor contract: a render function receiving the active editing row (or null when none). */
+export interface DataTableRowEditorProps<T> {
+  component: (context: DataTableRowEditorContext<T> | null) => React.ReactNode;
+}
+
+/**
  * A feature-rich data table component built on Azimuth's Table primitives.
  *
  * Supports sorting, search (with optional column selector), pagination,
@@ -63,6 +79,10 @@ export interface DataTableProps<T> extends Omit<
       enabled?: boolean;
       onEdit?: (row: T, index: number) => void;
     };
+    /** Modal-style row editor for complex records. When set, the pencil
+     * action opens `component` with the active row instead of calling
+     * `edit.onEdit`, which remains available for lightweight inline flows. */
+    rowEditor?: DataTableRowEditorProps<T>;
   };
   search?: {
     enabled?: boolean;
@@ -135,6 +155,7 @@ function DataTableInner<T>(
       data,
       emptyMessage = 'No data available',
       edit: { enabled: editable = false, onEdit } = {},
+      rowEditor,
     } = {},
     search: {
       enabled: searchable = false,
@@ -173,6 +194,9 @@ function DataTableInner<T>(
   const columnDropdownRef = useRef<HTMLDivElement>(null);
   const [sortState, setSortState] = useState<SortState | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [editing, setEditing] = useState<{ row: T; index: number } | null>(
+    null,
+  );
   const virtScrollRef = useRef<HTMLDivElement>(null);
 
   const isPageSizeControlled = controlledPageSize !== undefined;
@@ -315,18 +339,24 @@ function DataTableInner<T>(
     [onRowClick, paginatedRows, sortedRows, useVirtualized],
   );
 
+  const showEditor = editable || rowEditor !== undefined;
+
   const handleEdit = useCallback(
     (rowIndex: number) => {
-      if (!onEdit) return;
       const entry = useVirtualized
         ? sortedRows[rowIndex]
         : paginatedRows[rowIndex];
       if (!entry) return;
-      const { row, index } = entry;
-      onEdit(row, index);
+      if (rowEditor) {
+        setEditing({ row: entry.row, index: entry.index });
+        return;
+      }
+      onEdit?.(entry.row, entry.index);
     },
-    [onEdit, paginatedRows, sortedRows, useVirtualized],
+    [onEdit, paginatedRows, sortedRows, useVirtualized, rowEditor],
   );
+
+  const closeEditor = useCallback(() => setEditing(null), []);
 
   const showSearch = searchable || onSearch !== undefined;
   const showColumnSelector = searchColumnSelector && showSearch && !onSearch;
@@ -590,7 +620,7 @@ function DataTableInner<T>(
                       </Table.HeadCell>
                     );
                   })}
-                  {editable && (
+                  {showEditor && (
                     <Table.HeadCell scope="col">
                       <span className="sr-only">Actions</span>
                     </Table.HeadCell>
@@ -662,7 +692,7 @@ function DataTableInner<T>(
                                         )}
                                   </Table.Cell>
                                 ))}
-                                {editable && (
+                                {showEditor && (
                                   <Table.Cell>
                                     <button
                                       type="button"
@@ -726,7 +756,7 @@ function DataTableInner<T>(
                                 )}
                           </Table.Cell>
                         ))}
-                        {editable && (
+                        {showEditor && (
                           <Table.Cell>
                             <button
                               type="button"
@@ -830,6 +860,13 @@ function DataTableInner<T>(
           {emptyMessage}
         </div>
       )}
+
+      {rowEditor &&
+        rowEditor.component(
+          editing
+            ? { row: editing.row, index: editing.index, close: closeEditor }
+            : null,
+        )}
     </div>
   );
 }

@@ -20,11 +20,20 @@ const options = [
   { value: 'fig', label: 'Fig' },
 ];
 
-function ComboboxDemo(override: Partial<React.ComponentProps<typeof Combobox>>) {
+function ComboboxDemo(
+  override: Partial<React.ComponentProps<typeof Combobox>>,
+) {
   const [value, setValue] = useState('');
   return (
     <Combobox
-      selection={{ value, onChange: setValue, onSelect: (v) => { setValue(''); setValue(v); } }}
+      selection={{
+        value,
+        onChange: setValue,
+        onSelect: (v) => {
+          setValue('');
+          setValue(v);
+        },
+      }}
       data={{ options }}
       {...override}
     />
@@ -49,4 +58,29 @@ export const Sizes: Story = {
 
 export const Error: Story = {
   render: () => <ComboboxDemo error="Please select a valid option" />,
+};
+
+function MultiComboboxDemo(
+  override: Partial<React.ComponentProps<typeof Combobox>>,
+) {
+  const [values, setValues] = useState<string[]>(['apple']);
+  return (
+    <Combobox
+      selection={{
+        values,
+        onChange: setValues,
+        onSelect: (v) => console.log('selected', v),
+        onRemove: (v) => console.log('removed', v),
+      }}
+      data={{ options }}
+      label="Pick fruits"
+      {...override}
+    />
+  );
+}
+
+export const MultiSelect: Story = { render: () => <MultiComboboxDemo /> };
+
+export const MultiSelectAllowNew: Story = {
+  render: () => <MultiComboboxDemo allowNewValue maxSelected={4} />,
 };

@@ -377,3 +377,183 @@ describe('Combobox listbox positioning', () => {
     expect(listbox).toHaveStyle({ top: '4px' });
   });
 });
+
+describe('Combobox multi-select', () => {
+  it('renders chips for selected values', () => {
+    render(
+      <Combobox
+        data={{ options }}
+        selection={{
+          values: ['apple', 'cherry'],
+          onChange: () => {},
+          onSelect: () => {},
+          onRemove: () => {},
+        }}
+      />,
+    );
+    expect(screen.getByText('Apple')).toBeInTheDocument();
+    expect(screen.getByText('Cherry')).toBeInTheDocument();
+  });
+
+  it('labels chips exist with remove buttons', () => {
+    render(
+      <Combobox
+        data={{ options }}
+        selection={{
+          values: ['apple'],
+          onChange: () => {},
+          onSelect: () => {},
+          onRemove: () => {},
+        }}
+      />,
+    );
+    expect(
+      screen.getByRole('button', { name: 'Remove Apple' }),
+    ).toBeInTheDocument();
+  });
+
+  it('onRemove fires when a chip remove button is clicked', async () => {
+    const onRemove = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Combobox
+        data={{ options }}
+        selection={{
+          values: ['apple'],
+          onChange: () => {},
+          onSelect: () => {},
+          onRemove,
+        }}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: 'Remove Apple' }));
+    expect(onRemove).toHaveBeenCalledWith('apple');
+  });
+
+  it('onSelect appends a value via onChange in selection order', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(
+      <Combobox
+        data={{ options }}
+        selection={{
+          values: ['apple'],
+          onChange,
+          onSelect: () => {},
+          onRemove: () => {},
+        }}
+      />,
+    );
+    const input = container.querySelector<HTMLInputElement>(
+      'input[role="combobox"]',
+    )!;
+    await user.type(input, 'ban');
+    await user.keyboard('{Enter}');
+    expect(onChange).toHaveBeenCalledWith(['apple', 'banana']);
+  });
+
+  it('Backspace on empty input pops the last chip', async () => {
+    const onRemove = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(
+      <Combobox
+        data={{ options }}
+        selection={{
+          values: ['apple', 'cherry'],
+          onChange: () => {},
+          onSelect: () => {},
+          onRemove,
+        }}
+      />,
+    );
+    const input = container.querySelector<HTMLInputElement>(
+      'input[role="combobox"]',
+    )!;
+    await user.click(input);
+    await user.keyboard('{Backspace}');
+    expect(onRemove).toHaveBeenCalledWith('cherry');
+  });
+
+  it('maxSelected caps additional selections', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(
+      <Combobox
+        data={{ options }}
+        selection={{
+          values: ['apple', 'cherry'],
+          onChange,
+          onSelect: () => {},
+          onRemove: () => {},
+        }}
+        maxSelected={2}
+      />,
+    );
+    const input = container.querySelector<HTMLInputElement>(
+      'input[role="combobox"]',
+    )!;
+    await user.type(input, 'ban');
+    await user.keyboard('{Enter}');
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('allowNewValue adds typed entries not in options', async () => {
+    const onChange = vi.fn();
+    const onSelect = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(
+      <Combobox
+        data={{ options }}
+        selection={{ values: [], onChange, onSelect, onRemove: () => {} }}
+        allowNewValue
+      />,
+    );
+    const input = container.querySelector<HTMLInputElement>(
+      'input[role="combobox"]',
+    )!;
+    await user.type(input, 'komorebi');
+    await user.keyboard('{Enter}');
+    expect(onChange).toHaveBeenCalledWith(['komorebi']);
+    expect(onSelect).toHaveBeenCalledWith('komorebi');
+  });
+
+  it('duplicate selection is ignored and does not fire onChange', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(
+      <Combobox
+        data={{ options }}
+        selection={{
+          values: ['apple'],
+          onChange,
+          onSelect: () => {},
+          onRemove: () => {},
+        }}
+      />,
+    );
+    const input = container.querySelector<HTMLInputElement>(
+      'input[role="combobox"]',
+    )!;
+    await user.type(input, 'app');
+    await user.keyboard('{Enter}');
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('single-select API still works (regression)', async () => {
+    const onSelect = vi.fn();
+    function SingleDemo() {
+      const [value, setValue] = useState('');
+      return (
+        <Combobox
+          data={{ options }}
+          selection={{ value, onChange: setValue, onSelect }}
+        />
+      );
+    }
+    const user = userEvent.setup();
+    render(<SingleDemo />);
+    await user.type(screen.getByRole('combobox'), 'ban');
+    await user.keyboard('{Enter}');
+    expect(onSelect).toHaveBeenCalledWith('banana');
+  });
+});

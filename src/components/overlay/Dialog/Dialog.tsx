@@ -40,6 +40,14 @@ export interface DialogProps extends Omit<
       onCancel?: () => void;
     };
   };
+  /**
+   * Which button receives focus when the dialog opens.
+   * Destructive confirmations are safest when focus lands on the cancel
+   * action, so `warning`/`danger` dialogs default to `'cancel'`; `info`
+   * defaults to `'close'` (the X button).
+   * @default undefined (resolved by {@link DialogProps.content.variant})
+   */
+  initialFocus?: 'cancel' | 'confirm' | 'close';
   children?: React.ReactNode;
 }
 
@@ -65,6 +73,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
         } = {},
         cancel: { label: cancelLabel = 'Cancel', onCancel } = {},
       } = {},
+      initialFocus: initialFocusProp,
       className,
       children,
       ...props
@@ -72,6 +81,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     ref,
   ) => {
     const confirmRef = useRef<HTMLButtonElement>(null);
+    const cancelRef = useRef<HTMLButtonElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
     const titleId = useRef(
       `azimuth-dialog-${Math.random().toString(36).slice(2, 9)}`,
@@ -101,6 +111,25 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     );
 
     useFocusTrap(overlayRef, open);
+
+    // Focus the initial target after the trap's first-focus (runs one frame
+    // later so it wins). Destructive variants default focus to the cancel
+    // action; info defaults to the close button.
+    const initialFocus =
+      initialFocusProp ?? (variant === 'info' ? 'close' : 'cancel');
+    useEffect(() => {
+      if (!open) return;
+      const timer = window.setTimeout(() => {
+        const target =
+          initialFocus === 'confirm'
+            ? confirmRef.current
+            : initialFocus === 'cancel'
+              ? cancelRef.current
+              : overlayRef.current?.querySelector('button');
+        target?.focus();
+      }, 0);
+      return () => window.clearTimeout(timer);
+    }, [open, initialFocus]);
 
     useEffect(() => {
       if (!open) return;
@@ -180,6 +209,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
 
           <div className={styles.footer}>
             <button
+              ref={cancelRef}
               type="button"
               className={styles.cancelButton}
               onClick={handleCancel}

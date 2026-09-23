@@ -4,7 +4,28 @@ import { type ComponentPropsWithoutRef, forwardRef, useCallback } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Pagination.module.css';
 
-/** Props for the Pagination navigation component. */
+/**
+ * Props for the Pagination navigation component.
+ *
+ * @remarks
+ * **Usage with JSX element arrays:** Pagination renders its own page buttons
+ * and does not accept a JSX array of items. Slice your data with the current
+ * page and size, render the slice separately, and place Pagination below it:
+ *
+ * ```tsx
+ * const perPage = 10;
+ * const visible = items.slice((page - 1) * perPage, page * perPage);
+ *
+ * <>
+ *   <Grid cols={3}>{visible.map((card) => <ProductCard {...card} />)}</Grid>
+ *   <Pagination
+ *     currentPage={page}
+ *     totalPages={Math.ceil(items.length / perPage)}
+ *     onPageChange={setPage}
+ *   />
+ * </>
+ * ```
+ */
 export interface PaginationProps extends ComponentPropsWithoutRef<'nav'> {
   currentPage: number;
   totalPages: number;
@@ -59,7 +80,10 @@ function getPageRange(
   return [
     1,
     'ellipsis-start',
-    ...Array.from({ length: rightSibling - leftSibling + 1 }, (_, i) => leftSibling + i),
+    ...Array.from(
+      { length: rightSibling - leftSibling + 1 },
+      (_, i) => leftSibling + i,
+    ),
     'ellipsis-end',
     total,
   ];
@@ -157,10 +181,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
               <li key={page}>
                 <button
                   type="button"
-                  className={cn(
-                    styles.item,
-                    isActive && styles.active,
-                  )}
+                  className={cn(styles.item, isActive && styles.active)}
                   onClick={() => handleClick(page)}
                   onKeyDown={(e) => handleKeyDown(e, page)}
                   aria-current={isActive ? 'page' : undefined}

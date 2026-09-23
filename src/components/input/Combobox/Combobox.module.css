@@ -15,6 +15,82 @@
   position: relative;
 }
 
+/* Multi-select mode: chips share the field box with the input. */
+.inputRow {
+  position: relative;
+}
+
+.hasChips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--azimuth-space-xs);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  background: var(--azimuth-color-surface);
+  padding: calc(var(--azimuth-space-xs) / 2) var(--azimuth-space-sm);
+  transition:
+    border-color var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast),
+    background var(--azimuth-transition-fast);
+}
+
+.hasChips input {
+  flex: 1 1 8ch;
+  min-width: 8ch;
+  padding-block: calc(var(--azimuth-space-xs) / 2);
+}
+
+.hasChips:focus-within {
+  outline: none;
+  border-color: var(--azimuth-color-primary);
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.hasError .hasChips {
+  border-color: var(--azimuth-color-error-text);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--azimuth-space-xs) / 2);
+  padding: calc(var(--azimuth-space-xs) / 3) calc(var(--azimuth-space-xs) / 2);
+  border-radius: var(--azimuth-radius-sm);
+  background: var(--azimuth-color-accent-subtle);
+  color: var(--azimuth-color-text);
+  font-size: var(--azimuth-fs-sm);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.chipRemove {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: var(--azimuth-fs-base);
+  line-height: 1;
+  padding: 0 0.15em;
+  cursor: pointer;
+  border-radius: var(--azimuth-radius-sm);
+}
+
+.chipRemove:hover {
+  color: var(--azimuth-color-error-text);
+}
+
+.chipRemove:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 1px;
+}
+
+.chipRemove:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .input {
   width: 100%;
   border: 1px solid var(--azimuth-color-border);

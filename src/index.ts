@@ -153,6 +153,8 @@ export { DataTable } from './components/data/DataTable';
 export type {
   DataTableProps,
   DataTableColumn,
+  DataTableRowEditorProps,
+  DataTableRowEditorContext,
 } from './components/data/DataTable';
 
 export { DateTimePicker } from './components/data/DateTimePicker';
@@ -169,6 +171,12 @@ export type { FileUploadProps } from './components/input/FileUpload';
 
 export { Dialog } from './components/overlay/Dialog';
 export type { DialogProps } from './components/overlay/Dialog';
+
+export { ConfirmDialog } from './components/overlay/ConfirmDialog';
+export type {
+  ConfirmDialogProps,
+  ConfirmSeverity,
+} from './components/overlay/ConfirmDialog';
 
 export { Drawer } from './components/overlay/Drawer';
 export type { DrawerProps } from './components/overlay/Drawer';

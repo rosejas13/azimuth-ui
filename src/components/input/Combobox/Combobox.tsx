@@ -18,6 +18,25 @@ export interface ComboboxOption {
   label: string;
 }
 
+/** Single-select state contract (default mode). */
+export interface ComboboxSingleSelection {
+  value: string;
+  onChange: (value: string) => void;
+  onSelect: (value: string) => void;
+}
+
+/**
+ * Multi-select state contract: chips render inside the field, `onSelect`
+ * appends a value, `onRemove` fires when a chip is dismissed, and Backspace
+ * on an empty input pops the last chip.
+ */
+export interface ComboboxMultiSelection {
+  values: string[];
+  onChange: (values: string[]) => void;
+  onSelect: (value: string) => void;
+  onRemove?: (value: string) => void;
+}
+
 /** Props for the Combobox component. */
 export interface ComboboxProps extends Omit<
   ComponentPropsWithoutRef<'div'>,
@@ -27,11 +46,7 @@ export interface ComboboxProps extends Omit<
     options: ComboboxOption[];
     /** @default 'No results found' */ emptyMessage?: string;
   };
-  selection: {
-    value: string;
-    onChange: (value: string) => void;
-    onSelect: (value: string) => void;
-  };
+  selection: ComboboxSingleSelection | ComboboxMultiSelection;
   label?: string;
   /** @default 'Type to search...' */
   placeholder?: string;
@@ -44,28 +59,59 @@ export interface ComboboxProps extends Omit<
    *  Return `true` to include the option in the filtered list.
    *  @default substring match (case-insensitive includes) */
   filter?: (option: ComboboxOption, query: string) => boolean;
+  /**
+   * Render removable chips for the selected values inside the field
+   * (multi mode only).
+   * @default true */
+  chipVariant?: boolean;
+  /** Accept typed values not present in `data.options` (multi mode only). @default false */
+  allowNewValue?: boolean;
+  /** Maximum number of selectable values (multi mode only). */
+  maxSelected?: number;
 }
 
-/** An autocomplete combobox with filtering, keyboard navigation, and ARIA support. */
+const isMultiSelection = (
+  selection: ComboboxProps['selection'],
+): selection is ComboboxMultiSelection =>
+  'values' in selection && Array.isArray(selection.values);
+
+function toLabel(value: string, options: ComboboxOption[] | undefined): string {
+  const found = (options ?? []).find((o) => o.value === value);
+  return found?.label ?? value;
+}
+
+/** An autocomplete combobox with filtering, keyboard navigation, ARIA support,
+ * and an optional multi-select chip mode. */
 export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
   (
     {
       data: { options, emptyMessage = 'No results found' },
-      selection: { value, onChange, onSelect },
+      selection,
       label,
       placeholder = 'Type to search...',
       size = 'md',
       disabled = false,
       error,
       filter: customFilter,
+      chipVariant = true,
+      allowNewValue = false,
+      maxSelected,
       className,
       ...props
     },
     ref,
   ) => {
+    const multi = isMultiSelection(selection);
+    const values: string[] = multi ? selection.values : [];
+    const isAtCapacity =
+      maxSelected !== undefined && values.length >= maxSelected;
+
     const [open, setOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
     const [listboxStyle, setListboxStyle] = useState<React.CSSProperties>({});
+    // Multi mode keeps the typed query internal — `selection.onChange` there
+    // carries the selected values, not the input text.
+    const [query, setQuery] = useState('');
     const wrapperRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const listboxRef = useRef<HTMLUListElement>(null);
@@ -78,8 +124,9 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
         return (opt.label ?? '').toLowerCase().includes(q.toLowerCase());
       });
 
+    const displayValue = multi ? query : (selection.value ?? '');
     const filteredOptions = (options ?? []).filter((opt) =>
-      filterFn(opt, value ?? ''),
+      filterFn(opt, displayValue ?? ''),
     );
 
     const close = useCallback(() => {
@@ -135,8 +182,9 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
 
     useEffect(() => {
       if (open && highlightedIndex >= 0 && listboxRef.current) {
-        const options = listboxRef.current.querySelectorAll('[role="option"]');
-        const el = options[highlightedIndex] as HTMLElement | undefined;
+        const optionEls =
+          listboxRef.current.querySelectorAll('[role="option"]');
+        const el = optionEls[highlightedIndex] as HTMLElement | undefined;
         el?.scrollIntoView({ block: 'nearest' });
       }
     }, [highlightedIndex, open]);
@@ -148,30 +196,73 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
       updatePosition();
     }, [open, filteredOptions.length, updatePosition]);
 
+    const removeValue = useCallback(
+      (value: string) => {
+        if (!multi) return;
+        selection.onChange(values.filter((v) => v !== value));
+        selection.onRemove?.(value);
+      },
+      [multi, selection, values],
+    );
+
+    const addValue = useCallback(
+      (value: string) => {
+        if (!multi) return;
+        if (values.includes(value)) return;
+        if (isAtCapacity) return;
+        selection.onChange([...values, value]);
+        selection.onSelect(value);
+      },
+      [multi, selection, values, isAtCapacity],
+    );
+
     const handleInputChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
-        onChange(e.target.value);
+        const next = e.target.value;
+        if (multi) {
+          setQuery(next);
+        } else {
+          selection.onChange(next);
+        }
         updatePosition();
         setOpen(true);
         // Reset highlight to 0 only if there are options to highlight
         const nextFiltered = (options ?? []).filter((opt) =>
-          filterFn(opt, e.target.value),
+          filterFn(opt, next),
         );
         setHighlightedIndex(nextFiltered.length > 0 ? 0 : -1);
       },
-      [onChange, updatePosition, options, filterFn],
+      [multi, selection, updatePosition, options, filterFn],
     );
 
     const handleSelect = useCallback(
       (optionValue: string) => {
-        onSelect(optionValue);
+        if (multi) {
+          if (values.includes(optionValue)) return; // toggle no-op; removing is chip/Backspace only
+          addValue(optionValue);
+          setQuery('');
+        } else {
+          selection.onSelect(optionValue);
+        }
         close();
       },
-      [onSelect, close],
+      [multi, selection, values, addValue, close],
     );
 
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent) => {
+        // Backspace on an empty input pops the last chip (multi mode).
+        if (
+          multi &&
+          e.key === 'Backspace' &&
+          (e.currentTarget as HTMLInputElement).value === '' &&
+          values.length > 0
+        ) {
+          e.preventDefault();
+          removeValue(values[values.length - 1]);
+          return;
+        }
+
         if (!open) {
           if (e.key === 'ArrowDown') {
             e.preventDefault();
@@ -194,6 +285,9 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
               highlightedIndex < filteredOptions.length
             ) {
               handleSelect(filteredOptions[highlightedIndex].value);
+            } else if (multi && allowNewValue && query.trim() !== '') {
+              addValue(query.trim());
+              setQuery('');
             }
             break;
           case 'ArrowDown':
@@ -214,13 +308,27 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
             break;
         }
       },
-      [open, highlightedIndex, filteredOptions, handleSelect, close],
+      [
+        multi,
+        values,
+        removeValue,
+        open,
+        highlightedIndex,
+        filteredOptions,
+        handleSelect,
+        close,
+        allowNewValue,
+        query,
+        addValue,
+      ],
     );
 
     const activeDescendantId =
       open && highlightedIndex >= 0 && highlightedIndex < filteredOptions.length
         ? `combobox-option-${id}-${filteredOptions[highlightedIndex].value}`
         : undefined;
+
+    const valueToLabel = (value: string) => toLabel(value, options);
 
     return (
       <div
@@ -240,29 +348,66 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
           </label>
         )}
         <div ref={wrapperRef} className={styles.control}>
-          <input
-            ref={inputRef}
-            id={`combobox-input-${id}`}
-            type="text"
-            role="combobox"
-            aria-autocomplete="list"
-            aria-expanded={open}
-            aria-controls={listboxId}
-            aria-activedescendant={activeDescendantId}
-            aria-invalid={error ? 'true' : undefined}
-            className={styles.input}
-            value={value}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            onFocus={() => {
-              if ((value ?? '').length > 0) {
-                updatePosition();
-                setOpen(true);
+          <div
+            className={cn(
+              styles.inputRow,
+              multi && chipVariant && values.length > 0 && styles.hasChips,
+            )}
+          >
+            {multi &&
+              chipVariant &&
+              values.map((v) => (
+                <span
+                  key={v}
+                  className={cn(styles.chip, error && styles.chipError)}
+                >
+                  {valueToLabel(v)}
+                  <button
+                    type="button"
+                    className={styles.chipRemove}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeValue(v);
+                    }}
+                    aria-label={`Remove ${valueToLabel(v)}`}
+                    disabled={disabled}
+                    tabIndex={-1}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            <input
+              ref={inputRef}
+              id={`combobox-input-${id}`}
+              type="text"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded={open}
+              aria-controls={listboxId}
+              aria-activedescendant={activeDescendantId}
+              aria-invalid={error ? 'true' : undefined}
+              className={styles.input}
+              value={displayValue}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => {
+                if ((displayValue ?? '').length > 0) {
+                  updatePosition();
+                  setOpen(true);
+                }
+              }}
+              placeholder={multi && values.length > 0 ? undefined : placeholder}
+              disabled={disabled}
+              aria-label={
+                multi && values.length > 0
+                  ? label
+                    ? `${label} — search to add more`
+                    : 'Search to add more'
+                  : undefined
               }
-            }}
-            placeholder={placeholder}
-            disabled={disabled}
-          />
+            />
+          </div>
           {open && (
             <ul
               ref={listboxRef}
@@ -277,7 +422,11 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
                     key={opt.value}
                     id={`combobox-option-${id}-${opt.value}`}
                     role="option"
-                    aria-selected={i === highlightedIndex}
+                    aria-selected={
+                      multi
+                        ? values.includes(opt.value)
+                        : i === highlightedIndex
+                    }
                     className={cn(
                       styles.option,
                       i === highlightedIndex && styles.optionHighlighted,
@@ -296,7 +445,12 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
                 ))
               ) : (
                 <li className={styles.emptyMessage} role="status">
-                  {emptyMessage}
+                  {multi &&
+                  allowNewValue &&
+                  query.trim() !== '' &&
+                  !isAtCapacity
+                    ? `Add "${query.trim()}"`
+                    : emptyMessage}
                 </li>
               )}
             </ul>

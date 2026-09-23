@@ -1,5 +1,54 @@
 # Changelog
 
+## 0.13.0 (2026-09-22)
+
+### Features
+
+- **`ConfirmDialog` — a themed destructive-confirmation preset over `Dialog`.** Downstream apps were reaching for unstyled native `window.confirm()` because Dialog is a generic container; ConfirmDialog gives confirm/cancel flows the intended shape: `title`/`message`, `confirmLabel`/`cancelLabel`, a `severity` prop (`danger` default maps to a danger confirm button with `alertdialog` semantics; `warn` maps to warning styling), loading state, and focus landing on the safe action. Closes azimuth_ui-4dt (a promise-style `await confirm(...)` helper is deferred until there's a provider flow to hang it on).
+
+  ```tsx
+  <ConfirmDialog
+    visible={{ open, onClose }}
+    title="Delete partner?"
+    message="Deletes take effect when you press Save all."
+    confirmLabel="Delete"
+    onConfirm={handleDelete}
+  />
+  ```
+
+- **`Dialog` gains an `initialFocus` prop** (`'cancel' | 'confirm' | 'close'`). Previously focus always landed on the X button; for destructive confirmations that risks an accidental confirm-adjacent Enter. `warning`/`danger` variants now default to focusing Cancel, `info` keeps the X button. Closes the focus-handling half of azimuth_ui-4dt.
+
+- **Combobox multi-select mode.** `selection` becomes a discriminated union: the existing single contract (`value`/`onChange`/`onSelect`) is unchanged, and a `{ values, onChange, onSelect, onRemove }` variant renders removable chips inside the field (like TagInput). Typing still filters; Enter appends the highlighted option; Backspace on an empty input pops the last chip; duplicates are ignored. New `allowNewValue` accepts typed values outside `data.options` (announced as `Add "…"`) and `maxSelected` caps the list. Lets downstream list editors drop their custom chip-state management. Closes azimuth_ui-ot0.
+
+- **`DataTable` row editor contract for complex records.** The `edit` prop still covers lightweight inline hooks, but complex rows (multiline lists, grouped pickers, several textareas) now get a modal-style editor without each app hand-rolling its own binding:
+
+  ```tsx
+  <DataTable
+    data={{
+      columns,
+      data,
+      edit: { enabled: true },
+      rowEditor: {
+        component: (ctx) =>
+          ctx ? <RowEditorModal row={ctx.row} close={ctx.close} /> : null,
+      },
+    }}
+  />
+  ```
+
+  DataTable owns the active-row state and hands the render function `{ row, index, close }` (or `null` when nothing is being edited); the renderer hosts whatever overlay it wants. When `rowEditor` is set the pencil action goes to it instead of `edit.onEdit`. Exports: `DataTableRowEditorProps`, `DataTableRowEditorContext`. Closes azimuth_ui-c7j.
+
+- **Pagination documented for JSX element arrays.** Pagination generates its own page buttons and does not accept a JSX array prop; the docs (JSDoc remarks + a `WithElementArrays` story) now show the intended slice-alongside-nav pattern. Closes azimuth_ui-2m1.
+
+### Fixes
+
+- **`Form.Field` no longer mislabels compound children.** `cloneElement` used to inject its `id` onto any single child, so wrapping `AddressInput` (a `fieldset`) or `PhoneInput` (a wrapper `div`) pointed the label's `htmlFor` at a non-labelable wrapper and clobbered the child's own aria wiring. The id is now only injected for simple controls; compound children keep their own id structure while `aria-invalid`/`aria-describedby` still reach them. Closes the main defect in azimuth_ui-m3h (its secondary notes moved to a follow-up bead: Input suggestion blur dismissal and a dev warning for invalid `Text as=` nesting).
+
+### Quality
+
+- Sourcemap hygiene re-verified: `tsup` emits no `sourceMappingURL` and the `verify-dist.mjs` build gate confirms `dist/` ships clean (regression coverage for the Vite-ENOENT fix from 0.12.0; case azimuth_ui-ujy closed as verified).
+- 56 new tests across the four components/cases above (1698 total, 123 files).
+
 ## 0.12.3 (2026-08-31)
 
 ### Fixes

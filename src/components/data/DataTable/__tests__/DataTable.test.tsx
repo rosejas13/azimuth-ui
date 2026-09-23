@@ -531,3 +531,99 @@ describe('DataTable', () => {
     );
   });
 });
+
+describe('DataTable rowEditor', () => {
+  function EditorDemo() {
+    return (
+      <DataTable
+        data={{
+          columns: DEFAULT_COLUMNS,
+          data: DEFAULT_DATA,
+          edit: { enabled: true },
+          rowEditor: {
+            component: (ctx) =>
+              ctx ? (
+                <div role="dialog" aria-label="Row editor">
+                  <div>
+                    editing {String((ctx.row as { name: string }).name)}
+                  </div>
+                  <button onClick={ctx.close}>Done</button>
+                </div>
+              ) : null,
+          },
+        }}
+      />
+    );
+  }
+
+  it('pencil click opens the row editor with active row context', async () => {
+    const user = userEvent.setup();
+    render(<EditorDemo />);
+    await user.click(screen.getByRole('button', { name: 'Edit row 1' }));
+    expect(
+      screen.getByRole('dialog', { name: 'Row editor' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText('editing Alice')).toBeInTheDocument();
+  });
+
+  it('close() clears the active row and unmounts the editor', async () => {
+    const user = userEvent.setup();
+    render(<EditorDemo />);
+    await user.click(screen.getByRole('button', { name: 'Edit row 1' }));
+    await user.click(screen.getByRole('button', { name: 'Done' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('onEdit is not called when rowEditor is present', async () => {
+    const onEdit = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <DataTable
+        data={{
+          columns: DEFAULT_COLUMNS,
+          data: DEFAULT_DATA,
+          edit: { enabled: true, onEdit },
+          rowEditor: {
+            component: (ctx) => (ctx ? <div>editor open</div> : null),
+          },
+        }}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: 'Edit row 1' }));
+    expect(onEdit).not.toHaveBeenCalled();
+    expect(screen.getByText('editor open')).toBeInTheDocument();
+  });
+
+  it('onEdit still fires when no rowEditor is configured', async () => {
+    const onEdit = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <DataTable
+        data={{
+          columns: DEFAULT_COLUMNS,
+          data: DEFAULT_DATA,
+          edit: { enabled: true, onEdit },
+        }}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: 'Edit row 1' }));
+    expect(onEdit).toHaveBeenCalledTimes(1);
+  });
+
+  it('rowEditor works with edit.enabled unset', () => {
+    render(
+      <DataTable
+        data={{
+          columns: DEFAULT_COLUMNS,
+          data: DEFAULT_DATA,
+          rowEditor: {
+            component: (ctx) => (ctx ? <div>editor</div> : null),
+          },
+        }}
+      />,
+    );
+    expect(
+      screen.getByRole('button', { name: 'Edit row 1' }),
+    ).toBeInTheDocument();
+  });
+});

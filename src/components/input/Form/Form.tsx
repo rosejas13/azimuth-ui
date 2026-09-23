@@ -225,6 +225,9 @@ const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
       unknown
     >;
 
+    const childHasExplicitId =
+      'id' in childProps && childProps.id !== undefined;
+
     // Auto-wiring: inject controlled value/change/touched from the form hook.
     const injected: Record<string, unknown> = {};
     if (
@@ -266,7 +269,12 @@ const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
         [key: string]: unknown;
       }>,
       {
-        id: fieldId,
+        // `id` is only injected for simple controls — compound inputs
+        // (AddressInput fieldset, PhoneInput wrapper) manage their own id
+        // wiring, and a wrapper id would make the label's htmlFor point at a
+        // non-labelable element. aria-* attributes are valid on wrappers and
+        // keep error/help text associated either way.
+        ...(childHasExplicitId ? {} : { id: fieldId }),
         'aria-invalid': error ? 'true' : undefined,
         'aria-describedby': error ? errorId : helpText ? helpId : undefined,
         ...injected,
@@ -276,7 +284,10 @@ const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
     return (
       <div ref={ref} className={cn(styles.field, className)} {...props}>
         {label && (
-          <label className={styles.label} htmlFor={fieldId}>
+          <label
+            className={styles.label}
+            htmlFor={childHasExplicitId ? undefined : fieldId}
+          >
             {label}
             {required && (
               <span className={styles.required} aria-hidden="true">
@@ -287,6 +298,7 @@ const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
         )}
         <div
           className={cn(styles.fieldControl, error && styles.fieldControlError)}
+          aria-labelledby={childHasExplicitId ? undefined : fieldId}
         >
           {childWithId}
         </div>
