@@ -4,13 +4,18 @@ import { Slider } from '../Slider';
 
 function SliderDemo() {
   const [value, setValue] = useState(50);
-  return <Slider value={value} onChange={setValue} />;
+  return <Slider value={value} onChange={setValue} aria-label="Volume" />;
 }
 
 function ValueDisplayDemo() {
   const [value, setValue] = useState(42);
   return (
-    <Slider value={value} onChange={setValue} display={{ showValue: true }} />
+    <Slider
+      value={value}
+      onChange={setValue}
+      display={{ showValue: true }}
+      aria-label="Zoom level"
+    />
   );
 }
 
@@ -22,6 +27,7 @@ function VerticalDemo() {
         value={value}
         onChange={setValue}
         display={{ orientation: 'vertical', showValue: true }}
+        aria-label="Height"
       />
     </div>
   );

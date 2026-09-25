@@ -21,7 +21,9 @@
 
 ### Quality
 
-- Versus 0.13.0: +19 tests (1717 total, 123 files), lint/typecheck zero-error, build clean with the sourcemap guard intact, knip dead-code scan clean.
+- **a11y Playwright suite repaired and running again** (azimuth_ui-uk0, long-open): the runner pointed at the Storybook manager URL where `#storybook-root` never exists; specs now load stories directly via `iframe.html`, stale story ids across 13 spec files were re-mapped to the current index, and bare-canvas page rules (`landmark-one-main`, `region`, …) are disabled for component contexts. The input suite is 21/21 green; the rest of the run surfaces 31 real, categorized violations now tracked as a fix-worklist bead (contrast collection, aria-children structure, nameable progressbar) rather than silently hidden.
+- Input/FileUpload/Select a11y hardening from the freshly-running suite: FileUpload no longer nests two focusable `role="button"` surfaces (the drag zone is now the single interactive element, outer wrapper is a plain drag target), Select derives an accessible name from its `placeholder` when no label is provided, and Slider stories carry `aria-label`s through the native passthrough.
+- Versus 0.13.0: +19 tests (1717 total, 123 files), lint/typecheck zero-error, build clean with the sourcemap guard intact, knip dead-code scan clean. `npm run verify` (the publish gate) remains green; the a11y suite runs separately via `npm run test:a11y`.
 
 ## 0.13.0 (2026-09-22)
 

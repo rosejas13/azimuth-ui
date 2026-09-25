@@ -159,6 +159,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         : defaultValue === null ||
           (defaultValue === '' && !optionsHaveEmptyValue && !placeholder));
     const activeBlank = useSentinel ? EMPTY_SENTINEL : '';
+    // Self-setup: without a label, derive an accessible name from the
+    // placeholder text the consumer already supplied.
+    const resolvedAriaLabel =
+      rest['aria-label'] ?? label ?? placeholder ?? undefined;
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -225,6 +229,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             onBlur={effOnBlur}
             name={name}
             {...rest}
+            aria-label={resolvedAriaLabel}
             multiple={multiple}
             {...selectProps}
           >

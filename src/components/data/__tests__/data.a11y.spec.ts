@@ -9,13 +9,13 @@ const stories = [
   'components-datepicker--default',
   'components-datetimepicker--default',
   'components-datafilterbar--default',
-  'components-diffviewer--default',
-  'components-list--default',
+  'components-diffviewer--simple-diff',
+  'components-list--unordered',
   'components-pagination--default',
-  'components-simplechart--default',
+  'components-simplechart--bar-chart',
   'components-table--default',
-  'components-timeline--default',
-  'components-treelist--default',
+  'components-timeline--default-items',
+  'components-treelist--simple',
 ];
 
 test.describe('Data components a11y', () => {

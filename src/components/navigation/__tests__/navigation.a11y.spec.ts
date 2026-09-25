@@ -6,7 +6,7 @@ const stories = [
   'components-breadcrumbs--default',
   'components-menu--default',
   'components-navbar--default',
-  'components-tabs--default',
+  'components-tabs--underline',
 ];
 
 test.describe('Navigation components a11y', () => {

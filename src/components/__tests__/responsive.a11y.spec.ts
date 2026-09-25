@@ -10,7 +10,7 @@ const viewports = [
 
 const stories = [
   'sections-hero--default',
-  'sections-hero--splitwithmedia',
+  'sections-hero--split-with-media',
   'sections-featuresgrid--default',
   'sections-pricingtable--default',
   'sections-testimonials--default',
@@ -18,8 +18,8 @@ const stories = [
   'components-navbar--default',
   'components-pagelayout--default',
   'components-datatable--default',
-  'components-modal--default',
-  'components-sidebar--default',
+  'components-modal--demo',
+  'components-sidebar--left-sidebar',
 ];
 
 test.describe('Responsive a11y & layout', () => {
@@ -27,7 +27,7 @@ test.describe('Responsive a11y & layout', () => {
     for (const vp of viewports) {
       test(`${story} @${vp.name}(${vp.width}px)`, async ({ page }) => {
         await page.setViewportSize({ width: vp.width, height: vp.height });
-        await page.goto(`/?path=/story/${story}`);
+        await page.goto(`/iframe.html?id=${story}&viewMode=story`);
         await expect(page.locator('#storybook-root')).toBeVisible({
           timeout: 15000,
         });

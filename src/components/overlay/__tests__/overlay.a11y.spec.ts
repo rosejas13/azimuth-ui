@@ -3,13 +3,13 @@ import { runA11yTest } from '../../__tests__/a11y-utils';
 
 const stories = [
   'components-commandpalette--default',
-  'components-dialog--default',
-  'components-drawer--default',
+  'components-dialog--info',
+  'components-drawer--left',
   'components-flyout--default',
-  'components-modal--default',
-  'components-sidebar--default',
-  'components-slidesheet--default',
-  'components-tooltip--default',
+  'components-modal--demo',
+  'components-sidebar--left-sidebar',
+  'components-slidesheet--bottom',
+  'components-tooltip--basic',
 ];
 
 test.describe('Overlay components a11y', () => {

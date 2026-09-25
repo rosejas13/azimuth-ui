@@ -32,7 +32,7 @@ describe('FileUpload', () => {
   it('shows file list after files are added via drop', () => {
     const file = createMockFile('test.txt', 100);
     render(<FileUpload />);
-    const zone = screen.getByLabelText('File upload area');
+    const zone = screen.getByRole('button', { name: 'Add files' });
     fireEvent.drop(zone, { dataTransfer: { files: [file] } });
     expect(screen.getByText('test.txt')).toBeInTheDocument();
   });
@@ -41,7 +41,7 @@ describe('FileUpload', () => {
     const onFilesSelected = vi.fn();
     const file = createMockFile('test.txt', 100);
     render(<FileUpload onFilesSelected={onFilesSelected} />);
-    const zone = screen.getByLabelText('File upload area');
+    const zone = screen.getByRole('button', { name: 'Add files' });
     fireEvent.drop(zone, { dataTransfer: { files: [file] } });
     expect(onFilesSelected).toHaveBeenCalledWith([file]);
   });
@@ -51,7 +51,7 @@ describe('FileUpload', () => {
     const file = createMockFile('test.txt', 100);
     const user = userEvent.setup();
     render(<FileUpload onFilesSelected={onFilesSelected} />);
-    const zone = screen.getByLabelText('File upload area');
+    const zone = screen.getByRole('button', { name: 'Add files' });
     fireEvent.drop(zone, { dataTransfer: { files: [file] } });
     expect(screen.getByText('test.txt')).toBeInTheDocument();
     await user.click(screen.getByLabelText('Remove test.txt'));
@@ -62,21 +62,23 @@ describe('FileUpload', () => {
   it('shows error when file exceeds maxSize', () => {
     const file = createMockFile('bigfile.txt', 11 * 1024 * 1024);
     render(<FileUpload maxSize={10} />);
-    const zone = screen.getByLabelText('File upload area');
+    const zone = screen.getByRole('button', { name: 'Add files' });
     fireEvent.drop(zone, { dataTransfer: { files: [file] } });
-    expect(screen.getByRole('alert')).toHaveTextContent(/exceeds the 10 MB limit/);
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      /exceeds the 10 MB limit/,
+    );
   });
 
   it('shows drag over state when dragging', () => {
     render(<FileUpload />);
-    const zone = screen.getByLabelText('File upload area');
+    const zone = screen.getByRole('button', { name: 'Add files' });
     fireEvent.dragOver(zone);
     expect(screen.getByText('Drop files here')).toBeInTheDocument();
   });
 
   it('removes drag over state on drag leave', () => {
     render(<FileUpload />);
-    const zone = screen.getByLabelText('File upload area');
+    const zone = screen.getByRole('button', { name: 'Add files' });
     fireEvent.dragOver(zone);
     expect(screen.getByText('Drop files here')).toBeInTheDocument();
     fireEvent.dragLeave(zone);
@@ -85,7 +87,7 @@ describe('FileUpload', () => {
 
   it('handles drag over state class', () => {
     const { container } = render(<FileUpload />);
-    const zone = screen.getByLabelText('File upload area');
+    const zone = screen.getByRole('button', { name: 'Add files' });
     fireEvent.dragOver(zone);
     expect(container.firstChild).toHaveClass('dragOver');
     fireEvent.dragLeave(zone);
@@ -97,28 +99,30 @@ describe('FileUpload', () => {
     const file1 = createMockFile('first.txt', 100);
     const file2 = createMockFile('second.txt', 100);
     render(<FileUpload multiple={false} onFilesSelected={onFilesSelected} />);
-    const zone = screen.getByLabelText('File upload area');
+    const zone = screen.getByRole('button', { name: 'Add files' });
     fireEvent.drop(zone, { dataTransfer: { files: [file1, file2] } });
     expect(onFilesSelected).toHaveBeenCalledWith([file1]);
   });
 
   it('does not show multiple files text when multiple is false', () => {
     render(<FileUpload multiple={false} />);
-    expect(screen.queryByText(/(multiple files allowed)/)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/(multiple files allowed)/),
+    ).not.toBeInTheDocument();
   });
 
   it('does not call onFilesSelected when disabled', () => {
     const onFilesSelected = vi.fn();
     const file = createMockFile('test.txt', 100);
     render(<FileUpload onFilesSelected={onFilesSelected} disabled />);
-    const zone = screen.getByLabelText('File upload area');
+    const zone = screen.getByRole('button', { name: 'Add files' });
     fireEvent.drop(zone, { dataTransfer: { files: [file] } });
     expect(onFilesSelected).not.toHaveBeenCalled();
   });
 
   it('does not show drag over when disabled', () => {
     render(<FileUpload disabled />);
-    const zone = screen.getByLabelText('File upload area');
+    const zone = screen.getByRole('button', { name: 'Add files' });
     fireEvent.dragOver(zone);
     expect(screen.getByText('Drag and drop files here')).toBeInTheDocument();
   });
@@ -131,7 +135,9 @@ describe('FileUpload', () => {
   it('clicking zone triggers file input', async () => {
     const user = userEvent.setup();
     render(<FileUpload />);
-    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const input = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
     const clickSpy = vi.spyOn(input, 'click');
     await user.click(screen.getByText('Drag and drop files here'));
     expect(clickSpy).toHaveBeenCalled();
@@ -140,7 +146,9 @@ describe('FileUpload', () => {
   it('does not trigger file input when disabled', async () => {
     const user = userEvent.setup();
     render(<FileUpload disabled />);
-    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const input = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
     const clickSpy = vi.spyOn(input, 'click');
     await user.click(screen.getByText('Drag and drop files here'));
     expect(clickSpy).not.toHaveBeenCalled();
@@ -150,7 +158,9 @@ describe('FileUpload', () => {
     const onFilesSelected = vi.fn();
     const file = createMockFile('uploaded.txt', 200);
     render(<FileUpload onFilesSelected={onFilesSelected} />);
-    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const input = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
     fireEvent.change(input, { target: { files: [file] } });
     expect(onFilesSelected).toHaveBeenCalledWith([file]);
     expect(screen.getByText('uploaded.txt')).toBeInTheDocument();
@@ -160,7 +170,7 @@ describe('FileUpload', () => {
     const onFilesSelected = vi.fn();
     const file = createMockFile('pasted.png', 500, 'image/png');
     render(<FileUpload onFilesSelected={onFilesSelected} />);
-    const zone = screen.getByLabelText('File upload area');
+    const zone = screen.getByRole('button', { name: 'Add files' });
     const items = [{ kind: 'file', getAsFile: () => file }];
     fireEvent.paste(zone, { clipboardData: { items } });
     expect(onFilesSelected).toHaveBeenCalledWith([file]);

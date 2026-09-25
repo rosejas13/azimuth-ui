@@ -2,7 +2,9 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Accordion a11y', () => {
   test('should render default accordion panels', async ({ page }) => {
-    await page.goto('/?path=/story/components-accordion--default');
+    await page.goto(
+      '/iframe.html?id=components-accordion--default&viewMode=story',
+    );
     await expect(page.locator('#storybook-root')).toBeVisible();
 
     const panels = page.getByRole('heading');
@@ -10,7 +12,9 @@ test.describe('Accordion a11y', () => {
   });
 
   test('should toggle panel content on click', async ({ page }) => {
-    await page.goto('/?path=/story/components-accordion--default');
+    await page.goto(
+      '/iframe.html?id=components-accordion--default&viewMode=story',
+    );
     await expect(page.locator('#storybook-root')).toBeVisible();
 
     const firstTrigger = page.getByRole('button').first();

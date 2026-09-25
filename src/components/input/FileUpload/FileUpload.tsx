@@ -1,10 +1,21 @@
 'use client';
 
-import { type ComponentPropsWithoutRef, forwardRef, useCallback, useRef, useState, type DragEvent, type ClipboardEvent } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  forwardRef,
+  useCallback,
+  useRef,
+  useState,
+  type DragEvent,
+  type ClipboardEvent,
+} from 'react';
 import { cn } from '@/utils/cn';
 import styles from './FileUpload.module.css';
 
-export interface FileUploadProps extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
+export interface FileUploadProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'children'
+> {
   onFilesSelected?: (files: File[]) => void;
   /** Accepted file types string (e.g. 'image/*,.pdf'). Passed to the underlying file input. */
   accept?: string;
@@ -34,33 +45,50 @@ function formatSize(bytes: number): string {
  * - Keyboard accessible via Enter/Space on the drop zone
  */
 export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
-  ({ onFilesSelected, accept, multiple = true, maxSize = 10, disabled = false, className, ...props }, ref) => {
+  (
+    {
+      onFilesSelected,
+      accept,
+      multiple = true,
+      maxSize = 10,
+      disabled = false,
+      className,
+      ...props
+    },
+    ref,
+  ) => {
     const [dragOver, setDragOver] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
     const [error, setError] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const validateAndAdd = useCallback((newFiles: FileList | File[]) => {
-      setError(null);
-      const valid: File[] = [];
-      for (const f of Array.from(newFiles)) {
-        if (f.size > maxSize * 1024 * 1024) {
-          setError(`${f.name} exceeds the ${maxSize} MB limit`);
-          continue;
+    const validateAndAdd = useCallback(
+      (newFiles: FileList | File[]) => {
+        setError(null);
+        const valid: File[] = [];
+        for (const f of Array.from(newFiles)) {
+          if (f.size > maxSize * 1024 * 1024) {
+            setError(`${f.name} exceeds the ${maxSize} MB limit`);
+            continue;
+          }
+          valid.push(f);
         }
-        valid.push(f);
-      }
-      if (valid.length === 0) return;
-      const updated = multiple ? [...files, ...valid] : [valid[0]];
-      setFiles(updated);
-      onFilesSelected?.(updated);
-    }, [files, maxSize, multiple, onFilesSelected]);
+        if (valid.length === 0) return;
+        const updated = multiple ? [...files, ...valid] : [valid[0]];
+        setFiles(updated);
+        onFilesSelected?.(updated);
+      },
+      [files, maxSize, multiple, onFilesSelected],
+    );
 
-    const handleDragOver = useCallback((e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!disabled) setDragOver(true);
-    }, [disabled]);
+    const handleDragOver = useCallback(
+      (e: DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!disabled) setDragOver(true);
+      },
+      [disabled],
+    );
 
     const handleDragLeave = useCallback((e: DragEvent) => {
       e.preventDefault();
@@ -68,66 +96,86 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
       setDragOver(false);
     }, []);
 
-    const handleDrop = useCallback((e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setDragOver(false);
-      if (disabled) return;
-      if (e.dataTransfer.files.length > 0) {
-        validateAndAdd(e.dataTransfer.files);
-      }
-    }, [disabled, validateAndAdd]);
-
-    const handlePaste = useCallback((e: ClipboardEvent) => {
-      if (disabled) return;
-      const items = e.clipboardData?.items;
-      if (!items) return;
-      const pastedFiles: File[] = [];
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        if (item.kind === 'file') {
-          const file = item.getAsFile();
-          if (file) pastedFiles.push(file);
-        }
-      }
-      if (pastedFiles.length > 0) {
-        validateAndAdd(pastedFiles);
-      }
-    }, [disabled, validateAndAdd]);
-
-    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-      if (disabled) return;
-      if (e.key === 'Enter' || e.key === ' ') {
+    const handleDrop = useCallback(
+      (e: DragEvent) => {
         e.preventDefault();
-        inputRef.current?.click();
-      }
-    }, [disabled]);
+        e.stopPropagation();
+        setDragOver(false);
+        if (disabled) return;
+        if (e.dataTransfer.files.length > 0) {
+          validateAndAdd(e.dataTransfer.files);
+        }
+      },
+      [disabled, validateAndAdd],
+    );
 
-    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files && e.target.files.length > 0) {
-        validateAndAdd(e.target.files);
-      }
-      e.target.value = '';
-    }, [validateAndAdd]);
+    const handlePaste = useCallback(
+      (e: ClipboardEvent) => {
+        if (disabled) return;
+        const items = e.clipboardData?.items;
+        if (!items) return;
+        const pastedFiles: File[] = [];
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          if (item.kind === 'file') {
+            const file = item.getAsFile();
+            if (file) pastedFiles.push(file);
+          }
+        }
+        if (pastedFiles.length > 0) {
+          validateAndAdd(pastedFiles);
+        }
+      },
+      [disabled, validateAndAdd],
+    );
 
-    const removeFile = useCallback((index: number) => {
-      const updated = files.filter((_, i) => i !== index);
-      setFiles(updated);
-      onFilesSelected?.(updated);
-    }, [files, onFilesSelected]);
+    const handleKeyDown = useCallback(
+      (e: React.KeyboardEvent) => {
+        if (disabled) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          inputRef.current?.click();
+        }
+      },
+      [disabled],
+    );
+
+    const handleInputChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+          validateAndAdd(e.target.files);
+        }
+        e.target.value = '';
+      },
+      [validateAndAdd],
+    );
+
+    const removeFile = useCallback(
+      (index: number) => {
+        const updated = files.filter((_, i) => i !== index);
+        setFiles(updated);
+        onFilesSelected?.(updated);
+      },
+      [files, onFilesSelected],
+    );
 
     return (
       <div
         ref={ref}
-        className={cn(styles.root, dragOver && styles.dragOver, disabled && styles.disabled, className)}
+        className={cn(
+          styles.root,
+          dragOver && styles.dragOver,
+          disabled && styles.disabled,
+          className,
+        )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onPaste={handlePaste}
         onKeyDown={handleKeyDown}
-        tabIndex={disabled ? -1 : 0}
-        role="button"
-        aria-label="File upload area"
+        // Non-interactive: the drag target role is carried by the inner
+        // button; this wrapper only handles file-transfer events.
+        role="presentation"
         {...props}
       >
         <input
@@ -145,6 +193,7 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
           className={styles.zone}
           role="button"
           tabIndex={disabled ? -1 : 0}
+          aria-label="Add files"
           onClick={() => !disabled && inputRef.current?.click()}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -161,14 +210,19 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
             or click to browse{multiple ? ' (multiple files allowed)' : ''}
           </div>
           <div className={styles.subtitle}>
-            Max file size: {maxSize} MB{accept ? ` \u00B7 Accepts: ${accept}` : ''}
+            Max file size: {maxSize} MB
+            {accept ? ` \u00B7 Accepts: ${accept}` : ''}
           </div>
           <div className={styles.subtitle}>
             You can also paste images from clipboard
           </div>
         </div>
 
-        {error && <div className={styles.error} role="alert">{error}</div>}
+        {error && (
+          <div className={styles.error} role="alert">
+            {error}
+          </div>
+        )}
 
         {files.length > 0 && (
           <ul className={styles.fileList} aria-live="polite">
@@ -176,7 +230,9 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
               <li key={`${file.name}-${i}`} className={styles.fileItem}>
                 <div className={styles.fileInfo}>
                   <span className={styles.fileName}>{file.name}</span>
-                  <span className={styles.fileSize}>{formatSize(file.size)}</span>
+                  <span className={styles.fileSize}>
+                    {formatSize(file.size)}
+                  </span>
                 </div>
                 <button
                   type="button"

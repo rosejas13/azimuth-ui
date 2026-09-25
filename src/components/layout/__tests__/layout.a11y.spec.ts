@@ -3,9 +3,9 @@ import { runA11yTest } from '../../__tests__/a11y-utils';
 
 const stories = [
   'components-container--default',
-  'components-divider--default',
-  'components-grid--default',
-  'components-stack--default',
+  'components-divider--horizontal',
+  'components-grid--two-columns',
+  'components-stack--vertical',
 ];
 
 test.describe('Layout components a11y', () => {

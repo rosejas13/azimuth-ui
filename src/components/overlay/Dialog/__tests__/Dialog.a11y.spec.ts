@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Dialog a11y', () => {
   test('should render dialog trigger button', async ({ page }) => {
-    await page.goto('/?path=/story/components-dialog--info');
+    await page.goto('/iframe.html?id=components-dialog--info&viewMode=story');
     await expect(page.locator('#storybook-root')).toBeVisible();
 
     const trigger = page.getByRole('button', { name: 'Open Dialog' });
@@ -10,7 +10,7 @@ test.describe('Dialog a11y', () => {
   });
 
   test('should open dialog on trigger click', async ({ page }) => {
-    await page.goto('/?path=/story/components-dialog--info');
+    await page.goto('/iframe.html?id=components-dialog--info&viewMode=story');
     await expect(page.locator('#storybook-root')).toBeVisible();
 
     await page.getByRole('button', { name: 'Open Dialog' }).click();

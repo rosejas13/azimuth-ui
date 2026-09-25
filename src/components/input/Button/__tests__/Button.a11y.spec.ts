@@ -2,7 +2,9 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Button a11y', () => {
   test('should render primary button with correct role', async ({ page }) => {
-    await page.goto('/?path=/story/primitives-button--primary');
+    await page.goto(
+      '/iframe.html?id=primitives-button--primary&viewMode=story',
+    );
     await expect(page.locator('#storybook-root')).toBeVisible();
 
     const button = page.getByRole('button', { name: 'Primary Button' });
@@ -11,7 +13,9 @@ test.describe('Button a11y', () => {
   });
 
   test('should render disabled button as disabled', async ({ page }) => {
-    await page.goto('/?path=/story/primitives-button--disabled');
+    await page.goto(
+      '/iframe.html?id=primitives-button--disabled&viewMode=story',
+    );
     await expect(page.locator('#storybook-root')).toBeVisible();
 
     const button = page.getByRole('button', { name: 'Disabled' });
@@ -24,7 +28,9 @@ test.describe('Button a11y', () => {
   test('asChild link variant removes the UA default underline', async ({
     page,
   }) => {
-    await page.goto('/?path=/story/primitives-button--as-child-link');
+    await page.goto(
+      '/iframe.html?id=primitives-button--as-child-link&viewMode=story',
+    );
     await expect(page.locator('#storybook-root')).toBeVisible();
 
     const link = page.getByRole('link', { name: 'Start Your Project' });

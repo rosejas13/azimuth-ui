@@ -4,7 +4,9 @@ test.describe('Keyboard navigation smoke test', () => {
   test('tabs through primary interactive components without keyboard trap', async ({
     page,
   }) => {
-    await page.goto('/?path=/story/components-button--primary');
+    await page.goto(
+      '/iframe.html?id=components-button--primary&viewMode=story',
+    );
     await expect(page.locator('#storybook-root')).toBeVisible({
       timeout: 15000,
     });

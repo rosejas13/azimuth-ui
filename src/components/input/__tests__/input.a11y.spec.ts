@@ -2,27 +2,27 @@ import { test } from '@playwright/test';
 import { runA11yTest } from '../../__tests__/a11y-utils';
 
 const stories = [
-  'components-button--primary',
-  'components-button--secondary',
-  'components-button--disabled',
-  'components-checkbox--default',
+  'primitives-button--primary',
+  'primitives-button--secondary',
+  'primitives-button--disabled',
+  'primitives-checkbox--unchecked',
   'components-combobox--default',
   'components-dropdownlist--default',
   'components-fileupload--default',
   'components-form--default',
-  'components-input--default',
+  'primitives-input--text',
   'components-inputgroup--default',
   'components-otpinput--default',
   'components-phoneinput--default',
-  'components-quantitystepper--default',
-  'components-radio--default',
-  'components-rating--default',
+  'input-quantitystepper--default',
+  'primitives-radio--unchecked',
+  'components-rating--empty',
   'components-searchbar--default',
-  'components-select--default',
+  'primitives-select--default',
   'components-slider--default',
   'components-textarea--default',
-  'components-textbox--default',
-  'components-toggle--default',
+  'components-textbox--plain',
+  'primitives-toggle--off',
 ];
 
 test.describe('Input components a11y', () => {
