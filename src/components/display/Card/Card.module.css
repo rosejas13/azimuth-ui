@@ -14,6 +14,11 @@
   background: var(--azimuth-color-surface-hover);
 }
 
+.card.static:hover {
+  box-shadow: none;
+  background: var(--azimuth-color-surface);
+}
+
 .elevated {
   border: none;
   box-shadow: var(--azimuth-shadow-md);

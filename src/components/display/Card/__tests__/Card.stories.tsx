@@ -8,6 +8,7 @@ const meta: Meta<typeof Card> = {
   tags: ['autodocs'],
   argTypes: {
     expandable: { control: 'boolean' },
+    hoverable: { control: 'boolean' },
   },
 };
 
@@ -48,6 +49,18 @@ export const WithFooter: Story = {
     footer: (
       <Text size="xs" color="muted">
         Footer content
+      </Text>
+    ),
+  },
+};
+
+export const HoverableFalse: Story = {
+  args: {
+    header: <Text weight="semibold">Card (hoverable={false})</Text>,
+    hoverable: false,
+    children: (
+      <Text size="sm" color="secondary">
+        A basic card with header and body content. No hover styles applied.
       </Text>
     ),
   },

@@ -110,6 +110,16 @@ describe('Card', () => {
     expect(container.firstChild).toHaveClass('fill');
   });
 
+  it('applies static class when hoverable is false', () => {
+    const { container } = render(<Card hoverable={false}>Content</Card>);
+    expect(container.firstChild).toHaveClass('static');
+  });
+
+  it('does not apply static class by default', () => {
+    const { container } = render(<Card>Content</Card>);
+    expect(container.firstChild).not.toHaveClass('static');
+  });
+
   it('default variant (outline) does not apply variant class', () => {
     const { container } = render(<Card>Content</Card>);
     expect(container.firstChild).not.toHaveClass('outline');

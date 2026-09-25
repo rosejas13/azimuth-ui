@@ -27,6 +27,8 @@ export interface CardProps extends ComponentPropsWithoutRef<'div'> {
   variant?: 'outline' | 'elevated' | 'dashed';
   /** @default false */
   fill?: boolean;
+  /** @default true */
+  hoverable?: boolean;
   /** Body content of the card. */
   children?: React.ReactNode;
 }
@@ -41,6 +43,7 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
       defaultExpanded = true,
       variant,
       fill,
+      hoverable = true,
       className,
       children,
       ...props
@@ -55,6 +58,7 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         className={cn(
           styles.card,
+          !hoverable && styles.static,
           variant && variant !== 'outline' && styles[variant],
           fill && styles.fill,
           className,
