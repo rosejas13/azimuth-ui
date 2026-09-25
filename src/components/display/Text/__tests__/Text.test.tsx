@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Text } from '../Text';
 
 describe('Text', () => {
@@ -169,6 +169,40 @@ describe('CSS structure', () => {
       const { unmount } = render(<Text variant={variant}>V</Text>);
       expect(screen.getByText('V').className).toContain(variant);
       unmount();
+    }
+  });
+});
+
+describe('Text as= nesting dev warning', () => {
+  it('warns in dev when as=li renders inside a paragraph', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      render(
+        <p>
+          <Text as="li">item</Text>
+        </p>,
+      );
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('invalid HTML nesting'),
+      );
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it('does not warn for valid nesting (as=li inside ul)', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      render(
+        <ul>
+          <Text as="li">item</Text>
+        </ul>,
+      );
+      expect(warn).not.toHaveBeenCalledWith(
+        expect.stringContaining('invalid HTML nesting'),
+      );
+    } finally {
+      warn.mockRestore();
     }
   });
 });

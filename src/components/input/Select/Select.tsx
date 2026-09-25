@@ -67,7 +67,9 @@ export interface SelectSingleProps extends SelectBaseProps {
   multiple?: false;
   /**
    * Controlled selected value. Pair with `onChange`. When omitted the select is uncontrolled.
-   * Pass `null`, `''`, or leave unset to show no selection.
+   * Pass `null` (or `''` when no option uses the empty string) to show no selection.
+   * When an option's value is `''`, passing `''` selects that literal option —
+   * the classic "All years" / "All counties" filter default.
    */
   value?: string | null;
   /** Initial value for an uncontrolled select. Ignored while `value` is set. `null` shows no selection. */
@@ -89,6 +91,14 @@ export interface SelectMultipleProps extends SelectBaseProps {
 
 /** A native select element with label, validation, and custom chevron styling. */
 export type SelectProps = SelectSingleProps | SelectMultipleProps;
+
+/**
+ * Internal sentinel used for the "no selection" state. It only appears when a
+ * real option or a placeholder already occupies `value=""`, keeping the empty
+ * string free to mean "select that literal empty-value option". It is not a
+ * valid consumer value.
+ */
+const EMPTY_SENTINEL = '__azimuth-empty__';
 
 type SelectImplProps = SelectBaseProps & {
   multiple?: boolean;
@@ -136,11 +146,19 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const hasHeader = Boolean(label) || Boolean(subtitle);
     const hasFooter = Boolean(error);
     const controlled = effValue !== undefined;
+    const optionsHaveEmptyValue = options.some((o) => o.value === '');
+    // Only pay the sentinel cost when a placeholder or a real empty-value
+    // option occupies ''; otherwise the 0.11.4 `''`-clears behavior holds.
+    const useSentinel =
+      !multiple && (Boolean(placeholder) || optionsHaveEmptyValue);
     const blankValue =
       !multiple &&
       (controlled
-        ? effValue === null || effValue === ''
-        : defaultValue === null || defaultValue === '');
+        ? effValue === null ||
+          (effValue === '' && !optionsHaveEmptyValue && !placeholder)
+        : defaultValue === null ||
+          (defaultValue === '' && !optionsHaveEmptyValue && !placeholder));
+    const activeBlank = useSentinel ? EMPTY_SENTINEL : '';
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -179,8 +197,20 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={fieldId}
             className={cn(styles.select, error && styles.hasError, className)}
-            value={controlled ? (effValue ?? '') : undefined}
-            defaultValue={!controlled ? (defaultValue ?? '') : undefined}
+            value={
+              controlled
+                ? blankValue
+                  ? activeBlank
+                  : (effValue ?? '')
+                : undefined
+            }
+            defaultValue={
+              !controlled
+                ? blankValue
+                  ? activeBlank
+                  : (defaultValue ?? '')
+                : undefined
+            }
             onChange={handleChange}
             disabled={disabled}
             required={required}
@@ -199,11 +229,11 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             {...selectProps}
           >
             {placeholder ? (
-              <option value="" disabled>
+              <option value={activeBlank} disabled>
                 {placeholder}
               </option>
             ) : blankValue ? (
-              <option value="" hidden />
+              <option value={activeBlank} hidden />
             ) : null}
             {options.map((opt) => (
               <option key={opt.value} value={opt.value} disabled={opt.disabled}>

@@ -297,3 +297,17 @@
 .resultsInfo {
   white-space: nowrap;
 }
+
+/* Pinned columns during horizontal scroll. Solid token background so the
+   striped rows don't bleed through; z-index layering matches the inline
+   style emitted per cell (head 3, body 2). */
+.stickyLeft,
+.stickyRight {
+  background: var(--azimuth-color-surface) !important;
+  border-right: 1px solid var(--azimuth-color-border);
+}
+
+.stickyRight {
+  border-right: none;
+  border-left: var(--azimuth-color-border) solid 1px;
+}

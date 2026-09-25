@@ -141,3 +141,76 @@ describe('Select (cleared state)', () => {
     expect(handleChange).toHaveBeenCalledWith('1');
   });
 });
+
+describe('Select (empty-string option values)', () => {
+  const emptyValueOptions = [
+    { value: '', label: 'All years' },
+    { value: '2023', label: '2023' },
+  ];
+
+  function selectedText() {
+    const select = document.querySelector('select')!;
+    const opt = select.querySelector<HTMLSelectElement>(
+      `option[value="${CSS.escape(select.value)}"]`,
+    );
+    return opt?.textContent;
+  }
+
+  it('selects a real option with value="" instead of showing blank', () => {
+    render(<Select options={emptyValueOptions} value="" onChange={() => {}} />);
+    expect(selectedText()).toBe('All years');
+  });
+
+  it('stays on the empty-value option after rerender', () => {
+    const { rerender } = render(
+      <Select options={emptyValueOptions} value="" onChange={() => {}} />,
+    );
+    rerender(
+      <Select options={emptyValueOptions} value="" onChange={() => {}} />,
+    );
+    expect(selectedText()).toBe('All years');
+  });
+
+  it('fires onChange with "" and round-trips it', () => {
+    const onChange = vi.fn();
+    const { rerender } = render(
+      <Select options={emptyValueOptions} value={null} onChange={onChange} />,
+    );
+    const select = document.querySelector('select')!;
+    select.value = '';
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(onChange).toHaveBeenCalledWith('');
+    rerender(
+      <Select options={emptyValueOptions} value="" onChange={onChange} />,
+    );
+    expect(selectedText()).toBe('All years');
+  });
+
+  it('null still clears even when an empty-value option exists', () => {
+    render(
+      <Select options={emptyValueOptions} value={null} onChange={() => {}} />,
+    );
+    expect(selectedText()).toBe('');
+  });
+
+  it("'' still clears when no option uses the empty string (back-compat)", () => {
+    render(<Select options={options} value="" onChange={() => {}} />);
+    expect(document.querySelector('select')!.value).toBe('');
+    expect(document.querySelector('option[hidden]')).not.toBeNull();
+  });
+
+  it('placeholder state uses the sentinel, real empty option stays selectable', () => {
+    render(
+      <Select
+        options={emptyValueOptions}
+        placeholder="Choose…"
+        value={null}
+        onChange={() => {}}
+      />,
+    );
+    const select = document.querySelector('select')!;
+    expect(select.value).toBe('__azimuth-empty__');
+    const realEmpty = Array.from(select.options).find((o) => o.value === '');
+    expect(realEmpty?.textContent).toBe('All years');
+  });
+});

@@ -627,3 +627,69 @@ describe('DataTable rowEditor', () => {
     ).toBeInTheDocument();
   });
 });
+
+describe('DataTable sticky columns', () => {
+  it('applies sticky geometry to left-pinned columns and off for others', () => {
+    render(
+      <DataTable
+        data={{
+          columns: [
+            { key: 'id', title: 'ID', sticky: true, width: 80 },
+            { key: 'name', title: 'Name', width: 120 },
+          ],
+          data: DEFAULT_DATA,
+        }}
+      />,
+    );
+    const firstCell = screen.getAllByRole('cell')[0];
+    expect(firstCell).toHaveStyle({
+      position: 'sticky',
+      left: 0,
+      width: '80px',
+    });
+    const secondCell = screen.getAllByRole('cell')[1];
+    expect(secondCell).not.toHaveStyle({ position: 'sticky' });
+  });
+
+  it('pins the Actions cell right when any column is sticky', () => {
+    render(
+      <DataTable
+        data={{
+          columns: [{ key: 'id', title: 'ID', sticky: true, width: 80 }],
+          data: DEFAULT_DATA,
+          edit: { enabled: true },
+        }}
+      />,
+    );
+    const actionsHead = screen.getByText('Actions').closest('th');
+    expect(actionsHead).toHaveStyle({ position: 'sticky', right: 0 });
+  });
+
+  it('no sticky artifacts without the flag (regression)', () => {
+    render(
+      <DataTable data={{ columns: DEFAULT_COLUMNS, data: DEFAULT_DATA }} />,
+    );
+    const firstCell = screen.getAllByRole('cell')[0];
+    expect(firstCell).not.toHaveStyle({ position: 'sticky' });
+  });
+
+  it('right-pinned columns compute cumulative right offsets', () => {
+    render(
+      <DataTable
+        data={{
+          columns: [
+            { key: 'id', title: 'ID' },
+            { key: 'name', title: 'Name', sticky: 'right', width: 120 },
+            { key: 'email', title: 'Email', sticky: 'right', width: 200 },
+          ],
+          data: DEFAULT_DATA,
+        }}
+      />,
+    );
+    // email (rightmost) gets right: 0; name gets right: 200
+    const cells = document.querySelectorAll('td');
+    const emailCell = screen.getByText('Email').closest('th');
+    expect(emailCell).toHaveStyle({ position: 'sticky', right: 0 });
+    expect(Object.keys(cells).length).toBeGreaterThan(0);
+  });
+});

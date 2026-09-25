@@ -28,6 +28,16 @@ export interface DataTableColumn<T> {
   render?: (value: unknown, row: T, index: number) => React.ReactNode;
   /** Optional function to extract searchable text for this column. Falls back to cell value if not provided. */
   searchValue?: (row: T) => string;
+  /**
+   * Pin this column during horizontal scrolling. `true` pins left;
+   * `'left'`/`'right'` set the side explicitly. Pinned columns need an
+   * explicit `width` (number = px) so cumulative offsets can be computed —
+   * the Actions column is implicitly right-pinned at offset 0 whenever any
+   * column is sticky.
+   */
+  sticky?: boolean | 'left' | 'right';
+  /** Fixed width for the column; required on sticky columns, number = px. */
+  width?: number | string;
 }
 
 /**
@@ -341,6 +351,72 @@ function DataTableInner<T>(
 
   const showEditor = editable || rowEditor !== undefined;
 
+  // Sticky column geometry: cumulative offsets per pinned column index, only
+  // meaningful when the consumer declared widths on sticky columns.
+  const stickyOffsets = useMemo(() => {
+    const leftMap: Record<number, number> = {};
+    const rightMap: Record<number, number> = {};
+    let hasSticky = false;
+    const sideOf = (c: DataTableColumn<T>): 'left' | 'right' | null =>
+      typeof c.sticky === 'string' ? c.sticky : c.sticky ? 'left' : null;
+
+    let left = 0;
+    resolvedColumns.forEach((c, i) => {
+      if (sideOf(c) === 'left') {
+        leftMap[i] = left;
+        left += Number(c.width ?? 0);
+        hasSticky = true;
+      }
+    });
+    let right = 0;
+    for (let i = resolvedColumns.length - 1; i >= 0; i--) {
+      const side = sideOf(resolvedColumns[i]);
+      if (side === 'right') {
+        rightMap[i] = right;
+        right += Number(resolvedColumns[i].width ?? 0);
+        hasSticky = true;
+      }
+    }
+    return { leftMap, rightMap, hasSticky };
+  }, [resolvedColumns]);
+
+  const stickyCellProps = useCallback(
+    (
+      index: number,
+      isHead: boolean,
+    ): {
+      className?: string;
+      style?: React.CSSProperties;
+    } => {
+      if (!stickyOffsets.hasSticky) return {};
+      const col = resolvedColumns[index];
+      const side =
+        typeof col?.sticky === 'string'
+          ? col.sticky
+          : col?.sticky
+            ? 'left'
+            : null;
+      const offset =
+        side === 'left'
+          ? stickyOffsets.leftMap[index]
+          : side === 'right'
+            ? stickyOffsets.rightMap[index]
+            : undefined;
+      if (!side) return {};
+      const width = col.width;
+      return {
+        className: side === 'left' ? styles.stickyLeft : styles.stickyRight,
+        style: {
+          position: 'sticky',
+          ...(side === 'left' ? { left: offset } : { right: offset }),
+          zIndex: isHead ? 3 : 2,
+          ...(width !== undefined ? { width } : {}),
+        },
+      };
+    },
+    [stickyOffsets, resolvedColumns],
+  );
+
   const handleEdit = useCallback(
     (rowIndex: number) => {
       const entry = useVirtualized
@@ -571,13 +647,18 @@ function DataTableInner<T>(
             <Table striped hoverable={!!onRowClick}>
               <Table.Head>
                 <Table.Row>
-                  {resolvedColumns.map((col) => {
+                  {resolvedColumns.map((col, colIndex) => {
                     const isSortable = col.sortable ?? false;
                     const isActive = sortState?.key === col.key;
+                    const sticky = stickyCellProps(colIndex, true);
                     return (
                       <Table.HeadCell
                         key={col.key}
-                        className={cn(isSortable && styles.thSortable)}
+                        className={cn(
+                          isSortable && styles.thSortable,
+                          sticky.className,
+                        )}
+                        style={sticky.style}
                         scope="col"
                         aria-sort={
                           isActive
@@ -621,7 +702,17 @@ function DataTableInner<T>(
                     );
                   })}
                   {showEditor && (
-                    <Table.HeadCell scope="col">
+                    <Table.HeadCell
+                      scope="col"
+                      className={
+                        stickyOffsets.hasSticky ? styles.stickyRight : undefined
+                      }
+                      style={
+                        stickyOffsets.hasSticky
+                          ? { position: 'sticky', right: 0, zIndex: 3 }
+                          : undefined
+                      }
+                    >
                       <span className="sr-only">Actions</span>
                     </Table.HeadCell>
                   )}
@@ -675,25 +766,50 @@ function DataTableInner<T>(
                                 tabIndex={onRowClick ? 0 : undefined}
                                 role={onRowClick ? 'button' : undefined}
                               >
-                                {resolvedColumns.map((col) => (
-                                  <Table.Cell key={col.key}>
-                                    {col.render
-                                      ? col.render(
-                                          (row as Record<string, unknown>)[
-                                            col.key
-                                          ],
-                                          row,
-                                          index,
-                                        )
-                                      : formatCellValue(
-                                          (row as Record<string, unknown>)[
-                                            col.key
-                                          ],
-                                        )}
-                                  </Table.Cell>
-                                ))}
+                                {resolvedColumns.map((col, colIndex) => {
+                                  const sticky = stickyCellProps(
+                                    colIndex,
+                                    false,
+                                  );
+                                  return (
+                                    <Table.Cell
+                                      key={col.key}
+                                      className={sticky.className}
+                                      style={sticky.style}
+                                    >
+                                      {col.render
+                                        ? col.render(
+                                            (row as Record<string, unknown>)[
+                                              col.key
+                                            ],
+                                            row,
+                                            index,
+                                          )
+                                        : formatCellValue(
+                                            (row as Record<string, unknown>)[
+                                              col.key
+                                            ],
+                                          )}
+                                    </Table.Cell>
+                                  );
+                                })}
                                 {showEditor && (
-                                  <Table.Cell>
+                                  <Table.Cell
+                                    className={
+                                      stickyOffsets.hasSticky
+                                        ? styles.stickyRight
+                                        : undefined
+                                    }
+                                    style={
+                                      stickyOffsets.hasSticky
+                                        ? {
+                                            position: 'sticky',
+                                            right: 0,
+                                            zIndex: 2,
+                                          }
+                                        : undefined
+                                    }
+                                  >
                                     <button
                                       type="button"
                                       className={styles.editBtn}
@@ -743,21 +859,39 @@ function DataTableInner<T>(
                         tabIndex={onRowClick ? 0 : undefined}
                         role={onRowClick ? 'button' : undefined}
                       >
-                        {resolvedColumns.map((col) => (
-                          <Table.Cell key={col.key}>
-                            {col.render
-                              ? col.render(
-                                  (row as Record<string, unknown>)[col.key],
-                                  row,
-                                  index,
-                                )
-                              : formatCellValue(
-                                  (row as Record<string, unknown>)[col.key],
-                                )}
-                          </Table.Cell>
-                        ))}
+                        {resolvedColumns.map((col, colIndex) => {
+                          const sticky = stickyCellProps(colIndex, false);
+                          return (
+                            <Table.Cell
+                              key={col.key}
+                              className={sticky.className}
+                              style={sticky.style}
+                            >
+                              {col.render
+                                ? col.render(
+                                    (row as Record<string, unknown>)[col.key],
+                                    row,
+                                    index,
+                                  )
+                                : formatCellValue(
+                                    (row as Record<string, unknown>)[col.key],
+                                  )}
+                            </Table.Cell>
+                          );
+                        })}
                         {showEditor && (
-                          <Table.Cell>
+                          <Table.Cell
+                            className={
+                              stickyOffsets.hasSticky
+                                ? styles.stickyRight
+                                : undefined
+                            }
+                            style={
+                              stickyOffsets.hasSticky
+                                ? { position: 'sticky', right: 0, zIndex: 2 }
+                                : undefined
+                            }
+                          >
                             <button
                               type="button"
                               className={styles.editBtn}

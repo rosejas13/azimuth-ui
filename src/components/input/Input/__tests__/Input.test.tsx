@@ -301,3 +301,72 @@ describe('Input', () => {
     expect(a).not.toBe(b);
   });
 });
+
+describe('Input onEnterPress', () => {
+  it('fires on plain Enter', async () => {
+    const onEnterPress = vi.fn();
+    const user = userEvent.setup();
+    render(<Input onEnterPress={onEnterPress} />);
+    await user.type(screen.getByRole('textbox'), 'hello{Enter}');
+    expect(onEnterPress).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not fire when Enter applies a highlighted suggestion', async () => {
+    const onEnterPress = vi.fn();
+    const onSelect = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Input
+        value=""
+        onChange={() => {}}
+        onEnterPress={onEnterPress}
+        suggestions={{ options: ['Alpha', 'Beta'], onSelect, filter: false }}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+    await user.click(input);
+    await user.keyboard('{ArrowDown}');
+    await user.keyboard('{Enter}');
+    expect(onSelect).toHaveBeenCalledWith('Alpha');
+    expect(onEnterPress).not.toHaveBeenCalled();
+  });
+});
+
+describe('Input suggestions blur dismissal', () => {
+  it('closes the suggestion list when focus leaves the field', async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <Input
+          value=""
+          onChange={() => {}}
+          suggestions={{ options: ['Alpha', 'Beta'], filter: false }}
+        />
+        <button>elsewhere</button>
+      </>,
+    );
+    const input = screen.getByRole('combobox');
+    await user.click(input);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    await user.click(screen.getByText('elsewhere'));
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  it('still applies a suggestion clicked with the mouse', async () => {
+    const onSelect = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <>
+        <Input
+          value=""
+          onChange={() => {}}
+          suggestions={{ options: ['Alpha', 'Beta'], onSelect, filter: false }}
+        />
+        <button>elsewhere</button>
+      </>,
+    );
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByRole('option', { name: 'Alpha' }));
+    expect(onSelect).toHaveBeenCalledWith('Alpha');
+  });
+});

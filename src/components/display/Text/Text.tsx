@@ -5,10 +5,29 @@ import {
   type MouseEventHandler,
   createElement,
   forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
 } from 'react';
 import type { AriaRole } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Text.module.css';
+
+/**
+ * Conflict-free content-model spot checks for dev builds: tags rendered by
+ * `Text as=` that are only valid inside specific parents. Covers the common
+ * mistake of dropping list/table syntax into paragraph markup; anything not
+ * listed produces no warning.
+ */
+const NESTING_RULES: Record<string, string[]> = {
+  li: ['ul', 'ol', 'menu'],
+  option: ['select', 'datalist', 'optgroup'],
+  tr: ['table', 'tbody', 'thead', 'tfoot'],
+  td: ['tr', 'table'],
+  th: ['tr', 'table'],
+  dt: ['dl', 'div'],
+  dd: ['dl', 'div'],
+};
 
 export type TextSize =
   | 'h1'
@@ -99,14 +118,42 @@ export const Text = forwardRef<HTMLElement, TextProps>(
       children,
       ...props
     },
-    ref,
+    forwardedRef,
   ) => {
     const element = as ?? AS_MAP[size] ?? 'p';
+
+    const internalRef = useRef<HTMLElement | null>(null);
+    const setNodeRef = useCallback(
+      (node: HTMLElement | null) => {
+        internalRef.current = node;
+        if (typeof forwardedRef === 'function') {
+          forwardedRef(node);
+        } else if (forwardedRef) {
+          forwardedRef.current = node;
+        }
+      },
+      [forwardedRef],
+    );
+
+    useEffect(() => {
+      if (process.env.NODE_ENV === 'production') return;
+      const tag = typeof element === 'string' ? element : null;
+      const allowed = tag ? NESTING_RULES[tag] : null;
+      if (!tag || !allowed) return;
+      const node = internalRef.current;
+      if (!node) return;
+      const parentTag = node.parentElement?.tagName.toLowerCase();
+      if (parentTag && !allowed.includes(parentTag)) {
+        console.warn(
+          `azimuth-ui: <Text as=${tag}> renders inside <${parentTag}>, which is invalid HTML nesting. Move the text or change the "as" prop.`,
+        );
+      }
+    });
 
     return createElement(
       element,
       {
-        ref,
+        ref: setNodeRef,
         className: cn(
           styles.text,
           styles[variant],

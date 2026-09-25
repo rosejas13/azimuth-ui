@@ -103,6 +103,13 @@ export interface InputProps {
   onFocus?: FocusEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  /**
+   * Fired when Enter is pressed in the field, after suggestion selection had
+   * first chance to consume it. When the suggestion list is open with a
+   * highlighted option, Enter applies the suggestion and this callback is NOT
+   * fired; otherwise (including Enter submit-style in plain fields) it fires.
+   */
+  onEnterPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   onKeyUp?: KeyboardEventHandler<HTMLInputElement>;
   onKeyPress?: KeyboardEventHandler<HTMLInputElement>;
   onPaste?: ClipboardEventHandler<HTMLInputElement>;
@@ -130,6 +137,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       min,
       max,
       step,
+      onEnterPress,
       maxLength,
       showCharCount = false,
       suggestions,
@@ -236,6 +244,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent) => {
+        // Plain Enter (not consumed by an actively-highlighted suggestion)
+        // notifies onEnterPress consumers first.
+        if (
+          e.key === 'Enter' &&
+          !(
+            showSuggestions &&
+            filteredSuggestions.length > 0 &&
+            highlightedIndex >= 0
+          )
+        ) {
+          onEnterPress?.(e as React.KeyboardEvent<HTMLInputElement>);
+        }
+
         if (!showSuggestions || filteredSuggestions.length === 0) return;
 
         if (e.key === 'ArrowDown') {
@@ -258,7 +279,25 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           setShowSuggestions(false);
         }
       },
-      [showSuggestions, filteredSuggestions, highlightedIndex, suggestions],
+      [
+        showSuggestions,
+        filteredSuggestions,
+        highlightedIndex,
+        suggestions,
+        onEnterPress,
+      ],
+    );
+
+    const handleInputBlur = useCallback(
+      (e: React.FocusEvent<HTMLInputElement>) => {
+        effOnBlur?.(e);
+        // Keep the list open when focus moves into it (e.g. suggestion
+        // click keystrokes); otherwise dismiss for touch/AT parity.
+        const next = e.relatedTarget as Node | null;
+        if (next && suggestionsRef.current?.contains(next)) return;
+        setShowSuggestions(false);
+      },
+      [effOnBlur],
     );
 
     const stepUp = () => {
@@ -356,7 +395,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           }
           role={hasSuggestions ? 'combobox' : undefined}
           autoComplete={hasSuggestions ? 'off' : undefined}
-          onBlur={effOnBlur}
+          onBlur={handleInputBlur}
           {...props}
           {...inputProps}
         />
@@ -401,6 +440,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                   styles.suggestion,
                   i === highlightedIndex && styles.suggestionHighlighted,
                 )}
+                onMouseDown={(e) => {
+                  // Keep focus in the input so blur dismissal doesn't race
+                  // the suggestion click.
+                  e.preventDefault();
+                }}
                 onClick={() => {
                   setLocalValue(suggestion);
                   setShowSuggestions(false);

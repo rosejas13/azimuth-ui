@@ -71,6 +71,26 @@ interface ComponentProps {
 }
 ```
 
+### Curated native surfaces (no aria-flood)
+Never extend `ComponentPropsWithoutRef<'element'>` directly on a new component:
+it floods editor autocomplete with every aria attribute. Instead, pick a
+curated surface via `src/utils/curate.ts` (proven in `Input`, `Select`,
+`TextArea`, `TextBox`) and expose an escape hatch that spreads last:
+
+```tsx
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
+
+export interface TextBoxProps extends CuratedSurface<'div', ['className', 'id', 'aria-label']> {
+  variant?: 'plain' | 'code';
+  children: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. */
+  boxProps?: NativeRest<'div'>;
+}
+```
+
+Curate the attributes the component itself uses; everything else flows
+through `<el>Props` so editors suggest ~10 props instead of ~150.
+
 ## Design Tokens
 
 Tokens are defined in `src/styles/tokens.css` as CSS custom properties:

@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.14.0 (2026-09-24)
+
+### Features
+
+- **`Input` gains `onEnterPress`.** Fired on plain Enter submit-style (`(event) => void`); suppressed when the suggestion combobox consumes Enter to apply a highlighted option, so form-submit and suggestion-apply flows coexist. Closes azimuth_ui-bdb.
+
+- **`ThemeToggle` supports controlled mode.** Pass `mode` + `onModeChange` and the toggle stops reading/writing localStorage — it reports the next cycle step to your provider-style owner. Uncontrolled usage is unchanged. Along the way `useThemeMode` was given an explicit `useSyncExternalStore<ColorMode>()` binding, so the hook's `mode` is typed `ColorMode` instead of `string` (the previous inference made `mode` comparisons string-typed). Closes azimuth_ui-5t2.
+
+- **`DataTable` sticky/pinned columns.** `DataTableColumn` accepts `sticky?: boolean | 'left' | 'right'` plus an optional `width`; pinned cells render `position: sticky` with cumulative left/right offsets computed from declared widths, so Pinned columns need an explicit `width` to line up. The Actions column is implicitly right-pinned at offset 0 whenever any column is sticky, in both paginated and virtualized rendering. Closes azimuth_ui-xff. (azimuth_ui-ot0, azimuth_ui-c7j, azimuth_ui-4dt etc. were shipped in 0.13.0.)
+
+- **`Select` distinguishes cleared from empty-string options.** Since 0.11.4 the injected hidden empty option shared `value=""` with real options, so a genuine "All years" / "All counties" option displayed blank once selected. Clearing now uses an internal sentinel, freeing `''` to select a literal empty-value option — the cleared-`''` behavior only persists when no option uses the empty string. Single and placeholder flows covered by new tests. Closes azimuth_ui-lbn.
+
+- **Curated-prop convention codified.** The 0.11-era curated-surface pattern (`Input`/`Select`/`TextArea`) now has a reusable helper — `CuratedSurface`/`NativeRest` in `src/utils/curate.ts` — plus guidelines in CONTRIBUTING.md, and `TextBox` converts to it (`boxProps` escape hatch). Fifty-three more components have raw `ComponentPropsWithoutRef` inheritance flooding VSCode suggestions; the mechanical sweep is scoped in a follow-up bead. Proposed concrete pattern for the sweep — proving one component per release until it's caught up.
+
+### Fixes
+
+- **`Input` suggestion list dismisses on blur**, not just outside-mousedown, so touch and assistive-tech users get parity. A `relatedTarget` guard keeps the list open when focus moves into it, and the option buttons `preventDefault` their mousedown so a click-and-select doesn't race the dismissal. Part 2 of azimuth_ui-m4u; part 1 (the compound-children fix) shipped in 0.13.0.
+- **`Text as=` emits a dev console warning for invalid HTML nesting.** Content-model spot checks for `li`/**`option`**/`tr`/`td`/`th`/`dt`/`dd` (e.g. `as="li"` inside a `<p>`) warn with a pointer to fix placement. Dev builds only; verified by tests. Closes azimuth_ui-m4u.
+
+### Quality
+
+- Versus 0.13.0: +19 tests (1717 total, 123 files), lint/typecheck zero-error, build clean with the sourcemap guard intact, knip dead-code scan clean.
+
 ## 0.13.0 (2026-09-22)
 
 ### Features

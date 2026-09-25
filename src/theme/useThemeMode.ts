@@ -27,7 +27,11 @@ function subscribe(callback: () => void) {
  * ```
  */
 export function useThemeMode() {
-  const mode = useSyncExternalStore(subscribe, getMode, () => 'system');
+  const mode = useSyncExternalStore<ColorMode>(
+    subscribe,
+    getMode,
+    () => 'system',
+  );
 
   const setMode = useCallback((newMode: ColorMode) => {
     localStorage.setItem('azimuth-theme-mode', newMode);
