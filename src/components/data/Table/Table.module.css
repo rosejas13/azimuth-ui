@@ -51,7 +51,7 @@
 }
 
 .striped .row:nth-child(even) {
-  background: var(--azimuth-color-bg);
+  background: var(--azimuth-color-stripe, var(--azimuth-color-bg));
 }
 
 .hoverable .body .row:hover {

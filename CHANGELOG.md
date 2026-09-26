@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.15.0 (2026-09-25)
+
+### Fixes
+
+- **Zebra rows actually read as stripes in light mode.** Striped tables used a background barely a hair off the surface color (98.5% vs 99% lightness — indistinguishable), so odd/even rows had effectively no contrast. A dedicated `--azimuth-color-stripe` token brings the stripe a visible step off the surface in light mode (97.2%) and keeps a clear but gentle differential in dark (21% vs 19%); hover tokens untouched so hover feedback still reads on striped rows. Legacy non-oklch fallback palettes updated to match.
+
 ## 0.14.0 (2026-09-24)
 
 _Downstream-reported batch (SKDHelper Atlas / IncentIQ Admin findings)._
