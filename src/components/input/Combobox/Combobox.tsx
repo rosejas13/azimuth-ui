@@ -10,6 +10,7 @@ import {
   useId,
 } from 'react';
 import { cn } from '@/utils/cn';
+import { useInputConfig } from '../input-config';
 import styles from './Combobox.module.css';
 
 /** An individual option in the combobox dropdown list. */
@@ -89,7 +90,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
       selection,
       label,
       placeholder = 'Type to search...',
-      size = 'md',
+      size,
       disabled = false,
       error,
       filter: customFilter,
@@ -102,6 +103,9 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
     ref,
   ) => {
     const multi = isMultiSelection(selection);
+    const { size: configSize } = useInputConfig();
+    const resolvedSize =
+      size ?? (configSize === 'xl' ? 'lg' : configSize) ?? 'md';
     const values: string[] = multi ? selection.values : [];
     const isAtCapacity =
       maxSelected !== undefined && values.length >= maxSelected;
@@ -335,7 +339,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
         ref={ref}
         className={cn(
           styles.wrapper,
-          styles[size],
+          styles[resolvedSize],
           error && styles.hasError,
           disabled && styles.disabled,
           className,

@@ -106,6 +106,20 @@ describe('Select (multiple)', () => {
   });
 });
 
+describe('Select (size wiring)', () => {
+  it('applies the size class to the wrapper for narrow-gutter sizes', () => {
+    const { container } = render(<Select options={options} size="sm" />);
+    expect(container.firstElementChild?.className).toContain('sm');
+  });
+
+  it('renders the chevron as a hidden decoration inside the control', () => {
+    const { container } = render(<Select options={options} />);
+    const chevron = container.querySelector('span[aria-hidden="true"]');
+    expect(chevron?.className).toContain('chevron');
+    expect(chevron?.parentElement?.className).toContain('selectContainer');
+  });
+});
+
 describe('Select (cleared state)', () => {
   const selectEl = () =>
     screen.getByRole('combobox') as unknown as HTMLSelectElement;

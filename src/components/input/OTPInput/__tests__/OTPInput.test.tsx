@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { useState } from 'react';
 import { OTPInput } from '../OTPInput';
+import { InputConfigProvider } from '../../input-config';
 
 describe('OTPInput', () => {
   it('renders correct number of inputs based on default length', () => {
@@ -261,5 +262,31 @@ describe('OTPInput', () => {
     expect(inputs[1]).toHaveValue('2');
     expect(inputs[2]).toHaveValue('3');
     expect(inputs[3]).toHaveValue('4');
+  });
+});
+
+describe('OTPInput size inheritance (InputConfigContext)', () => {
+  it('inherits size from InputConfigContext', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <OTPInput value="" />
+      </InputConfigProvider>,
+    );
+    expect(container.firstChild).toHaveClass('sm');
+  });
+
+  it('instance size prop wins over context', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <OTPInput value="" size="lg" />
+      </InputConfigProvider>,
+    );
+    expect(container.firstChild).toHaveClass('lg');
+    expect(container.firstChild).not.toHaveClass('sm');
+  });
+
+  it('defaults to md without context', () => {
+    const { container } = render(<OTPInput value="" />);
+    expect(container.firstChild).toHaveClass('md');
   });
 });

@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { Button } from '@/components/input/Button';
 import { cn } from '@/utils/cn';
+import { useInputConfig } from '../input-config';
 import styles from './QuantityStepper.module.css';
 
 /** Props for the QuantityStepper component. */
@@ -46,7 +47,7 @@ export const QuantityStepper = forwardRef<HTMLDivElement, QuantityStepperProps>(
       min = 1,
       max,
       step = 1,
-      size = 'md',
+      size,
       disabled = false,
       label,
       className,
@@ -55,6 +56,9 @@ export const QuantityStepper = forwardRef<HTMLDivElement, QuantityStepperProps>(
     ref,
   ) => {
     const [internalValue, setInternalValue] = useState(defaultValue);
+    const { size: configSize } = useInputConfig();
+    const resolvedSize =
+      size ?? (configSize === 'xl' ? 'lg' : configSize) ?? 'md';
     const currentValue =
       controlledValue !== undefined ? controlledValue : internalValue;
 
@@ -80,12 +84,12 @@ export const QuantityStepper = forwardRef<HTMLDivElement, QuantityStepperProps>(
     return (
       <div
         ref={ref}
-        className={cn(styles.stepper, styles[size], className)}
+        className={cn(styles.stepper, styles[resolvedSize], className)}
         {...props}
       >
         {label && <span className={styles.label}>{label}</span>}
         <Button
-          size={size}
+          size={resolvedSize}
           variant="secondary"
           onClick={decrement}
           disabled={disabled || atMin}
@@ -97,7 +101,7 @@ export const QuantityStepper = forwardRef<HTMLDivElement, QuantityStepperProps>(
           {currentValue}
         </span>
         <Button
-          size={size}
+          size={resolvedSize}
           variant="secondary"
           onClick={increment}
           disabled={disabled || atMax}

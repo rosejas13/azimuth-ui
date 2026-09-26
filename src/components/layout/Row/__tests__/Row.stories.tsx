@@ -23,3 +23,14 @@ export const InForm: Story = {
     </Form>
   ),
 };
+
+export const InFormNaturalWidth: Story = {
+  render: () => (
+    <Form onSubmit={(data) => console.log(data)}>
+      <Row gap="sm" stretch={false}>
+        <Input label="Email" name="email" placeholder="ada@example.com" />
+        <button type="submit">Subscribe</button>
+      </Row>
+    </Form>
+  ),
+};

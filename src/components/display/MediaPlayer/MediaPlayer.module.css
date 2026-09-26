@@ -64,7 +64,7 @@
 }
 
 .errorText {
-  color: var(--azimuth-color-error-text, #ef4444);
+  color: oklch(85% 0.08 30deg);
   font-size: var(--azimuth-fs-sm);
 }
 

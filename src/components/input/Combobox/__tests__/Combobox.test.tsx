@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { act, useState } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { Combobox } from '../Combobox';
+import { InputConfigProvider } from '../../input-config';
 
 const options = [
   { value: 'apple', label: 'Apple' },
@@ -555,5 +556,43 @@ describe('Combobox multi-select', () => {
     await user.type(screen.getByRole('combobox'), 'ban');
     await user.keyboard('{Enter}');
     expect(onSelect).toHaveBeenCalledWith('banana');
+  });
+});
+
+describe('Combobox size inheritance (InputConfigContext)', () => {
+  it('inherits size from InputConfigContext', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <Combobox
+          selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+          data={{ options }}
+        />
+      </InputConfigProvider>,
+    );
+    expect(container.firstChild).toHaveClass('sm');
+  });
+
+  it('instance size prop wins over context', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <Combobox
+          selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+          data={{ options }}
+          size="lg"
+        />
+      </InputConfigProvider>,
+    );
+    expect(container.firstChild).toHaveClass('lg');
+    expect(container.firstChild).not.toHaveClass('sm');
+  });
+
+  it('defaults to md without context', () => {
+    const { container } = render(
+      <Combobox
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+        data={{ options }}
+      />,
+    );
+    expect(container.firstChild).toHaveClass('md');
   });
 });

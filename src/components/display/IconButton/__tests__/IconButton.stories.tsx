@@ -31,3 +31,16 @@ export const Tertiary: Story = {
 export const Danger: Story = {
   args: { icon, 'aria-label': 'Danger action', variant: 'danger' },
 };
+
+export const Square: Story = {
+  args: { icon, 'aria-label': 'Square action', shape: 'square' },
+};
+
+export const SquarePrimary: Story = {
+  args: {
+    icon,
+    'aria-label': 'Square primary action',
+    shape: 'square',
+    variant: 'primary',
+  },
+};

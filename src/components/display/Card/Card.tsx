@@ -18,7 +18,11 @@ export interface CardProps extends ComponentPropsWithoutRef<'div'> {
    * Ignored when `header` is provided.
    */
   title?: string;
+  /** @default 'md' */
+  titleSize?: 'sm' | 'md';
   footer?: React.ReactNode;
+  /** Action row pinned under the card body, styled more subtly than the footer. */
+  actions?: React.ReactNode;
   /** @default false */
   expandable?: boolean;
   /** @default true */
@@ -38,7 +42,9 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
     {
       header,
       title,
+      titleSize = 'md',
       footer,
+      actions,
       expandable = false,
       defaultExpanded = true,
       variant,
@@ -68,7 +74,13 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
         {(header || title || expandable) && (
           <div className={styles.header}>
             {!header && title ? (
-              <h3 className={cn(styles.title, styles.headerContent)}>
+              <h3
+                className={cn(
+                  styles.title,
+                  styles.headerContent,
+                  titleSize === 'sm' && styles.titleSm,
+                )}
+              >
                 {title}
               </h3>
             ) : (
@@ -95,6 +107,7 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
           {children}
         </div>
         {footer && <div className={styles.footer}>{footer}</div>}
+        {actions && <div className={styles.actions}>{actions}</div>}
       </div>
     );
   },

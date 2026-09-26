@@ -60,6 +60,30 @@ describe('Row', () => {
     expect(row).toHaveClass('formRow');
   });
 
+  it('applies formRow class when stretch is set outside a Form', () => {
+    const { container } = render(
+      <Row stretch>
+        <span>A</span>
+        <span>B</span>
+      </Row>,
+    );
+    expect(container.firstChild).toHaveClass('formRow');
+  });
+
+  it('does not apply formRow class when stretch is false inside a Form', () => {
+    const { container } = render(
+      <Form>
+        <Row stretch={false}>
+          <Input label="First name" name="firstName" />
+          <span>Save</span>
+        </Row>
+      </Form>,
+    );
+    const row = container.querySelector('div.wrap');
+    expect(row).not.toBeNull();
+    expect(row).not.toHaveClass('formRow');
+  });
+
   it('does not apply formRow class outside a Form', () => {
     const { container } = render(
       <Row>

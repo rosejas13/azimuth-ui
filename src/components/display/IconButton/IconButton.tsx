@@ -1,23 +1,33 @@
 import { forwardRef } from 'react';
 import { Button, type ButtonProps } from '@/components/input/Button';
+import styles from './IconButton.module.css';
 
-/** A round icon-only button. Wraps the Button component with a circle shape. */
-export interface IconButtonProps extends Omit<ButtonProps, 'iconPosition' | 'shape'> {
+/** An icon-only button. Wraps the Button component; circular by default, with an optional square shape. */
+export interface IconButtonProps extends Omit<
+  ButtonProps,
+  'iconPosition' | 'shape'
+> {
   /** Icon element to render inside the button. */
   icon: React.ReactNode;
   /** Accessible label for the icon-only button. */
   'aria-label': string;
+  /** @default 'circle' */
+  shape?: 'circle' | 'square';
 }
 
-/** A circular button that displays only an icon. */
+/** A button that displays only an icon, circular by default. */
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ icon, variant = 'tertiary', size = 'md', ...props }, ref) => {
+  (
+    { icon, variant = 'tertiary', size = 'md', shape = 'circle', ...props },
+    ref,
+  ) => {
     return (
       <Button
         ref={ref}
         variant={variant}
         size={size}
-        shape="circle"
+        shape={shape === 'square' ? 'default' : 'circle'}
+        className={shape === 'square' ? styles.square : undefined}
         icon={icon}
         {...props}
       />

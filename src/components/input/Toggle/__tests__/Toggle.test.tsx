@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Toggle } from '../Toggle';
+import { InputConfigProvider } from '../../input-config';
 
 describe('Toggle', () => {
   it('renders toggle', () => {
@@ -115,5 +116,34 @@ describe('Toggle (flat checked API)', () => {
     render(<Toggle label="Notify" width="min-content" />);
     const wrapper = screen.getByLabelText('Notify').closest('label');
     expect(wrapper).toHaveStyle({ width: 'min-content' });
+  });
+});
+
+describe('Toggle size inheritance (InputConfigContext)', () => {
+  it('inherits size from InputConfigContext', () => {
+    render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <Toggle label="Notify" />
+      </InputConfigProvider>,
+    );
+    const wrapper = screen.getByLabelText('Notify').closest('label');
+    expect(wrapper).toHaveClass('sm');
+  });
+
+  it('instance size prop wins over context', () => {
+    render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <Toggle label="Notify" size="lg" />
+      </InputConfigProvider>,
+    );
+    const wrapper = screen.getByLabelText('Notify').closest('label');
+    expect(wrapper).toHaveClass('lg');
+    expect(wrapper).not.toHaveClass('sm');
+  });
+
+  it('defaults to md without context', () => {
+    render(<Toggle label="Notify" />);
+    const wrapper = screen.getByLabelText('Notify').closest('label');
+    expect(wrapper).toHaveClass('md');
   });
 });

@@ -160,6 +160,25 @@
   overflow: hidden;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--azimuth-space-sm);
+  padding: var(--azimuth-space-sm)
+    var(--azimuth-card-padding, var(--azimuth-space-md));
+  border-top: 1px solid var(--azimuth-color-border);
+  color: var(--azimuth-color-text-secondary);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-sm);
+}
+
+.actions:last-child {
+  border-radius: 0 0 var(--azimuth-radius, var(--azimuth-radius-md))
+    var(--azimuth-radius, var(--azimuth-radius-md));
+  overflow: hidden;
+}
+
 .title {
   margin: 0;
   font-size: var(--azimuth-fs-lg);
@@ -167,6 +186,10 @@
   font-family: var(--azimuth-font-body, system-ui, sans-serif);
   color: var(--azimuth-color-text);
   line-height: var(--azimuth-lh-heading);
+}
+
+.titleSm {
+  font-size: var(--azimuth-fs-base);
 }
 
 .description {

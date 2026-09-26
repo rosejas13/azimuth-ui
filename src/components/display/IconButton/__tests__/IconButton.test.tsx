@@ -95,4 +95,55 @@ describe('IconButton', () => {
     render(<IconButton icon={<span />} aria-label="Large" size="lg" />);
     expect(screen.getByRole('button').className).toContain('lg');
   });
+
+  it('applies circle shape class by default', () => {
+    render(<IconButton icon={<span />} aria-label="Round" />);
+    expect(screen.getByRole('button').className).toContain('circle');
+    expect(screen.getByRole('button').className).not.toContain('square');
+  });
+
+  it('square shape replaces the circle class', () => {
+    render(<IconButton icon={<span />} aria-label="Boxy" shape="square" />);
+    const btn = screen.getByRole('button');
+    expect(btn.className).toContain('square');
+    expect(btn.className).not.toContain('circle');
+  });
+
+  it('square shape keeps variant and size classes', () => {
+    render(
+      <IconButton
+        icon={<span />}
+        aria-label="Boxed"
+        shape="square"
+        variant="primary"
+        size="lg"
+      />,
+    );
+    const btn = screen.getByRole('button');
+    expect(btn.className).toContain('square');
+    expect(btn.className).toContain('primary');
+    expect(btn.className).toContain('lg');
+  });
+
+  it('square forwards onClick and aria-label', async () => {
+    const onClick = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <IconButton
+        icon={<span />}
+        aria-label="Copy"
+        shape="square"
+        onClick={onClick}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('square shape stays disabled-able', () => {
+    render(
+      <IconButton icon={<span />} aria-label="Sq" shape="square" disabled />,
+    );
+    expect(screen.getByRole('button')).toBeDisabled();
+  });
 });

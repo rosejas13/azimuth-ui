@@ -17,7 +17,9 @@ const meta: Meta<typeof ProgressBar> = {
 export default meta;
 type Story = StoryObj<typeof ProgressBar>;
 
-export const Determinate: Story = { args: { value: 60 } };
+export const Determinate: Story = {
+  args: { value: 60, label: 'Loading' },
+};
 
 export const Colors: Story = {
   render: () => (
@@ -32,4 +34,6 @@ export const Colors: Story = {
 };
 
 export const Indeterminate: Story = { args: { indeterminate: true } };
-export const WithPercentage: Story = { args: { value: 60, showPercentage: true } };
+export const WithPercentage: Story = {
+  args: { value: 60, showPercentage: true },
+};

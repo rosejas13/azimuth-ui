@@ -114,6 +114,11 @@
   -webkit-overflow-scrolling: touch;
 }
 
+.scrollWrapper:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
+}
+
 .thSortable {
   cursor: pointer;
   transition: background var(--azimuth-transition-fast);

@@ -186,7 +186,7 @@ function makeSubtle(color: string, dark?: boolean): string {
  *
  * @example
  * ```tsx
- * <ThemeProvider config={{ accentColor: 'oklch(60% 0.15 30)', mode: 'system' }}>
+ * <ThemeProvider config={{ accentColor: 'oklch(48% 0.16 35)', mode: 'system' }}>
  *   <App />
  * </ThemeProvider>
  * ```

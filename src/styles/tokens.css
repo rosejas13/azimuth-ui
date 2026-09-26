@@ -55,7 +55,11 @@
     --azimuth-shadow-md: 0 2px 8px 0 rgb(0 0 0 / 6%);
     --azimuth-shadow-lg: 0 4px 16px 0 rgb(0 0 0 / 8%);
     --azimuth-shadow-xl: 0 8px 32px 0 rgb(0 0 0 / 10%);
-    --azimuth-accent: #e8734a;
+
+    /* #e8734a is decorative only — on light backgrounds it sits at 2.3:1 text
+       contrast, below the 4.5:1 WCAG AA minimum, so text-colored uses resolve
+       --azimuth-color-accent to the darker accessible copper instead. */
+    --azimuth-accent-decorative: #e8734a;
     --azimuth-font-display: 'Onest', system-ui, sans-serif;
     --azimuth-font-body: 'Onest', system-ui, sans-serif;
   }
@@ -69,11 +73,12 @@
     --azimuth-color-text-muted: oklch(42% 0.01 85deg);
     --azimuth-color-border: oklch(78% 0.008 85deg);
     --azimuth-color-border-strong: oklch(80% 0.01 85deg);
-    --azimuth-color-primary: oklch(50% 0.13 195deg);
-    --azimuth-color-primary-hover: oklch(45% 0.14 195deg);
+    --azimuth-color-primary: oklch(48% 0.13 195deg);
+    --azimuth-color-primary-hover: oklch(43% 0.14 195deg);
     --azimuth-color-primary-subtle: oklch(92% 0.04 195deg);
     --azimuth-color-on-primary: oklch(99% 0 0deg);
     --azimuth-color-on-primary-hover: oklch(99% 0 0deg);
+    --azimuth-accent: oklch(48% 0.16 35deg);
     --azimuth-color-accent: var(--azimuth-accent);
     --azimuth-color-accent-hover: oklch(60% 0.18 35deg);
     --azimuth-color-accent-strong: oklch(56% 0.16 35deg);
@@ -156,17 +161,19 @@
       --azimuth-color-text-inverse: #fff;
       --azimuth-color-border: #dededb;
       --azimuth-color-border-strong: #c8c8c5;
-      --azimuth-color-primary: #00787a;
+      --azimuth-color-primary: #006c6e;
       --azimuth-color-primary-hover: #006b6d;
       --azimuth-color-primary-ring: #e0f0ec;
       --azimuth-color-primary-subtle: #e0f0ec;
       --azimuth-color-on-primary: #fff;
       --azimuth-color-on-primary-hover: #fff;
+      --azimuth-accent: #a2350d;
       --azimuth-color-accent-hover: #d4623a;
       --azimuth-color-accent-strong: #c0482a;
       --azimuth-color-accent-subtle: #fae8e0;
       --azimuth-color-on-accent: #fff;
       --azimuth-color-on-accent-hover: #fff;
+      --azimuth-accent-decorative: #e8734a;
       --azimuth-color-success-bg: #e0f0e0;
       --azimuth-color-success-text: #2e7a2e;
       --azimuth-color-warning-bg: #f5f0e0;
@@ -200,7 +207,7 @@
       --azimuth-color-primary-subtle: #1a2a28;
       --azimuth-color-on-primary: #121218;
       --azimuth-color-on-primary-hover: #121218;
-      --azimuth-color-accent-hover: #f5a07a;
+      --azimuth-accent: #f5a07a;
       --azimuth-color-accent-strong: #f5a07a;
       --azimuth-color-accent-subtle: #2a1a18;
       --azimuth-color-on-accent: #121218;

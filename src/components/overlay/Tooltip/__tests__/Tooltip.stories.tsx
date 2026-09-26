@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Tooltip } from '../Tooltip';
+import { Button } from '@/components/input/Button';
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Components/Tooltip',
@@ -15,24 +16,41 @@ export const Basic: Story = {
 };
 
 export const PositionTop: Story = {
-  args: { content: 'Tooltip on top', position: 'top', children: <span>Hover me</span> },
+  args: {
+    content: 'Tooltip on top',
+    position: 'top',
+    children: <span>Hover me</span>,
+  },
 };
 
 export const PositionBottom: Story = {
-  args: { content: 'Tooltip on bottom', position: 'bottom', children: <span>Hover me</span> },
+  args: {
+    content: 'Tooltip on bottom',
+    position: 'bottom',
+    children: <span>Hover me</span>,
+  },
 };
 
 export const PositionLeft: Story = {
-  args: { content: 'Tooltip on left', position: 'left', children: <span>Hover me</span> },
+  args: {
+    content: 'Tooltip on left',
+    position: 'left',
+    children: <span>Hover me</span>,
+  },
 };
 
 export const PositionRight: Story = {
-  args: { content: 'Tooltip on right', position: 'right', children: <span>Hover me</span> },
+  args: {
+    content: 'Tooltip on right',
+    position: 'right',
+    children: <span>Hover me</span>,
+  },
 };
 
 export const LongContent: Story = {
   args: {
-    content: 'This is a much longer tooltip that contains detailed information about the element being hovered.',
+    content:
+      'This is a much longer tooltip that contains detailed information about the element being hovered.',
     children: <span>Hover me</span>,
   },
 };
@@ -42,5 +60,14 @@ export const CustomDelay: Story = {
     content: 'Appears after 1 second',
     delay: 1000,
     children: <span>Hover me</span>,
+  },
+};
+
+export const OnButton: Story = {
+  name: 'On a Button',
+  args: {
+    content: 'Saves all pending changes',
+    delay: 0,
+    children: <Button>Save</Button>,
   },
 };

@@ -106,7 +106,7 @@ describe('ActivityFeed', () => {
 
   it('applies custom className', () => {
     render(<ActivityFeed events={[events[0]]} className="my-feed" />);
-    expect(screen.getByRole('feed')).toHaveClass('my-feed');
+    expect(screen.getByRole('feed').parentElement).toHaveClass('my-feed');
   });
 
   it('formats Date timestamps', () => {

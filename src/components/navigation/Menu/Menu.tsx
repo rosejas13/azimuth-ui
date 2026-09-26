@@ -2,7 +2,10 @@
 
 import {
   type ComponentPropsWithoutRef,
+  type ReactElement,
   forwardRef,
+  isValidElement,
+  cloneElement,
   useCallback,
   useEffect,
   useRef,
@@ -263,22 +266,41 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
       [ref],
     );
 
+    const triggerChild = isValidElement(trigger)
+      ? (trigger as ReactElement<Record<string, unknown>>)
+      : null;
+    const triggerChildType = triggerChild?.type as string | symbol | undefined;
+    // Native elements have string types; component types (including
+    // forwardRef/memo objects and functions) are treated as interactive
+    // triggers and rendered directly so we never wrap one element inside another.
+    const isNativeInteractiveTag = typeof triggerChildType === 'string';
+    const hasInteractiveTrigger =
+      triggerChildType !== undefined && !isNativeInteractiveTag;
+
+    const triggerFallbackClassName = styles.trigger;
+
+    const triggerElement = hasInteractiveTrigger ? (
+      cloneElement(triggerChild!, { className: styles.trigger })
+    ) : (
+      <button
+        type="button"
+        onClick={triggerMode === 'click' ? handleToggle : undefined}
+        onContextMenu={
+          triggerMode === 'context' ? handleContextMenu : undefined
+        }
+        onKeyDown={handleTriggerKeyDown}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={trigger ? undefined : 'Open menu'}
+        className={triggerFallbackClassName}
+      >
+        {trigger ?? '\u22EE'}
+      </button>
+    );
+
     return (
       <div ref={setRefs} className={cn(styles.container, className)} {...props}>
-        <button
-          type="button"
-          className={styles.trigger}
-          onClick={triggerMode === 'click' ? handleToggle : undefined}
-          onContextMenu={
-            triggerMode === 'context' ? handleContextMenu : undefined
-          }
-          onKeyDown={handleTriggerKeyDown}
-          aria-haspopup="menu"
-          aria-expanded={open}
-          aria-label={trigger ? undefined : 'Open menu'}
-        >
-          {trigger ?? '\u22EE'}
-        </button>
+        {triggerElement}
 
         {open && (
           <div style={panelStyle}>

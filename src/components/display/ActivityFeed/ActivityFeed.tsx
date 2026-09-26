@@ -69,7 +69,6 @@ export const ActivityFeed = forwardRef<HTMLDivElement, ActivityFeedProps>(
       return (
         <div
           ref={ref}
-          role="feed"
           className={cn(styles.root, styles.empty, className)}
           {...props}
         >
@@ -79,25 +78,19 @@ export const ActivityFeed = forwardRef<HTMLDivElement, ActivityFeedProps>(
     }
 
     return (
-      <div
-        ref={ref}
-        role="feed"
-        className={cn(styles.root, className)}
-        {...props}
-      >
-        <ul className={styles.list}>
+      <div ref={ref} className={cn(styles.root, className)} {...props}>
+        <div className={styles.list} role="feed">
           {visibleEvents.map((event) => (
-            <li key={event.id} className={styles.item}>
-              <span className={styles.marker}>
+            <article key={event.id} className={styles.item}>
+              <div className={styles.marker}>
                 {event.icon ? (
                   <span className={styles.iconWrapper}>{event.icon}</span>
                 ) : (
                   <span
                     className={cn(styles.dot, styles[event.type ?? 'default'])}
-                    aria-label={event.type}
                   />
                 )}
-              </span>
+              </div>
               <div className={styles.body}>
                 <div className={styles.header}>
                   <span className={styles.title}>{event.title}</span>
@@ -114,9 +107,9 @@ export const ActivityFeed = forwardRef<HTMLDivElement, ActivityFeedProps>(
                   </a>
                 )}
               </div>
-            </li>
+            </article>
           ))}
-        </ul>
+        </div>
         {showMoreButton && (
           <div className={styles.footer}>
             <button

@@ -2,7 +2,10 @@
 
 import {
   type ComponentPropsWithoutRef,
+  type ReactElement,
   forwardRef,
+  isValidElement,
+  cloneElement,
   useCallback,
   useEffect,
   useRef,
@@ -151,32 +154,65 @@ export const Flyout = forwardRef<HTMLDivElement, FlyoutProps>(
       return () => clearTimers();
     }, [clearTimers]);
 
+    const handleWrapperKeyDown = useCallback((e: React.KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    }, []);
+
+    const childElement = isValidElement(trigger)
+      ? (trigger as ReactElement<Record<string, unknown>>)
+      : null;
+    const childType = childElement?.type as string | symbol | undefined;
+    // Native elements have string types; component types (including
+    // forwardRef/memo objects and functions) are treated as interactive
+    // triggers and rendered directly so we never wrap one element inside another.
+    const isNativeTag = typeof childType === 'string';
+    const childIsInteractive = childType !== undefined && !isNativeTag;
+
+    const triggerProps = {
+      className: cn(styles.trigger),
+    };
+    const wrapperProps = {
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+      onKeyDown: handleWrapperKeyDown,
+      onFocus: () => {
+        clearTimers();
+        setOpen(true);
+      },
+      onBlur: () => {
+        clearTimers();
+        closeTimerRef.current = setTimeout(() => setOpen(false), closeDelay);
+      },
+    };
+
     return (
       <div
         ref={mergedRef}
         className={cn(styles.flyout, className)}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        {...wrapperProps}
         {...props}
       >
-        <button
-          type="button"
-          className={styles.trigger}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') setOpen(false);
-          }}
-          onFocus={() => {
-            clearTimers();
-            updatePosition();
-            setOpen(true);
-          }}
-          onBlur={() => {
-            clearTimers();
-            openTimerRef.current = setTimeout(() => setOpen(false), closeDelay);
-          }}
-        >
-          {trigger}
-        </button>
+        {childIsInteractive ? (
+          cloneElement(childElement!, triggerProps)
+        ) : childElement ? (
+          <button
+            type="button"
+            className={cn(
+              styles.trigger,
+              (childElement.props as { className?: string }).className,
+            )}
+          >
+            {trigger}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={styles.trigger}
+            aria-label="Show more info"
+          >
+            {trigger}
+          </button>
+        )}
         {open && (
           <div
             ref={panelRef}

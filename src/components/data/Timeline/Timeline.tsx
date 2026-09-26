@@ -1,6 +1,10 @@
 'use client';
 
-import { type ComponentPropsWithoutRef, type ReactNode, forwardRef } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  type ReactNode,
+  forwardRef,
+} from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Timeline.module.css';
 
@@ -14,8 +18,10 @@ export interface TimelineItem {
 }
 
 /** Props for the Timeline component. */
-export interface TimelineProps
-  extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
+export interface TimelineProps extends Omit<
+  ComponentPropsWithoutRef<'ul'>,
+  'children'
+> {
   items: TimelineItem[];
   /** @default 'default' */
   variant?: 'default' | 'alternating';
@@ -23,12 +29,11 @@ export interface TimelineProps
 }
 
 /** Renders a vertical timeline of items with optional alternating layout. */
-export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
+export const Timeline = forwardRef<HTMLUListElement, TimelineProps>(
   ({ items, variant = 'default', className, ...props }, ref) => {
     return (
-      <div
+      <ul
         ref={ref}
-        role="list"
         className={cn(
           styles.timeline,
           variant === 'alternating' && styles.alternating,
@@ -37,7 +42,7 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
         {...props}
       >
         {(items ?? []).map((item) => (
-          <div
+          <li
             key={item.id}
             className={cn(
               styles.item,
@@ -63,9 +68,9 @@ export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
                 <p className={styles.description}>{item.description}</p>
               )}
             </div>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     );
   },
 );

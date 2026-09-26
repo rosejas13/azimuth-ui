@@ -27,6 +27,13 @@ export interface RowProps extends ComponentPropsWithoutRef<'div'> {
   /** @default true */
   wrap?: boolean;
   /**
+   * Whether children stretch to share the row's width evenly and align to
+   * the label baseline. Defaults to `true` inside a `<Form>`, `false`
+   * elsewhere. Set `false` inside a `<Form>` to keep children at their
+   * natural widths (e.g. a button beside a single field).
+   */
+  stretch?: boolean;
+  /**
    * Width applied to each child. A single string applies the same width to
    * all children. An array applies widths left-to-right, cycling the last
    * value for any remaining children.
@@ -37,8 +44,8 @@ export interface RowProps extends ComponentPropsWithoutRef<'div'> {
 
 /**
  * A horizontal flexbox row with consistent gap spacing.
- * Inside a `<Form>`, children share width evenly and align to the label baseline
- * unless an explicit `align` is provided.
+ * Children stretch (equal widths, label-baseline alignment) only when
+ * `stretch` is enabled, which happens by default inside a `<Form>`.
  */
 export const Row = forwardRef<HTMLDivElement, RowProps>(
   (
@@ -47,6 +54,7 @@ export const Row = forwardRef<HTMLDivElement, RowProps>(
       align,
       justify,
       wrap = true,
+      stretch,
       childWidths,
       className,
       children,
@@ -77,7 +85,7 @@ export const Row = forwardRef<HTMLDivElement, RowProps>(
         className={cn(
           styles.row,
           wrap ? styles.wrap : styles.nowrap,
-          inForm && styles.formRow,
+          (stretch ?? inForm) && styles.formRow,
           align && styles[`align${capitalize(align)}`],
           justify && styles[`justify${capitalize(justify)}`],
           styles[`gap${capitalize(gap)}`],

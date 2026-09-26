@@ -1,6 +1,7 @@
 .timeline {
   position: relative;
   padding-left: var(--azimuth-space-xl);
+  list-style: none;
 }
 
 .timeline::before {

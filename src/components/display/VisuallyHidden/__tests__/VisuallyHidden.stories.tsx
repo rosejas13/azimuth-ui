@@ -14,4 +14,12 @@ export const Default: Story = {
   args: {
     children: 'This text is hidden visually but available to screen readers.',
   },
+  decorators: [
+    (Story) => (
+      <div>
+        <Story />
+        <p>Visible content around the visually hidden text.</p>
+      </div>
+    ),
+  ],
 };

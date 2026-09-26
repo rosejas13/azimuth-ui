@@ -2,7 +2,10 @@
 
 import {
   type ComponentPropsWithoutRef,
+  type ReactElement,
+  cloneElement,
   forwardRef,
+  isValidElement,
   useCallback,
   useEffect,
   useId,
@@ -13,6 +16,15 @@ import { cn } from '@/utils/cn';
 import styles from './Tooltip.module.css';
 
 type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
+
+const INTERACTIVE_TAG_NAMES = new Set([
+  'button',
+  'a',
+  'input',
+  'select',
+  'textarea',
+  'summary',
+]);
 
 /**
  * Props for the Tooltip component.
@@ -26,12 +38,23 @@ export interface TooltipProps extends Omit<
   position?: TooltipPosition;
   /** @default 300 */
   delay?: number;
+  /**
+   * The tooltip trigger. Interactive children (components or native focusable
+   * elements) become the trigger themselves and receive the tooltip's ARIA
+   * relationship; simple content such as strings is wrapped in a focusable
+   * span. Avoid passing interactive children to both and duplicating refs.
+   */
   children: React.ReactNode;
 }
 
 /**
  * A hover/focus-triggered tooltip that displays contextual content near its
  * child element.
+ *
+ * Interactive children act as the trigger directly — the tooltip never wraps
+ * them in its own focusable element, so nesting a button or link inside a
+ * Tooltip stays valid HTML. Simple content (strings, inert elements) is
+ * rendered inside a keyboard-focusable span trigger.
  *
  * Supports four positions (top, bottom, left, right) with a configurable
  * appearance delay. Repositions on scroll and resize while visible.
@@ -100,19 +123,20 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       }
     }, [position]);
 
-    const show = () => {
+    const show = useCallback(() => {
+      if (timeoutId) clearTimeout(timeoutId);
       const id = setTimeout(() => {
         updatePosition();
         setVisible(true);
       }, delay);
       setTimeoutId(id);
-    };
+    }, [timeoutId, delay, updatePosition]);
 
-    const hide = () => {
+    const hide = useCallback(() => {
       if (timeoutId) clearTimeout(timeoutId);
       setVisible(false);
       setTimeoutId(null);
-    };
+    }, [timeoutId]);
 
     useEffect(() => {
       if (!visible) return;
@@ -137,6 +161,40 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       [ref],
     );
 
+    const childElement = isValidElement(children)
+      ? (children as ReactElement<Record<string, unknown>>)
+      : null;
+    const childType = childElement?.type;
+    const childIsTrigger =
+      childType !== undefined &&
+      (typeof childType !== 'string' || INTERACTIVE_TAG_NAMES.has(childType));
+    const childDescribedProp = childElement?.props['aria-describedby'];
+    const childDescribedBy =
+      typeof childDescribedProp === 'string' ? childDescribedProp : undefined;
+
+    const describedBy =
+      childIsTrigger && visible
+        ? childDescribedBy
+          ? `${childDescribedBy} ${tooltipId}`
+          : tooltipId
+        : childDescribedBy;
+
+    const trigger =
+      childIsTrigger && childElement ? (
+        cloneElement(childElement, {
+          'aria-describedby': describedBy,
+        })
+      ) : (
+        <span
+          className={styles.trigger}
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- tooltip trigger for plain content must be keyboard-focusable; no interactive role applies
+          tabIndex={0}
+          aria-describedby={visible ? tooltipId : undefined}
+        >
+          {children}
+        </span>
+      );
+
     return (
       <div
         ref={setWrapperRef}
@@ -147,13 +205,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
         onBlur={hide}
         {...props}
       >
-        <button
-          type="button"
-          className={styles.trigger}
-          aria-describedby={visible ? tooltipId : undefined}
-        >
-          {children}
-        </button>
+        {trigger}
         {visible && (
           <div
             id={tooltipId}

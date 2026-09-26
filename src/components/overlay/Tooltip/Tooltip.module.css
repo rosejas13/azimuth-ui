@@ -6,9 +6,6 @@
 .trigger {
   display: inline-flex;
   cursor: pointer;
-  border: none;
-  background: none;
-  padding: 0;
   font: inherit;
   color: inherit;
 }

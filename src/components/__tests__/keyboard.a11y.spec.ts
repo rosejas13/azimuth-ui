@@ -5,7 +5,7 @@ test.describe('Keyboard navigation smoke test', () => {
     page,
   }) => {
     await page.goto(
-      '/iframe.html?id=components-button--primary&viewMode=story',
+      '/iframe.html?id=primitives-button--primary&viewMode=story',
     );
     await expect(page.locator('#storybook-root')).toBeVisible({
       timeout: 15000,

@@ -86,7 +86,9 @@ describe('DateTimePicker', () => {
 
   it('applies className', () => {
     render(<DateTimePicker className="test-class" />);
-    expect(screen.getByRole('grid').parentElement).toHaveClass('test-class');
+    expect(screen.getByRole('grid').parentElement?.parentElement).toHaveClass(
+      'test-class',
+    );
   });
 
   it('works controlled', () => {

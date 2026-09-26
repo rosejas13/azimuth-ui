@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { QuantityStepper } from '../QuantityStepper';
+import { InputConfigProvider } from '../../input-config';
 
 describe('QuantityStepper', () => {
   it('renders with default value', () => {
@@ -77,5 +78,31 @@ describe('QuantityStepper', () => {
   it('renders label when provided', () => {
     render(<QuantityStepper label="Quantity" />);
     expect(screen.getByText('Quantity')).toBeInTheDocument();
+  });
+});
+
+describe('QuantityStepper size inheritance (InputConfigContext)', () => {
+  it('inherits size from InputConfigContext', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <QuantityStepper />
+      </InputConfigProvider>,
+    );
+    expect(container.firstChild).toHaveClass('sm');
+  });
+
+  it('instance size prop wins over context', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <QuantityStepper size="lg" />
+      </InputConfigProvider>,
+    );
+    expect(container.firstChild).toHaveClass('lg');
+    expect(container.firstChild).not.toHaveClass('sm');
+  });
+
+  it('defaults to md without context', () => {
+    const { container } = render(<QuantityStepper />);
+    expect(container.firstChild).toHaveClass('md');
   });
 });

@@ -15,9 +15,9 @@ export type ColorMode = 'light' | 'dark' | 'system';
 
 /** Partial theme configuration passed by consumers. Unset fields fall back to defaults. */
 export interface ThemeConfig {
-  /** Primary accent color in oklch or hex. @default 'oklch(60% 0.15 30)' */
+  /** Primary accent color in oklch or hex. @default 'oklch(48% 0.16 35)' */
   accentColor?: string;
-  /** Primary brand color in oklch or hex. @default 'oklch(50% 0.10 185)' */
+  /** Primary brand color in oklch or hex. @default 'oklch(40% 0.14 195)' */
   primaryColor?: string;
   /** Primary brand color for dark mode. Falls back to primaryColor if unset. @default 'oklch(68% 0.08 185)' */
   darkPrimaryColor?: string;
@@ -62,8 +62,8 @@ export interface ThemeTokens {
 
 /** Default theme configuration used when no overrides are provided by the consumer. */
 export const DEFAULT_THEME: Required<ThemeConfig> = {
-  accentColor: 'oklch(60% 0.15 30)',
-  primaryColor: 'oklch(50% 0.10 185)',
+  accentColor: 'oklch(48% 0.16 35)',
+  primaryColor: 'oklch(40% 0.14 195)',
   darkPrimaryColor: 'oklch(68% 0.08 185)',
   darkAccentColor: 'oklch(72% 0.12 30)',
   borderRadius: 'md',

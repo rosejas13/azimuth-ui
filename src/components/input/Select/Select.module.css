@@ -48,6 +48,7 @@
   color: var(--azimuth-color-text);
   cursor: pointer;
   line-height: 1.5;
+  text-overflow: ellipsis;
   transition:
     border-color var(--azimuth-transition-fast),
     background var(--azimuth-transition-fast),
@@ -94,6 +95,10 @@
   padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
   padding-right: calc(var(--azimuth-space-sm) + 24px);
   font-size: var(--azimuth-fs-sm);
+}
+
+.sm .chevron {
+  right: var(--azimuth-space-sm);
 }
 
 .lg .select {

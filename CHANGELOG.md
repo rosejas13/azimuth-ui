@@ -2,6 +2,8 @@
 
 ## 0.14.0 (2026-09-24)
 
+_Downstream-reported batch (SKDHelper Atlas / IncentIQ Admin findings)._
+
 ### Features
 
 - **`Input` gains `onEnterPress`.** Fired on plain Enter submit-style (`(event) => void`); suppressed when the suggestion combobox consumes Enter to apply a highlighted option, so form-submit and suggestion-apply flows coexist. Closes azimuth_ui-bdb.
@@ -11,6 +13,10 @@
 - **`DataTable` sticky/pinned columns.** `DataTableColumn` accepts `sticky?: boolean | 'left' | 'right'` plus an optional `width`; pinned cells render `position: sticky` with cumulative left/right offsets computed from declared widths, so Pinned columns need an explicit `width` to line up. The Actions column is implicitly right-pinned at offset 0 whenever any column is sticky, in both paginated and virtualized rendering. Closes azimuth_ui-xff. (azimuth_ui-ot0, azimuth_ui-c7j, azimuth_ui-4dt etc. were shipped in 0.13.0.)
 
 - **`Card` gains a `hoverable` prop.** Cards lift on hover at rest by default (the workbench interaction model); `hoverable={false}` keeps the card flat and static — for informational cards where the lift implies clickability that isn't there. Renders a `.static` class that cancels the hover shadow/background shift; ships with tests and a story variant.
+
+- **`Card` gains an `actions` prop and a compact `titleSize`.** `actions?: React.ReactNode` renders a divider-pinned, right-aligned action row under the card body; `titleSize?: 'sm' | 'md'` (default `'md'`) compacts the heading for dense card layouts. +7 tests.
+
+- **`IconButton` gains a `shape` prop.** `shape?: 'circle' | 'square'` (default `'circle'`) — square maps to `aspect-ratio: 1` with `--azimuth-radius-sm`. +5 tests.
 
 - **`Select` distinguishes cleared from empty-string options.** Since 0.11.4 the injected hidden empty option shared `value=""` with real options, so a genuine "All years" / "All counties" option displayed blank once selected. Clearing now uses an internal sentinel, freeing `''` to select a literal empty-value option — the cleared-`''` behavior only persists when no option uses the empty string. Single and placeholder flows covered by new tests. Closes azimuth_ui-lbn.
 
@@ -26,6 +32,14 @@
 - **a11y Playwright suite repaired and running again** (azimuth_ui-uk0, long-open): the runner pointed at the Storybook manager URL where `#storybook-root` never exists; specs now load stories directly via `iframe.html`, stale story ids across 13 spec files were re-mapped to the current index, and bare-canvas page rules (`landmark-one-main`, `region`, …) are disabled for component contexts. The input suite is 21/21 green; the rest of the run surfaces 31 real, categorized violations now tracked as a fix-worklist bead (contrast collection, aria-children structure, nameable progressbar) rather than silently hidden.
 - Input/FileUpload/Select a11y hardening from the freshly-running suite: FileUpload no longer nests two focusable `role="button"` surfaces (the drag zone is now the single interactive element, outer wrapper is a plain drag target), Select derives an accessible name from its `placeholder` when no label is provided, and Slider stories carry `aria-label`s through the native passthrough.
 - Versus 0.13.0: +19 tests (1717 total, 123 files), lint/typecheck zero-error, build clean with the sourcemap guard intact, knip dead-code scan clean. `npm run verify` (the publish gate) remains green; the a11y suite runs separately via `npm run test:a11y`.
+
+### Quality — late addition (before publish)
+
+- **`Tooltip` no longer injects its own button trigger.** Interactive children (Button, link, native controls) become the trigger themselves via `cloneElement` + merged `aria-describedby`; inert children get a focusable span instead. Kills button-in-button nesting and axe `nested-interactive` violations when consumers tooltip their own buttons. 11→18 tests. Closes azimuth_ui-vk4.
+- **`Row` inside `<Form>` no longer force-stretches every child.** New `stretch?: boolean` resolves `stretch ?? inForm` — existing form rows behave identically, and natural-width siblings (a button beside a field) are one `stretch={false}` away. Closes azimuth_ui-1sy.
+- **Combobox / Toggle / OTPInput / QuantityStepper now inherit `InputConfigContext` size** like Select/Input already did (instance > group > form > built-in; `'xl'` clamps to `'lg'` where the component has no xl styles). +12 wiring tests. Closes azimuth_ui-n96.
+- **Select `sm` chevron can no longer collide with its text** — the caret anchors at its own size gutter and text ellipsizes, so narrow fixed-width containers ("All counties" patterns) are safe at any font. Closes azimuth_ui-z8q.
+- **The a11y suite is now fully green and the violations it exposed are fixed at the root** — chromium run 161 passed / 0 failed. Theme tokens were the app-wide contrast culprit (`--azimuth-color-primary`/`--azimuth-color-accent` darkened; the original accent survives as `--azimuth-accent-decorative`, and ThemeProvider's runtime `DEFAULT_THEME` was synced so it stopped re-overriding the base tokens). Structural fixes: Calendar moved its `role="grid"` to the actual grid, Timeline renders native `ul/li`, ActivityFeed uses `feed`/`article` roles (plus the removal of a prohibited `aria-label`), ScrollArea and DataTable's scroll wrapper are keyboard-focusable, Flyout/Menu no longer nest interactive triggers (the cloneElement trigger pattern), ProgressBar gained a `label` prop with `aria-label` fallback, stale keyboard-spec story id remapped, SkipLink/VisuallyHidden stories got anchors to demo against. Unit suite 1752 tests all green, lint/typecheck/build clean with the sourcemap guard intact. Closes azimuth_ui-25w.
 
 ## 0.13.0 (2026-09-22)
 

@@ -638,6 +638,7 @@ function DataTableInner<T>(
           <div
             ref={virtScrollRef}
             className={styles.scrollWrapper}
+            tabIndex={0} // eslint-disable-line jsx-a11y/no-noninteractive-tabindex -- keyboard-scrollable scroll region required by axe scrollable-region-focusable
             style={
               useVirtualized
                 ? { maxHeight: virtualizedMaxHeight, overflowY: 'auto' }

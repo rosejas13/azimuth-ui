@@ -28,6 +28,15 @@ export interface ScrollAreaProps extends ComponentPropsWithoutRef<'div'> {
    * @default false
    */
   asChild?: boolean;
+  /**
+   * Automatically add `tabIndex={0}` so keyboard users can scroll the region.
+   * Satisfies `scrollable-region-focusable`. Disable only when a focusable
+   * descendant is guaranteed to be present, or when composing focusable
+   * ScrollAreas inside another focusable element.
+   *
+   * @default true
+   */
+  keyboardScrollable?: boolean;
 }
 
 /** A container with custom-styled scrollbars that work consistently across browsers and OS. */
@@ -38,8 +47,10 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
       orientation = 'vertical',
       hideScrollbar = false,
       smoothScroll = true,
+      keyboardScrollable = true,
       asChild,
       className,
+      tabIndex,
       ...props
     },
     ref,
@@ -53,19 +64,22 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
       hideScrollbar && styles.hideScrollbar,
       className,
     );
+    const focusProps = {
+      tabIndex: tabIndex ?? (keyboardScrollable ? 0 : undefined),
+    };
 
     if (asChild) {
       const child = children as ReactElement | undefined;
       if (!child) return null;
       return (
-        <Slot className={classes} ref={ref} {...props}>
+        <Slot className={classes} ref={ref} {...focusProps} {...props}>
           {child}
         </Slot>
       );
     }
 
     return (
-      <div ref={ref} className={classes} {...props}>
+      <div ref={ref} className={classes} {...focusProps} {...props}>
         {children}
       </div>
     );

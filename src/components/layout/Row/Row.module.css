@@ -11,8 +11,9 @@
   flex-wrap: nowrap;
 }
 
-/* In-form field rows: fields share width evenly and wrap on narrow screens.
-   Compound selector keeps explicit align-* classes winning regardless of order. */
+/* Stretched field rows: fields share width evenly and wrap on narrow screens.
+   Opt-in outside forms via the `stretch` prop; compound selector keeps
+   explicit align-* classes winning regardless of order. */
 .row.formRow {
   align-items: flex-end;
 }

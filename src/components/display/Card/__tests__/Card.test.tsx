@@ -120,6 +120,46 @@ describe('Card', () => {
     expect(container.firstChild).not.toHaveClass('static');
   });
 
+  it('renders actions in an action row after the body', () => {
+    render(<Card actions={<button>Action</button>}>Body</Card>);
+    expect(screen.getByRole('button', { name: 'Action' })).toBeInTheDocument();
+    const actionsRow = screen.getByRole('button', { name: 'Action' })
+      .parentElement as HTMLElement;
+    expect(actionsRow.className).toContain('actions');
+  });
+
+  it('does not render the actions row when actions is omitted', () => {
+    const { container } = render(<Card>Body</Card>);
+    expect(container.querySelectorAll('.actions')).toHaveLength(0);
+  });
+
+  it('actions coexist with title, body, and footer in the right order', () => {
+    const { container } = render(
+      <Card title="My Card" actions={<span>Save</span>} footer="Foot">
+        Body text
+      </Card>,
+    );
+    const el = container.querySelector('.card') as HTMLElement;
+    const childClasses = Array.from(el.children).map(
+      (c) => c.className.split(' ')[0],
+    );
+    expect(childClasses).toEqual(['header', 'body', 'footer', 'actions']);
+  });
+
+  it('actions render after footer when both are present', () => {
+    render(
+      <Card footer="Footer" actions={<span>Actions</span>}>
+        Body
+      </Card>,
+    );
+    const footer = screen.getByText('Footer');
+    const actions = screen.getByText('Actions');
+    expect(
+      footer.compareDocumentPosition(actions) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
   it('default variant (outline) does not apply variant class', () => {
     const { container } = render(<Card>Content</Card>);
     expect(container.firstChild).not.toHaveClass('outline');
@@ -192,6 +232,13 @@ describe('CSS structure', () => {
     const body = container.querySelector('.body');
     expect(body?.className).not.toContain('collapsed');
   });
+
+  it('applies the actions CSS module class to the action row element', () => {
+    const { container } = render(<Card actions={<span>Do</span>}>Body</Card>);
+    const actionsRow = container.querySelector('.actions');
+    expect(actionsRow).toBeTruthy();
+    expect(actionsRow?.textContent).toContain('Do');
+  });
 });
 
 describe('Card title prop and collapsed visibility', () => {
@@ -240,5 +287,54 @@ describe('Card title prop and collapsed visibility', () => {
     expect(body).toHaveAttribute('aria-hidden', 'true');
     await user.click(button);
     expect(body).not.toHaveAttribute('aria-hidden');
+  });
+
+  it('titleSize sm renders the compact title class; default does not', () => {
+    const { unmount: unmountLg } = render(
+      <Card title="Large Title">Body</Card>,
+    );
+    const headingLg = screen.getByRole('heading', { name: 'Large Title' });
+    expect(headingLg.className).not.toContain('titleSm');
+    unmountLg();
+
+    const { unmount: unmountMdExplicit } = render(
+      <Card title="Md Title" titleSize="md">
+        Body
+      </Card>,
+    );
+    expect(
+      screen.getByRole('heading', { name: 'Md Title' }).className,
+    ).not.toContain('titleSm');
+    unmountMdExplicit();
+
+    render(
+      <Card title="Small Title" titleSize="sm">
+        Body
+      </Card>,
+    );
+    const headingSm = screen.getByRole('heading', { name: 'Small Title' });
+    expect(headingSm.className).toContain('titleSm');
+    expect(headingSm).toBeInstanceOf(HTMLHeadingElement);
+  });
+
+  it('titleSize sm coexists with expandable and actions', async () => {
+    const user = userEvent.setup();
+    render(
+      <Card
+        title="Compact"
+        titleSize="sm"
+        expandable
+        actions={<button>Do</button>}
+      >
+        Body
+      </Card>,
+    );
+    expect(
+      screen.getByRole('heading', { name: 'Compact' }).className,
+    ).toContain('titleSm');
+    await user.click(screen.getByRole('button', { name: /−|\+/ }));
+    expect(
+      screen.getByRole('heading', { name: 'Compact' }).className,
+    ).toContain('titleSm');
   });
 });

@@ -6,20 +6,33 @@ import {
   useState,
   useMemo,
   useCallback,
+  useId,
 } from 'react';
 import { cn } from '@/utils/cn';
 import styles from './Calendar.module.css';
 
 const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 const DAY_NAMES_SUN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 /** Props for the Calendar component. */
-export interface CalendarProps
-  extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'defaultValue'> {
+export interface CalendarProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'onChange' | 'defaultValue'
+> {
   value?: Date;
   defaultValue?: Date;
   onChange?: (date: Date) => void;
@@ -84,9 +97,7 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
 
     const selectedDate = isControlled ? controlledValue : internalValue;
 
-    const [viewDate, setViewDate] = useState(
-      startOfMonth(selectedDate),
-    );
+    const [viewDate, setViewDate] = useState(startOfMonth(selectedDate));
 
     const dayNames = useMemo(() => {
       if (locale) {
@@ -98,8 +109,7 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
             names.push(format.format(day));
           }
           return names;
-        } catch {
-        }
+        } catch {}
       }
       return DAY_NAMES_SUN;
     }, [locale]);
@@ -147,8 +157,26 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
 
     const isDisabled = useCallback(
       (date: Date): boolean => {
-        if (minDate && date < new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate())) return true;
-        if (maxDate && date > new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate())) return true;
+        if (
+          minDate &&
+          date <
+            new Date(
+              minDate.getFullYear(),
+              minDate.getMonth(),
+              minDate.getDate(),
+            )
+        )
+          return true;
+        if (
+          maxDate &&
+          date >
+            new Date(
+              maxDate.getFullYear(),
+              maxDate.getMonth(),
+              maxDate.getDate(),
+            )
+        )
+          return true;
         return false;
       },
       [minDate, maxDate],
@@ -202,15 +230,11 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
 
     const monthLabel = `${MONTH_NAMES[viewDate.getMonth()]} ${viewDate.getFullYear()}`;
 
+    const headerId = useId();
+
     return (
-      <div
-        ref={ref}
-        className={cn(styles.calendar, className)}
-        role="grid"
-        aria-label="Calendar"
-        {...props}
-      >
-        <div className={styles.header}>
+      <div ref={ref} className={cn(styles.calendar, className)} {...props}>
+        <div className={styles.header} id={headerId}>
           <button
             type="button"
             className={styles.navBtn}
@@ -230,65 +254,64 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
           </button>
         </div>
 
-        <div className={styles.grid} role="row">
-          {showWeekNumbers && (
-            <span className={cn(styles.dayHeader, styles.weekNumberHeader)} />
-          )}
-          {dayNames.map((name) => (
-            <span
-              key={name}
-              className={styles.dayHeader}
-              role="columnheader"
-              aria-label={name}
-            >
-              {name}
-            </span>
+        <div className={styles.grid} role="grid" aria-labelledby={headerId}>
+          <div className={styles.weekRow} role="row">
+            {showWeekNumbers && (
+              <span className={cn(styles.dayHeader, styles.weekNumberHeader)} />
+            )}
+            {dayNames.map((name) => (
+              <span
+                key={name}
+                className={styles.dayHeader}
+                role="columnheader"
+                aria-label={name}
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+
+          {weeks.map((week, weekIndex) => (
+            <div key={weekIndex} className={styles.weekRow} role="row">
+              {showWeekNumbers && (
+                <span className={styles.weekNumber}>{weekIndex + 1}</span>
+              )}
+              {week.map((cell) => {
+                const sel = selectedDate;
+                const selected = sel != null && isSameDay(cell.date, sel);
+                const today = isToday(cell.date);
+                const disabled = isDisabled(cell.date);
+                const isOutsideMonth = !cell.isCurrentMonth;
+
+                return (
+                  <span
+                    key={cell.date.toISOString()}
+                    role="gridcell"
+                    aria-selected={selected || undefined}
+                  >
+                    <button
+                      type="button"
+                      className={cn(
+                        styles.day,
+                        selected && styles.daySelected,
+                        today && !selected && styles.dayToday,
+                        isOutsideMonth && styles.dayOutside,
+                        disabled && styles.dayDisabled,
+                      )}
+                      aria-disabled={disabled || undefined}
+                      tabIndex={selected ? 0 : -1}
+                      onClick={() => handleSelectDate(cell.date)}
+                      onKeyDown={(e) => handleKeyDown(e, cell.date)}
+                      disabled={disabled}
+                    >
+                      {cell.date.getDate()}
+                    </button>
+                  </span>
+                );
+              })}
+            </div>
           ))}
         </div>
-
-        {weeks.map((week, weekIndex) => (
-          <div key={weekIndex} className={styles.weekRow} role="row">
-            {showWeekNumbers && (
-              <span className={styles.weekNumber}>
-                {weekIndex + 1}
-              </span>
-            )}
-            {week.map((cell) => {
-              const sel = selectedDate;
-              const selected =
-                sel != null && isSameDay(cell.date, sel);
-              const today = isToday(cell.date);
-              const disabled = isDisabled(cell.date);
-              const isOutsideMonth = !cell.isCurrentMonth;
-
-              return (
-                <span
-                  key={cell.date.toISOString()}
-                  role="gridcell"
-                  aria-selected={selected || undefined}
-                >
-                  <button
-                    type="button"
-                    className={cn(
-                      styles.day,
-                      selected && styles.daySelected,
-                      today && !selected && styles.dayToday,
-                      isOutsideMonth && styles.dayOutside,
-                      disabled && styles.dayDisabled,
-                    )}
-                    aria-disabled={disabled || undefined}
-                    tabIndex={selected ? 0 : -1}
-                    onClick={() => handleSelectDate(cell.date)}
-                    onKeyDown={(e) => handleKeyDown(e, cell.date)}
-                    disabled={disabled}
-                  >
-                    {cell.date.getDate()}
-                  </button>
-                </span>
-              );
-            })}
-          </div>
-        ))}
       </div>
     );
   },

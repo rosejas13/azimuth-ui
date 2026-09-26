@@ -11,8 +11,12 @@ describe('Calendar', () => {
 
   it('renders month navigation', () => {
     render(<Calendar />);
-    expect(screen.getByRole('button', { name: 'Previous month' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Next month' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Previous month' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Next month' }),
+    ).toBeInTheDocument();
   });
 
   it('renders day headers', () => {
@@ -33,12 +37,10 @@ describe('Calendar', () => {
     const user = userEvent.setup();
     render(<Calendar onChange={onChange} />);
     const cells = screen.getAllByRole('gridcell');
-    const todayCell = cells.find(
-      (c) => {
-        const btn = c.querySelector('button');
-        return btn && !btn.disabled && c.textContent;
-      },
-    );
+    const todayCell = cells.find((c) => {
+      const btn = c.querySelector('button');
+      return btn && !btn.disabled && c.textContent;
+    });
     if (todayCell) {
       const btn = todayCell.querySelector('button')!;
       await user.click(btn);
@@ -52,7 +54,10 @@ describe('Calendar', () => {
     const date = new Date(2024, 5, 15);
     render(<Calendar value={date} />);
     const selected = screen.getByText('15');
-    expect(selected.closest('[role="gridcell"]')).toHaveAttribute('aria-selected', 'true');
+    expect(selected.closest('[role="gridcell"]')).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
   });
 
   it('navigates months with prev/next buttons', async () => {
@@ -83,7 +88,7 @@ describe('Calendar', () => {
 
   it('applies className', () => {
     render(<Calendar className="test-class" />);
-    expect(screen.getByRole('grid')).toHaveClass('test-class');
+    expect(screen.getByRole('grid').parentElement).toHaveClass('test-class');
   });
 
   it('does not call onChange for disabled dates', async () => {
@@ -157,7 +162,9 @@ describe('Calendar', () => {
     );
     const cells = screen.getAllByText('30');
     const selectedDay = cells.find(
-      (c) => c.closest('[role="gridcell"]')?.getAttribute('aria-selected') === 'true',
+      (c) =>
+        c.closest('[role="gridcell"]')?.getAttribute('aria-selected') ===
+        'true',
     );
     selectedDay?.focus();
     await user.keyboard('{ArrowRight}');
@@ -172,7 +179,9 @@ describe('Calendar', () => {
     );
     const cells = screen.getAllByText('1');
     const selectedDay = cells.find(
-      (c) => c.closest('[role="gridcell"]')?.getAttribute('aria-selected') === 'true',
+      (c) =>
+        c.closest('[role="gridcell"]')?.getAttribute('aria-selected') ===
+        'true',
     );
     selectedDay?.focus();
     await user.keyboard('{ArrowLeft}');
@@ -187,7 +196,9 @@ describe('Calendar', () => {
     );
     const cells = screen.getAllByText('3');
     const selectedDay = cells.find(
-      (c) => c.closest('[role="gridcell"]')?.getAttribute('aria-selected') === 'true',
+      (c) =>
+        c.closest('[role="gridcell"]')?.getAttribute('aria-selected') ===
+        'true',
     );
     selectedDay?.focus();
     await user.keyboard('{ArrowUp}');
@@ -202,7 +213,9 @@ describe('Calendar', () => {
     );
     const cells = screen.getAllByText('31');
     const selectedDay = cells.find(
-      (c) => c.closest('[role="gridcell"]')?.getAttribute('aria-selected') === 'true',
+      (c) =>
+        c.closest('[role="gridcell"]')?.getAttribute('aria-selected') ===
+        'true',
     );
     selectedDay?.focus();
     await user.keyboard('{ArrowRight}');

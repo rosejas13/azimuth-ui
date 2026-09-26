@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { cn } from '@/utils/cn';
 import { useAutoWireProps } from '../auto-wire';
+import { useInputConfig } from '../input-config';
 import styles from './Toggle.module.css';
 
 /** Props for the Toggle component. */
@@ -54,7 +55,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
   (
     {
       label,
-      size = 'md',
+      size,
       name,
       onBlur,
       checked,
@@ -71,6 +72,9 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     ref,
   ) => {
     const autoId = useId();
+    const { size: configSize } = useInputConfig();
+    const resolvedSize =
+      size ?? (configSize === 'xl' ? 'lg' : configSize) ?? 'md';
     const generatedId = id || autoId;
     const labelContent = label || children;
 
@@ -105,7 +109,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
         htmlFor={generatedId}
         className={cn(
           styles.wrapper,
-          styles[size],
+          styles[resolvedSize],
           disabled && styles.wrapperDisabled,
           className,
         )}

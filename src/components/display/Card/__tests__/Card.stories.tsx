@@ -65,3 +65,45 @@ export const HoverableFalse: Story = {
     ),
   },
 };
+
+export const WithActions: Story = {
+  args: {
+    title: 'Card with Actions',
+    children: (
+      <Text size="sm" color="secondary">
+        Actions render in a subtle row pinned under the body.
+      </Text>
+    ),
+    actions: (
+      <>
+        <button type="button">Cancel</button>
+        <button type="button">Save</button>
+      </>
+    ),
+  },
+};
+
+export const CompactTitle: Story = {
+  args: {
+    title: 'Compact Card',
+    titleSize: 'sm',
+    children: (
+      <Text size="sm" color="secondary">
+        A compact card with a smaller title for dense sections.
+      </Text>
+    ),
+  },
+};
+
+export const SectionCard: Story = {
+  args: {
+    title: 'Section header',
+    titleSize: 'sm',
+    children: (
+      <Text size="sm" color="secondary">
+        13px section header with right-aligned controls in the action row.
+      </Text>
+    ),
+    actions: <button type="button">Edit section</button>,
+  },
+};

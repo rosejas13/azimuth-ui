@@ -7,11 +7,14 @@ import {
   useRef,
 } from 'react';
 import { cn } from '@/utils/cn';
+import { useInputConfig } from '../input-config';
 import styles from './OTPInput.module.css';
 
 /** Props for the OTPInput component. */
-export interface OTPInputProps
-  extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+export interface OTPInputProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'onChange'
+> {
   /** @default 4 */
   length?: number;
   /** The current OTP value string. */
@@ -34,7 +37,7 @@ export const OTPInput = forwardRef<HTMLDivElement, OTPInputProps>(
       value,
       onChange,
       disabled = false,
-      size = 'md',
+      size,
       error = false,
       className,
       ...props
@@ -42,6 +45,9 @@ export const OTPInput = forwardRef<HTMLDivElement, OTPInputProps>(
     ref,
   ) => {
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+    const { size: configSize } = useInputConfig();
+    const resolvedSize =
+      size ?? (configSize === 'xl' ? 'lg' : configSize) ?? 'md';
 
     const getDigits = useCallback(() => {
       const arr: string[] = [];
@@ -150,7 +156,7 @@ export const OTPInput = forwardRef<HTMLDivElement, OTPInputProps>(
         aria-label="One-time code input"
         className={cn(
           styles.container,
-          styles[size],
+          styles[resolvedSize],
           error && styles.error,
           disabled && styles.disabled,
           className,
@@ -168,7 +174,7 @@ export const OTPInput = forwardRef<HTMLDivElement, OTPInputProps>(
             aria-label={`Digit ${i + 1}`}
             className={cn(
               styles.input,
-              styles[size],
+              styles[resolvedSize],
               digits[i] && styles.filled,
               error && styles.inputError,
             )}

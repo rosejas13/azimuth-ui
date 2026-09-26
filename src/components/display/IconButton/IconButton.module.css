@@ -1,0 +1,5 @@
+.square {
+  aspect-ratio: 1;
+  border-radius: var(--azimuth-radius-sm);
+  padding: 0;
+}
