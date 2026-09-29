@@ -491,3 +491,112 @@ describe('self-registering fields (bare inputs with name)', () => {
     expect(input).not.toHaveAttribute('value');
   });
 });
+
+describe('Form.Field auto-wiring (structured values)', () => {
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+  ];
+
+  /** Stands in for DatePicker, recording the value the wiring injected. */
+  function ProbeDatePicker(props: {
+    value?: unknown;
+    onProbe?: (value: unknown) => void;
+  }) {
+    props.onProbe?.(props.value);
+    return <div data-testid="probe" />;
+  }
+  ProbeDatePicker.displayName = 'DatePicker';
+
+  it('wires a multi-Select Field with the array value and round-trips changes', async () => {
+    let submitted: unknown;
+    const user = userEvent.setup();
+    function Harness() {
+      const form = useForm({
+        schema: z.object({ tags: z.array(z.string()) }),
+        defaultValues: { tags: ['1'] },
+        onSubmit: (v) => {
+          submitted = v;
+        },
+      });
+      return (
+        <Form form={form}>
+          <Form.Field name="tags">
+            <Select options={options} multiple />
+          </Form.Field>
+          <button type="submit">go</button>
+        </Form>
+      );
+    }
+    render(<Harness />);
+    expect(
+      screen
+        .getAllByRole('option', { selected: true })
+        .map((opt) => opt.getAttribute('value')),
+    ).toEqual(['1']);
+    await user.selectOptions(screen.getByRole('listbox'), '2');
+    await user.click(screen.getByText('go'));
+    expect(submitted).toEqual({ tags: ['1', '2'] });
+  });
+
+  it('wires a DatePicker Field with undefined (not "") when the field is unset', () => {
+    let receivedValue: unknown;
+    function Harness() {
+      const form = useForm({
+        schema: z.object({ when: z.date().optional() }),
+        defaultValues: { when: undefined },
+      });
+      return (
+        <Form form={form}>
+          <Form.Field name="when">
+            <ProbeDatePicker
+              onProbe={(value) => {
+                receivedValue = value;
+              }}
+            />
+          </Form.Field>
+        </Form>
+      );
+    }
+    render(<Harness />);
+    expect(receivedValue).toBeUndefined();
+  });
+
+  it('renders an unset DatePicker Field empty (no coerced string value)', () => {
+    function Harness() {
+      const form = useForm({
+        schema: z.object({ when: z.date().optional() }),
+        defaultValues: { when: undefined },
+      });
+      return (
+        <Form form={form}>
+          <Form.Field label="When">
+            <DatePicker label="When" />
+          </Form.Field>
+        </Form>
+      );
+    }
+    render(<Harness />);
+    const input = screen.getByLabelText('When');
+    expect(input).toHaveValue('');
+    expect(input).toHaveAttribute('placeholder', 'Select date');
+  });
+
+  it('wires a DatePicker Field with the Date value when set', () => {
+    function Harness() {
+      const form = useForm({
+        schema: z.object({ when: z.date() }),
+        defaultValues: { when: new Date(2026, 0, 15) },
+      });
+      return (
+        <Form form={form}>
+          <Form.Field label="When">
+            <DatePicker label="When" />
+          </Form.Field>
+        </Form>
+      );
+    }
+    render(<Harness />);
+    expect(screen.getByDisplayValue('January 15, 2026')).toBeInTheDocument();
+  });
+});

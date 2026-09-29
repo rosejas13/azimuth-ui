@@ -8,6 +8,7 @@ import {
 } from 'react';
 import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
+import { useInputConfig } from '../input-config';
 import styles from './Rating.module.css';
 
 /**
@@ -50,7 +51,7 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(
       value = 0,
       max = 5,
       onChange,
-      size = 'md',
+      size,
       disabled = false,
       className,
       groupProps,
@@ -60,6 +61,10 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(
   ) => {
     const [hovered, setHovered] = useState(0);
     const [focusedIdx, setFocusedIdx] = useState(-1);
+    const { size: configSize } = useInputConfig();
+    // Rating has no 'xl' styles; clamp an inherited xl down to lg.
+    const resolvedSize =
+      size ?? (configSize === 'xl' ? 'lg' : configSize) ?? 'md';
 
     const displayValue = hovered > 0 ? hovered : value;
 
@@ -95,7 +100,7 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(
         tabIndex={-1}
         className={cn(
           styles.rating,
-          styles[size],
+          styles[resolvedSize],
           disabled && styles.disabled,
           className,
         )}

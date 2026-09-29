@@ -14,6 +14,15 @@ import {
 import { cn } from '@/utils/cn';
 import styles from './Flyout.module.css';
 
+const INTERACTIVE_TAG_NAMES = new Set([
+  'button',
+  'a',
+  'input',
+  'select',
+  'textarea',
+  'summary',
+]);
+
 /**
  * Props for the Flyout component.
  */
@@ -21,6 +30,13 @@ export interface FlyoutProps extends Omit<
   ComponentPropsWithoutRef<'div'>,
   'content'
 > {
+  /**
+   * The flyout trigger. Component children and native interactive elements
+   * (button, a, input, select, textarea, summary) become the trigger
+   * themselves and keep both classes merged; simple content is wrapped in a
+   * focusable button. Avoid nesting interactive children inside an
+   * interactive element.
+   */
   trigger: React.ReactNode;
   content: React.ReactNode;
   /** @default 'bottom' */
@@ -159,18 +175,19 @@ export const Flyout = forwardRef<HTMLDivElement, FlyoutProps>(
     }, []);
 
     const childElement = isValidElement(trigger)
-      ? (trigger as ReactElement<Record<string, unknown>>)
+      ? (trigger as ReactElement<
+          { className?: string } & Record<string, unknown>
+        >)
       : null;
     const childType = childElement?.type as string | symbol | undefined;
-    // Native elements have string types; component types (including
-    // forwardRef/memo objects and functions) are treated as interactive
-    // triggers and rendered directly so we never wrap one element inside another.
+    // Component types (including forwardRef/memo objects and functions) and
+    // native interactive tags act as their own triggers and are rendered
+    // directly so we never wrap one interactive element inside another.
     const isNativeTag = typeof childType === 'string';
-    const childIsInteractive = childType !== undefined && !isNativeTag;
+    const childIsInteractive =
+      childType !== undefined &&
+      (!isNativeTag || INTERACTIVE_TAG_NAMES.has(childType));
 
-    const triggerProps = {
-      className: cn(styles.trigger),
-    };
     const wrapperProps = {
       onMouseEnter: handleMouseEnter,
       onMouseLeave: handleMouseLeave,
@@ -193,14 +210,13 @@ export const Flyout = forwardRef<HTMLDivElement, FlyoutProps>(
         {...props}
       >
         {childIsInteractive ? (
-          cloneElement(childElement!, triggerProps)
+          cloneElement(childElement!, {
+            className: cn(childElement!.props.className, styles.trigger),
+          })
         ) : childElement ? (
           <button
             type="button"
-            className={cn(
-              styles.trigger,
-              (childElement.props as { className?: string }).className,
-            )}
+            className={cn(styles.trigger, childElement.props.className)}
           >
             {trigger}
           </button>

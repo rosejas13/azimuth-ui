@@ -31,6 +31,13 @@ export interface ThemeConfig {
   elevation?: Elevation;
   /** Spacing density preset. @default 'normal' */
   spacing?: Spacing;
+  /**
+   * Typography scale preset — scales every `--azimuth-fs-*` token at runtime
+   * so components with token-driven heading sizes (Card titles, section
+   * headings) respect the overall density.
+   * @default 'normal'
+   */
+  typeScale?: Spacing;
   /** Inner padding for card surfaces (header, body, footer, content). Emitted as `--azimuth-card-padding`. @default 'normal' */
   cardPadding?: 'none' | Spacing;
   /** Enable animation and transition styles. @default true */
@@ -52,6 +59,7 @@ export interface ThemeTokens {
   flat: boolean;
   elevation: Elevation;
   spacing: Spacing;
+  typeScale: Spacing;
   cardPadding: 'none' | Spacing;
   animations: boolean;
   motion: Motion;
@@ -70,6 +78,7 @@ export const DEFAULT_THEME: Required<ThemeConfig> = {
   flat: false,
   elevation: 'raised',
   spacing: 'normal',
+  typeScale: 'normal',
   cardPadding: 'normal',
   animations: true,
   motion: 'snappy',

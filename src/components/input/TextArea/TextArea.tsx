@@ -76,6 +76,8 @@ export interface TextAreaProps {
   textareaProps?: TextareaHTMLAttributes<HTMLTextAreaElement>;
   /** Styling for the underlying `<textarea>` element. */
   className?: string;
+  /** Styling for the outer wrapper `<div>`. */
+  wrapperClassName?: string;
 }
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
@@ -94,6 +96,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       maxLength,
       showCharCount = false,
       className,
+      wrapperClassName,
       id,
       name,
       onBlur,
@@ -141,7 +144,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         className={cn(
           styles.wrapper,
           resolvedSize && styles[resolvedSize],
-          className,
+          wrapperClassName,
         )}
       >
         {label && (
@@ -176,6 +179,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             styles.textarea,
             flushed && styles.flushed,
             error && styles.hasError,
+            className,
           )}
           disabled={disabled}
           required={required}

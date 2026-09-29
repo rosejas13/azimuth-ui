@@ -137,6 +137,12 @@
   opacity: 0.5;
 }
 
+/* Attached-group member: the group owns corner shaping. */
+.flushed .track,
+.flushed .fill {
+  border-radius: 0;
+}
+
 .disabled .track {
   cursor: not-allowed;
 }

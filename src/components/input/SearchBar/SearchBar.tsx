@@ -10,6 +10,7 @@ import {
 } from 'react';
 import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
+import { useInputConfig } from '../input-config';
 import styles from './SearchBar.module.css';
 
 /**
@@ -87,6 +88,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
     const [suggestionsStyle, setSuggestionsStyle] =
       useState<React.CSSProperties>({});
+    const { flushed } = useInputConfig();
     const wrapperRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -293,7 +295,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
             type="text"
             role="searchbox"
             aria-label={placeholder}
-            className={styles.input}
+            className={cn(styles.input, flushed && styles.flushed)}
             value={currentValue}
             onChange={handleChange}
             onKeyDown={handleKeyDown}

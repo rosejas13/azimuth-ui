@@ -51,6 +51,11 @@
   background: var(--azimuth-color-surface-hover);
 }
 
+/* Attached-group member: the group owns corner shaping. */
+.input.flushed {
+  border-radius: 0;
+}
+
 .clearBtn {
   position: absolute;
   right: var(--azimuth-space-sm);

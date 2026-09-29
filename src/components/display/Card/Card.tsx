@@ -95,6 +95,7 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
                 onClick={() => setExpanded((prev) => !prev)}
                 aria-expanded={expanded}
                 aria-controls={bodyId}
+                aria-label={expanded ? 'Collapse card' : 'Expand card'}
               >
                 {expanded ? '−' : '+'}
               </button>

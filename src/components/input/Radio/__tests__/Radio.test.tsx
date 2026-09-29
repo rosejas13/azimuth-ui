@@ -85,7 +85,9 @@ describe('Radio', () => {
   it('respects controlled checked prop', async () => {
     const handleChange = vi.fn();
     const user = userEvent.setup();
-    const { rerender } = render(<Radio checked={false} onChange={handleChange} />);
+    const { rerender } = render(
+      <Radio checked={false} onChange={handleChange} />,
+    );
     const radio = screen.getByRole('radio');
     await user.click(radio);
     expect(radio).not.toBeChecked();
@@ -101,5 +103,20 @@ describe('Radio', () => {
   it('renders with disabled wrapper CSS class when disabled', () => {
     const { container } = render(<Radio disabled label="test" />);
     expect(container.firstChild).toHaveClass('wrapperDisabled');
+  });
+});
+
+describe('Radio id uniqueness (useId)', () => {
+  it('renders distinct ids for two instances with the same label', () => {
+    render(
+      <>
+        <Radio label="Yes" name="group-a" />
+        <Radio label="Yes" name="group-b" />
+      </>,
+    );
+    const [first, second] = screen.getAllByLabelText('Yes');
+    expect(first.id).toBeTruthy();
+    expect(second.id).toBeTruthy();
+    expect(first.id).not.toBe(second.id);
   });
 });

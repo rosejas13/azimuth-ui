@@ -36,9 +36,15 @@ describe('TextArea', () => {
     expect(screen.getByRole('textbox')).toBeDisabled();
   });
 
-  it('applies custom className', () => {
+  it('applies custom className to the textarea element', () => {
     render(<TextArea className="my-textarea" />);
-    expect(document.querySelector('.my-textarea')).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toHaveClass('my-textarea');
+  });
+
+  it('applies wrapperClassName to the wrapper div', () => {
+    const { container } = render(<TextArea wrapperClassName="my-wrapper" />);
+    expect(container.firstChild).toHaveClass('my-wrapper');
+    expect(screen.getByRole('textbox')).not.toHaveClass('my-wrapper');
   });
 
   it('fires onChange with the string value', async () => {

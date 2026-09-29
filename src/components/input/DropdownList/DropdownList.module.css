@@ -201,6 +201,11 @@
   border-color: var(--azimuth-color-error-text);
 }
 
+/* Attached-group member: the group owns corner shaping. */
+.trigger.flushed {
+  border-radius: 0;
+}
+
 .hasError .trigger:focus {
   box-shadow: var(--azimuth-shadow-focus-error);
 }

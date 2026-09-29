@@ -22,8 +22,22 @@ describe('Card', () => {
 
   it('renders expandable toggle with correct aria attributes when expandable', () => {
     render(<Card expandable>Content</Card>);
-    const button = screen.getByRole('button');
+    const button = screen.getByRole('button', { name: 'Collapse card' });
     expect(button).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('sets an accessible name on the toggle that flips with expansion state', async () => {
+    const user = userEvent.setup();
+    render(
+      <Card expandable defaultExpanded={false}>
+        Content
+      </Card>,
+    );
+    const button = screen.getByRole('button', { name: 'Expand card' });
+    await user.click(button);
+    expect(
+      screen.getByRole('button', { name: 'Collapse card' }),
+    ).toBeInTheDocument();
   });
 
   it('renders expandable toggle and collapses body on click', async () => {
@@ -359,9 +373,13 @@ describe('Card title prop and collapsed visibility', () => {
     expect(
       screen.getByRole('heading', { name: 'Compact' }).className,
     ).toContain('titleSm');
-    await user.click(screen.getByRole('button', { name: /−|\+/ }));
+    await user.click(screen.getByRole('button', { name: 'Collapse card' }));
     expect(
       screen.getByRole('heading', { name: 'Compact' }).className,
     ).toContain('titleSm');
+    expect(screen.getByRole('button', { name: 'Expand card' })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
   });
 });

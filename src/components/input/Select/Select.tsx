@@ -126,6 +126,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       name,
       onBlur,
       selectProps,
+      'aria-label': ariaLabel,
+      'aria-describedby': ariaDescribedby,
+      'aria-invalid': ariaInvalid,
       ...rest
     } = props as SelectImplProps;
     const { multiple } = rest;
@@ -138,7 +141,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     });
     const effValue = (autoWire.value as typeof value) ?? value;
     const effOnChange = (autoWire.onChange as typeof onChange) ?? onChange;
-    const effOnBlur = autoWire.onBlur as typeof onBlur | undefined;
+    const effOnBlur = (autoWire.onBlur as typeof onBlur | undefined) ?? onBlur;
     const { size: configSize, flushed } = useInputConfig();
     const resolvedSize = size ?? configSize ?? 'md';
     const generatedId = useId();
@@ -160,9 +163,17 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           (defaultValue === '' && !optionsHaveEmptyValue && !placeholder));
     const activeBlank = useSentinel ? EMPTY_SENTINEL : '';
     // Self-setup: without a label, derive an accessible name from the
-    // placeholder text the consumer already supplied.
-    const resolvedAriaLabel =
-      rest['aria-label'] ?? label ?? placeholder ?? undefined;
+    // placeholder text the consumer already supplied. A consumer-passed
+    // `aria-label` always wins.
+    const resolvedAriaLabel = ariaLabel ?? label ?? placeholder ?? undefined;
+    // One winner per aria key: internal error/subtitle wiring takes
+    // precedence when present; otherwise the consumer's curated value.
+    const resolvedInvalid = error ? 'true' : (ariaInvalid ?? undefined);
+    const resolvedDescribedby = error
+      ? `${fieldId}-error`
+      : subtitle
+        ? `${fieldId}-subtitle`
+        : (ariaDescribedby ?? undefined);
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -223,14 +234,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             onChange={handleChange}
             disabled={disabled}
             required={required}
-            aria-invalid={error ? 'true' : undefined}
-            aria-describedby={
-              error
-                ? `${fieldId}-error`
-                : subtitle
-                  ? `${fieldId}-subtitle`
-                  : undefined
-            }
+            aria-invalid={resolvedInvalid}
+            aria-describedby={resolvedDescribedby}
             onBlur={effOnBlur}
             name={name}
             {...rest}

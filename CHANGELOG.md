@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.16.2 (2026-09-29)
+
+### Features
+
+- **`ThemeProvider` gains `typeScale`.** `'compact' | 'normal' | 'spacious'` (default `'normal'`) re-emits the `--azimuth-fs-*` ramp at runtime (×0.9 / ×1.1), so token-driven heading sizes — Card titles and section headers especially — finally track the overall theme density instead of staying fixed while spacing shrinks.
+
+- **Prop-propagation audit fixes (12 findings).** Select's curated `onBlur`/aria props can no longer silently override the component's own error wiring (and consumer `onBlur` is no longer dropped outside a Form); `Form.Field` now wires structured children (multi-Select, DatePicker, PhoneInput…) with their real value shape instead of `''`; Combobox gains Select-style self-setup (accessible name from label/placeholder, `aria-describedby` on its error span); Flyout treats native interactive triggers as the trigger instead of nesting buttons; Menu no longer replaces a trigger's `className` when cloning; Card's expand toggle is named ("Expand card"/"Collapse card").
+
+- **Group defaults propagate further.** Radio/PhoneInput/DropdownList stop deriving DOM ids from label slugs (two "Yes" radios no longer collide — now `useId()`); DropdownList's trigger is named via `aria-labelledby` and accepts `aria-label`/`aria-describedby` on the button; Rating and Slider adopt context size; SearchBar/Slider/FileUpload/DropdownList/PhoneInput go flat inside `InputGroup` via the `flushed` marker; a responsive nested group no longer loses a master group's flush; `TextArea.className` lands on the actual `<textarea>` element (new `wrapperClassName` for the wrapper).
+
+### Fixes
+
+- **Dark-mode contrast caught and fixed.** The a11y suite now runs every story in **both** light and light/dark color modes (mode-labeled violations). The first dark pass found 9 stories failing on `color-contrast` only in dark mode — fixed at the token layer: dark `--azimuth-color-text-muted` 45% → 62%, dark `text-secondary` 65% → 70%, and the runtime subtle-fill offset corrected so neutral badges/tags clear 4.5:1 in dark against every color preset. Nothing in light mode moved.
+
+### Quality
+
+- a11y suite: 161 chromium tests, now double-checked per mode, 0 failures; unit suite 1837 tests green; lint/typecheck zero-error.
+
 ## 0.16.1 (2026-09-29)
 
 ### Fixes

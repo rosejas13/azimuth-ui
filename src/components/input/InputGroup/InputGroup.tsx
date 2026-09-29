@@ -57,9 +57,20 @@ export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
         labelPosition: labelPosition ?? parent.labelPosition,
         inForm: parent.inForm,
         // In responsive (stacked) mode every child is its own full box again.
-        flushed: !responsive,
+        // Otherwise merge heritage: a nested group keeps the master group's
+        // flushed state instead of dropping it, defaulting to attached (true)
+        // for a top-level group.
+        flushed: responsive ? false : (parent.flushed ?? true),
       }),
-      [size, labelPosition, parent.size, parent.labelPosition, parent.inForm],
+      [
+        size,
+        labelPosition,
+        parent.size,
+        parent.labelPosition,
+        parent.inForm,
+        parent.flushed,
+        responsive,
+      ],
     );
 
     return (

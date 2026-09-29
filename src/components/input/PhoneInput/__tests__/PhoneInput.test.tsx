@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { PhoneInput } from '../PhoneInput';
+import { InputConfigProvider } from '../../input-config';
 
 describe('PhoneInput', () => {
   it('renders without crashing with default props', () => {
@@ -119,6 +120,53 @@ describe('PhoneInput', () => {
     );
     expect(screen.getByPlaceholderText('Phone number')).toHaveValue(
       '17612345678',
+    );
+  });
+});
+
+describe('PhoneInput id uniqueness (useId)', () => {
+  it('renders distinct ids for two instances with the same label', () => {
+    render(
+      <>
+        <PhoneInput label="Phone" />
+        <PhoneInput label="Phone" />
+      </>,
+    );
+    const [first, second] = screen.getAllByLabelText('Phone');
+    expect(first.id).toBeTruthy();
+    expect(second.id).toBeTruthy();
+    expect(first.id).not.toBe(second.id);
+  });
+
+  it('derives error and help ids from the generated id', () => {
+    render(<PhoneInput label="Phone" error="Required" />);
+    const input = screen.getByLabelText('Phone');
+    const error = screen.getByRole('alert');
+    expect(input.getAttribute('aria-describedby')).toBe(error.id);
+    expect(error.id).toContain(input.id);
+  });
+});
+
+describe('PhoneInput flush (InputConfigContext)', () => {
+  it('flushes the country button and phone field inside a group', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ flushed: true }}>
+        <PhoneInput label="Phone" />
+      </InputConfigProvider>,
+    );
+    expect(container.querySelector('[aria-label="Country code"]')).toHaveClass(
+      'flushed',
+    );
+    expect(container.querySelector('input[type="tel"]')).toHaveClass('flushed');
+  });
+
+  it('stays unflushed by default', () => {
+    const { container } = render(<PhoneInput label="Phone" />);
+    expect(
+      container.querySelector('[aria-label="Country code"]'),
+    ).not.toHaveClass('flushed');
+    expect(container.querySelector('input[type="tel"]')).not.toHaveClass(
+      'flushed',
     );
   });
 });

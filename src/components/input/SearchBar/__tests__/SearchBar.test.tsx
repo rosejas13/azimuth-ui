@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { SearchBar } from '../SearchBar';
+import { InputConfigProvider } from '../../input-config';
 
 describe('SearchBar', () => {
   it('renders with placeholder', () => {
@@ -59,10 +60,7 @@ describe('SearchBar', () => {
   it('shows suggestions based on input', async () => {
     const user = userEvent.setup();
     render(
-      <SearchBar
-        suggestions={['apple', 'banana', 'apricot']}
-        debounceMs={0}
-      />,
+      <SearchBar suggestions={['apple', 'banana', 'apricot']} debounceMs={0} />,
     );
     const input = screen.getByRole('searchbox');
     await user.type(input, 'ap');
@@ -89,9 +87,7 @@ describe('SearchBar', () => {
 
   it('closes suggestions on Escape', async () => {
     const user = userEvent.setup();
-    render(
-      <SearchBar suggestions={['apple', 'banana']} debounceMs={0} />,
-    );
+    render(<SearchBar suggestions={['apple', 'banana']} debounceMs={0} />);
     const input = screen.getByRole('searchbox');
     await user.type(input, 'ap');
     expect(screen.getByRole('listbox')).toBeInTheDocument();
@@ -142,5 +138,21 @@ describe('SearchBar', () => {
     const input = screen.getByRole('searchbox');
     await user.type(input, 'abc');
     expect(input).toHaveValue('fixed');
+  });
+});
+
+describe('SearchBar flush (InputConfigContext)', () => {
+  it('flushes the input inside a group', () => {
+    render(
+      <InputConfigProvider value={{ flushed: true }}>
+        <SearchBar />
+      </InputConfigProvider>,
+    );
+    expect(screen.getByRole('searchbox')).toHaveClass('flushed');
+  });
+
+  it('stays unflushed by default', () => {
+    render(<SearchBar />);
+    expect(screen.getByRole('searchbox')).not.toHaveClass('flushed');
   });
 });

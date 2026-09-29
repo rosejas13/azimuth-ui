@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { FileUpload } from '../FileUpload';
+import { InputConfigProvider } from '../../input-config';
 
 function createMockFile(name: string, size: number, type = 'text/plain'): File {
   return new File([new ArrayBuffer(size)], name, { type });
@@ -179,5 +180,21 @@ describe('FileUpload', () => {
   it('applies custom className', () => {
     const { container } = render(<FileUpload className="my-upload" />);
     expect(container.firstChild).toHaveClass('my-upload');
+  });
+});
+
+describe('FileUpload flush (InputConfigContext)', () => {
+  it('flushes the drop zone inside a group', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ flushed: true }}>
+        <FileUpload />
+      </InputConfigProvider>,
+    );
+    expect(container.firstChild).toHaveClass('flushed');
+  });
+
+  it('stays unflushed by default', () => {
+    const { container } = render(<FileUpload />);
+    expect(container.firstChild).not.toHaveClass('flushed');
   });
 });

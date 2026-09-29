@@ -213,4 +213,41 @@ describe('InputGroup flush', () => {
       (container.querySelector('input') as HTMLInputElement).className,
     ).not.toContain('flushed');
   });
+
+  it('a nested group inherits the master group flush', () => {
+    const { container } = render(
+      <InputGroup>
+        <InputGroup>
+          <Input defaultValue="a" />
+        </InputGroup>
+      </InputGroup>,
+    );
+    expect(container.querySelector('input')!.className).toContain('flushed');
+  });
+
+  it('a nested group keeps an unflushed (responsive) master state', () => {
+    const { container } = render(
+      <InputGroup responsive>
+        <InputGroup>
+          <Input defaultValue="a" />
+        </InputGroup>
+      </InputGroup>,
+    );
+    expect(container.querySelector('input')!.className).not.toContain(
+      'flushed',
+    );
+  });
+
+  it('a responsive nested group inside a flushed master is unflushed', () => {
+    const { container } = render(
+      <InputGroup>
+        <InputGroup responsive>
+          <Input defaultValue="a" />
+        </InputGroup>
+      </InputGroup>,
+    );
+    expect(container.querySelector('input')!.className).not.toContain(
+      'flushed',
+    );
+  });
 });

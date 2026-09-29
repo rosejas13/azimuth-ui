@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Menu } from '../Menu';
 import type { MenuItem } from '../Menu';
+import { Button } from '../../../input/Button';
 
 const sampleItems: MenuItem[] = [
   { key: 'edit', label: 'Edit' },
@@ -25,6 +26,18 @@ describe('Menu', () => {
   it('renders custom trigger', () => {
     render(<Menu items={sampleItems} trigger={<span>Options</span>} />);
     expect(screen.getByText('Options')).toBeInTheDocument();
+  });
+
+  it('merges custom trigger className with the menu trigger class', () => {
+    render(
+      <Menu
+        items={sampleItems}
+        trigger={<Button className="consumer-class">Actions</Button>}
+      />,
+    );
+    const triggerButton = screen.getByRole('button', { name: 'Actions' });
+    expect(triggerButton).toHaveClass('consumer-class');
+    expect(triggerButton).toHaveClass('trigger');
   });
 
   it('opens menu on trigger click', async () => {

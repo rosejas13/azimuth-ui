@@ -7,9 +7,11 @@ import {
   useRef,
   useEffect,
   useCallback,
+  useId,
 } from 'react';
 import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
+import { useInputConfig } from '../input-config';
 import styles from './DropdownList.module.css';
 
 /**
@@ -64,7 +66,11 @@ export interface DropdownListProps extends CuratedSurface<
 const dataDefault: DropdownListProps['data'] = { options: [] };
 const selectionDefault: DropdownListProps['selection'] = {};
 
-/** A dropdown select component with search, single/multiple selection, and keyboard navigation. */
+/**
+ * A dropdown select component with search, single/multiple selection, and
+ * keyboard navigation. The visible label (via `aria-labelledby`) or a consumer
+ * `aria-label` names the trigger button.
+ */
 export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
   (
     {
@@ -90,6 +96,24 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
     const wrapperRef = useRef<HTMLDivElement>(null);
     const listboxRef = useRef<HTMLUListElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
+
+    // The trigger button is a compound control, not the wrapper the curated
+    // div surface targets. Self-setup contract (same as Input/Select):
+    // internal wiring fills gaps only; a consumer value always wins.
+    const {
+      'aria-label': ariaLabel,
+      'aria-labelledby': ariaLabelledby,
+      'aria-describedby': ariaDescribedby,
+      ...wrapperPropsRest
+    } = props;
+
+    // `useId` keeps ids unique across instances (two identical labels no
+    // longer share one DOM id). Only naming, not stability, matters here.
+    const autoId = useId();
+    const labelId = `${autoId}-label`;
+    const resolvedAriaLabelledby =
+      ariaLabelledby ?? (label && !ariaLabel ? labelId : undefined);
+    const { flushed } = useInputConfig();
 
     const selectedValues = Array.isArray(value) ? value : value ? [value] : [];
 
@@ -255,15 +279,12 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
       <div
         ref={ref}
         className={cn(styles.wrapper, error && styles.hasError, className)}
-        {...props}
+        {...wrapperPropsRest}
         {...(wrapperProps as ComponentPropsWithoutRef<'div'>)}
       >
         <div ref={wrapperRef}>
           {label && (
-            <label
-              className={styles.label}
-              id={label.toLowerCase().replace(/\s+/g, '-')}
-            >
+            <label className={styles.label} id={labelId}>
               {label}
             </label>
           )}
@@ -273,12 +294,15 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
           >
             <button
               type="button"
-              className={styles.trigger}
+              className={cn(styles.trigger, flushed && styles.flushed)}
               onClick={toggleOpen}
               onKeyDown={handleKeyDown}
               disabled={disabled}
               aria-haspopup="listbox"
               aria-expanded={open}
+              aria-label={ariaLabel}
+              aria-labelledby={resolvedAriaLabelledby}
+              aria-describedby={ariaDescribedby}
             >
               <span
                 className={cn(

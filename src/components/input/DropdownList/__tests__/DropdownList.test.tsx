@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { DropdownList } from '../DropdownList';
+import { InputConfigProvider } from '../../input-config';
 
 const options = [
   { value: 'a', label: 'Option A' },
@@ -16,7 +17,6 @@ describe('DropdownList', () => {
     render(<DropdownList data={{ options, placeholder: 'Pick one' }} />);
     expect(screen.getByText('Pick one')).toBeInTheDocument();
   });
-
 
   it('opens dropdown on trigger click', async () => {
     const user = userEvent.setup();
@@ -44,7 +44,12 @@ describe('DropdownList', () => {
 
   it('stays open after multi select', async () => {
     const user = userEvent.setup();
-    render(<DropdownList data={{ options }} selection={{ multiple: true, onChange: vi.fn() }} />);
+    render(
+      <DropdownList
+        data={{ options }}
+        selection={{ multiple: true, onChange: vi.fn() }}
+      />,
+    );
     await user.click(document.querySelector('[aria-haspopup="listbox"]')!);
     await user.click(screen.getByText('Option A'));
     expect(screen.getByRole('listbox')).toBeInTheDocument();
@@ -56,7 +61,12 @@ describe('DropdownList', () => {
   });
 
   it('displays multiple selected values', () => {
-    render(<DropdownList data={{ options }} selection={{ value: ['a', 'd'], multiple: true }} />);
+    render(
+      <DropdownList
+        data={{ options }}
+        selection={{ value: ['a', 'd'], multiple: true }}
+      />,
+    );
     expect(screen.getByText('Option A, Option D')).toBeInTheDocument();
   });
 
@@ -131,5 +141,79 @@ describe('DropdownList', () => {
     const trigger = document.querySelector('[aria-haspopup="listbox"]')!;
     expect(trigger).toHaveAttribute('aria-haspopup', 'listbox');
     expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  });
+});
+
+describe('DropdownList id uniqueness (useId)', () => {
+  it('renders distinct label ids for two instances with the same label', () => {
+    render(
+      <>
+        <DropdownList label="Priority" data={{ options }} />
+        <DropdownList label="Priority" data={{ options }} />
+      </>,
+    );
+    const labels = document.querySelectorAll('label');
+    expect(labels).toHaveLength(2);
+    const [first, second] = labels;
+    expect(first.id).toBeTruthy();
+    expect(second.id).toBeTruthy();
+    expect(first.id).not.toBe(second.id);
+  });
+});
+
+describe('DropdownList trigger naming (a11y)', () => {
+  it('names the trigger via the visible label id', () => {
+    render(<DropdownList label="Priority" data={{ options }} />);
+    const trigger = document.querySelector('[aria-haspopup="listbox"]')!;
+    const labelId = trigger.getAttribute('aria-labelledby')!;
+    expect(labelId).toBeTruthy();
+    expect(document.getElementById(labelId)).toHaveTextContent('Priority');
+  });
+
+  it('routes a consumer aria-label to the trigger button, not the wrapper', () => {
+    const { container } = render(
+      <DropdownList data={{ options }} aria-label="Filter" />,
+    );
+    const trigger = document.querySelector('[aria-haspopup="listbox"]')!;
+    expect(trigger).toHaveAttribute('aria-label', 'Filter');
+    expect(container.firstChild).not.toHaveAttribute('aria-label');
+  });
+
+  it('routes a consumer aria-describedby to the trigger button', () => {
+    render(<DropdownList data={{ options }} aria-describedby="hint-1" />);
+    const trigger = document.querySelector('[aria-haspopup="listbox"]')!;
+    expect(trigger).toHaveAttribute('aria-describedby', 'hint-1');
+  });
+
+  it('prefers a consumer aria-labelledby over the internal label id', () => {
+    render(
+      <DropdownList
+        label="Priority"
+        data={{ options }}
+        aria-labelledby="custom-name"
+      />,
+    );
+    const trigger = document.querySelector('[aria-haspopup="listbox"]')!;
+    expect(trigger).toHaveAttribute('aria-labelledby', 'custom-name');
+  });
+});
+
+describe('DropdownList flush (InputConfigContext)', () => {
+  it('flushes the trigger inside a group', () => {
+    render(
+      <InputConfigProvider value={{ flushed: true }}>
+        <DropdownList data={{ options }} />
+      </InputConfigProvider>,
+    );
+    expect(document.querySelector('[aria-haspopup="listbox"]')).toHaveClass(
+      'flushed',
+    );
+  });
+
+  it('stays unflushed by default', () => {
+    render(<DropdownList data={{ options }} />);
+    expect(document.querySelector('[aria-haspopup="listbox"]')).not.toHaveClass(
+      'flushed',
+    );
   });
 });

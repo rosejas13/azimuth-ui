@@ -98,6 +98,8 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
       allowNewValue = false,
       maxSelected,
       className,
+      'aria-label': ariaLabel,
+      'aria-describedby': ariaDescribedby,
       ...props
     },
     ref,
@@ -334,6 +336,11 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
 
     const valueToLabel = (value: string) => toLabel(value, options);
 
+    // Self-setup for the combobox input's accessible name: a consumer-passed
+    // `aria-label` wins; otherwise the label, falling back to the placeholder.
+    const resolvedAriaLabel = label ?? placeholder ?? undefined;
+    const errorId = `${id}-error`;
+
     return (
       <div
         ref={ref}
@@ -391,6 +398,9 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
               aria-controls={listboxId}
               aria-activedescendant={activeDescendantId}
               aria-invalid={error ? 'true' : undefined}
+              aria-describedby={
+                ariaDescribedby ?? (error ? errorId : undefined)
+              }
               className={styles.input}
               value={displayValue}
               onChange={handleInputChange}
@@ -404,11 +414,12 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
               placeholder={multi && values.length > 0 ? undefined : placeholder}
               disabled={disabled}
               aria-label={
-                multi && values.length > 0
+                ariaLabel ??
+                (multi && values.length > 0
                   ? label
                     ? `${label} — search to add more`
                     : 'Search to add more'
-                  : undefined
+                  : resolvedAriaLabel)
               }
             />
           </div>
@@ -461,7 +472,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
           )}
         </div>
         {error && (
-          <span className={styles.error} role="alert">
+          <span id={errorId} className={styles.error} role="alert">
             {error}
           </span>
         )}

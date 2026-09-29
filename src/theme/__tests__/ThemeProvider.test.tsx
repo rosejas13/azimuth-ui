@@ -223,3 +223,34 @@ describe('cardPadding token', () => {
     );
   });
 });
+
+describe('ThemeProvider typeScale', () => {
+  it('compact scale emits smaller fs tokens into the runtime layer', () => {
+    render(
+      <ThemeProvider config={{ typeScale: 'compact' }}>
+        <div>child</div>
+      </ThemeProvider>,
+    );
+    const styleTags = document.querySelectorAll('style');
+    let foundVar = '';
+    styleTags.forEach((s) => {
+      if ((s.textContent || '').includes('--azimuth-fs-lg:')) {
+        foundVar =
+          (s.textContent || '').match(/--azimuth-fs-lg:\s*([^;]+);/)?.[1] ?? '';
+      }
+    });
+    expect(foundVar).toBe('1.012rem');
+  });
+
+  it('normal scale emits nothing (base tokens win)', () => {
+    render(
+      <ThemeProvider config={{ typeScale: 'normal' }}>
+        <div>child</div>
+      </ThemeProvider>,
+    );
+    const anyVar = Array.from(document.querySelectorAll('style')).some((s) =>
+      (s.textContent || '').includes('--azimuth-fs-lg:'),
+    );
+    expect(anyVar).toBe(false);
+  });
+});

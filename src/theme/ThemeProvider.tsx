@@ -4,6 +4,7 @@ import { type ReactNode, useEffect, useMemo, useRef } from 'react';
 import { ThemeContext } from './ThemeContext';
 import { DEFAULT_THEME } from './types';
 import type { ColorMode, ThemeConfig, ThemeTokens } from './types';
+import type { Spacing } from './types';
 
 /** Props for the ThemeProvider component. */
 interface ThemeProviderProps {
@@ -171,8 +172,10 @@ function makeSubtle(color: string, dark?: boolean): string {
   if (!p)
     return `color-mix(in srgb, ${color} 20%, ${dark ? '#1a1a1a' : '#f5f5f5'})`;
   const isLight = p.l > 60;
+  // Dark subtles must stay ≥ ~2.3x darker than the saturated foreground placed
+  // on them (badge/tag/section pills) so the pair clears 4.5:1 in dark mode.
   const subtleL =
-    dark || isLight ? Math.max(5, p.l - 35) : Math.min(100, p.l + 42);
+    dark || isLight ? Math.max(5, p.l - 38) : Math.min(100, p.l + 42);
   const subtleC = Math.max(0.05, p.c * 0.3);
   return `oklch(${subtleL}% ${subtleC} ${p.h})`;
 }
@@ -203,6 +206,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
       flat: c.flat,
       elevation: c.elevation,
       spacing: c.spacing,
+      typeScale: c.typeScale,
       cardPadding: c.cardPadding,
       animations: c.animations,
       motion: c.motion,
@@ -222,6 +226,36 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     const ease = MOTION_MAP[c.motion];
     const elevation = c.flat ? 'flat' : c.elevation;
     const shadows = SHADOW_MAP[elevation];
+
+    // Runtime-scaled type ramp: re-emits the fs tokens scaled from their
+    // base values so token-driven heading sizes (Card titles, section
+    // headers) track the overall density.
+    const TYPE_SCALE_FACTOR: Record<Spacing, number> = {
+      compact: 0.9,
+      normal: 1,
+      spacious: 1.1,
+    };
+    const fsScale = TYPE_SCALE_FACTOR[c.typeScale];
+    const fsBase: Record<string, string> = {
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+      '2xl': '1.5rem',
+      h6: '1rem',
+      h5: '1.25rem',
+      h4: '1.5rem',
+    };
+    const typeScaleCss =
+      fsScale === 1
+        ? ''
+        : Object.keys(fsBase)
+            .map((k) => {
+              const scaleValue = Number(fsBase[k].replace('rem', '')) * fsScale;
+              return `      --azimuth-fs-${k}: ${Number(scaleValue.toFixed(3))}rem;`;
+            })
+            .join('\n');
 
     // Non-color tokens. Emitted into an injected :root block (inside the
     // azimuth.runtime cascade layer) rather than inline documentElement styles,
@@ -243,6 +277,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
       --azimuth-space-3xl: ${spaces['3xl']};
       --azimuth-space-4xl: ${spaces['4xl']};
       --azimuth-card-padding: ${cardPadding};
+      ${typeScaleCss}
       --azimuth-font-display: ${c.fontDisplay};
       --azimuth-font-body: ${c.fontBody};
       --azimuth-ease: ${ease};
@@ -347,8 +382,8 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
         --azimuth-color-surface: oklch(19% 0.01 220);
         --azimuth-color-surface-hover: oklch(22% 0.01 220);
         --azimuth-color-text: oklch(90% 0.005 85);
-        --azimuth-color-text-secondary: oklch(65% 0.005 85);
-        --azimuth-color-text-muted: oklch(45% 0.005 85);
+        --azimuth-color-text-secondary: oklch(70% 0.005 85);
+        --azimuth-color-text-muted: oklch(62% 0.005 85);
         --azimuth-color-border: oklch(28% 0.01 220);
         --azimuth-color-border-strong: oklch(40% 0.01 220);
         --azimuth-color-on-primary: oklch(14% 0.008 220);

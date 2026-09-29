@@ -114,12 +114,19 @@
     --azimuth-color-surface-hover: oklch(22% 0.01 220deg);
     --azimuth-color-stripe: oklch(21% 0.01 220deg);
     --azimuth-color-text: oklch(90% 0.005 85deg);
-    --azimuth-color-text-secondary: oklch(65% 0.005 85deg);
-    --azimuth-color-text-muted: oklch(45% 0.005 85deg);
+
+    /* Dark-mode text on south-facing surfaces (bg 14%, surface 19-22%):
+       muted/secondary must clear 4.5:1 against the lightest normal surface
+       (surface-hover) and against the subtle* filled backgrounds. */
+    --azimuth-color-text-secondary: oklch(70% 0.005 85deg);
+    --azimuth-color-text-muted: oklch(62% 0.005 85deg);
     --azimuth-color-border: oklch(28% 0.01 220deg);
     --azimuth-color-border-strong: oklch(35% 0.01 220deg);
     --azimuth-color-primary: oklch(62% 0.12 195deg);
     --azimuth-color-primary-hover: oklch(68% 0.13 195deg);
+
+    /* Token-layer counterpart of ThemeProvider.makeSubtle's dark offset (−38):
+       primary text on primary-subtle fills must keep ≥4.5:1 in dark mode. */
     --azimuth-color-primary-subtle: oklch(25% 0.04 195deg);
     --azimuth-color-on-primary: oklch(14% 0.008 220deg);
     --azimuth-color-on-primary-hover: oklch(14% 0.008 220deg);
@@ -203,8 +210,8 @@
       --azimuth-color-surface-hover: #282830;
       --azimuth-color-stripe: #26262e;
       --azimuth-color-text: #e8e8e5;
-      --azimuth-color-text-secondary: #a0a09e;
-      --azimuth-color-text-muted: #70706e;
+      --azimuth-color-text-secondary: #a09e9b;
+      --azimuth-color-text-muted: #878683;
       --azimuth-color-text-inverse: #121218;
       --azimuth-color-border: #3a3a40;
       --azimuth-color-border-strong: #505058;

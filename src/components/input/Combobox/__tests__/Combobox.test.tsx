@@ -596,3 +596,90 @@ describe('Combobox size inheritance (InputConfigContext)', () => {
     expect(container.firstChild).toHaveClass('md');
   });
 });
+
+describe('Combobox (aria self-setup)', () => {
+  it('links the input to the error message via aria-describedby', () => {
+    render(
+      <Combobox
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+        data={{ options }}
+        error="Invalid selection"
+      />,
+    );
+    const error = screen.getByRole('alert');
+    expect(error.id).toMatch(/-error$/);
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'aria-describedby',
+      error.id,
+    );
+  });
+
+  it('leaves aria-describedby off the input when there is no error or consumer value', () => {
+    render(
+      <Combobox
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+        data={{ options }}
+      />,
+    );
+    expect(screen.getByRole('combobox')).not.toHaveAttribute(
+      'aria-describedby',
+    );
+  });
+
+  it('derives the accessible name from the label, falling back to the placeholder', () => {
+    const { rerender } = render(
+      <Combobox
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+        data={{ options }}
+        label="Assignee"
+      />,
+    );
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'aria-label',
+      'Assignee',
+    );
+    rerender(
+      <Combobox
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+        data={{ options }}
+      />,
+    );
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'aria-label',
+      'Type to search...',
+    );
+  });
+
+  it('lets a consumer aria-label win', () => {
+    render(
+      <Combobox
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+        data={{ options }}
+        label="Assignee"
+        aria-label="Custom name"
+      />,
+    );
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'aria-label',
+      'Custom name',
+    );
+  });
+
+  it('keeps the add-more name for a labeled multi combobox with chips', () => {
+    render(
+      <Combobox
+        selection={{
+          values: ['apple'],
+          onChange: vi.fn(),
+          onSelect: vi.fn(),
+        }}
+        data={{ options }}
+        label="Tags"
+      />,
+    );
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'aria-label',
+      'Tags — search to add more',
+    );
+  });
+});

@@ -28,16 +28,28 @@ export async function runA11yTest(
     // The story canvas is a bare component page, not a document — page-level
     // document-structure rules can't be satisfied there and would flag every
     // story regardless of component quality.
-    const results = await axe
-      .disableRules([
-        'landmark-one-main',
-        'page-has-heading-one',
-        'region',
-        'meta-viewport',
-        'bypass',
-      ])
-      .analyze();
+    const disabled = axe.disableRules([
+      'landmark-one-main',
+      'page-has-heading-one',
+      'region',
+      'meta-viewport',
+      'bypass',
+    ]);
 
-    expect(results.violations).toEqual([]);
+    // Color-sensitive rules run in BOTH color modes: the light default and
+    // the dark data-theme scheme. A mode-specific failure labels the violation.
+    for (const mode of ['light', 'dark'] as const) {
+      await page.evaluate((m) => {
+        document.documentElement.setAttribute('data-theme', m);
+      }, mode);
+      await page.waitForTimeout(150);
+      const results = await disabled.analyze();
+      if (results.violations.length > 0) {
+        results.violations.forEach((v) => {
+          v.help = `[${mode}] ${v.help}`;
+        });
+        expect(results.violations).toEqual([]);
+      }
+    }
   });
 }

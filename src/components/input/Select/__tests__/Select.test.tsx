@@ -228,3 +228,79 @@ describe('Select (empty-string option values)', () => {
     expect(realEmpty?.textContent).toBe('All years');
   });
 });
+
+describe('Select (aria + onBlur wiring)', () => {
+  it('fires a consumer onBlur outside any form', async () => {
+    const handleBlur = vi.fn();
+    const user = userEvent.setup();
+    render(<Select options={options} onBlur={handleBlur} />);
+    await user.click(screen.getByRole('combobox'));
+    await user.tab();
+    expect(handleBlur).toHaveBeenCalledTimes(1);
+  });
+
+  it('passes a consumer aria-describedby through when there is no error or subtitle', () => {
+    render(<Select options={options} aria-describedby="extra-desc" />);
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'aria-describedby',
+      'extra-desc',
+    );
+  });
+
+  it('keeps the internal error describedby even when the consumer passes its own', () => {
+    render(
+      <Select
+        options={options}
+        error="Required"
+        aria-describedby="extra-desc"
+      />,
+    );
+    const describedby = screen
+      .getByRole('combobox')
+      .getAttribute('aria-describedby');
+    expect(describedby).toMatch(/-error$/);
+  });
+
+  it('links subtitle via aria-describedby when there is no error', () => {
+    render(<Select options={options} subtitle="Pick one" />);
+    expect(screen.getByRole('combobox').getAttribute('aria-describedby')).toBe(
+      screen.getByText('Pick one').id,
+    );
+  });
+
+  it('honors a consumer aria-invalid when there is no error', () => {
+    render(<Select options={options} aria-invalid />);
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    );
+  });
+
+  it('forces aria-invalid true on error regardless of consumer value', () => {
+    render(<Select options={options} error="Required" aria-invalid={false} />);
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    );
+  });
+
+  it('lets a consumer aria-label win over label and placeholder', () => {
+    render(
+      <Select
+        options={options}
+        label="Country"
+        placeholder="Choose..."
+        aria-label="Pick a country"
+      />,
+    );
+    expect(screen.queryByRole('combobox', { name: 'Country' })).toBeNull();
+    expect(
+      screen.getByRole('combobox', { name: 'Pick a country' }),
+    ).toBeInTheDocument();
+  });
+
+  it('derives an accessible name from the placeholder when there is no label', () => {
+    render(<Select options={options} placeholder="Choose..." />);
+    expect(screen.getByLabelText('Choose...')).toBeInTheDocument();
+  });
+});

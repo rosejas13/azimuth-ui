@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Slider } from '../Slider';
+import { InputConfigProvider } from '../../input-config';
 
 describe('Slider', () => {
   it('renders with slider role', () => {
@@ -107,5 +108,57 @@ describe('Slider', () => {
     expect(screen.getByRole('slider')).toBeInTheDocument();
     rerender(<Slider display={{ size: 'lg' }} />);
     expect(screen.getByRole('slider')).toBeInTheDocument();
+  });
+});
+
+describe('Slider size inheritance (InputConfigContext)', () => {
+  it('inherits size from InputConfigContext', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <Slider />
+      </InputConfigProvider>,
+    );
+    expect(container.querySelector('[class*="track"]')).toHaveClass('trackSm');
+  });
+
+  it('instance size wins over context', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <Slider display={{ size: 'lg' }} />
+      </InputConfigProvider>,
+    );
+    expect(container.querySelector('[class*="track"]')).toHaveClass('trackLg');
+  });
+
+  it('clamps an inherited xl down to lg (no xl styles)', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ size: 'xl' }}>
+        <Slider />
+      </InputConfigProvider>,
+    );
+    expect(container.querySelector('[class*="track"]')).toHaveClass('trackLg');
+  });
+
+  it('defaults to md without context', () => {
+    const { container } = render(<Slider />);
+    const track = container.querySelector('[class*="track"]')!;
+    expect(track).not.toHaveClass('trackSm');
+    expect(track).not.toHaveClass('trackLg');
+  });
+});
+
+describe('Slider flush (InputConfigContext)', () => {
+  it('flushes the wrapper inside a group', () => {
+    const { container } = render(
+      <InputConfigProvider value={{ flushed: true }}>
+        <Slider />
+      </InputConfigProvider>,
+    );
+    expect(container.firstChild).toHaveClass('flushed');
+  });
+
+  it('stays unflushed by default', () => {
+    const { container } = render(<Slider />);
+    expect(container.firstChild).not.toHaveClass('flushed');
   });
 });

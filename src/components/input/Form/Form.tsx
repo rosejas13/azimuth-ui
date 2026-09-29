@@ -180,6 +180,20 @@ export interface FormFieldProps extends ComponentPropsWithoutRef<'div'> {
 const BOOLEAN_CONTROLS = new Set(['Toggle', 'Checkbox']);
 
 /**
+ * Controls whose value is an object, array, or `Date` rather than a plain
+ * string — wired values for these pass through uncoerced (`undefined` stays
+ * `undefined`, never `''`).
+ */
+const STRUCTURED_VALUE_CONTROLS = new Set([
+  'AddressInput',
+  'DateRangePicker',
+  'DatePicker',
+  'DateTimePicker',
+  'DropdownList',
+  'PhoneInput',
+]);
+
+/**
  * A labeled form field with validation error and help text support.
  *
  * @remarks
@@ -238,13 +252,22 @@ const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
       childProps.checked === undefined &&
       childProps.onChange === undefined
     ) {
-      const wired = ctx.values[fieldName] ?? '';
-      injected.onChange = (v: unknown) => ctx.setValue!(fieldName, v);
       const childType = (child as React.ReactElement).type as
         | { displayName?: string }
         | string;
       const displayName =
         typeof childType === 'string' ? undefined : childType.displayName;
+      // Structured-value children (multi-select arrays, Date pickers, object
+      // inputs) receive the form value uncoerced; string children keep the
+      // `''` fallback so an unset field renders as an empty text input.
+      const isStructuredValue =
+        childProps.selection !== undefined ||
+        childProps.multiple === true ||
+        STRUCTURED_VALUE_CONTROLS.has(displayName ?? '');
+      const wired = isStructuredValue
+        ? ctx.values[fieldName]
+        : (ctx.values[fieldName] ?? '');
+      injected.onChange = (v: unknown) => ctx.setValue!(fieldName, v);
       if (BOOLEAN_CONTROLS.has(displayName ?? '')) {
         injected.checked = Boolean(wired);
       } else {

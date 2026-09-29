@@ -23,6 +23,11 @@
   cursor: not-allowed;
 }
 
+/* Attached-group member: the group owns corner shaping. */
+.flushed {
+  border-radius: 0;
+}
+
 .zone {
   display: flex;
   flex-direction: column;

@@ -22,6 +22,38 @@ describe('Flyout', () => {
     expect(screen.getByText('Hover me')).toBeInTheDocument();
   });
 
+  it('uses a native interactive trigger element directly as the trigger', () => {
+    render(
+      <Flyout trigger={<a href="#x">Hover link</a>} content="Flyout content" />,
+    );
+    const link = screen.getByRole('link', { name: 'Hover link' });
+    expect(link).toHaveAttribute('href', '#x');
+  });
+
+  it('merges the trigger child className with the flyout trigger class', () => {
+    render(
+      <Flyout
+        trigger={
+          <button type="button" className="consumer-class">
+            Trigger
+          </button>
+        }
+        content="Flyout content"
+      />,
+    );
+    const trigger = screen.getByText('Trigger');
+    expect(trigger).toHaveClass('consumer-class');
+    expect(trigger.className).toContain('trigger');
+  });
+
+  it('does not wrap a native anchor trigger in a focusable button', () => {
+    const { container } = render(
+      <Flyout trigger={<a href="#x">Trigger</a>} content="Content" />,
+    );
+    const anchor = container.querySelector('a[href="#x"]')!;
+    expect(anchor.parentElement!.tagName).toBe('DIV');
+  });
+
   it('does not show content initially', () => {
     render(
       <Flyout
@@ -92,6 +124,13 @@ describe('Flyout', () => {
     );
     const wrapper = screen.getByText('Trigger').closest('[class*="my-flyout"]');
     expect(wrapper).toBeTruthy();
+  });
+
+  it('still wraps inert native elements (span) in the fallback button', () => {
+    render(<Flyout trigger={<span>Inert trigger</span>} content="Content" />);
+    expect(
+      screen.getByRole('button', { name: 'Inert trigger' }),
+    ).toBeInTheDocument();
   });
 
   it('renders with side prop without error', () => {

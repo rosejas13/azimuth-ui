@@ -189,6 +189,12 @@
   border-color: var(--azimuth-color-error-text);
 }
 
+/* Attached-group member: the group owns corner shaping. */
+.countryButton.flushed,
+.phoneInput.flushed {
+  border-radius: 0;
+}
+
 .hasError .phoneInput {
   border-color: var(--azimuth-color-error-text);
 }

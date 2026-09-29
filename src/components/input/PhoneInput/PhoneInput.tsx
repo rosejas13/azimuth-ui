@@ -5,12 +5,14 @@ import {
   forwardRef,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
 } from 'react';
 import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
+import { useInputConfig } from '../input-config';
 import styles from './PhoneInput.module.css';
 
 /** A country code entry in the phone input selector. */
@@ -259,8 +261,11 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
       ? getFlagEmoji(currentCountry.country)
       : undefined;
 
-    const generatedId =
-      id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+    // `useId` keeps ids unique across instances (two "Phone" fields no longer
+    // share one DOM id). Explicit `id` still wins; error/help ids derive from it.
+    const autoId = useId();
+    const generatedId = id || autoId;
+    const { flushed } = useInputConfig();
 
     return (
       <div className={cn(styles.wrapper, error && styles.hasError, className)}>
@@ -275,7 +280,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             <button
               ref={buttonRef}
               type="button"
-              className={styles.countryButton}
+              className={cn(styles.countryButton, flushed && styles.flushed)}
               onClick={() => setIsOpen((prev) => !prev)}
               aria-expanded={isOpen}
               aria-haspopup="listbox"
@@ -349,7 +354,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             ref={ref}
             id={generatedId}
             type="tel"
-            className={styles.phoneInput}
+            className={cn(styles.phoneInput, flushed && styles.flushed)}
             value={phoneNumber}
             onChange={handleNumberChange}
             disabled={disabled}

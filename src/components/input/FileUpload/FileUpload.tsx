@@ -11,6 +11,7 @@ import {
 } from 'react';
 import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
+import { useInputConfig } from '../input-config';
 import styles from './FileUpload.module.css';
 
 /**
@@ -83,6 +84,7 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
     const [files, setFiles] = useState<File[]>([]);
     const [error, setError] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const { flushed } = useInputConfig();
 
     const validateAndAdd = useCallback(
       (newFiles: FileList | File[]) => {
@@ -188,6 +190,7 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
           styles.root,
           dragOver && styles.dragOver,
           disabled && styles.disabled,
+          flushed && styles.flushed,
           className,
         )}
         onDragOver={handleDragOver}

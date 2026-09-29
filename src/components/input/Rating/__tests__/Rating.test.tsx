@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Rating } from '../Rating';
+import { InputConfigProvider } from '../../input-config';
 
 describe('Rating', () => {
   it('renders correct number of stars', () => {
@@ -73,7 +74,10 @@ describe('Rating', () => {
     stars.forEach((star) => {
       expect(star).toBeDisabled();
     });
-    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByRole('radiogroup')).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
   });
 
   it('does not call onChange when disabled and clicked', async () => {
@@ -144,5 +148,41 @@ describe('Rating', () => {
   it('applies custom className', () => {
     render(<Rating className="my-rating" />);
     expect(screen.getByRole('radiogroup')).toHaveClass('my-rating');
+  });
+});
+
+describe('Rating size inheritance (InputConfigContext)', () => {
+  it('inherits size from InputConfigContext', () => {
+    render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <Rating />
+      </InputConfigProvider>,
+    );
+    expect(screen.getByRole('radiogroup')).toHaveClass('sm');
+  });
+
+  it('instance size prop wins over context', () => {
+    render(
+      <InputConfigProvider value={{ size: 'sm' }}>
+        <Rating size="lg" />
+      </InputConfigProvider>,
+    );
+    expect(screen.getByRole('radiogroup')).toHaveClass('lg');
+    expect(screen.getByRole('radiogroup')).not.toHaveClass('sm');
+  });
+
+  it('clamps an inherited xl down to lg (no xl styles)', () => {
+    render(
+      <InputConfigProvider value={{ size: 'xl' }}>
+        <Rating />
+      </InputConfigProvider>,
+    );
+    expect(screen.getByRole('radiogroup')).toHaveClass('lg');
+    expect(screen.getByRole('radiogroup')).not.toHaveClass('xl');
+  });
+
+  it('defaults to md without context', () => {
+    render(<Rating />);
+    expect(screen.getByRole('radiogroup')).toHaveClass('md');
   });
 });

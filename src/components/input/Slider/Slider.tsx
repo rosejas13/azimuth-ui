@@ -9,6 +9,7 @@ import {
   useEffect,
 } from 'react';
 import { cn } from '@/utils/cn';
+import { useInputConfig } from '../input-config';
 import styles from './Slider.module.css';
 
 /** Props for the Slider component. */
@@ -62,11 +63,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
       defaultValue,
       onChange,
       disabled = false,
-      display: {
-        orientation = 'horizontal',
-        showValue = false,
-        size = 'md',
-      } = {},
+      display: { orientation = 'horizontal', showValue = false, size } = {},
       className,
       onKeyDown,
       ...props
@@ -75,6 +72,10 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
   ) => {
     const isControlled = value !== undefined;
     const isVertical = orientation === 'vertical';
+    const { size: configSize, flushed } = useInputConfig();
+    // Slider has no 'xl' styles; clamp an inherited xl down to lg.
+    const resolvedSize =
+      size ?? (configSize === 'xl' ? 'lg' : configSize) ?? 'md';
 
     const [internalValue, setInternalValue] = useState(defaultValue ?? min);
 
@@ -190,6 +191,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
           styles.wrapper,
           isVertical && styles.wrapperVertical,
           disabled && styles.disabled,
+          flushed && styles.flushed,
           className,
         )}
       >
@@ -224,8 +226,10 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
             className={cn(
               styles.track,
               isVertical && styles.trackVertical,
-              size !== 'md' &&
-                styles[`track${size.charAt(0).toUpperCase() + size.slice(1)}`],
+              resolvedSize !== 'md' &&
+                styles[
+                  `track${resolvedSize.charAt(0).toUpperCase() + resolvedSize.slice(1)}`
+                ],
             )}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
@@ -239,9 +243,9 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
               className={cn(
                 styles.thumb,
                 isVertical && styles.thumbVertical,
-                size !== 'md' &&
+                resolvedSize !== 'md' &&
                   styles[
-                    `thumb${size.charAt(0).toUpperCase() + size.slice(1)}`
+                    `thumb${resolvedSize.charAt(0).toUpperCase() + resolvedSize.slice(1)}`
                   ],
               )}
               style={thumbOffset}

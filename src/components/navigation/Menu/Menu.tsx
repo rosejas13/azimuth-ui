@@ -267,7 +267,9 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
     );
 
     const triggerChild = isValidElement(trigger)
-      ? (trigger as ReactElement<Record<string, unknown>>)
+      ? (trigger as ReactElement<
+          { className?: string } & Record<string, unknown>
+        >)
       : null;
     const triggerChildType = triggerChild?.type as string | symbol | undefined;
     // Native elements have string types; component types (including
@@ -280,7 +282,9 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
     const triggerFallbackClassName = styles.trigger;
 
     const triggerElement = hasInteractiveTrigger ? (
-      cloneElement(triggerChild!, { className: styles.trigger })
+      cloneElement(triggerChild!, {
+        className: cn(triggerChild!.props.className, styles.trigger),
+      })
     ) : (
       <button
         type="button"
