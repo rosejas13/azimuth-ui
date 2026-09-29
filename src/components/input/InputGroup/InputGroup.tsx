@@ -56,6 +56,8 @@ export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
         size: size ?? parent.size,
         labelPosition: labelPosition ?? parent.labelPosition,
         inForm: parent.inForm,
+        // In responsive (stacked) mode every child is its own full box again.
+        flushed: !responsive,
       }),
       [size, labelPosition, parent.size, parent.labelPosition, parent.inForm],
     );

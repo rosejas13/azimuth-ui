@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.16.1 (2026-09-29)
+
+### Fixes
+
+- **`InputGroup` attached borders now actually attach.** The group zeroed the *wrapper's* radius, but `Input`/`TextArea`/`Select` draw their border and radius on the inner control — so group members still showed their own rounded corners and the seams never reconciled. `InputGroup` now sets an internal `flushed` marker through `InputConfigContext` (the same group-defaults channel as `size`/`labelPosition`) and the three text-family controls drop their `border-radius` when inside — restoring in responsive stacked mode, where each child is an independent box again. Default inputs outside groups are unchanged. +3 wiring tests.
+
 ## 0.16.0 (2026-09-29)
 
 ### Features

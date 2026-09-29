@@ -151,8 +151,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
-    const { size: configSize, labelPosition: configLabelPosition } =
-      useInputConfig();
+    const {
+      size: configSize,
+      labelPosition: configLabelPosition,
+      flushed,
+    } = useInputConfig();
     const autoWire = useAutoWireProps({
       name,
       value,
@@ -363,6 +366,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           }}
           className={cn(
             styles.input,
+            flushed && styles.flushed,
             hasSteppers && styles.hasSteppers,
             error && styles.hasError,
             className,

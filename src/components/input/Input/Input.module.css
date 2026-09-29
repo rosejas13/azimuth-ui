@@ -94,6 +94,13 @@
     box-shadow var(--azimuth-transition-fast);
 }
 
+/* Attached-group member: the group collapses the shared edges, so this
+   input gives up its own corner radius while keeping its border for the
+   seam overlap. */
+.input.flushed {
+  border-radius: 0;
+}
+
 .input:focus {
   outline: none;
   border-color: var(--azimuth-color-primary);

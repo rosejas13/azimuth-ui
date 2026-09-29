@@ -139,7 +139,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const effValue = (autoWire.value as typeof value) ?? value;
     const effOnChange = (autoWire.onChange as typeof onChange) ?? onChange;
     const effOnBlur = autoWire.onBlur as typeof onBlur | undefined;
-    const { size: configSize } = useInputConfig();
+    const { size: configSize, flushed } = useInputConfig();
     const resolvedSize = size ?? configSize ?? 'md';
     const generatedId = useId();
     const fieldId = id || generatedId;
@@ -200,7 +200,12 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           <select
             ref={ref}
             id={fieldId}
-            className={cn(styles.select, error && styles.hasError, className)}
+            className={cn(
+              styles.select,
+              flushed && styles.flushed,
+              error && styles.hasError,
+              className,
+            )}
             value={
               controlled
                 ? blankValue

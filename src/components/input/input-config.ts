@@ -6,8 +6,14 @@ import { createContext, useContext } from 'react';
 export interface InputConfig {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   labelPosition?: 'top' | 'left' | 'inner';
-  /** Internal marker set by `<Form>`; lets Row apply field-row alignment. */
+  /** Set once on `<Form>`; lets Row apply field-row alignment. */
   inForm?: true;
+  /**
+   * Internal marker set by `<InputGroup>`: child inputs drop their own
+   * border-radius (and the visual seam radius on their own borders) so the
+   * attached look is produced by the group instead of per-control corners.
+   */
+  flushed?: boolean;
 }
 
 export const InputConfigContext = createContext<InputConfig>({});

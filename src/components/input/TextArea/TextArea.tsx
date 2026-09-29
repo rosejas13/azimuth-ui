@@ -102,7 +102,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     },
     ref,
   ) => {
-    const { size: configSize } = useInputConfig();
+    const { size: configSize, flushed } = useInputConfig();
     const autoWire = useAutoWireProps({ name, value, onChange, onBlur });
     const effOnBlur = autoWire.onBlur as typeof onBlur | undefined;
     const effValue = (autoWire.value as typeof value) ?? value;
@@ -172,7 +172,11 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           defaultValue={isControlled ? undefined : defaultValue}
           onChange={handleChange}
           onBlur={effOnBlur}
-          className={cn(styles.textarea, error && styles.hasError)}
+          className={cn(
+            styles.textarea,
+            flushed && styles.flushed,
+            error && styles.hasError,
+          )}
           disabled={disabled}
           required={required}
           readOnly={readOnly}

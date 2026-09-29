@@ -182,3 +182,35 @@ describe('InputGroup', () => {
     });
   });
 });
+
+describe('InputGroup flush', () => {
+  it('child Inputs drop their corner radius class inside the group', () => {
+    const { container } = render(
+      <InputGroup>
+        <Input defaultValue="a" />
+        <Input defaultValue="b" />
+      </InputGroup>,
+    );
+    const inputs = container.querySelectorAll('input');
+    expect(inputs.length).toBe(2);
+    inputs.forEach((i) => expect(i.className).toContain('flushed'));
+  });
+
+  it('responsive (stacked) groups do not flush children', () => {
+    const { container } = render(
+      <InputGroup responsive>
+        <Input defaultValue="a" />
+      </InputGroup>,
+    );
+    expect(container.querySelector('input')!.className).not.toContain(
+      'flushed',
+    );
+  });
+
+  it('Inputs outside a group stay unflushed', () => {
+    const { container } = render(<Input defaultValue="solo" />);
+    expect(
+      (container.querySelector('input') as HTMLInputElement).className,
+    ).not.toContain('flushed');
+  });
+});

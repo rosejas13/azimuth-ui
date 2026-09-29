@@ -45,6 +45,11 @@
     box-shadow var(--azimuth-transition-fast);
 }
 
+/* Attached-group member: the group owns corner shaping. */
+.flushed {
+  border-radius: 0;
+}
+
 .textarea:focus {
   outline: none;
   border-color: var(--azimuth-color-primary);
