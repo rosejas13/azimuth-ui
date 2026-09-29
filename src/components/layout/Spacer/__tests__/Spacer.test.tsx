@@ -25,7 +25,7 @@ describe('Spacer', () => {
   });
 
   it('passes through native props like data-testid', () => {
-    render(<Spacer data-testid="gap" />);
+    render(<Spacer spacerProps={{ 'data-testid': 'gap' }} />);
     expect(screen.getByTestId('gap')).toBeInTheDocument();
   });
 });

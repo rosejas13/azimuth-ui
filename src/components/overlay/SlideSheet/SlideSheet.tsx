@@ -1,13 +1,8 @@
 'use client';
 
-import {
-  type ComponentPropsWithoutRef,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react';
+import { forwardRef, useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import styles from './SlideSheet.module.css';
@@ -15,7 +10,19 @@ import styles from './SlideSheet.module.css';
 /**
  * Props for the SlideSheet component.
  */
-export interface SlideSheetProps extends ComponentPropsWithoutRef<'div'> {
+export interface SlideSheetProps extends CuratedSurface<
+  'div',
+  [
+    'className',
+    'id',
+    'style',
+    'tabIndex',
+    'aria-hidden',
+    'aria-label',
+    'onClick',
+    'onKeyDown',
+  ]
+> {
   visible?: {
     open: boolean;
     onClose: () => void;
@@ -30,6 +37,8 @@ export interface SlideSheetProps extends ComponentPropsWithoutRef<'div'> {
     persistent?: boolean;
   };
   children?: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  overlayProps?: NativeRest<'div'>;
 }
 
 /**
@@ -53,6 +62,7 @@ export const SlideSheet = forwardRef<HTMLDivElement, SlideSheetProps>(
       children,
       className,
       style,
+      overlayProps,
       ...props
     },
     ref,
@@ -132,7 +142,10 @@ export const SlideSheet = forwardRef<HTMLDivElement, SlideSheetProps>(
         className={cn(styles.overlay, className)}
         onClick={handleOverlayClick}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+          if (
+            (e.key === 'Enter' || e.key === ' ') &&
+            e.target === e.currentTarget
+          ) {
             e.preventDefault();
             handleOverlayClick(e as unknown as React.MouseEvent);
           }
@@ -141,6 +154,7 @@ export const SlideSheet = forwardRef<HTMLDivElement, SlideSheetProps>(
         tabIndex={-1}
         style={style}
         {...props}
+        {...(overlayProps as React.ComponentPropsWithoutRef<'div'>)}
       >
         <div
           ref={sheetRef}

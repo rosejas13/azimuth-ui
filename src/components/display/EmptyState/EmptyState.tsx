@@ -1,9 +1,13 @@
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './EmptyState.module.css';
 
-/** An empty state placeholder with an icon, title, description, and optional action. */
-export interface EmptyStateProps extends ComponentPropsWithoutRef<'div'> {
+/** Curated native surface for the EmptyState region; anything native not listed goes through `boxProps`. */
+export interface EmptyStateProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id']
+> {
   /** Optional icon displayed above the title. */
   icon?: React.ReactNode;
   /** Primary heading text. */
@@ -12,17 +16,23 @@ export interface EmptyStateProps extends ComponentPropsWithoutRef<'div'> {
   description?: string;
   /** Call-to-action element (typically a Button). */
   action?: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  boxProps?: NativeRest<'div'>;
 }
 
 /** An empty state placeholder for when no data is available. */
 export const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(
-  ({ icon, title, description, action, className, ...props }, ref) => {
+  (
+    { icon, title, description, action, className, boxProps, ...props },
+    ref,
+  ) => {
     return (
       <div
         ref={ref}
         role="status"
         className={cn(styles.root, className)}
         {...props}
+        {...(boxProps as ComponentPropsWithoutRef<'div'>)}
       >
         {icon && <div className={styles.icon}>{icon}</div>}
         <h3 className={styles.title}>{title}</h3>

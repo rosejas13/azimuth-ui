@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  type ComponentPropsWithoutRef,
   type ReactNode,
   forwardRef,
   useCallback,
@@ -11,6 +10,7 @@ import {
   useState,
 } from 'react';
 import { createPortal } from 'react-dom';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import styles from './CommandPalette.module.css';
@@ -32,10 +32,10 @@ export interface CommandGroup {
   items: CommandItem[];
 }
 
-/** Props for the CommandPalette component. */
-export interface CommandPaletteProps extends Omit<
-  ComponentPropsWithoutRef<'div'>,
-  'onSelect'
+/** Curated native surface for the palette overlay wrapper. */
+export interface CommandPaletteProps extends CuratedSurface<
+  'div',
+  ['className', 'id', 'style', 'tabIndex', 'aria-hidden', 'aria-label']
 > {
   open: boolean;
   onClose: () => void;
@@ -45,6 +45,8 @@ export interface CommandPaletteProps extends Omit<
   placeholder?: string;
   /** @default 'No results found' */
   emptyMessage?: string;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  overlayProps?: NativeRest<'div'>;
 }
 
 /** A modal command palette (⌘K-style) for searching and executing commands. */
@@ -58,6 +60,7 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
       placeholder = 'Search commands...',
       emptyMessage = 'No results found',
       className,
+      overlayProps,
       ...props
     },
     ref,
@@ -166,7 +169,10 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
         if (e.target === e.currentTarget) onClose();
       };
       const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (
+          (e.key === 'Enter' || e.key === ' ') &&
+          e.target === e.currentTarget
+        ) {
           e.preventDefault();
           onClose();
         }
@@ -193,6 +199,7 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(
         aria-modal="true"
         aria-label="Command palette"
         {...props}
+        {...(overlayProps as React.ComponentPropsWithoutRef<'div'>)}
       >
         <div className={styles.panel} role="listbox" aria-label="Commands">
           <div className={styles.searchWrapper}>

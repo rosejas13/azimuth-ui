@@ -5,6 +5,7 @@ import {
   type ReactNode,
   forwardRef,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { Container } from '@/components/layout';
 import { Text } from '@/components/display';
@@ -30,8 +31,11 @@ export interface PricingTier {
   cta: { label: string; href?: string; onClick?: () => void };
 }
 
-/** Props for the PricingTable section component. */
-export interface PricingTableProps extends ComponentPropsWithoutRef<'section'> {
+/** Curated native surface for the PricingTable section; anything native not listed goes through `sectionProps`. */
+export interface PricingTableProps extends CuratedSurface<
+  'section',
+  ['className', 'style', 'id']
+> {
   /** Main heading above the pricing grid. */
   title?: string;
   /** Smaller label displayed above the title. */
@@ -42,10 +46,8 @@ export interface PricingTableProps extends ComponentPropsWithoutRef<'section'> {
   tiers: PricingTier[];
   /** Section color variant. @default 'default' */
   variant?: 'default' | 'accent' | 'dark' | 'muted';
-  /** Custom class name applied to the section element. */
-  className?: string;
-  /** Section id for anchor linking. */
-  id?: string;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  sectionProps?: NativeRest<'section'>;
 }
 
 function renderCTA(cta: PricingTier['cta'], highlighted: boolean): ReactNode {
@@ -73,8 +75,8 @@ export const PricingTable = forwardRef<HTMLElement, PricingTableProps>(
       description,
       tiers,
       variant = 'default',
-      id,
       className,
+      sectionProps,
       ...props
     },
     ref,
@@ -82,9 +84,9 @@ export const PricingTable = forwardRef<HTMLElement, PricingTableProps>(
     return (
       <section
         ref={ref}
-        id={id}
         className={cn(styles.section, styles[variant], className)}
         {...props}
+        {...(sectionProps as ComponentPropsWithoutRef<'section'>)}
       >
         <Container size="lg">
           {(title || subtitle || description) && (

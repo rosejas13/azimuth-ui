@@ -189,7 +189,10 @@ describe('Row', () => {
 
   it('applies custom className and forwards native props', () => {
     const { container } = render(
-      <Row className="my-row" data-testid="row" aria-label="toolbar">
+      <Row
+        className="my-row"
+        rowProps={{ 'data-testid': 'row', 'aria-label': 'toolbar' }}
+      >
         <span>A</span>
       </Row>,
     );

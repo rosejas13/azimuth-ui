@@ -1,19 +1,18 @@
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './Stack.module.css';
 
 type StackDirection = 'horizontal' | 'vertical';
 type StackAlign = 'start' | 'center' | 'end' | 'stretch';
-type StackJustify =
-  | 'start'
-  | 'center'
-  | 'end'
-  | 'between'
-  | 'around';
+type StackJustify = 'start' | 'center' | 'end' | 'between' | 'around';
 type StackSpacing = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-/** Props for the Stack layout component. */
-export interface StackProps extends ComponentPropsWithoutRef<'div'> {
+/** Curated native surface for the Stack container; anything native not listed goes through `stackProps`. */
+export interface StackProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id']
+> {
   /** @default 'vertical' */
   direction?: StackDirection;
   align?: StackAlign;
@@ -23,6 +22,8 @@ export interface StackProps extends ComponentPropsWithoutRef<'div'> {
   /** @default false */
   wrap?: boolean;
   children?: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  stackProps?: NativeRest<'div'>;
 }
 
 /** A flexbox stack layout for arranging children vertically or horizontally with consistent spacing. */
@@ -36,6 +37,7 @@ export const Stack = forwardRef<HTMLDivElement, StackProps>(
       wrap = false,
       className,
       children,
+      stackProps,
       ...props
     },
     ref,
@@ -46,13 +48,18 @@ export const Stack = forwardRef<HTMLDivElement, StackProps>(
         className={cn(
           styles.stack,
           styles[direction],
-          align && styles[`align${align.charAt(0).toUpperCase() + align.slice(1)}`],
-          justify && styles[`justify${justify.charAt(0).toUpperCase() + justify.slice(1)}`],
+          align &&
+            styles[`align${align.charAt(0).toUpperCase() + align.slice(1)}`],
+          justify &&
+            styles[
+              `justify${justify.charAt(0).toUpperCase() + justify.slice(1)}`
+            ],
           styles[`gap${spacing.charAt(0).toUpperCase() + spacing.slice(1)}`],
           wrap && styles.wrap,
           className,
         )}
         {...props}
+        {...(stackProps as ComponentPropsWithoutRef<'div'>)}
       >
         {children}
       </div>

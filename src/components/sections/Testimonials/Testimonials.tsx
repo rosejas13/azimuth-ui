@@ -1,6 +1,7 @@
 'use client';
 
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { Container } from '@/components/layout';
 import { Text } from '@/components/display';
@@ -20,8 +21,11 @@ export interface TestimonialItem {
   company?: string;
 }
 
-/** Props for the Testimonials section component. */
-export interface TestimonialsProps extends ComponentPropsWithoutRef<'section'> {
+/** Curated native surface for the Testimonials section; anything native not listed goes through `sectionProps`. */
+export interface TestimonialsProps extends CuratedSurface<
+  'section',
+  ['className', 'style', 'id']
+> {
   /** Main heading above the testimonials grid. */
   title?: string;
   /** Smaller label displayed above the title. */
@@ -32,12 +36,10 @@ export interface TestimonialsProps extends ComponentPropsWithoutRef<'section'> {
   variant?: 'default' | 'accent' | 'dark' | 'muted';
   /** Number of grid columns. @default 2 */
   columns?: 1 | 2 | 3;
-  /** Custom class name applied to the section element. */
-  className?: string;
-  /** Section id for anchor linking. */
-  id?: string;
   /** Number of rating stars to display per card. @default 0 */
   rating?: number;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  sectionProps?: NativeRest<'section'>;
 }
 
 function getInitials(name: string): string {
@@ -82,8 +84,8 @@ export const Testimonials = forwardRef<HTMLElement, TestimonialsProps>(
       variant = 'default',
       columns = 2,
       rating = 0,
-      id,
       className,
+      sectionProps,
       ...props
     },
     ref,
@@ -91,9 +93,9 @@ export const Testimonials = forwardRef<HTMLElement, TestimonialsProps>(
     return (
       <section
         ref={ref}
-        id={id}
         className={cn(styles.section, styles[variant], className)}
         {...props}
+        {...(sectionProps as ComponentPropsWithoutRef<'section'>)}
       >
         <Container size="lg">
           {(title || subtitle) && (

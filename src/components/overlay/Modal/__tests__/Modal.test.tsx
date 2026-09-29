@@ -284,4 +284,146 @@ describe('Modal', () => {
     const dialog = screen.getByRole('dialog');
     expect(dialog).toHaveClass('overlayBlurMd');
   });
+
+  it('does not land initial focus on the close button', async () => {
+    render(
+      <Modal
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'Edit Profile' }}
+      >
+        <input aria-label="Name" />
+      </Modal>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByLabelText('Name'));
+    });
+    expect(document.activeElement).not.toBe(
+      screen.getByLabelText('Close dialog'),
+    );
+  });
+
+  it('focuses the body wrapper when content has no focusable elements', async () => {
+    render(
+      <Modal
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'Notice' }}
+      >
+        <p>Just text</p>
+      </Modal>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(
+        document.querySelector('[class*="body"]'),
+      );
+    });
+    expect(document.activeElement).not.toBe(
+      screen.getByLabelText('Close dialog'),
+    );
+  });
+
+  it('falls back to the first footer button when the body has no focusables', async () => {
+    render(
+      <Modal
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'Notice' }}
+        footer={<button type="button">Save</button>}
+      >
+        <p>Just text</p>
+      </Modal>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByText('Save'));
+    });
+  });
+
+  it('focuses the close button when initialFocus is close', async () => {
+    render(
+      <Modal
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'Edit Profile' }}
+        initialFocus="close"
+      >
+        <input aria-label="Name" />
+      </Modal>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(
+        screen.getByLabelText('Close dialog'),
+      );
+    });
+  });
+
+  it('focuses the first footer button when initialFocus is cancel', async () => {
+    render(
+      <Modal
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'Edit Profile' }}
+        initialFocus="cancel"
+        footer={
+          <>
+            <button type="button">Cancel</button>
+            <button type="button">Save</button>
+          </>
+        }
+      >
+        <input aria-label="Name" />
+      </Modal>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByText('Cancel'));
+    });
+  });
+
+  it('focuses the last footer button when initialFocus is confirm', async () => {
+    render(
+      <Modal
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'Edit Profile' }}
+        initialFocus="confirm"
+        footer={
+          <>
+            <button type="button">Cancel</button>
+            <button type="button">Save</button>
+          </>
+        }
+      >
+        <input aria-label="Name" />
+      </Modal>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByText('Save'));
+    });
+  });
+
+  it('interceptClose returning false vetoes Escape, overlay click, and X close', async () => {
+    const onClose = vi.fn();
+    const intercept = vi.fn(() => false);
+    const user = userEvent.setup();
+    render(
+      <Modal
+        visible={{ open: true, onClose }}
+        interceptClose={intercept}
+        content={{ title: 'Unsaved changes' }}
+      >
+        <p>Content</p>
+      </Modal>,
+    );
+    await user.keyboard('{Escape}');
+    await user.click(screen.getByRole('dialog'));
+    await user.click(screen.getByLabelText('Close dialog'));
+    expect(onClose).not.toHaveBeenCalled();
+    expect(intercept).toHaveBeenCalledTimes(3);
+  });
+
+  it('interceptClose returning true allows dismissal', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Modal visible={{ open: true, onClose }} interceptClose={() => true}>
+        <p>Content</p>
+      </Modal>,
+    );
+    await user.keyboard('{Escape}');
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
 });

@@ -3,14 +3,18 @@ import {
   type ReactNode,
   forwardRef,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { Container } from '@/components/layout';
 import { Text } from '@/components/display';
 import { Button, type ButtonVariant } from '@/components/input';
 import styles from './Hero.module.css';
 
-/** Props for the Hero section component. */
-export interface HeroProps extends ComponentPropsWithoutRef<'section'> {
+/** Curated native surface for the Hero section; anything native not listed goes through `sectionProps`. */
+export interface HeroProps extends CuratedSurface<
+  'section',
+  ['className', 'style', 'id']
+> {
   /** Main heading text. */
   title: string;
   /** Subtitle line displayed below the title. */
@@ -29,6 +33,8 @@ export interface HeroProps extends ComponentPropsWithoutRef<'section'> {
   backgroundImage?: string;
   /** Optional media element displayed in split layout. */
   media?: { src: string; alt: string };
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  sectionProps?: NativeRest<'section'>;
 }
 
 function renderAction(
@@ -65,7 +71,7 @@ export const Hero = forwardRef<HTMLElement, HeroProps>(
       className,
       id,
       style,
-      ...props
+      sectionProps,
     },
     ref,
   ) => {
@@ -85,7 +91,7 @@ export const Hero = forwardRef<HTMLElement, HeroProps>(
             : {}),
           ...style,
         }}
-        {...props}
+        {...(sectionProps as ComponentPropsWithoutRef<'section'>)}
       >
         {backgroundImage && (
           <div className={styles.overlay} aria-hidden="true" />

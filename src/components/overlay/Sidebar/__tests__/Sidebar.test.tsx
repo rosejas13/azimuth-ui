@@ -257,9 +257,32 @@ describe('Sidebar', () => {
     const user = userEvent.setup();
     screen.getByText('Dashboard').closest('button')!.focus();
     await user.keyboard('{ArrowUp}');
-    expect(screen.getByRole('button', { name: 'Collapse sidebar' })).toHaveFocus();
+    expect(
+      screen.getByRole('button', { name: 'Collapse sidebar' }),
+    ).toHaveFocus();
     await user.keyboard('{ArrowUp}');
     expect(screen.getByText('Admin').closest('button')).toHaveFocus();
+  });
+
+  it('does not dismiss on Space, Enter, or Escape', async () => {
+    const onSelect = vi.fn();
+    const onToggle = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Sidebar
+        items={items}
+        activeKey="dashboard"
+        onSelect={onSelect}
+        collapsed={false}
+        onToggle={onToggle}
+      />,
+    );
+    await user.keyboard(' ');
+    await user.keyboard('{Enter}');
+    await user.keyboard('{Escape}');
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(onToggle).not.toHaveBeenCalled();
   });
 
   it('handles empty items', () => {

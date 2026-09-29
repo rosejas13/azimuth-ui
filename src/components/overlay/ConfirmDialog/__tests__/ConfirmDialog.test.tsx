@@ -107,7 +107,7 @@ describe('ConfirmDialog', () => {
         onConfirm={() => {}}
       />,
     );
-    await new Promise((r) => setTimeout(r, 10));
+    await new Promise((r) => setTimeout(r, 80));
     expect((document.activeElement as HTMLElement)?.textContent).toBe('Cancel');
   });
 

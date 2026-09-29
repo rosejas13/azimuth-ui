@@ -5,12 +5,16 @@ import {
   type ReactElement,
   forwardRef,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { Slot } from '@/utils/Slot';
 import styles from './ScrollArea.module.css';
 
-/** Props for the ScrollArea component. */
-export interface ScrollAreaProps extends ComponentPropsWithoutRef<'div'> {
+/** Curated native surface for the ScrollArea region; anything native not listed goes through `boxProps`. */
+export interface ScrollAreaProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id', 'tabIndex']
+> {
   children?: React.ReactNode;
   /** Orientation of scrollable content.
    * @default 'vertical'
@@ -37,6 +41,8 @@ export interface ScrollAreaProps extends ComponentPropsWithoutRef<'div'> {
    * @default true
    */
   keyboardScrollable?: boolean;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  boxProps?: NativeRest<'div'>;
 }
 
 /** A container with custom-styled scrollbars that work consistently across browsers and OS. */
@@ -51,6 +57,7 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
       asChild,
       className,
       tabIndex,
+      boxProps,
       ...props
     },
     ref,
@@ -72,14 +79,26 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
       const child = children as ReactElement | undefined;
       if (!child) return null;
       return (
-        <Slot className={classes} ref={ref} {...focusProps} {...props}>
+        <Slot
+          className={classes}
+          ref={ref}
+          {...focusProps}
+          {...props}
+          {...(boxProps as ComponentPropsWithoutRef<'div'>)}
+        >
           {child}
         </Slot>
       );
     }
 
     return (
-      <div ref={ref} className={classes} {...focusProps} {...props}>
+      <div
+        ref={ref}
+        className={classes}
+        {...focusProps}
+        {...props}
+        {...(boxProps as ComponentPropsWithoutRef<'div'>)}
+      >
         {children}
       </div>
     );

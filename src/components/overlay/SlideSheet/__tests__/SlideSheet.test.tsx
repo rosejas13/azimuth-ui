@@ -1,7 +1,17 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { SlideSheet } from '../SlideSheet';
+
+async function blurThenFocusOverlay(overlay: HTMLElement) {
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+  overlay.focus();
+  await waitFor(() => {
+    expect(document.activeElement).toBe(overlay);
+  });
+}
 
 describe('SlideSheet', () => {
   it('renders when open', () => {
@@ -51,7 +61,10 @@ describe('SlideSheet', () => {
     const onClose = vi.fn();
     const user = userEvent.setup();
     render(
-      <SlideSheet visible={{ open: true, onClose }} config={{ persistent: true }}>
+      <SlideSheet
+        visible={{ open: true, onClose }}
+        config={{ persistent: true }}
+      >
         <p>Sheet content</p>
       </SlideSheet>,
     );
@@ -60,11 +73,56 @@ describe('SlideSheet', () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
+  it('does not close on Space inside an inner textarea', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <SlideSheet visible={{ open: true, onClose }}>
+        <input aria-label="Search" defaultValue="hello world" />
+        <textarea aria-label="Notes" defaultValue="line one" />
+      </SlideSheet>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).not.toBe(document.body);
+    });
+    await user.click(screen.getByLabelText('Search'));
+    await user.keyboard(' ');
+    await user.keyboard('{Enter}');
+    expect(onClose).not.toHaveBeenCalled();
+    expect(screen.getByLabelText('Search')).toHaveValue('hello world ');
+    const notes = screen.getByLabelText('Notes');
+    await user.click(notes);
+    await user.keyboard(' ');
+    expect(onClose).not.toHaveBeenCalled();
+    expect(notes).toHaveValue('line one ');
+    await user.keyboard('{Escape}');
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('closes on Space and Enter while the overlay itself is focused', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <SlideSheet visible={{ open: true, onClose }}>
+        <p>Sheet content</p>
+      </SlideSheet>,
+    );
+    const overlay = screen.getByRole('dialog').parentElement!;
+    await blurThenFocusOverlay(overlay);
+    await user.keyboard(' ');
+    expect(onClose).toHaveBeenCalledTimes(1);
+    await user.keyboard('{Enter}');
+    expect(onClose).toHaveBeenCalledTimes(2);
+  });
+
   it('closes on X button click', async () => {
     const onClose = vi.fn();
     const user = userEvent.setup();
     render(
-      <SlideSheet visible={{ open: true, onClose }} config={{ title: 'Test Sheet' }}>
+      <SlideSheet
+        visible={{ open: true, onClose }}
+        config={{ title: 'Test Sheet' }}
+      >
         <p>Sheet content</p>
       </SlideSheet>,
     );
@@ -75,7 +133,10 @@ describe('SlideSheet', () => {
 
   it('renders title', () => {
     render(
-      <SlideSheet visible={{ open: true, onClose: () => {} }} config={{ title: 'My Sheet' }}>
+      <SlideSheet
+        visible={{ open: true, onClose: () => {} }}
+        config={{ title: 'My Sheet' }}
+      >
         <p>Content</p>
       </SlideSheet>,
     );
@@ -96,7 +157,10 @@ describe('SlideSheet', () => {
 
   it('applies side and sheet CSS classes', () => {
     render(
-      <SlideSheet visible={{ open: true, onClose: () => {} }} config={{ side: 'right' }}>
+      <SlideSheet
+        visible={{ open: true, onClose: () => {} }}
+        config={{ side: 'right' }}
+      >
         <p>Content</p>
       </SlideSheet>,
     );
@@ -107,7 +171,10 @@ describe('SlideSheet', () => {
 
   it('has correct accessibility attributes', () => {
     render(
-      <SlideSheet visible={{ open: true, onClose: () => {} }} config={{ title: 'Accessible Sheet' }}>
+      <SlideSheet
+        visible={{ open: true, onClose: () => {} }}
+        config={{ title: 'Accessible Sheet' }}
+      >
         <p>Content</p>
       </SlideSheet>,
     );
@@ -119,7 +186,10 @@ describe('SlideSheet', () => {
 
   it('renders drag handle for bottom side', () => {
     render(
-      <SlideSheet visible={{ open: true, onClose: () => {} }} config={{ side: 'bottom' }}>
+      <SlideSheet
+        visible={{ open: true, onClose: () => {} }}
+        config={{ side: 'bottom' }}
+      >
         <p>Content</p>
       </SlideSheet>,
     );
@@ -129,7 +199,10 @@ describe('SlideSheet', () => {
 
   it('applies height style', () => {
     render(
-      <SlideSheet visible={{ open: true, onClose: () => {} }} config={{ height: '75vh' }}>
+      <SlideSheet
+        visible={{ open: true, onClose: () => {} }}
+        config={{ height: '75vh' }}
+      >
         <p>Content</p>
       </SlideSheet>,
     );
@@ -139,7 +212,10 @@ describe('SlideSheet', () => {
 
   it('applies snapPoints style', () => {
     render(
-      <SlideSheet visible={{ open: true, onClose: () => {} }} config={{ snapPoints: ['25vh', '50vh'] }}>
+      <SlideSheet
+        visible={{ open: true, onClose: () => {} }}
+        config={{ snapPoints: ['25vh', '50vh'] }}
+      >
         <p>Content</p>
       </SlideSheet>,
     );

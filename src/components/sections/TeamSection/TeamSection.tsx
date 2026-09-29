@@ -1,4 +1,5 @@
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { Container } from '@/components/layout';
 import { Text } from '@/components/display';
@@ -14,16 +15,19 @@ export interface TeamMember {
   socialLinks?: Array<{ label: string; href: string }>;
 }
 
-/** Team section displaying members in a configurable grid */
-export interface TeamSectionProps extends ComponentPropsWithoutRef<'section'> {
+/** Curated native surface for the TeamSection section; anything native not listed goes through `sectionProps`. */
+export interface TeamSectionProps extends CuratedSurface<
+  'section',
+  ['className', 'style', 'id']
+> {
   title?: string;
   subtitle?: string;
   description?: string;
   members: TeamMember[];
   columns?: 2 | 3 | 4;
   variant?: 'default' | 'accent' | 'dark' | 'muted';
-  id?: string;
-  className?: string;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  sectionProps?: NativeRest<'section'>;
 }
 
 export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(
@@ -35,8 +39,8 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(
       members,
       columns = 3,
       variant = 'default',
-      id,
       className,
+      sectionProps,
       ...props
     },
     ref,
@@ -44,9 +48,9 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(
     return (
       <section
         ref={ref}
-        id={id}
         className={cn(styles.section, styles[variant], className)}
         {...props}
+        {...(sectionProps as ComponentPropsWithoutRef<'section'>)}
       >
         <Container size="lg">
           {(title || subtitle || description) && (

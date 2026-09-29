@@ -1,13 +1,8 @@
 'use client';
 
-import {
-  type ComponentPropsWithoutRef,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react';
+import { forwardRef, useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import styles from './Drawer.module.css';
@@ -15,7 +10,18 @@ import styles from './Drawer.module.css';
 /**
  * Props for the Drawer component.
  */
-export interface DrawerProps extends ComponentPropsWithoutRef<'div'> {
+export interface DrawerProps extends CuratedSurface<
+  'div',
+  [
+    'className',
+    'id',
+    'style',
+    'tabIndex',
+    'aria-hidden',
+    'aria-label',
+    'aria-labelledby',
+  ]
+> {
   visible: { open: boolean; onClose: () => void };
   config?: {
     /** @default 'left' */
@@ -28,6 +34,8 @@ export interface DrawerProps extends ComponentPropsWithoutRef<'div'> {
   };
   children?: React.ReactNode;
   footer?: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  overlayProps?: NativeRest<'div'>;
 }
 
 /**
@@ -44,6 +52,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
       children,
       footer,
       className,
+      overlayProps,
       ...props
     },
     ref,
@@ -132,6 +141,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
         {...props}
+        {...(overlayProps as React.ComponentPropsWithoutRef<'div'>)}
       >
         <div
           ref={drawerRef}

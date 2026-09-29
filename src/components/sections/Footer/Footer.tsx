@@ -1,4 +1,5 @@
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { Container } from '@/components/layout';
 import { Divider } from '@/components/layout';
@@ -17,14 +18,20 @@ export interface SocialLink {
   icon?: React.ReactNode;
 }
 
-/** Props for the Footer section component. */
-export interface FooterProps extends ComponentPropsWithoutRef<'footer'> {
+/** Curated native surface for the Footer element; anything native not listed goes through `footerProps`. */
+export interface FooterProps extends CuratedSurface<
+  'footer',
+  ['className', 'style', 'id']
+> {
   brand?: { name: string; description?: string; logo?: React.ReactNode };
   columns?: FooterColumn[];
   socialLinks?: SocialLink[];
   copyright?: string;
   newsletterText?: string;
+  /** @default 'default' */
   variant?: 'default' | 'dark' | 'muted';
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  footerProps?: NativeRest<'footer'>;
 }
 
 /** A multi-column site footer with brand, navigation links, social media, newsletter signup, and copyright. */
@@ -36,9 +43,9 @@ export const Footer = forwardRef<HTMLElement, FooterProps>(
       socialLinks,
       copyright,
       newsletterText,
-      variant = 'default',
-      id,
       className,
+      variant = 'default',
+      footerProps,
       ...props
     },
     ref,
@@ -46,9 +53,9 @@ export const Footer = forwardRef<HTMLElement, FooterProps>(
     return (
       <footer
         ref={ref}
-        id={id}
         className={cn(styles.footer, styles[variant], className)}
         {...props}
+        {...(footerProps as ComponentPropsWithoutRef<'footer'>)}
       >
         <Container size="lg">
           {(brand || newsletterText) && (

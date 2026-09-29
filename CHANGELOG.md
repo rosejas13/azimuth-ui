@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.17.0 (2026-09-29)
+
+### Features
+
+- **`SuggestionsField` (TagInput family)** — three modes in one component: `free` (comma/Enter commits typed text), `suggestions` (must pick from the option list; typed unknowns rejected with a visible hint), and `fixed` (chips toggle selection). Controlled `values`/`onChange` with `onSelect`/`onRemove`, per-mode duplicate/max handling, Backspace pops, combobox-style listbox a11y in suggestion mode, curated surface + `containerProps`, context-driven size. 31 tests + 7 stories. Closes azimuth_ui-5sj.
+- **`MarkdownField`** — markdown editing with a rendered preview: `write` / `preview` / `split` modes (consumer-driven or built-in toggle), an internal toolbar (bold/italic/code/link/list glyphs, aria-labeled, inserts around the caret), and a **zero-dependency, escape-by-construction** markdown renderer producing React nodes (headings, bold/italic, inline + fenced code, safe links only — `javascript:` dropped, lists, blockquotes, paragraphs). No `dangerouslySetInnerHTML` anywhere. Preview region is `aria-live="polite"`. 29 tests. Closes azimuth_ui-lxi.
+- **`onCloseIntercept` for `Modal` and `Dialog`** — unsaved-changes guard: return `false` from `interceptClose` to veto X, Escape, and overlay dismissal (the cancel action remains direct; programmatic close unaffected). JSDoc documents the ConfirmDialog-based async pattern. Closes azimuth_ui-zgq.
+- **Overlay initial focus fixed (`azimuth_ui-xyj`)** — a fresh modal defaults focus to the panel/body's first focusable instead of the header X, so a spacebar press far away no longer instantly closes the dialog. Explicit `initialFocus` wins on both components; the Dialog `info` default joins this, `warning`/`danger` keep cancel-first. A double-rAF now guarantees the override outruns the focus trap.
+- **Combobox `openOnFocus`** (default `true`) — options show on focus without typing; `openOnFocus={false}` restores the legacy behavior. Multi mode gains click-to-toggle removal (fires `onChange` + `onRemove` once each); keyboard removal stays chip/Backspace. Closes azimuth_ui-8ce.
+- **Overlay keydown audit follow-up (`azimuth_ui-nwy`)** — SlideSheet and CommandPalette adopt the same Enter/Space content guard as Modal/Drawer; Sidebar deliberately unchanged (no dismissal contract exists; arrow navigation only).
+- **Curated-surface sweep completed** (`azimuth_ui-ogp` epic): batch 2 (Dialog, Modal, Drawer, SlideSheet, Sidebar, Tooltip, CommandPalette, Menu, Tabs → `overlayProps`/`navProps`/`wrapperProps`/`containerProps`/`tabsProps`) and batch 3 (27 layout/display/section components → `boxProps`/`stackProps`/`gridProps`/`rowProps`/`columnProps`/`dividerProps`/`spanProps`/`kbdProps`/`sectionProps`/`footerProps`). The main½ component set now curates its native surface; only rarely-touched stragglers remain raw.
+
+### Fixes
+
+- **Card body regression from 0.16.0 (`azimuth_ui-owf`)** — the collapsing body referenced a renamed CSS-module key (`styles.body` after it became `bodyInner`), so cards rendered unclassed: no body padding and the collapse never shrank. Found externally via a headless consumer probe; fixed and covered by a renamed-structure test.
+
+### Quality
+
+- Unit suite 1929 tests (125 files) green; lint/typecheck zero-error.
+
 ## 0.16.2 (2026-09-29)
 
 ### Features

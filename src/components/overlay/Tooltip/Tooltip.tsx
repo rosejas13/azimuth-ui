@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  type ComponentPropsWithoutRef,
   type ReactElement,
   cloneElement,
   forwardRef,
@@ -12,6 +11,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './Tooltip.module.css';
 
@@ -27,11 +27,21 @@ const INTERACTIVE_TAG_NAMES = new Set([
 ]);
 
 /**
- * Props for the Tooltip component.
+ * Curated native surface for the tooltip wrapper. The show/hide event
+ * handlers are managed internally (passing these overrides them, as before);
+ * anything native not listed goes through `wrapperProps`.
  */
-export interface TooltipProps extends Omit<
-  ComponentPropsWithoutRef<'div'>,
-  'content'
+export interface TooltipProps extends CuratedSurface<
+  'div',
+  [
+    'className',
+    'id',
+    'style',
+    'onMouseEnter',
+    'onMouseLeave',
+    'onFocus',
+    'onBlur',
+  ]
 > {
   content: React.ReactNode;
   /** @default 'top' */
@@ -45,6 +55,8 @@ export interface TooltipProps extends Omit<
    * span. Avoid passing interactive children to both and duplicating refs.
    */
   children: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  wrapperProps?: NativeRest<'div'>;
 }
 
 /**
@@ -61,7 +73,15 @@ export interface TooltipProps extends Omit<
  */
 export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
   (
-    { content, position = 'top', delay = 300, className, children, ...props },
+    {
+      content,
+      position = 'top',
+      delay = 300,
+      className,
+      children,
+      wrapperProps,
+      ...props
+    },
     ref,
   ) => {
     const generatedId = useId();
@@ -204,6 +224,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
         onFocus={show}
         onBlur={hide}
         {...props}
+        {...(wrapperProps as React.ComponentPropsWithoutRef<'div'>)}
       >
         {trigger}
         {visible && (

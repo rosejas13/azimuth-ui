@@ -1,0 +1,345 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-xs);
+  width: 100%;
+}
+
+/* Header row: label + char count, shared with TextArea's layout. */
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--azimuth-space-sm);
+}
+
+.label {
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 600;
+  color: var(--azimuth-color-text-secondary);
+}
+
+.required::after {
+  content: ' *';
+  color: var(--azimuth-color-error-text);
+}
+
+.subtitle {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+}
+
+.charCount {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+  text-align: right;
+}
+
+/* ── Mode switch ─────────────────────────────────────────── */
+
+.modeSwitch {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-sm);
+  background: var(--azimuth-color-surface-hover);
+  align-self: flex-start;
+}
+
+.modeButton {
+  padding: 2px var(--azimuth-space-sm);
+  font-size: var(--azimuth-fs-xs);
+  font-weight: 600;
+  color: var(--azimuth-color-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--azimuth-radius-sm);
+  cursor: pointer;
+  transition:
+    background var(--azimuth-transition-fast),
+    color var(--azimuth-transition-fast);
+}
+
+.modeButton:hover:not(:disabled) {
+  color: var(--azimuth-color-text);
+  background: var(--azimuth-color-surface-hover);
+}
+
+.modeButton:focus-visible {
+  outline: none;
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.modeActive {
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  box-shadow: var(--azimuth-shadow-sm);
+}
+
+/* ── Toolbar ─────────────────────────────────────────────── */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-sm);
+  background: var(--azimuth-color-surface);
+  align-self: flex-start;
+}
+
+.toolButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 1.75rem;
+  padding: 0 var(--azimuth-space-sm);
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 600;
+  color: var(--azimuth-color-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--azimuth-radius-sm);
+  cursor: pointer;
+  transition:
+    background var(--azimuth-transition-fast),
+    color var(--azimuth-transition-fast);
+}
+
+.toolButton:hover:not(:disabled) {
+  color: var(--azimuth-color-text);
+  background: var(--azimuth-color-surface-hover);
+}
+
+.toolButton:focus-visible {
+  outline: none;
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.toolButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Body: editor and preview panes ──────────────────────── */
+
+.body {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-width: 0;
+}
+
+.bodySplit {
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+}
+
+.editor {
+  width: 100%;
+  min-height: 120px;
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  font-family: var(--azimuth-font-mono);
+  font-size: var(--azimuth-fs-base);
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  line-height: var(--azimuth-lh-base);
+  resize: vertical;
+  transition:
+    border-color var(--azimuth-transition-fast),
+    background var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast);
+}
+
+.editor:focus {
+  outline: none;
+  border-color: var(--azimuth-color-primary);
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.editor:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--azimuth-color-surface-hover);
+}
+
+.editor::placeholder {
+  color: var(--azimuth-color-text-muted);
+}
+
+/* Attached-group member: the group owns corner shaping. */
+.flushed {
+  border-radius: 0;
+}
+
+/* Split pane: the shared border owns the seam between columns. */
+.editorSplit {
+  border: none;
+  border-radius: 0;
+}
+
+.hasError {
+  border-color: var(--azimuth-color-error-text);
+}
+
+.hasError:focus {
+  box-shadow: var(--azimuth-shadow-focus-error);
+}
+
+.preview {
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  min-height: 120px;
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-base);
+  color: var(--azimuth-color-text);
+  line-height: var(--azimuth-lh-base);
+  overflow: auto;
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+}
+
+.previewSplit {
+  border: none;
+  border-radius: 0;
+  border-left: 1px solid var(--azimuth-color-border);
+}
+
+.previewEmpty {
+  color: var(--azimuth-color-text-muted);
+}
+
+/* ── Rendered markdown typography ────────────────────────── */
+
+.mdParagraph {
+  margin: 0 0 var(--azimuth-space-sm);
+}
+
+.mdParagraph:last-child {
+  margin-bottom: 0;
+}
+
+.mdH1 {
+  font-size: var(--azimuth-fs-2xl);
+  font-weight: 700;
+  margin: 0 0 var(--azimuth-space-sm);
+}
+
+.mdH2 {
+  font-size: var(--azimuth-fs-xl);
+  font-weight: 700;
+  margin: 0 0 var(--azimuth-space-sm);
+}
+
+.mdH3 {
+  font-size: var(--azimuth-fs-lg);
+  font-weight: 600;
+  margin: 0 0 var(--azimuth-space-sm);
+}
+
+.mdH4,
+.mdH5,
+.mdH6 {
+  font-size: var(--azimuth-fs-base);
+  font-weight: 600;
+  margin: 0 0 var(--azimuth-space-sm);
+}
+
+.mdList {
+  margin: 0 0 var(--azimuth-space-sm);
+  padding-left: var(--azimuth-space-lg);
+}
+
+.mdList:last-child {
+  margin-bottom: 0;
+}
+
+.mdQuote {
+  margin: 0 0 var(--azimuth-space-sm);
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  border-left: 3px solid var(--azimuth-color-border-strong);
+  color: var(--azimuth-color-text-secondary);
+}
+
+.mdQuote:last-child {
+  margin-bottom: 0;
+}
+
+.mdCodeBlock {
+  margin: 0 0 var(--azimuth-space-sm);
+  padding: var(--azimuth-space-sm) var(--azimuth-space-md);
+  background: var(--azimuth-color-surface-hover);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-sm);
+  font-family: var(--azimuth-font-mono);
+  font-size: var(--azimuth-fs-sm);
+  overflow-x: auto;
+}
+
+.mdCodeBlock:last-child {
+  margin-bottom: 0;
+}
+
+.mdInlineCode {
+  font-family: var(--azimuth-font-mono);
+  font-size: 0.9em;
+  padding: 0.1em 0.3em;
+  background: var(--azimuth-color-surface-hover);
+  border-radius: var(--azimuth-radius-sm);
+}
+
+.mdLink {
+  color: var(--azimuth-color-primary);
+  text-decoration: underline;
+}
+
+.mdLink:hover {
+  color: var(--azimuth-color-primary-hover);
+}
+
+/* Size tiers scale fonts, padding and min-heights (TextArea proportions). */
+
+.sm .editor {
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  font-size: var(--azimuth-fs-sm);
+  min-height: 80px;
+}
+
+.sm .preview {
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  min-height: 80px;
+  font-size: var(--azimuth-fs-sm);
+}
+
+.lg .editor {
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
+  font-size: var(--azimuth-fs-lg);
+  min-height: 160px;
+}
+
+.lg .preview {
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
+  min-height: 160px;
+}
+
+.xl .editor {
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
+  font-size: var(--azimuth-fs-lg);
+  min-height: 190px;
+}
+
+.xl .preview {
+  padding: var(--azimuth-space-md) var(--azimuth-space-lg);
+  min-height: 190px;
+}
+
+/* ── Error ───────────────────────────────────────────────── */
+
+.errorMessage {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-error-text);
+}

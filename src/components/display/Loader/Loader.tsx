@@ -1,18 +1,24 @@
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './Loader.module.css';
 
 type LoaderVariant = 'circle' | 'bar';
 type LoaderSize = 'sm' | 'md' | 'lg';
 
-/** A loading indicator in either circle or bar variant. */
-export interface LoaderProps extends ComponentPropsWithoutRef<'div'> {
+/** Curated native surface for the Loader region; anything native not listed goes through `boxProps`. */
+export interface LoaderProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id']
+> {
   /** @default 'circle' */
   variant?: LoaderVariant;
   /** @default 'md' */
   size?: LoaderSize;
   /** Accessible label for the loading indicator. */
   label?: string;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  boxProps?: NativeRest<'div'>;
 }
 
 const BORDER_COLORS = {
@@ -22,7 +28,10 @@ const BORDER_COLORS = {
 
 /** A loading spinner (circle) or animated bar. */
 export const Loader = forwardRef<HTMLDivElement, LoaderProps>(
-  ({ variant = 'circle', size = 'md', label, className, ...props }, ref) => {
+  (
+    { variant = 'circle', size = 'md', label, className, boxProps, ...props },
+    ref,
+  ) => {
     if (variant === 'bar') {
       return (
         <div
@@ -31,12 +40,16 @@ export const Loader = forwardRef<HTMLDivElement, LoaderProps>(
           role="status"
           aria-label={label || 'Loading'}
           {...props}
+          {...(boxProps as ComponentPropsWithoutRef<'div'>)}
         >
           <div className={styles.barWrapper}>
             {[0, 1, 2, 3].map((i) => (
               <div
                 key={i}
-                className={cn(styles.bar, styles[`bar${size.charAt(0).toUpperCase() + size.slice(1)}`])}
+                className={cn(
+                  styles.bar,
+                  styles[`bar${size.charAt(0).toUpperCase() + size.slice(1)}`],
+                )}
               />
             ))}
           </div>
@@ -52,6 +65,7 @@ export const Loader = forwardRef<HTMLDivElement, LoaderProps>(
         role="status"
         aria-label={label || 'Loading'}
         {...props}
+        {...(boxProps as ComponentPropsWithoutRef<'div'>)}
       >
         <div
           className={cn(styles.circle, styles[size])}

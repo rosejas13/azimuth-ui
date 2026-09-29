@@ -1,14 +1,29 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { CommandPalette } from '../CommandPalette';
+
+async function blurThenFocusOverlay(overlay: HTMLElement) {
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+  overlay.focus();
+  await waitFor(() => {
+    expect(document.activeElement).toBe(overlay);
+  });
+}
 
 const groups = [
   {
     id: 'navigation',
     label: 'Navigation',
     items: [
-      { id: 'dashboard', label: 'Dashboard', shortcut: 'G D', icon: <span data-testid="icon-dash">🏠</span> },
+      {
+        id: 'dashboard',
+        label: 'Dashboard',
+        shortcut: 'G D',
+        icon: <span data-testid="icon-dash">🏠</span>,
+      },
       { id: 'settings', label: 'Settings', shortcut: 'G S' },
     ],
   },
@@ -57,7 +72,9 @@ describe('CommandPalette', () => {
         onSelect={vi.fn()}
       />,
     );
-    act(() => { vi.advanceTimersByTime(100); });
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
     expect(screen.getByLabelText('Search commands')).toHaveFocus();
     vi.useRealTimers();
   });
@@ -186,6 +203,63 @@ describe('CommandPalette', () => {
     );
     await userEvent.click(screen.getByRole('dialog'));
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('does not close on Space typed in the search input', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <CommandPalette
+        open={true}
+        onClose={onClose}
+        groups={groups}
+        onSelect={vi.fn()}
+      />,
+    );
+    const input = screen.getByLabelText('Search commands');
+    await user.click(input);
+    await user.keyboard('new file');
+    expect(onClose).not.toHaveBeenCalled();
+    expect(input).toHaveValue('new file');
+  });
+
+  it('does not close on Enter when no results match', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <CommandPalette
+        open={true}
+        onClose={onClose}
+        groups={groups}
+        onSelect={vi.fn()}
+      />,
+    );
+    const input = screen.getByLabelText('Search commands');
+    await user.click(input);
+    await user.type(input, 'zzz123');
+    await user.keyboard('{Enter}');
+    expect(onClose).not.toHaveBeenCalled();
+    await user.keyboard('{Escape}');
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it('closes on Space and Enter while the overlay itself is focused', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <CommandPalette
+        open={true}
+        onClose={onClose}
+        groups={groups}
+        onSelect={vi.fn()}
+      />,
+    );
+    const overlay = screen.getByRole('dialog');
+    await blurThenFocusOverlay(overlay);
+    await user.keyboard(' ');
+    expect(onClose).toHaveBeenCalledTimes(1);
+    await user.keyboard('{Enter}');
+    expect(onClose).toHaveBeenCalledTimes(2);
   });
 
   it('shows shortcuts when provided', () => {

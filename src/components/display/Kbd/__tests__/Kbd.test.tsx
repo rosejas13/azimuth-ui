@@ -20,7 +20,7 @@ describe('Kbd', () => {
   });
 
   it('passes additional props', () => {
-    render(<Kbd data-testid="kbd-key">A</Kbd>);
+    render(<Kbd kbdProps={{ 'data-testid': 'kbd-key' }}>A</Kbd>);
     expect(screen.getByTestId('kbd-key')).toBeInTheDocument();
   });
 });

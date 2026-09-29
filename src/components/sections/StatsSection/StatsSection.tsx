@@ -1,4 +1,5 @@
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { Container, Grid, Stack } from '@/components/layout';
 import styles from './StatsSection.module.css';
@@ -11,12 +12,18 @@ export interface StatItem {
   suffix?: string;
 }
 
-export interface StatsSectionProps extends ComponentPropsWithoutRef<'section'> {
+/** Curated native surface for the StatsSection section; anything native not listed goes through `sectionProps`. */
+export interface StatsSectionProps extends CuratedSurface<
+  'section',
+  ['className', 'style', 'id']
+> {
   title?: string;
   subtitle?: string;
   stats: StatItem[];
   columns?: 2 | 3 | 4;
   variant?: 'default' | 'accent' | 'dark' | 'muted';
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  sectionProps?: NativeRest<'section'>;
 }
 
 export const StatsSection = forwardRef<HTMLElement, StatsSectionProps>(
@@ -28,7 +35,7 @@ export const StatsSection = forwardRef<HTMLElement, StatsSectionProps>(
       columns = 3,
       variant = 'default',
       className,
-      id,
+      sectionProps,
       ...props
     },
     ref,
@@ -36,9 +43,9 @@ export const StatsSection = forwardRef<HTMLElement, StatsSectionProps>(
     return (
       <section
         ref={ref}
-        id={id}
         className={cn(styles.section, styles[variant], className)}
         {...props}
+        {...(sectionProps as ComponentPropsWithoutRef<'section'>)}
       >
         <Container>
           {(title || subtitle) && (

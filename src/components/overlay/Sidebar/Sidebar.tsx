@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  type ComponentPropsWithoutRef,
   type ReactNode,
   forwardRef,
   useCallback,
@@ -9,6 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './Sidebar.module.css';
 
@@ -24,9 +24,13 @@ export interface SidebarItem {
 }
 
 /**
- * Props for the Sidebar component.
+ * Curated native surface for the sidebar nav element. Anything native not
+ * listed goes through `navProps`.
  */
-export interface SidebarProps extends Omit<ComponentPropsWithoutRef<'nav'>, 'onSelect'> {
+export interface SidebarProps extends CuratedSurface<
+  'nav',
+  ['className', 'id', 'style', 'tabIndex', 'aria-hidden', 'aria-label']
+> {
   items: SidebarItem[];
   activeKey: string;
   onSelect: (key: string) => void;
@@ -34,6 +38,8 @@ export interface SidebarProps extends Omit<ComponentPropsWithoutRef<'nav'>, 'onS
   onToggle: () => void;
   header?: ReactNode;
   footer?: ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  navProps?: NativeRest<'nav'>;
 }
 
 /**
@@ -53,11 +59,14 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
       header,
       footer,
       className,
+      navProps,
       ...props
     },
     ref,
   ) => {
-    const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+    const [expandedSections, setExpandedSections] = useState<Set<string>>(
+      new Set(),
+    );
     const [hovered, setHovered] = useState(false);
     const navRef = useRef<HTMLElement>(null);
 
@@ -67,7 +76,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
-          (ref).current = node;
+          ref.current = node;
         }
       },
       [ref],
@@ -112,10 +121,13 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
             }}
             title={!isExpanded ? item.label : undefined}
           >
-            {item.icon && (
-              <span className={styles.itemIcon}>{item.icon}</span>
-            )}
-            <span className={cn(styles.itemLabel, !isExpanded && styles.labelHidden)}>
+            {item.icon && <span className={styles.itemIcon}>{item.icon}</span>}
+            <span
+              className={cn(
+                styles.itemLabel,
+                !isExpanded && styles.labelHidden,
+              )}
+            >
               {item.label}
             </span>
             {item.badge !== undefined && isExpanded && (
@@ -123,7 +135,10 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
             )}
             {hasChildren && isExpanded && (
               <span
-                className={cn(styles.chevron, isSectionExpanded && styles.chevronOpen)}
+                className={cn(
+                  styles.chevron,
+                  isSectionExpanded && styles.chevronOpen,
+                )}
                 aria-hidden="true"
               >
                 ▸
@@ -151,12 +166,16 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
         if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
           e.preventDefault();
           const focusable = el.querySelectorAll('button');
-          const currentIndex = Array.from(focusable).findIndex((f) => f === document.activeElement);
+          const currentIndex = Array.from(focusable).findIndex(
+            (f) => f === document.activeElement,
+          );
           let nextIndex: number;
           if (e.key === 'ArrowDown') {
-            nextIndex = currentIndex < focusable.length - 1 ? currentIndex + 1 : 0;
+            nextIndex =
+              currentIndex < focusable.length - 1 ? currentIndex + 1 : 0;
           } else {
-            nextIndex = currentIndex > 0 ? currentIndex - 1 : focusable.length - 1;
+            nextIndex =
+              currentIndex > 0 ? currentIndex - 1 : focusable.length - 1;
           }
           (focusable[nextIndex] as HTMLElement).focus();
         }
@@ -182,12 +201,9 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
         )}
         tabIndex={-1}
         {...props}
+        {...(navProps as React.ComponentPropsWithoutRef<'nav'>)}
       >
-        {header && (
-          <div className={styles.header}>
-            {header}
-          </div>
-        )}
+        {header && <div className={styles.header}>{header}</div>}
         <div className={styles.nav}>
           {(items ?? []).map((item) => renderItem(item))}
         </div>
@@ -200,7 +216,10 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             <span
-              className={cn(styles.toggleIcon, collapsed && styles.toggleIconCollapsed)}
+              className={cn(
+                styles.toggleIcon,
+                collapsed && styles.toggleIconCollapsed,
+              )}
               aria-hidden="true"
             >
               ◀

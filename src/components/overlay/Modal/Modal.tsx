@@ -1,23 +1,31 @@
 'use client';
 
-import {
-  type ComponentPropsWithoutRef,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react';
+import { forwardRef, useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import styles from './Modal.module.css';
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 /**
- * Props for the Modal component.
+ * Curated native surface for the modal overlay wrapper. The modal's own
+ * attributes (`role`, `aria-modal`, focus behavior) are managed internally;
+ * anything native not listed goes through `overlayProps`.
  */
-export interface ModalProps extends Omit<
-  ComponentPropsWithoutRef<'div'>,
-  'content'
+export interface ModalProps extends CuratedSurface<
+  'div',
+  [
+    'className',
+    'id',
+    'style',
+    'tabIndex',
+    'aria-hidden',
+    'aria-label',
+    'aria-labelledby',
+  ]
 > {
   visible?: {
     open: boolean;
@@ -35,6 +43,26 @@ export interface ModalProps extends Omit<
   };
   children?: React.ReactNode;
   footer?: React.ReactNode;
+  /**
+   * Which element receives focus when the modal opens. By default focus
+   * lands on the panel content: the first focusable element in the body
+   * (then the footer, then the body itself) — never the header close
+   * button, so a stray Enter or Space cannot dismiss the modal.
+   * `'close'` focuses the X button (only rendered with a header);
+   * `'cancel'` focuses the first footer button and `'confirm'` the last,
+   * falling back to the panel default when no footer is given.
+   */
+  initialFocus?: 'cancel' | 'confirm' | 'close';
+  /**
+   * Optional veto gate for dismissal requests. Called before the modal
+   * closes via the X button, Escape, or an overlay click/keypress; return
+   * `false` to cancel the dismissal (e.g. when there are unsaved changes).
+   * For an async flow, return `false` here and render a ConfirmDialog whose
+   * confirm action calls the real close.
+   */
+  interceptClose?: () => boolean;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  overlayProps?: NativeRest<'div'>;
 }
 
 /**
@@ -57,13 +85,19 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
       } = {},
       children,
       footer,
+      initialFocus,
+      interceptClose,
       className,
+      overlayProps,
       ...props
     },
     ref,
   ) => {
     const overlayRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
+    const bodyRef = useRef<HTMLDivElement>(null);
+    const footerRef = useRef<HTMLDivElement>(null);
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
     const titleId = useRef(
       `azimuth-modal-${Math.random().toString(36).slice(2, 9)}`,
     ).current;
@@ -80,13 +114,18 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
       [ref],
     );
 
+    const requestClose = useCallback(() => {
+      if (interceptClose && !interceptClose()) return;
+      onClose?.();
+    }, [interceptClose, onClose]);
+
     const handleEscape = useCallback(
       (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
-          onClose?.();
+          requestClose();
         }
       },
-      [onClose],
+      [requestClose],
     );
 
     useEffect(() => {
@@ -109,12 +148,50 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
     useFocusTrap(contentRef, open ?? false);
 
     useEffect(() => {
+      if (!open) return;
+      const rafId = requestAnimationFrame(() => {
+        let target: HTMLElement | null = null;
+
+        if (initialFocus === 'close') {
+          target = closeButtonRef.current;
+        } else if (initialFocus === 'cancel' || initialFocus === 'confirm') {
+          const buttons = footerRef.current
+            ? Array.from(
+                footerRef.current.querySelectorAll<HTMLButtonElement>(
+                  'button:not([disabled])',
+                ),
+              )
+            : [];
+          if (buttons.length > 0) {
+            target =
+              initialFocus === 'cancel'
+                ? buttons[0]
+                : buttons[buttons.length - 1];
+          }
+        }
+
+        if (!target) {
+          const bodyFocusable =
+            bodyRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR) ??
+            null;
+          const footerFocusable =
+            footerRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR) ??
+            null;
+          target = bodyFocusable ?? footerFocusable ?? bodyRef.current;
+        }
+
+        target?.focus();
+      });
+      return () => cancelAnimationFrame(rafId);
+    }, [open, initialFocus]);
+
+    useEffect(() => {
       const el = overlayRef.current;
       if (!el || !open) return;
 
       const handleOverlayClick = (e: MouseEvent) => {
         if (!persistent && e.target === e.currentTarget) {
-          onClose?.();
+          requestClose();
         }
       };
       const handleKeyDown = (e: KeyboardEvent) => {
@@ -123,7 +200,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
           e.target === e.currentTarget
         ) {
           e.preventDefault();
-          onClose?.();
+          requestClose();
         }
       };
 
@@ -133,7 +210,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         el.removeEventListener('click', handleOverlayClick);
         el.removeEventListener('keydown', handleKeyDown);
       };
-    }, [open, persistent, onClose]);
+    }, [open, persistent, requestClose]);
 
     if (!open) return null;
 
@@ -153,6 +230,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
         {...props}
+        {...(overlayProps as React.ComponentPropsWithoutRef<'div'>)}
       >
         <div ref={contentRef} className={cn(styles.content, styles[size])}>
           {(title || subtitle) && (
@@ -167,8 +245,9 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
               </div>
               <button
                 type="button"
+                ref={closeButtonRef}
                 className={styles.closeButton}
-                onClick={onClose}
+                onClick={requestClose}
                 aria-label="Close dialog"
               >
                 &#x2715;
@@ -176,9 +255,15 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
             </div>
           )}
 
-          <div className={styles.body}>{children}</div>
+          <div ref={bodyRef} tabIndex={-1} className={styles.body}>
+            {children}
+          </div>
 
-          {footer && <div className={styles.footer}>{footer}</div>}
+          {footer && (
+            <div ref={footerRef} className={styles.footer}>
+              {footer}
+            </div>
+          )}
         </div>
       </div>,
       document.body,

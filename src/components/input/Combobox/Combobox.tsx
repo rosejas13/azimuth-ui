@@ -69,6 +69,13 @@ export interface ComboboxProps extends Omit<
   allowNewValue?: boolean;
   /** Maximum number of selectable values (multi mode only). */
   maxSelected?: number;
+  /** Open the suggestion list when the input receives focus, as long as
+   *  options exist. In multi mode, clicking an already-selected option
+   *  toggles it off. `false` restores the previous behavior of opening
+   *  on focus only when the field already has a query, and keeping
+   *  click-on-selected a no-op.
+   *  @default true */
+  openOnFocus?: boolean;
 }
 
 const isMultiSelection = (
@@ -97,6 +104,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
       chipVariant = true,
       allowNewValue = false,
       maxSelected,
+      openOnFocus = true,
       className,
       'aria-label': ariaLabel,
       'aria-describedby': ariaDescribedby,
@@ -244,7 +252,9 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
     const handleSelect = useCallback(
       (optionValue: string) => {
         if (multi) {
-          if (values.includes(optionValue)) return; // toggle no-op; removing is chip/Backspace only
+          // Keyboard activation of an already-selected value stays a no-op;
+          // removal from the keyboard is chip/Backspace only.
+          if (values.includes(optionValue)) return;
           addValue(optionValue);
           setQuery('');
         } else {
@@ -253,6 +263,20 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
         close();
       },
       [multi, selection, values, addValue, close],
+    );
+
+    // Pointer activation toggles: clicking an already-selected value in
+    // multi mode removes it (mirrors the chip remove button).
+    const handleOptionClick = useCallback(
+      (optionValue: string) => {
+        if (multi && values.includes(optionValue)) {
+          removeValue(optionValue);
+          close();
+          return;
+        }
+        handleSelect(optionValue);
+      },
+      [multi, values, removeValue, handleSelect, close],
     );
 
     const handleKeyDown = useCallback(
@@ -406,9 +430,17 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               onFocus={() => {
-                if ((displayValue ?? '').length > 0) {
+                // Default: open on focus whenever there is anything to show
+                // (an unmatched query still gets the empty message). With
+                // `openOnFocus={false}`, restore the legacy behavior of
+                // opening only when the field already has a query.
+                const canOpen = openOnFocus
+                  ? (options ?? []).length > 0
+                  : (displayValue ?? '').length > 0;
+                if (canOpen) {
                   updatePosition();
                   setOpen(true);
+                  setHighlightedIndex(filteredOptions.length > 0 ? 0 : -1);
                 }
               }}
               placeholder={multi && values.length > 0 ? undefined : placeholder}
@@ -446,7 +478,7 @@ export const Combobox = forwardRef<HTMLDivElement, ComboboxProps>(
                       styles.option,
                       i === highlightedIndex && styles.optionHighlighted,
                     )}
-                    onClick={() => handleSelect(opt.value)}
+                    onClick={() => handleOptionClick(opt.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();

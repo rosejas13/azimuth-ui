@@ -1,13 +1,23 @@
 'use client';
 
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './Tag.module.css';
 
-type TagVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
+type TagVariant =
+  | 'neutral'
+  | 'accent'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'info';
 
-/** A tag/label with variant styling and optional remove button. */
-export interface TagProps extends ComponentPropsWithoutRef<'span'> {
+/** Curated native surface for the Tag span; anything native not listed goes through `spanProps`. */
+export interface TagProps extends CuratedSurface<
+  'span',
+  ['className', 'style', 'id']
+> {
   /** @default 'neutral' */
   variant?: TagVariant;
   /** @default false */
@@ -16,6 +26,8 @@ export interface TagProps extends ComponentPropsWithoutRef<'span'> {
   onRemove?: () => void;
   /** Tag label content. */
   children?: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  spanProps?: NativeRest<'span'>;
 }
 
 /** A styled tag with optional remove functionality. */
@@ -27,6 +39,7 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(
       onRemove,
       className,
       children,
+      spanProps,
       ...props
     },
     ref,
@@ -41,6 +54,7 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(
           className,
         )}
         {...props}
+        {...(spanProps as ComponentPropsWithoutRef<'span'>)}
       >
         {children}
         {removable && (

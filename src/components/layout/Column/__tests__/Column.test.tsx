@@ -86,7 +86,10 @@ describe('Column', () => {
 
   it('applies custom className and forwards native props', () => {
     const { container } = render(
-      <Column className="my-column" data-testid="column" aria-label="details">
+      <Column
+        className="my-column"
+        columnProps={{ 'data-testid': 'column', 'aria-label': 'details' }}
+      >
         <span>A</span>
       </Column>,
     );

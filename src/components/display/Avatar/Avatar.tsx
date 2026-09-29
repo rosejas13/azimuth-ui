@@ -1,13 +1,17 @@
 'use client';
 
 import { type ComponentPropsWithoutRef, forwardRef, useState } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './Avatar.module.css';
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-/** A user avatar displaying an image or fallback initials. */
-export interface AvatarProps extends ComponentPropsWithoutRef<'div'> {
+/** Curated native surface for the Avatar img-role region; anything native not listed goes through `boxProps`. */
+export interface AvatarProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id']
+> {
   /** Image source URL. */
   src?: string;
   /** @default '' */
@@ -18,6 +22,8 @@ export interface AvatarProps extends ComponentPropsWithoutRef<'div'> {
   size?: AvatarSize;
   /** @default false */
   square?: boolean;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  boxProps?: NativeRest<'div'>;
 }
 
 /** An avatar component that shows an image or auto-generated initials as fallback. */
@@ -30,6 +36,7 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       size = 'md',
       square = false,
       className,
+      boxProps,
       ...props
     },
     ref,
@@ -58,6 +65,7 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         role="img"
         aria-label={alt || fallback || undefined}
         {...props}
+        {...(boxProps as ComponentPropsWithoutRef<'div'>)}
       >
         {showImage ? (
           <img

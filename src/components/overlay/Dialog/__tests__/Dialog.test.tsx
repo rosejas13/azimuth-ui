@@ -173,7 +173,7 @@ describe('Dialog', () => {
     );
     await waitFor(() => {
       expect(document.activeElement).toBe(
-        screen.getByLabelText('Close dialog'),
+        document.querySelector('[class*="body"]'),
       );
     });
     const overlay = screen.getByRole('dialog');
@@ -374,7 +374,7 @@ describe('Dialog', () => {
     expect(screen.getByRole('dialog')).toHaveAttribute('aria-modal', 'true');
   });
 
-  it('traps focus and focuses first element on open', async () => {
+  it('focuses the panel on open for info dialogs with no body content', async () => {
     render(
       <Dialog
         visible={{ open: true, onClose: () => {} }}
@@ -383,9 +383,131 @@ describe('Dialog', () => {
     );
     await waitFor(() => {
       expect(document.activeElement).toBe(
+        document.querySelector('[class*="panel"]'),
+      );
+    });
+    expect(document.activeElement).not.toBe(
+      screen.getByLabelText('Close dialog'),
+    );
+  });
+
+  it('focuses the first body element on open for info dialogs, not the close button', async () => {
+    render(
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'Rename' }}
+      >
+        <input aria-label="Name" />
+      </Dialog>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByLabelText('Name'));
+    });
+    expect(document.activeElement).not.toBe(
+      screen.getByLabelText('Close dialog'),
+    );
+  });
+
+  it('defaults focus to the cancel action for danger dialogs', async () => {
+    render(
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ variant: 'danger', title: 'Delete?' }}
+      />,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByText('Cancel'));
+    });
+  });
+
+  it('defaults focus to the cancel action for warning dialogs', async () => {
+    render(
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        content={{ variant: 'warning', title: 'Proceed?' }}
+      />,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByText('Cancel'));
+    });
+  });
+
+  it('honors initialFocus close explicitly', async () => {
+    render(
+      <Dialog visible={{ open: true, onClose: () => {} }} initialFocus="close">
+        <input aria-label="Name" />
+      </Dialog>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(
         screen.getByLabelText('Close dialog'),
       );
     });
+  });
+
+  it('honors initialFocus confirm explicitly', async () => {
+    render(
+      <Dialog
+        visible={{ open: true, onClose: () => {} }}
+        initialFocus="confirm"
+      >
+        <input aria-label="Name" />
+      </Dialog>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByText('Confirm'));
+    });
+  });
+
+  it('interceptClose returning false vetoes X, Escape, and overlay dismissal', async () => {
+    const onClose = vi.fn();
+    const intercept = vi.fn(() => false);
+    const user = userEvent.setup();
+    render(
+      <Dialog
+        visible={{ open: true, onClose }}
+        interceptClose={intercept}
+        content={{ title: 'Unsaved changes' }}
+      >
+        <input aria-label="Name" />
+      </Dialog>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByLabelText('Name'));
+    });
+    await user.click(screen.getByLabelText('Close dialog'));
+    await user.keyboard('{Escape}');
+    await user.click(screen.getByRole('dialog'));
+    expect(onClose).not.toHaveBeenCalled();
+    expect(intercept).toHaveBeenCalledTimes(3);
+  });
+
+  it('interceptClose returning true allows dismissal', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Dialog visible={{ open: true, onClose }} interceptClose={() => true} />,
+    );
+    await user.keyboard('{Escape}');
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('interceptClose does not block the Cancel action button', async () => {
+    const onClose = vi.fn();
+    const onCancel = vi.fn();
+    const intercept = vi.fn(() => false);
+    const user = userEvent.setup();
+    render(
+      <Dialog
+        visible={{ open: true, onClose }}
+        interceptClose={intercept}
+        actions={{ cancel: { onCancel } }}
+      />,
+    );
+    await user.click(screen.getByText('Cancel'));
+    expect(onCancel).toHaveBeenCalledTimes(1);
+    expect(intercept).not.toHaveBeenCalled();
+    expect(onClose).not.toHaveBeenCalled();
   });
 
   it('displays correct displayName', () => {

@@ -1,4 +1,5 @@
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './Grid.module.css';
 
@@ -9,8 +10,11 @@ type GridAlign = 'start' | 'center' | 'end' | 'stretch';
 type GridVariant = 'auto' | 'highlight' | 'sidebar';
 type GridGap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-/** Props for the Grid layout component. */
-export interface GridProps extends ComponentPropsWithoutRef<'div'> {
+/** Curated native surface for the Grid container; anything native not listed goes through `gridProps`. */
+export interface GridProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id']
+> {
   /** @default 'auto' */
   cols?: GridCols;
   /** Azimuth space token applied to the grid gap. */
@@ -21,6 +25,8 @@ export interface GridProps extends ComponentPropsWithoutRef<'div'> {
   /** @default 250 */
   minWidth?: number | string;
   children?: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  gridProps?: NativeRest<'div'>;
 }
 
 const BREAKPOINTS: Record<GridBreakpoint, number> = {
@@ -43,6 +49,7 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
       className,
       style,
       children,
+      gridProps,
       ...props
     },
     ref,
@@ -109,6 +116,7 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
           ...style,
         }}
         {...props}
+        {...(gridProps as ComponentPropsWithoutRef<'div'>)}
       >
         {children}
       </div>

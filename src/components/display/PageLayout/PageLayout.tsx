@@ -9,12 +9,16 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import styles from './PageLayout.module.css';
 
-/** A page layout shell with optional sidebar, top navigation, and footer. */
-export interface PageLayoutProps extends ComponentPropsWithoutRef<'div'> {
+/** Curated native surface for the PageLayout shell; anything native not listed goes through `boxProps`. */
+export interface PageLayoutProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id']
+> {
   /** Sidebar content rendered in an aside element. */
   sidebar?: React.ReactNode;
   /** @default '260px' */
@@ -29,6 +33,8 @@ export interface PageLayoutProps extends ComponentPropsWithoutRef<'div'> {
   footer?: React.ReactNode;
   /** Main page content. */
   children?: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  boxProps?: NativeRest<'div'>;
 }
 
 /** A page layout shell providing sidebar, top nav, and footer regions. */
@@ -44,6 +50,7 @@ export const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
       children,
       className,
       style,
+      boxProps,
       ...props
     },
     ref,
@@ -136,15 +143,20 @@ export const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
         className={cn(
           styles.pageLayout,
           hasSidebarDesktop && styles.hasSidebar,
-          hasSidebarDesktop && sidebarPosition === 'right' && styles.sidebarRight,
+          hasSidebarDesktop &&
+            sidebarPosition === 'right' &&
+            styles.sidebarRight,
           isMobile && sidebarOpen && styles.mobileOverlayOpen,
           className,
         )}
-        style={{
-          ...style,
-          '--azimuth-sidebar-width': sidebar ? sidebarWidth : undefined,
-        } as React.CSSProperties}
+        style={
+          {
+            ...style,
+            '--azimuth-sidebar-width': sidebar ? sidebarWidth : undefined,
+          } as React.CSSProperties
+        }
         {...props}
+        {...(boxProps as ComponentPropsWithoutRef<'div'>)}
       >
         {(topNav || hasSidebarMobile) && (
           <header
@@ -163,9 +175,24 @@ export const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
                 aria-expanded={sidebarOpen}
                 aria-controls={sidebarId}
               >
-                <span className={cn(styles.hamburgerLine, sidebarOpen && styles.hamburgerLineTop)} />
-                <span className={cn(styles.hamburgerLine, sidebarOpen && styles.hamburgerLineMid)} />
-                <span className={cn(styles.hamburgerLine, sidebarOpen && styles.hamburgerLineBottom)} />
+                <span
+                  className={cn(
+                    styles.hamburgerLine,
+                    sidebarOpen && styles.hamburgerLineTop,
+                  )}
+                />
+                <span
+                  className={cn(
+                    styles.hamburgerLine,
+                    sidebarOpen && styles.hamburgerLineMid,
+                  )}
+                />
+                <span
+                  className={cn(
+                    styles.hamburgerLine,
+                    sidebarOpen && styles.hamburgerLineBottom,
+                  )}
+                />
               </button>
             )}
             {topNav}
@@ -175,7 +202,10 @@ export const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
         {hasSidebarMobile && (
           <>
             <div
-              className={cn(styles.backdrop, sidebarOpen && styles.backdropVisible)}
+              className={cn(
+                styles.backdrop,
+                sidebarOpen && styles.backdropVisible,
+              )}
               onClick={closeSidebar}
               aria-hidden="true"
             />

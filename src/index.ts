@@ -42,6 +42,16 @@ export type { IconButtonProps } from './components/display/IconButton';
 export { Input } from './components/input/Input';
 export type { InputProps, LabelConfig } from './components/input/Input';
 
+export {
+  MarkdownField,
+  DEFAULT_TOOLBAR_ACTIONS,
+} from './components/input/MarkdownField';
+export type {
+  MarkdownFieldProps,
+  MarkdownFieldMode,
+  ToolbarAction,
+} from './components/input/MarkdownField';
+
 export { Radio } from './components/input/Radio';
 export type { RadioProps } from './components/input/Radio';
 

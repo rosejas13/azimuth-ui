@@ -9,18 +9,22 @@ import {
   useCallback,
   Children,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './Carousel.module.css';
 
-/** A rotating carousel/slider for cycling through child elements. */
-export interface CarouselProps extends ComponentPropsWithoutRef<'div'> {
+/** Curated native surface for the Carousel region; anything native not listed goes through `boxProps`. */
+export interface CarouselProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id', 'onMouseEnter', 'onMouseLeave']
+> {
   /** Slide elements to display. */
   children: React.ReactNode;
   /** Auto-advance behavior. Pass `{ enabled: true, interval: 3000 }` to configure. @default { enabled: false, interval: 5000 } */
   autoplay?: {
-    enabled?: boolean
+    enabled?: boolean;
     /** @default 5000 */
-    interval?: number
+    interval?: number;
   };
   /** @default true */
   showDots?: boolean;
@@ -28,6 +32,8 @@ export interface CarouselProps extends ComponentPropsWithoutRef<'div'> {
   showArrows?: boolean;
   /** @default true */
   loop?: boolean;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  boxProps?: NativeRest<'div'>;
 }
 
 /** A carousel that cycles through slides with auto-play, dots, arrows, and keyboard navigation. */
@@ -42,6 +48,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
       className,
       onMouseEnter,
       onMouseLeave,
+      boxProps,
       ...props
     },
     ref,
@@ -56,7 +63,9 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
     const [activeIndex, setActiveIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const shouldAutoPlay = autoPlay;
-    const timerRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+    const timerRef = useRef<ReturnType<typeof setInterval> | undefined>(
+      undefined,
+    );
 
     const goTo = useCallback(
       (index: number) => {
@@ -69,11 +78,23 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
       [loop, totalSlides],
     );
 
-    const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
-    const goPrev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
+    const goNext = useCallback(
+      () => goTo(activeIndex + 1),
+      [activeIndex, goTo],
+    );
+    const goPrev = useCallback(
+      () => goTo(activeIndex - 1),
+      [activeIndex, goTo],
+    );
 
     useEffect(() => {
-      if (!shouldAutoPlay || isPaused || totalSlides <= 1 || prefersReducedMotion) return;
+      if (
+        !shouldAutoPlay ||
+        isPaused ||
+        totalSlides <= 1 ||
+        prefersReducedMotion
+      )
+        return;
 
       timerRef.current = setInterval(goNext, interval);
       return () => {
@@ -100,6 +121,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
           onMouseLeave?.(e);
         }}
         {...props}
+        {...(boxProps as ComponentPropsWithoutRef<'div'>)}
       >
         <div className={styles.viewport}>
           <div
@@ -149,7 +171,11 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
         )}
 
         {showDots && totalSlides > 1 && (
-          <div className={styles.dots} role="tablist" aria-label="Slide navigation">
+          <div
+            className={styles.dots}
+            role="tablist"
+            aria-label="Slide navigation"
+          >
             {slides.map((_, index) => (
               <button
                 key={index}

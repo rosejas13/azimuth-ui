@@ -9,6 +9,7 @@ import {
   forwardRef,
   isValidElement,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { capitalize } from '@/utils/capitalize';
 import styles from './Row.module.css';
@@ -18,8 +19,11 @@ type RowSpacing = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 type RowAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 type RowJustify = 'start' | 'center' | 'end' | 'between' | 'around';
 
-/** Props for the Row layout component. */
-export interface RowProps extends ComponentPropsWithoutRef<'div'> {
+/** Curated native surface for the Row container; anything native not listed goes through `rowProps`. */
+export interface RowProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id']
+> {
   /** @default 'md' */
   gap?: RowSpacing;
   align?: RowAlign;
@@ -40,6 +44,8 @@ export interface RowProps extends ComponentPropsWithoutRef<'div'> {
    */
   childWidths?: string | string[];
   children?: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  rowProps?: NativeRest<'div'>;
 }
 
 /**
@@ -66,6 +72,7 @@ export const Row = forwardRef<HTMLDivElement, RowProps>(
       childWidths,
       className,
       children,
+      rowProps,
       ...props
     },
     ref,
@@ -102,6 +109,7 @@ export const Row = forwardRef<HTMLDivElement, RowProps>(
           className,
         )}
         {...props}
+        {...(rowProps as ComponentPropsWithoutRef<'div'>)}
       >
         {resolvedChildren}
       </div>

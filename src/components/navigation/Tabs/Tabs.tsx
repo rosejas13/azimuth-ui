@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  type ComponentPropsWithoutRef,
   forwardRef,
   useCallback,
   useEffect,
@@ -9,6 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './Tabs.module.css';
 
@@ -20,14 +20,22 @@ interface TabItem {
   disabled?: boolean;
 }
 
-/** Props for the Tabs component. */
-export interface TabsProps extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+/**
+ * Curated native surface for the tabs container. Tab/panel wiring is managed
+ * internally; anything native not listed goes through `tabsProps`.
+ */
+export interface TabsProps extends CuratedSurface<
+  'div',
+  ['className', 'id', 'style']
+> {
   tabs: TabItem[];
   defaultTab?: string;
   activeTab?: string;
   onChange?: (tabId: string) => void;
   /** @default 'underline' */
   variant?: 'underline' | 'pills' | 'buttons';
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  tabsProps?: NativeRest<'div'>;
 }
 
 /** A tabbed interface with keyboard navigation and controlled/uncontrolled modes. */
@@ -40,13 +48,15 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
       onChange,
       variant = 'underline',
       className,
+      tabsProps,
       ...props
     },
     ref,
   ) => {
     const id = useId();
     const isControlled = controlledTab !== undefined;
-    const firstEnabledTab = (tabs ?? []).find((t) => !t.disabled)?.id ?? (tabs ?? [])[0]?.id ?? '';
+    const firstEnabledTab =
+      (tabs ?? []).find((t) => !t.disabled)?.id ?? (tabs ?? [])[0]?.id ?? '';
     const initialTab = controlledTab ?? defaultTab ?? firstEnabledTab;
 
     const [internalTab, setInternalTab] = useState(initialTab);
@@ -89,11 +99,13 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
         switch (e.key) {
           case 'ArrowLeft':
             e.preventDefault();
-            nextIndex = currentIndex <= 0 ? enabledTabs.length - 1 : currentIndex - 1;
+            nextIndex =
+              currentIndex <= 0 ? enabledTabs.length - 1 : currentIndex - 1;
             break;
           case 'ArrowRight':
             e.preventDefault();
-            nextIndex = currentIndex >= enabledTabs.length - 1 ? 0 : currentIndex + 1;
+            nextIndex =
+              currentIndex >= enabledTabs.length - 1 ? 0 : currentIndex + 1;
             break;
           case 'Home':
             e.preventDefault();
@@ -123,6 +135,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
         ref={ref}
         className={cn(styles.tabs, styles[variant], className)}
         {...props}
+        {...(tabsProps as React.ComponentPropsWithoutRef<'div'>)}
       >
         <div role="tablist" className={styles.tabList}>
           {(tabs ?? []).map((tab) => {

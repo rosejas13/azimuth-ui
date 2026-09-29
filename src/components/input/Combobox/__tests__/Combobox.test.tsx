@@ -540,6 +540,29 @@ describe('Combobox multi-select', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it('reflects selected values in aria-selected on options (multi)', async () => {
+    render(
+      <Combobox
+        data={{ options }}
+        selection={{
+          values: ['apple'],
+          onChange: vi.fn(),
+          onSelect: vi.fn(),
+          onRemove: vi.fn(),
+        }}
+      />,
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    expect(screen.getByRole('option', { name: 'Apple' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    expect(screen.getByRole('option', { name: 'Banana' })).toHaveAttribute(
+      'aria-selected',
+      'false',
+    );
+  });
+
   it('single-select API still works (regression)', async () => {
     const onSelect = vi.fn();
     function SingleDemo() {
@@ -556,6 +579,140 @@ describe('Combobox multi-select', () => {
     await user.type(screen.getByRole('combobox'), 'ban');
     await user.keyboard('{Enter}');
     expect(onSelect).toHaveBeenCalledWith('banana');
+  });
+});
+
+describe('Combobox open on focus', () => {
+  it('opens the listbox on focus when options exist (default)', async () => {
+    render(
+      <Combobox
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+        data={{ options }}
+      />,
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    expect(screen.getAllByRole('option')).toHaveLength(3);
+  });
+
+  it('highlights the first option when opened via focus', async () => {
+    render(
+      <Combobox
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+        data={{ options }}
+      />,
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    expect(screen.getAllByRole('option')[0]).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+  });
+
+  it('does not open on focus when openOnFocus=false and the value is empty', async () => {
+    render(
+      <Combobox
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+        data={{ options }}
+        openOnFocus={false}
+      />,
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  it('openOnFocus=false preserves the legacy behavior of opening on focus with a query', async () => {
+    render(
+      <Combobox
+        selection={{ value: 'app', onChange: vi.fn(), onSelect: vi.fn() }}
+        data={{ options }}
+        openOnFocus={false}
+      />,
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Apple' })).toBeInTheDocument();
+  });
+
+  it('does not open on focus when there are no options', () => {
+    render(
+      <Combobox
+        selection={{ value: '', onChange: vi.fn(), onSelect: vi.fn() }}
+        data={{ options: [] }}
+      />,
+    );
+    screen.getByRole('combobox').focus();
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+});
+
+describe('Combobox click on options', () => {
+  it('clicking an already-selected option in multi mode removes it, firing onChange and onRemove once each', async () => {
+    const onChange = vi.fn();
+    const onRemove = vi.fn();
+    render(
+      <Combobox
+        data={{ options }}
+        selection={{ values: ['apple'], onChange, onSelect: vi.fn(), onRemove }}
+      />,
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    await userEvent.click(screen.getByRole('option', { name: 'Apple' }));
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith([]);
+    expect(onRemove).toHaveBeenCalledTimes(1);
+    expect(onRemove).toHaveBeenCalledWith('apple');
+  });
+
+  it('clicking an unselected option in multi mode still adds it', async () => {
+    const onChange = vi.fn();
+    const onSelect = vi.fn();
+    const onRemove = vi.fn();
+    render(
+      <Combobox
+        data={{ options }}
+        selection={{ values: [], onChange, onSelect, onRemove }}
+      />,
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    await userEvent.click(screen.getByRole('option', { name: 'Banana' }));
+    expect(onChange).toHaveBeenCalledWith(['banana']);
+    expect(onSelect).toHaveBeenCalledWith('banana');
+    expect(onRemove).not.toHaveBeenCalled();
+  });
+
+  it('keyboard Enter on an already-selected option in multi mode stays a no-op', async () => {
+    const onChange = vi.fn();
+    const onRemove = vi.fn();
+    const { container } = render(
+      <Combobox
+        data={{ options }}
+        selection={{ values: ['apple'], onChange, onSelect: vi.fn(), onRemove }}
+      />,
+    );
+    const input = container.querySelector<HTMLInputElement>(
+      'input[role="combobox"]',
+    )!;
+    await userEvent.type(input, 'app');
+    await userEvent.keyboard('{Enter}');
+    expect(onChange).not.toHaveBeenCalled();
+    expect(onRemove).not.toHaveBeenCalled();
+  });
+
+  it('clicking the selected option in single mode does not change the value', async () => {
+    function SingleDemo() {
+      const [value, setValue] = useState('apple');
+      return (
+        <Combobox
+          data={{ options }}
+          selection={{ value, onChange: setValue, onSelect: setValue }}
+        />
+      );
+    }
+    render(<SingleDemo />);
+    await userEvent.click(screen.getByRole('combobox'));
+    await userEvent.click(screen.getByRole('option', { name: 'Apple' }));
+    expect(screen.getByRole('combobox')).toHaveValue('apple');
   });
 });
 

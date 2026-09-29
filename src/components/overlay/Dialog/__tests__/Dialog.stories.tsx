@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Dialog } from '../Dialog';
 import { Button } from '../../../input/Button';
-
 function DialogDemo(props: Partial<React.ComponentProps<typeof Dialog>>) {
   const [open, setOpen] = useState(false);
   return (
@@ -24,15 +23,25 @@ type Story = StoryObj<typeof Dialog>;
 
 export const Info: Story = {
   render: () => (
-    <DialogDemo content={{ title: "Information", description: "This is an info dialog.", variant: "info" }} />
+    <DialogDemo
+      content={{
+        title: 'Information',
+        description: 'This is an info dialog.',
+        variant: 'info',
+      }}
+    />
   ),
 };
 
 export const Warning: Story = {
   render: () => (
     <DialogDemo
-      content={{ title: "Warning", description: "Are you sure you want to proceed?", variant: "warning" }}
-      actions={{ confirm: { label: "Proceed" } }}
+      content={{
+        title: 'Warning',
+        description: 'Are you sure you want to proceed?',
+        variant: 'warning',
+      }}
+      actions={{ confirm: { label: 'Proceed' } }}
     />
   ),
 };
@@ -40,8 +49,12 @@ export const Warning: Story = {
 export const Danger: Story = {
   render: () => (
     <DialogDemo
-      content={{ title: "Delete Item", description: "This action cannot be undone.", variant: "danger" }}
-      actions={{ confirm: { label: "Delete" } }}
+      content={{
+        title: 'Delete Item',
+        description: 'This action cannot be undone.',
+        variant: 'danger',
+      }}
+      actions={{ confirm: { label: 'Delete' } }}
     />
   ),
 };
@@ -57,7 +70,10 @@ function CustomBodyDemo() {
   return (
     <>
       <Button onClick={() => setOpen(true)}>Open Custom Dialog</Button>
-      <Dialog visible={{ open, onClose: () => setOpen(false) }} content={{ title: "Custom Content" }}>
+      <Dialog
+        visible={{ open, onClose: () => setOpen(false) }}
+        content={{ title: 'Custom Content' }}
+      >
         <div style={{ padding: '16px 0' }}>
           <p>This dialog has custom body content instead of a description.</p>
           <p>You can put any React nodes here.</p>
@@ -66,3 +82,49 @@ function CustomBodyDemo() {
     </>
   );
 }
+
+function UnsavedChangesDemo() {
+  const [open, setOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Dialog</Button>
+      <Dialog
+        visible={{ open, onClose: () => setOpen(false) }}
+        content={{
+          title: 'Edit Draft',
+          description: 'Changes are kept until you confirm.',
+        }}
+        interceptClose={() => {
+          setConfirmOpen(true);
+          return false;
+        }}
+      >
+        <div style={{ padding: '16px 0' }}>
+          <p>This dialog vetoes dismissal and asks for confirmation first.</p>
+        </div>
+      </Dialog>
+      <Dialog
+        visible={{ open: confirmOpen, onClose: () => setConfirmOpen(false) }}
+        content={{
+          title: 'Discard changes?',
+          description: 'Your edits have not been saved.',
+          variant: 'warning',
+        }}
+        actions={{
+          confirm: {
+            label: 'Discard',
+            onConfirm: () => {
+              setConfirmOpen(false);
+              setOpen(false);
+            },
+          },
+        }}
+      />
+    </>
+  );
+}
+
+export const WithUnsavedChangesGuard: Story = {
+  render: () => <UnsavedChangesDemo />,
+};

@@ -92,7 +92,10 @@ describe('Box', () => {
 
   it('spreads native props onto the rendered element', () => {
     render(
-      <Box id="panel" data-testid="box-panel" onClick={() => undefined}>
+      <Box
+        id="panel"
+        boxProps={{ 'data-testid': 'box-panel', onClick: () => undefined }}
+      >
         A
       </Box>,
     );

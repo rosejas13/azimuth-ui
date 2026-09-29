@@ -1,23 +1,34 @@
 'use client';
 
-import {
-  type ComponentPropsWithoutRef,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react';
+import { forwardRef, useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import styles from './Dialog.module.css';
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 /**
- * Props for the Dialog component.
+ * Curated native surface for the dialog overlay wrapper. The dialog's own
+ * attributes (`role`, `aria-modal`, focus behavior) are managed internally;
+ * anything native not listed goes through `overlayProps`.
  */
-export interface DialogProps extends Omit<
-  ComponentPropsWithoutRef<'div'>,
-  'title' | 'content'
+export interface DialogProps extends CuratedSurface<
+  'div',
+  [
+    'className',
+    'id',
+    'style',
+    'tabIndex',
+    'aria-hidden',
+    'aria-label',
+    'aria-labelledby',
+    'aria-describedby',
+    'onClick',
+    'onKeyDown',
+  ]
 > {
   visible: { open: boolean; onClose: () => void };
   content?: {
@@ -41,14 +52,28 @@ export interface DialogProps extends Omit<
     };
   };
   /**
-   * Which button receives focus when the dialog opens.
-   * Destructive confirmations are safest when focus lands on the cancel
-   * action, so `warning`/`danger` dialogs default to `'cancel'`; `info`
-   * defaults to `'close'` (the X button).
+   * Which button receives focus when the dialog opens. Destructive
+   * confirmations are safest when focus lands on the cancel action, so
+   * `warning`/`danger` dialogs default to `'cancel'`. `info` dialogs
+   * default to the panel: the first focusable element inside the content
+   * body, or the body/panel itself when there is none — so a stray Enter
+   * or Space neither dismisses the dialog nor triggers the close button.
+   * Pass `'close'` explicitly to restore X-first behavior.
    * @default undefined (resolved by {@link DialogProps.content.variant})
    */
   initialFocus?: 'cancel' | 'confirm' | 'close';
+  /**
+   * Optional veto gate for dismissal requests. Called before the dialog
+   * closes via the X button, Escape, or an overlay click/keypress; return
+   * `false` to cancel the dismissal (e.g. when there are unsaved changes).
+   * The Cancel action button is explicit user intent and is not intercepted.
+   * For an async flow, return `false` here and render a ConfirmDialog whose
+   * confirm action calls the real close.
+   */
+  interceptClose?: () => boolean;
   children?: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  overlayProps?: NativeRest<'div'>;
 }
 
 /**
@@ -74,8 +99,10 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
         cancel: { label: cancelLabel = 'Cancel', onCancel } = {},
       } = {},
       initialFocus: initialFocusProp,
+      interceptClose,
       className,
       children,
+      overlayProps,
       ...props
     },
     ref,
@@ -83,6 +110,8 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     const confirmRef = useRef<HTMLButtonElement>(null);
     const cancelRef = useRef<HTMLButtonElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
+    const panelRef = useRef<HTMLDivElement>(null);
+    const bodyRef = useRef<HTMLDivElement>(null);
     const titleId = useRef(
       `azimuth-dialog-${Math.random().toString(36).slice(2, 9)}`,
     ).current;
@@ -98,6 +127,11 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       }
     }, [onCancel, onClose]);
 
+    const requestClose = useCallback(() => {
+      if (interceptClose && !interceptClose()) return;
+      handleCancel();
+    }, [interceptClose, handleCancel]);
+
     const setOverlayRef = useCallback(
       (node: HTMLDivElement | null) => {
         overlayRef.current = node;
@@ -112,23 +146,36 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
 
     useFocusTrap(overlayRef, open);
 
-    // Focus the initial target after the trap's first-focus (runs one frame
-    // later so it wins). Destructive variants default focus to the cancel
-    // action; info defaults to the close button.
-    const initialFocus =
-      initialFocusProp ?? (variant === 'info' ? 'close' : 'cancel');
+    const initialFocus: 'cancel' | 'confirm' | 'close' | 'panel' =
+      initialFocusProp ?? (variant === 'info' ? 'panel' : 'cancel');
     useEffect(() => {
       if (!open) return;
-      const timer = window.setTimeout(() => {
-        const target =
-          initialFocus === 'confirm'
-            ? confirmRef.current
-            : initialFocus === 'cancel'
-              ? cancelRef.current
-              : overlayRef.current?.querySelector('button');
-        target?.focus();
-      }, 0);
-      return () => window.clearTimeout(timer);
+      // Double rAF: the focus trap (same frame) focuses the first tab-stop —
+      // a nested frame guarantees this override runs after it.
+      let raf2 = 0;
+      const rafId = requestAnimationFrame(() => {
+        raf2 = requestAnimationFrame(() => {
+          let target: HTMLElement | null = null;
+          if (initialFocus === 'confirm') {
+            target = confirmRef.current;
+          } else if (initialFocus === 'cancel') {
+            target = cancelRef.current;
+          } else if (initialFocus === 'close') {
+            target = overlayRef.current?.querySelector('button') ?? null;
+          }
+          if (!target) {
+            const bodyFocusable =
+              bodyRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR) ??
+              null;
+            target = bodyFocusable ?? bodyRef.current ?? panelRef.current;
+          }
+          target?.focus();
+        });
+      });
+      return () => {
+        cancelAnimationFrame(rafId);
+        cancelAnimationFrame(raf2);
+      };
     }, [open, initialFocus]);
 
     useEffect(() => {
@@ -136,13 +183,13 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
 
       const handleEscape = (e: KeyboardEvent) => {
         if (e.key === 'Escape' && !loading) {
-          handleCancel();
+          requestClose();
         }
       };
 
       document.addEventListener('keydown', handleEscape);
       return () => document.removeEventListener('keydown', handleEscape);
-    }, [open, handleCancel, loading]);
+    }, [open, requestClose, loading]);
 
     useEffect(() => {
       if (!open) return;
@@ -165,7 +212,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
         className={cn(styles.overlay, className)}
         onClick={(e) => {
           if (e.target === e.currentTarget && !loading) {
-            handleCancel();
+            requestClose();
           }
         }}
         onKeyDown={(e) => {
@@ -174,7 +221,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
             e.target === e.currentTarget
           ) {
             e.preventDefault();
-            if (!loading) handleCancel();
+            if (!loading) requestClose();
           }
         }}
         role={role}
@@ -183,12 +230,13 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
         aria-labelledby={title ? titleId : undefined}
         aria-describedby={description ? descriptionId : undefined}
         {...props}
+        {...(overlayProps as React.ComponentPropsWithoutRef<'div'>)}
       >
-        <div className={styles.panel}>
+        <div ref={panelRef} tabIndex={-1} className={styles.panel}>
           <button
             type="button"
             className={styles.closeButton}
-            onClick={handleCancel}
+            onClick={requestClose}
             aria-label="Close dialog"
           >
             X
@@ -209,7 +257,11 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
             </div>
           )}
 
-          {children && <div className={styles.body}>{children}</div>}
+          {children && (
+            <div ref={bodyRef} tabIndex={-1} className={styles.body}>
+              {children}
+            </div>
+          )}
 
           <div className={styles.footer}>
             <button

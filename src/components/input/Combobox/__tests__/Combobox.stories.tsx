@@ -84,3 +84,7 @@ export const MultiSelect: Story = { render: () => <MultiComboboxDemo /> };
 export const MultiSelectAllowNew: Story = {
   render: () => <MultiComboboxDemo allowNewValue maxSelected={4} />,
 };
+
+export const NoOpenOnFocus: Story = {
+  render: () => <ComboboxDemo openOnFocus={false} />,
+};

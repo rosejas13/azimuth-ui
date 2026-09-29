@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import {
   BellIcon,
@@ -46,8 +47,11 @@ const VARIANT_CLASS: Record<AlertVariant, string> = {
   notification: styles.notification,
 };
 
-/** A contextual alert banner with variant styling, optional dismiss, and auto-dismiss. */
-export interface AlertProps extends ComponentPropsWithoutRef<'div'> {
+/** Curated native surface for the Alert banner; anything native not listed goes through `boxProps`. */
+export interface AlertProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id']
+> {
   /** @default 'info' */
   variant?: AlertVariant;
   /** Optional title displayed prominently at the top. */
@@ -62,6 +66,8 @@ export interface AlertProps extends ComponentPropsWithoutRef<'div'> {
   icon?: ReactNode;
   /** Body content of the alert. */
   children?: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  boxProps?: NativeRest<'div'>;
 }
 
 /** A contextual alert banner for notifications, warnings, errors, and success messages. */
@@ -76,19 +82,26 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
       icon,
       className,
       children,
+      boxProps,
       ...props
     },
     ref,
   ) => {
     const [dismissing, setDismissing] = useState(false);
-    const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-    const exitTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+      undefined,
+    );
+    const exitTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+      undefined,
+    );
 
     useEffect(() => {
       if (autoDismiss && onDismiss) {
         timerRef.current = setTimeout(() => {
           setDismissing(true);
-          exitTimerRef.current = setTimeout(() => { onDismiss?.(); }, EXIT_ANIMATION_DURATION);
+          exitTimerRef.current = setTimeout(() => {
+            onDismiss?.();
+          }, EXIT_ANIMATION_DURATION);
         }, autoDismiss);
         return () => {
           if (timerRef.current !== undefined) {
@@ -116,10 +129,16 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
     return (
       <div
         ref={ref}
-        className={cn(styles.root, VARIANT_CLASS[variant], dismissing && styles.dismissing, className)}
+        className={cn(
+          styles.root,
+          VARIANT_CLASS[variant],
+          dismissing && styles.dismissing,
+          className,
+        )}
         role={role}
         aria-live={ariaLive}
         {...props}
+        {...(boxProps as ComponentPropsWithoutRef<'div'>)}
       >
         {icon !== null && (
           <span className={styles.icon} aria-hidden="true">

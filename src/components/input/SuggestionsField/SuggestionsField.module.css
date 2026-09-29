@@ -1,0 +1,275 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--azimuth-space-xs);
+}
+
+.wrapperDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.label {
+  font-size: var(--azimuth-fs-sm);
+  font-weight: 600;
+  color: var(--azimuth-color-text-secondary);
+}
+
+.required::after {
+  content: ' *';
+  color: var(--azimuth-color-error-text);
+}
+
+.subtitle {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+}
+
+/* The bounded field area: chips row and the input live here. */
+.fieldBox {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--azimuth-space-xs) / 2);
+  padding: calc(var(--azimuth-space-xs) / 2) var(--azimuth-space-sm);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  background: var(--azimuth-color-surface);
+  cursor: text;
+  transition:
+    border-color var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast),
+    background var(--azimuth-transition-fast);
+}
+
+.fieldBox:focus-within {
+  outline: none;
+  border-color: var(--azimuth-color-primary);
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.hasError {
+  border-color: var(--azimuth-color-error-text);
+}
+
+.hasError:focus-within {
+  box-shadow: var(--azimuth-shadow-focus-error);
+}
+
+.fieldInput {
+  flex: 1 1 10ch;
+  min-width: 10ch;
+  padding: calc(var(--azimuth-space-xs) / 2) var(--azimuth-space-xs);
+  border: none;
+  background: transparent;
+  color: var(--azimuth-color-text);
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-base);
+  line-height: 1.5;
+}
+
+.fieldInput::placeholder {
+  color: var(--azimuth-color-text-muted);
+}
+
+.fieldInput:disabled {
+  cursor: not-allowed;
+}
+
+/* Chips are list items; the list itself yields its layout to the box. */
+.chips {
+  display: contents;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--azimuth-space-xs) / 2);
+  padding: calc(var(--azimuth-space-xs) / 4) var(--azimuth-space-xs);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-sm);
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  font-size: var(--azimuth-fs-xs);
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.chipItem {
+  display: contents;
+}
+
+/* Toggle chip (fixed mode): the whole pill is the switch. */
+.chipToggle {
+  padding: calc(var(--azimuth-space-xs) / 4) var(--azimuth-space-xs);
+  border: 1px solid var(--azimuth-color-border);
+  border-radius: var(--azimuth-radius-sm);
+  background: var(--azimuth-color-surface);
+  color: var(--azimuth-color-text);
+  cursor: pointer;
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-xs);
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+  transition:
+    background var(--azimuth-transition-fast),
+    color var(--azimuth-transition-fast),
+    border-color var(--azimuth-transition-fast),
+    box-shadow var(--azimuth-transition-fast),
+    transform var(--azimuth-transition-fast);
+}
+
+.chipToggle:active {
+  transform: scale(0.97);
+}
+
+.chipToggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.chipToggle:focus-visible {
+  outline: none;
+  border-color: var(--azimuth-color-primary);
+  box-shadow: var(--azimuth-shadow-focus);
+}
+
+.chipToggle:hover:not(:disabled) {
+  border-color: var(--azimuth-color-primary-subtle);
+}
+
+.chipSelected {
+  border-color: transparent;
+  background: var(--azimuth-color-primary-subtle);
+  color: var(--azimuth-color-primary);
+}
+
+.chipToggle.chipSelected:hover:not(:disabled) {
+  background: var(--azimuth-color-primary-subtle);
+  border-color: var(--azimuth-color-primary-subtle);
+}
+
+.chipRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.6;
+  flex-shrink: 0;
+  transition: opacity var(--azimuth-transition-fast);
+}
+
+.chipRemove:hover {
+  opacity: 1;
+}
+
+.chipRemove:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.chipRemove:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: 1px;
+}
+
+/* Dropdown listbox: reused Input suggestion-panel pattern. */
+.listbox {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  margin-top: var(--azimuth-space-xs);
+  padding: var(--azimuth-space-xs);
+  border: 1px solid var(--azimuth-color-border-strong);
+  border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
+  background: var(--azimuth-color-surface);
+  box-shadow: var(--azimuth-shadow-lg);
+  max-height: 240px;
+  overflow-y: auto;
+  animation: azimuth-scale-in var(--azimuth-transition-fast) var(--azimuth-ease)
+    forwards;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: var(--azimuth-space-xs) var(--azimuth-space-sm);
+  border: none;
+  border-radius: var(--azimuth-radius-sm);
+  background: none;
+  color: var(--azimuth-color-text);
+  cursor: pointer;
+  font-family: var(--azimuth-font-body, system-ui, sans-serif);
+  font-size: var(--azimuth-fs-sm);
+  text-align: left;
+  transition: background var(--azimuth-transition-fast);
+}
+
+.option:hover,
+.optionHighlighted {
+  background: var(--azimuth-color-primary-subtle);
+  color: var(--azimuth-color-primary);
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--azimuth-color-primary);
+  outline-offset: -2px;
+}
+
+.hint {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-text-muted);
+}
+
+.errorMessage {
+  font-size: var(--azimuth-fs-xs);
+  color: var(--azimuth-color-error-text);
+}
+
+/* Footer reserves one line so hint/error don't shift layout. */
+.footerArea {
+  min-height: calc(var(--azimuth-fs-xs) * var(--azimuth-lh-base));
+}
+
+/* Sizes */
+.sm .fieldInput {
+  padding: calc(var(--azimuth-space-xs) / 4) var(--azimuth-space-xs);
+  font-size: var(--azimuth-fs-sm);
+}
+
+.lg .fieldInput,
+.xl .fieldInput {
+  padding: calc(var(--azimuth-space-xs) / 2) var(--azimuth-space-sm);
+  font-size: var(--azimuth-fs-lg);
+}
+
+.sm .chip {
+  padding: 2px calc(var(--azimuth-space-xs) / 2);
+  font-size: var(--azimuth-fs-xs);
+}
+
+.lg .chip,
+.xl .chip {
+  padding: calc(var(--azimuth-space-xs) / 3) var(--azimuth-space-xs);
+  font-size: var(--azimuth-fs-sm);
+}
+
+.lg .chipToggle,
+.xl .chipToggle {
+  padding: calc(var(--azimuth-space-xs) / 3) var(--azimuth-space-xs);
+  font-size: var(--azimuth-fs-sm);
+}

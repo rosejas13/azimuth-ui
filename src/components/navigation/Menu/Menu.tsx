@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  type ComponentPropsWithoutRef,
   type ReactElement,
   forwardRef,
   isValidElement,
@@ -11,6 +10,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './Menu.module.css';
 
@@ -24,10 +24,13 @@ export interface MenuItem {
   separator?: boolean;
 }
 
-/** Props for the Menu component. */
-export interface MenuProps extends Omit<
-  ComponentPropsWithoutRef<'div'>,
-  'onSelect'
+/**
+ * Curated native surface for the menu container. The trigger button region is
+ * managed internally; anything native not listed goes through `containerProps`.
+ */
+export interface MenuProps extends CuratedSurface<
+  'div',
+  ['className', 'id', 'style']
 > {
   items: MenuItem[];
   trigger?: React.ReactNode;
@@ -36,6 +39,8 @@ export interface MenuProps extends Omit<
   onSelect?: (key: string) => void;
   /** @default 'left' */
   side?: 'left' | 'right';
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  containerProps?: NativeRest<'div'>;
 }
 
 /** A dropdown menu triggered by a button or custom trigger element. Keyboard-navigable. */
@@ -48,6 +53,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
       onSelect,
       side = 'left',
       className,
+      containerProps,
       ...props
     },
     ref,
@@ -303,7 +309,12 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
     );
 
     return (
-      <div ref={setRefs} className={cn(styles.container, className)} {...props}>
+      <div
+        ref={setRefs}
+        className={cn(styles.container, className)}
+        {...props}
+        {...(containerProps as React.ComponentPropsWithoutRef<'div'>)}
+      >
         {triggerElement}
 
         {open && (

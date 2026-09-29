@@ -6,14 +6,18 @@ import {
   type ReactNode,
   forwardRef,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './KPICard.module.css';
 
 type KPICardVariant = 'default' | 'accent' | 'success' | 'warning' | 'danger';
 type KPICardTrend = 'up' | 'down' | 'neutral';
 
-/** Props for the KPICard component. */
-export interface KPICardProps extends ComponentPropsWithoutRef<'div'> {
+/** Curated native surface for the KPICard; anything native not listed goes through `boxProps`. */
+export interface KPICardProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id', 'onClick']
+> {
   /** Metric value (formatted string, e.g. "$12.4K", "85%") */
   value: string;
   /** Metric label */
@@ -30,6 +34,8 @@ export interface KPICardProps extends ComponentPropsWithoutRef<'div'> {
   variant?: KPICardVariant;
   /** Optional click handler — makes the card interactive */
   onClick?: () => void;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  boxProps?: NativeRest<'div'>;
 }
 
 const trendArrows: Record<KPICardTrend, string> = {
@@ -51,6 +57,7 @@ export const KPICard = forwardRef<HTMLDivElement, KPICardProps>(
       variant = 'default',
       onClick,
       className,
+      boxProps,
       ...props
     },
     ref,
@@ -80,6 +87,7 @@ export const KPICard = forwardRef<HTMLDivElement, KPICardProps>(
             : undefined
         }
         {...props}
+        {...(boxProps as ComponentPropsWithoutRef<'div'>)}
       >
         <div className={styles.header}>
           <span className={styles.value}>{value}</span>

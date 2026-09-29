@@ -234,16 +234,17 @@ describe('CSS structure', () => {
         Body
       </Card>,
     );
-    const bodyEl = container.querySelector('.body');
-    expect(bodyEl).toBeTruthy();
+    // The collapsing body renders as bodyGrid > bodyInner since 0.16.
+    const bodyEl = container.querySelector('[class*="bodyInner"]');
     expect(bodyEl?.textContent).toContain('Body');
+    const heading = container.querySelector('[class*="bodyGrid"]');
+    expect(heading).toBeTruthy();
 
-    const headerEl = container.querySelector('.header');
+    const headerEl = container.querySelector('[class*="header"]');
     expect(headerEl).toBeTruthy();
     expect(headerEl?.textContent).toContain('Title');
 
-    const footerEl = container.querySelector('.footer');
-    expect(footerEl).toBeTruthy();
+    const footerEl = container.querySelector('[class*="footer"]');
     expect(footerEl?.textContent).toContain('Foot');
   });
 

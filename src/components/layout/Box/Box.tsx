@@ -5,6 +5,7 @@ import {
   createElement,
   forwardRef,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { capitalize } from '@/utils/capitalize';
 import styles from './Box.module.css';
@@ -14,8 +15,15 @@ type BoxRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
 type BoxBackground = 'surface' | 'subtle';
 type BoxShadow = 'sm' | 'md' | 'lg' | 'xl';
 
-/** Props for the Box layout primitive. Every visual prop is opt-in; a bare Box renders an unstyled element. */
-export interface BoxProps extends ComponentPropsWithoutRef<'div'> {
+/**
+ * Curated native surface for the Box element. Requirement of the polymorphic
+ * `as` prop: only universal attributes (`className`, `style`, `id`) are
+ * curated; anything else goes through `boxProps`.
+ */
+export interface BoxProps extends CuratedSurface<
+  'div',
+  ['className', 'style', 'id']
+> {
   /** HTML element to render. @default 'div' */
   as?: keyof JSX.IntrinsicElements;
   /** Padding on all sides. */
@@ -29,6 +37,9 @@ export interface BoxProps extends ComponentPropsWithoutRef<'div'> {
   radius?: BoxRadius;
   background?: BoxBackground;
   shadow?: BoxShadow;
+  children?: React.ReactNode;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  boxProps?: NativeRest<'div'>;
 }
 
 /** A raw layout primitive that renders an unstyled element with optional visual props layered on top. */
@@ -44,8 +55,10 @@ export const Box = forwardRef<HTMLElement, BoxProps>(
       background,
       shadow,
       className,
+      style,
+      id,
       children,
-      ...props
+      boxProps,
     },
     ref,
   ) => {
@@ -64,7 +77,9 @@ export const Box = forwardRef<HTMLElement, BoxProps>(
           shadow && styles[`shadow${capitalize(shadow)}`],
           className,
         ),
-        ...props,
+        style,
+        id,
+        ...(boxProps as ComponentPropsWithoutRef<'div'>),
       },
       children,
     );

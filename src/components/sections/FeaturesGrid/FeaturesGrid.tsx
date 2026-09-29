@@ -3,6 +3,7 @@ import {
   type ReactNode,
   forwardRef,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { Container } from '@/components/layout';
 import { Card, Text } from '@/components/display';
@@ -18,8 +19,11 @@ export interface FeatureItem {
   description: string;
 }
 
-/** Props for the FeaturesGrid section component. */
-export interface FeaturesGridProps extends ComponentPropsWithoutRef<'section'> {
+/** Curated native surface for the FeaturesGrid section; anything native not listed goes through `sectionProps`. */
+export interface FeaturesGridProps extends CuratedSurface<
+  'section',
+  ['className', 'style', 'id']
+> {
   /** Main heading above the grid. */
   title?: string;
   /** Smaller label displayed above the title. */
@@ -32,10 +36,8 @@ export interface FeaturesGridProps extends ComponentPropsWithoutRef<'section'> {
   columns?: 2 | 3 | 4;
   /** Section color variant. @default 'default' */
   variant?: 'default' | 'accent' | 'dark' | 'muted';
-  /** Custom class name applied to the section element. */
-  className?: string;
-  /** Section id for anchor linking. */
-  id?: string;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  sectionProps?: NativeRest<'section'>;
 }
 
 /** A responsive grid of feature cards with optional header section and multiple column presets. */
@@ -48,8 +50,8 @@ export const FeaturesGrid = forwardRef<HTMLElement, FeaturesGridProps>(
       features,
       columns = 3,
       variant = 'default',
-      id,
       className,
+      sectionProps,
       ...props
     },
     ref,
@@ -57,9 +59,9 @@ export const FeaturesGrid = forwardRef<HTMLElement, FeaturesGridProps>(
     return (
       <section
         ref={ref}
-        id={id}
         className={cn(styles.section, styles[variant], className)}
         {...props}
+        {...(sectionProps as ComponentPropsWithoutRef<'section'>)}
       >
         <Container size="lg">
           {(title || subtitle || description) && (
