@@ -14,6 +14,7 @@
 - **Card expand no longer clips long bodies.** The `max-height: 2000px` cap is gone; the expanding body animates with the `grid-template-rows: 0fr → 1fr` technique (matching Accordion), so a card with 40 textareas renders in full. Non-expandable cards are untouched.
 - **Form rows stop overflowing with side-by-side controls.** The stretch path's `min-width: 12rem` floor forced every compact control to 144px each; stretched children now use `min-width: 0` flex hygiene. Inputs keep usability minima via their own padding.
 - **`DatePicker` holds its width inside flex rows.** Root gets `flex-shrink: 0` + `min-width: 12rem` (explicit `width` still wins) — no more consumer `flexShrink: 0` wrappers.
+- **Collapsed cards lost their stray bottom seam.** A collapsed Card rendered the header's border-bottom hard against a following footer/actions border-top (the zero-height hidden body contributed nothing in between), which read as a phantom divider at the card's bottom edge. The header border now drops while collapsed; footer/actions keep their own border when expanded content returns.
 - **Interactive Chip geometry.** `:focus-visible` ring (system focus shadow + primary border, matching Input) and a `scale(0.97)` press affordance, so chip-as-button matches the rest of the workbench.
 
 ### Quality

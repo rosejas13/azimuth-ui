@@ -72,7 +72,9 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
         {...props}
       >
         {(header || title || expandable) && (
-          <div className={styles.header}>
+          <div
+            className={cn(styles.header, !expanded && styles.headerCollapsed)}
+          >
             {!header && title ? (
               <h3
                 className={cn(

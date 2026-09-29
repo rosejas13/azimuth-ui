@@ -60,6 +60,14 @@
   overflow: hidden;
 }
 
+/* While the body is collapsed it contributes no height, so the header's
+   border-bottom and a following footer/actions border-top stack into a
+   stray double seam at the card's bottom edge. Hide the header border in
+   the collapsed state (any footer/actions keep their own top border). */
+.headerCollapsed {
+  border-bottom: none;
+}
+
 .headerContent {
   flex: 1;
 }

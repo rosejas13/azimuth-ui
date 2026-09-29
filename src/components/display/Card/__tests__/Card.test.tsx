@@ -49,6 +49,26 @@ describe('Card', () => {
     expect(button).toHaveAttribute('aria-expanded', 'false');
   });
 
+  it('drops the header border seam while collapsed', () => {
+    const { container } = render(
+      <Card expandable defaultExpanded={false}>
+        Hidden
+      </Card>,
+    );
+    const header = container.querySelector('[class*="header"]');
+    expect(header?.className).toContain('headerCollapsed');
+  });
+
+  it('keeps the header border while expanded', () => {
+    const { container } = render(
+      <Card expandable defaultExpanded={true}>
+        Shown
+      </Card>,
+    );
+    const header = container.querySelector('[class*="header"]');
+    expect(header?.className).not.toContain('headerCollapsed');
+  });
+
   it('toggle button has aria-controls pointing to body', () => {
     render(<Card expandable>Content</Card>);
     const button = screen.getByRole('button');
