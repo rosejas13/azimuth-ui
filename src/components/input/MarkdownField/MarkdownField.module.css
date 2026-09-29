@@ -51,7 +51,9 @@
   padding: 2px var(--azimuth-space-sm);
   font-size: var(--azimuth-fs-xs);
   font-weight: 600;
-  color: var(--azimuth-color-text-muted);
+
+  /* text-muted sits just under 4.5:1 on the subtle background at xs weight */
+  color: var(--azimuth-color-text-secondary);
   background: transparent;
   border: none;
   border-radius: var(--azimuth-radius-sm);

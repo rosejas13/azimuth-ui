@@ -5,8 +5,13 @@
 }
 
 .wrapperDisabled {
-  opacity: 0.5;
   cursor: not-allowed;
+
+  /* Dim only the frame, not the chip text: blanket opacity drops the
+     non-control chip labels under WCAG AA (axe ignores disabled controls
+     but not their surrounding graphics). The input and keep buttons dim
+     through their own :disabled rules. */
+  color: var(--azimuth-color-text-secondary);
 }
 
 .label {
