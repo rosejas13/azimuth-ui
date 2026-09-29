@@ -20,7 +20,11 @@
 
 .row.formRow > * {
   flex: 1 1 auto;
-  min-width: 12rem;
+  min-width: 0;
+}
+
+.row.childMin > * {
+  min-width: 0;
 }
 
 /* Alignment */

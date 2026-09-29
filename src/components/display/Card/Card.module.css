@@ -90,58 +90,65 @@
   border-color: var(--azimuth-color-border-strong);
 }
 
-.body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: var(--azimuth-card-padding, var(--azimuth-space-md));
-  color: var(--azimuth-color-text);
-  font-family: var(--azimuth-font-body, system-ui, sans-serif);
-  font-size: var(--azimuth-fs-sm);
-  line-height: var(--azimuth-lh-base);
+/*
+  Expandable bodies animate with the grid-template-rows technique
+  (0fr collapsed → 1fr expanded) so arbitrarily tall bodies are never
+  clipped by a max-height cap. The outer wrapper owns the animation;
+  the inner wrapper clips through min-height: 0 (the trick that lets an
+  fr track collapse) plus overflow: hidden.
+*/
+.bodyGrid {
+  display: grid;
+  grid-template-rows: 1fr;
   transition:
-    max-height var(--azimuth-transition-base),
+    grid-template-rows var(--azimuth-transition-base),
     opacity var(--azimuth-transition-fast),
-    padding var(--azimuth-transition-base),
     visibility 0s;
-  max-height: 2000px;
   opacity: 1;
-
-  /* Overflow stays visible while expanded so in-card dropdowns and
-     suggestion popovers are not clipped by the collapse container. */
-  overflow: visible;
 }
 
-.collapsed {
-  max-height: 0;
+.bodyGrid.collapsed {
+  grid-template-rows: 0fr;
   opacity: 0;
 
   /* visibility removes collapsed content from painting, hit-testing, and
      the accessibility tree — previously it kept rendering over whatever
      followed the card. The delayed visibility transition lets the fade-out
-     finish before hiding; on expand, .body's 0s delay shows it instantly. */
+     finish before hiding; on expand, .bodyGrid's 0s delay shows it instantly. */
   visibility: hidden;
-  overflow: hidden;
-  padding-top: 0;
-  padding-bottom: 0;
   transition:
-    max-height var(--azimuth-transition-base),
+    grid-template-rows var(--azimuth-transition-base),
     opacity var(--azimuth-transition-fast),
-    padding var(--azimuth-transition-base),
     visibility 0s linear var(--azimuth-transition-base);
 }
 
-.body:first-child {
+.bodyInner {
+  /* min-height: 0 lets the 1fr track shrink to 0fr when collapsed. */
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--azimuth-card-padding, var(--azimuth-space-md));
+
+  /* Expanded bodies keep overflow visible so in-card dropdowns and
+     suggestion popovers are not clipped by the collapse container. */
+  overflow: visible;
+}
+
+.collapsed > .bodyInner {
+  overflow: hidden;
+}
+
+.bodyGrid:first-child {
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md))
     var(--azimuth-radius, var(--azimuth-radius-md)) 0 0;
 }
 
-.body:last-child {
+.bodyGrid:last-child {
   border-radius: 0 0 var(--azimuth-radius, var(--azimuth-radius-md))
     var(--azimuth-radius, var(--azimuth-radius-md));
 }
 
-.body:only-child {
+.bodyGrid:only-child {
   border-radius: var(--azimuth-radius, var(--azimuth-radius-md));
 }
 

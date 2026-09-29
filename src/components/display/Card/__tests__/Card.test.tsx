@@ -140,9 +140,9 @@ describe('Card', () => {
       </Card>,
     );
     const el = container.querySelector('.card') as HTMLElement;
-    const childClasses = Array.from(el.children).map(
-      (c) => c.className.split(' ')[0],
-    );
+    const childClasses = Array.from(el.children)
+      .map((c) => c.className.split(' ')[0])
+      .map((cls) => (cls === 'bodyGrid' ? 'body' : cls));
     expect(childClasses).toEqual(['header', 'body', 'footer', 'actions']);
   });
 
@@ -213,24 +213,31 @@ describe('CSS structure', () => {
     expect(footerEl?.textContent).toContain('Foot');
   });
 
-  it('applies collapsed CSS module class to body when defaultExpanded is false', () => {
+  it('applies collapsed CSS module class to the grid wrapper when defaultExpanded is false', () => {
     const { container } = render(
       <Card expandable defaultExpanded={false}>
         Hidden
       </Card>,
     );
-    const body = container.querySelector('.body');
-    expect(body?.className).toContain('collapsed');
+    const grid = container.querySelector('.bodyGrid');
+    expect(grid?.className).toContain('collapsed');
+    expect(grid?.className).not.toContain('bodyInner');
   });
 
-  it('does not apply collapsed CSS module class when defaultExpanded is true', () => {
+  it('grid wrapper stays expanded by default and gains collapsed when toggled shut', async () => {
+    const user = userEvent.setup();
     const { container } = render(
       <Card expandable defaultExpanded={true}>
         Visible
       </Card>,
     );
-    const body = container.querySelector('.body');
-    expect(body?.className).not.toContain('collapsed');
+    const grid = container.querySelector('.bodyGrid');
+    expect(grid?.className).toContain('bodyGrid');
+    expect(grid?.className).not.toContain('collapsed');
+    expect(grid?.firstElementChild?.className).toContain('body');
+
+    await user.click(screen.getByRole('button'));
+    expect(grid?.className).toContain('collapsed');
   });
 
   it('applies the actions CSS module class to the action row element', () => {

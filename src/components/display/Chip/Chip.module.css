@@ -14,15 +14,21 @@
     background var(--azimuth-transition-fast),
     color var(--azimuth-transition-fast),
     border-color var(--azimuth-transition-fast),
-    box-shadow var(--azimuth-transition-fast);
+    box-shadow var(--azimuth-transition-fast),
+    transform var(--azimuth-transition-fast);
 }
 
 .clickable {
   cursor: pointer;
 }
 
+.clickable:active {
+  transform: scale(0.97);
+}
+
 .clickable:focus-visible {
   outline: none;
+  border-color: var(--azimuth-color-primary);
   box-shadow: var(--azimuth-shadow-focus);
 }
 

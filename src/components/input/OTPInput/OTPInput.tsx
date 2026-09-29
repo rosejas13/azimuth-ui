@@ -6,14 +6,30 @@ import {
   useCallback,
   useRef,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import { useInputConfig } from '../input-config';
 import styles from './OTPInput.module.css';
 
-/** Props for the OTPInput component. */
-export interface OTPInputProps extends Omit<
-  ComponentPropsWithoutRef<'div'>,
-  'onChange'
+/**
+ * Curated native surface for the OTP group container (div-rooted). Anything
+ * native not listed goes through `groupProps`.
+ */
+export interface OTPInputProps extends CuratedSurface<
+  'div',
+  [
+    'className',
+    'id',
+    'title',
+    'tabIndex',
+    'aria-label',
+    'aria-labelledby',
+    'aria-describedby',
+    'aria-hidden',
+    'onClick',
+    'onMouseEnter',
+    'onMouseLeave',
+  ]
 > {
   /** @default 4 */
   length?: number;
@@ -27,6 +43,8 @@ export interface OTPInputProps extends Omit<
   size?: 'sm' | 'md' | 'lg';
   /** @default false */
   error?: boolean;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  groupProps?: NativeRest<'div'>;
 }
 
 /** A one-time password input with individual digit fields, keyboard navigation, and paste support. */
@@ -40,6 +58,7 @@ export const OTPInput = forwardRef<HTMLDivElement, OTPInputProps>(
       size,
       error = false,
       className,
+      groupProps,
       ...props
     },
     ref,
@@ -162,6 +181,7 @@ export const OTPInput = forwardRef<HTMLDivElement, OTPInputProps>(
           className,
         )}
         {...props}
+        {...(groupProps as ComponentPropsWithoutRef<'div'>)}
       >
         {Array.from({ length }, (_, i) => (
           <input

@@ -169,13 +169,17 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
           }
         }}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+          if (
+            (e.key === 'Enter' || e.key === ' ') &&
+            e.target === e.currentTarget
+          ) {
             e.preventDefault();
             if (!loading) handleCancel();
           }
         }}
         role={role}
         aria-modal="true"
+        tabIndex={-1}
         aria-labelledby={title ? titleId : undefined}
         aria-describedby={description ? descriptionId : undefined}
         {...props}

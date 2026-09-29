@@ -93,6 +93,45 @@ describe('Row', () => {
     expect(container.firstChild).not.toHaveClass('formRow');
   });
 
+  it('stretch children rely on intrinsic min-sizing, no fixed pixel floor', () => {
+    // Regression (azimuth_ui-x7j): the stretch path previously forced
+    // `min-width: 12rem` on every child, so side-by-side compact controls
+    // (buttons) could not shrink below 12rem each and overflowed narrow
+    // containers. Row now opts into intrinsic min-sizing (`min-width: 0`)
+    // on every child whenever stretch is active, so several compact
+    // controls can fit — or wrap as a unit — instead of overflowing.
+    const { container } = render(
+      <Row stretch>
+        <button type="button">Save</button>
+        <button type="button">Cancel</button>
+      </Row>,
+    );
+    const row = container.querySelector('.row.childMin');
+    expect(row).not.toBeNull();
+    expect(row).toHaveClass('formRow');
+  });
+
+  it('row in a Form carries the min-width override on its children', () => {
+    const { container } = render(
+      <Form>
+        <Row>
+          <Input label="Email" name="email" />
+        </Row>
+      </Form>,
+    );
+    expect(container.querySelector('div.wrap.childMin')).not.toBeNull();
+  });
+
+  it('stretch child width is flexible, not a preferred fixed width', () => {
+    const { container } = render(
+      <Row stretch>
+        <span>A</span>
+      </Row>,
+    );
+    const child = container.querySelector('.row > span');
+    expect(child).not.toHaveAttribute('style');
+  });
+
   it('explicit align overrides the in-form default alignment class', () => {
     const { container } = render(
       <Form>

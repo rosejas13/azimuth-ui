@@ -3,6 +3,17 @@
   flex-direction: column;
   gap: var(--azimuth-space-xs);
   font-family: var(--azimuth-font-body, system-ui, sans-serif);
+
+  /* Stable width in flex rows (azimuth_ui-5zp): the wrapper IS the flex item,
+     so it needs flexbox min-sizing hygiene — otherwise it squishes next to
+     flexing siblings and a `width` prop can't hold. Intrinsic content sizing
+     when unset; explicit `width` still wins via inline style. */
+  flex-shrink: 0;
+  min-width: 12rem;
+}
+
+.noShrink {
+  flex-shrink: 0;
 }
 
 .label {

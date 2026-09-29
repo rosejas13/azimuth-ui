@@ -1,7 +1,17 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Drawer } from '../Drawer';
+
+async function blurThenFocusOverlay(overlay: HTMLElement) {
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+  overlay.focus();
+  await waitFor(() => {
+    expect(document.activeElement).toBe(overlay);
+  });
+}
 
 describe('Drawer', () => {
   it('renders when open', () => {
@@ -60,11 +70,58 @@ describe('Drawer', () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
+  it('does not close on Space inside an inner textarea', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    const { unmount } = render(
+      <Drawer visible={{ open: true, onClose }}>
+        <input aria-label="Search" defaultValue="hello world" />
+        <textarea aria-label="Notes" defaultValue="line one" />
+      </Drawer>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).not.toBe(document.body);
+    });
+    await user.click(screen.getByLabelText('Search'));
+    await user.keyboard(' ');
+    await user.keyboard('{Enter}');
+    expect(onClose).not.toHaveBeenCalled();
+    expect(screen.getByLabelText('Search')).toHaveValue('hello world ');
+    const notes = screen.getByLabelText('Notes');
+    await user.click(notes);
+    await user.keyboard(' ');
+    expect(onClose).not.toHaveBeenCalled();
+    expect(notes).toHaveValue('line one ');
+    await user.keyboard('{Escape}');
+    expect(onClose).toHaveBeenCalledTimes(1);
+    unmount();
+  });
+
+  it('closes on Space and Enter while the overlay itself is focused', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    const { unmount } = render(
+      <Drawer visible={{ open: true, onClose }}>
+        <p>Drawer content</p>
+      </Drawer>,
+    );
+    const overlay = screen.getByRole('dialog');
+    await blurThenFocusOverlay(overlay);
+    await user.keyboard(' ');
+    expect(onClose).toHaveBeenCalledTimes(1);
+    await user.keyboard('{Enter}');
+    expect(onClose).toHaveBeenCalledTimes(2);
+    unmount();
+  });
+
   it('closes on X button click', async () => {
     const onClose = vi.fn();
     const user = userEvent.setup();
     render(
-      <Drawer visible={{ open: true, onClose }} config={{ title: "Test Drawer" }}>
+      <Drawer
+        visible={{ open: true, onClose }}
+        config={{ title: 'Test Drawer' }}
+      >
         <p>Drawer content</p>
       </Drawer>,
     );
@@ -75,7 +132,10 @@ describe('Drawer', () => {
 
   it('renders title', () => {
     render(
-      <Drawer visible={{ open: true, onClose: () => {} }} config={{ title: "My Drawer" }}>
+      <Drawer
+        visible={{ open: true, onClose: () => {} }}
+        config={{ title: 'My Drawer' }}
+      >
         <p>Content</p>
       </Drawer>,
     );
@@ -95,7 +155,7 @@ describe('Drawer', () => {
     render(
       <Drawer
         visible={{ open: true, onClose: () => {} }}
-        config={{ title: "Drawer" }}
+        config={{ title: 'Drawer' }}
         footer={<button type="button">Cancel</button>}
       >
         <p>Content</p>
@@ -115,7 +175,10 @@ describe('Drawer', () => {
 
   it('has correct accessibility attributes', () => {
     render(
-      <Drawer visible={{ open: true, onClose: () => {} }} config={{ title: "Accessible Drawer" }}>
+      <Drawer
+        visible={{ open: true, onClose: () => {} }}
+        config={{ title: 'Accessible Drawer' }}
+      >
         <p>Content</p>
       </Drawer>,
     );
@@ -127,7 +190,10 @@ describe('Drawer', () => {
 
   it('maps side and size props to CSS classes', () => {
     render(
-      <Drawer visible={{ open: true, onClose: () => {} }} config={{ side: "right", size: "lg" }}>
+      <Drawer
+        visible={{ open: true, onClose: () => {} }}
+        config={{ side: 'right', size: 'lg' }}
+      >
         <p>Content</p>
       </Drawer>,
     );

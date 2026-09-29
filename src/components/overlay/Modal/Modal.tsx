@@ -118,7 +118,10 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         }
       };
       const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (
+          (e.key === 'Enter' || e.key === ' ') &&
+          e.target === e.currentTarget
+        ) {
           e.preventDefault();
           onClose?.();
         }

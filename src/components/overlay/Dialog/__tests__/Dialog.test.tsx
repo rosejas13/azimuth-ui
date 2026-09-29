@@ -3,6 +3,16 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Dialog } from '../Dialog';
 
+async function blurThenFocusOverlay(overlay: HTMLElement) {
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+  overlay.focus();
+  await waitFor(() => {
+    expect(document.activeElement).toBe(overlay);
+  });
+}
+
 describe('Dialog', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
@@ -124,6 +134,74 @@ describe('Dialog', () => {
     );
     await user.keyboard('{Escape}');
     expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it('does not close on Space or Enter inside custom form content', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Dialog visible={{ open: true, onClose }} content={{ title: 'Rename' }}>
+        <input aria-label="Name" defaultValue="hello world" />
+        <textarea aria-label="Notes" defaultValue="line one" />
+      </Dialog>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).not.toBe(document.body);
+    });
+    await user.click(screen.getByLabelText('Name'));
+    await user.keyboard(' ');
+    await user.keyboard('{Enter}');
+    expect(onClose).not.toHaveBeenCalled();
+    expect(screen.getByLabelText('Name')).toHaveValue('hello world ');
+    const notes = screen.getByLabelText('Notes');
+    await user.click(notes);
+    await user.keyboard(' ');
+    await user.keyboard('{Enter}');
+    expect(onClose).not.toHaveBeenCalled();
+    expect(notes).toHaveValue('line one \n');
+    await user.keyboard('{Escape}');
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('closes on Space and Enter while the overlay itself is focused', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Dialog visible={{ open: true, onClose }}>
+        <p>Are you sure?</p>
+      </Dialog>,
+    );
+    await waitFor(() => {
+      expect(document.activeElement).toBe(
+        screen.getByLabelText('Close dialog'),
+      );
+    });
+    const overlay = screen.getByRole('dialog');
+    await blurThenFocusOverlay(overlay);
+    await user.keyboard(' ');
+    expect(onClose).toHaveBeenCalledTimes(1);
+    await user.keyboard('{Enter}');
+    expect(onClose).toHaveBeenCalledTimes(2);
+  });
+
+  it('Space and Enter do not dismiss while loading even from the overlay', async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+    const { unmount } = render(
+      <Dialog
+        visible={{ open: true, onClose }}
+        actions={{ confirm: { loading: true } }}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByText('Cancel')).toBeDisabled();
+    });
+    const overlay = screen.getByRole('dialog');
+    await blurThenFocusOverlay(overlay);
+    await user.keyboard(' ');
+    await user.keyboard('{Enter}');
+    expect(onClose).not.toHaveBeenCalled();
+    unmount();
   });
 
   it('renders description', () => {

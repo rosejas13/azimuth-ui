@@ -9,6 +9,17 @@ describe('DatePicker', () => {
     expect(screen.getByRole('textbox')).toBeInTheDocument();
   });
 
+  it('wrapper is flex-safe: never squishes inside flex rows', () => {
+    const { container } = render(<DatePicker />);
+    expect(container.firstChild).toHaveClass('noShrink');
+  });
+
+  it('applies explicit width to the outer wrapper', () => {
+    const { container } = render(<DatePicker width="16rem" />);
+    expect(container.firstChild).toHaveStyle({ width: '16rem' });
+    expect(container.firstChild).toHaveClass('noShrink');
+  });
+
   it('shows placeholder text', () => {
     render(<DatePicker placeholder="Pick a date" />);
     expect(screen.getByPlaceholderText('Pick a date')).toBeInTheDocument();

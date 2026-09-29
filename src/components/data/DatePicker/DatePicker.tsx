@@ -180,7 +180,7 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
     return (
       <div
         ref={ref}
-        className={cn(styles.wrapper, className)}
+        className={cn(styles.wrapper, styles.noShrink, className)}
         style={width !== undefined ? { width } : undefined}
         {...props}
       >

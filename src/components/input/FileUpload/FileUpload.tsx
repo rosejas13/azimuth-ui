@@ -9,12 +9,31 @@ import {
   type DragEvent,
   type ClipboardEvent,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './FileUpload.module.css';
 
-export interface FileUploadProps extends Omit<
-  ComponentPropsWithoutRef<'div'>,
-  'children'
+/**
+ * Curated native surface for the drop-zone wrapper (div-rooted, handles
+ * file-transfer events). Anything native not listed goes through
+ * `wrapperProps`.
+ */
+export interface FileUploadProps extends CuratedSurface<
+  'div',
+  [
+    'className',
+    'id',
+    'title',
+    'tabIndex',
+    'aria-label',
+    'aria-labelledby',
+    'aria-describedby',
+    'onDragOver',
+    'onDragLeave',
+    'onDrop',
+    'onPaste',
+    'onKeyDown',
+  ]
 > {
   onFilesSelected?: (files: File[]) => void;
   /** Accepted file types string (e.g. 'image/*,.pdf'). Passed to the underlying file input. */
@@ -25,6 +44,8 @@ export interface FileUploadProps extends Omit<
   maxSize?: number;
   /** @default false */
   disabled?: boolean;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  wrapperProps?: NativeRest<'div'>;
 }
 
 function formatSize(bytes: number): string {
@@ -53,6 +74,7 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
       maxSize = 10,
       disabled = false,
       className,
+      wrapperProps,
       ...props
     },
     ref,
@@ -177,6 +199,7 @@ export const FileUpload = forwardRef<HTMLDivElement, FileUploadProps>(
         // button; this wrapper only handles file-transfer events.
         role="presentation"
         {...props}
+        {...(wrapperProps as ComponentPropsWithoutRef<'div'>)}
       >
         <input
           ref={inputRef}

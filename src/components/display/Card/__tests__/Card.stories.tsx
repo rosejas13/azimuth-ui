@@ -107,3 +107,25 @@ export const SectionCard: Story = {
     actions: <button type="button">Edit section</button>,
   },
 };
+
+// Regression story for azimuth_ui-e0v: bodies taller than the old
+// 2000px max-height cap must never clip when expanded.
+export const VeryLongBody: Story = {
+  args: {
+    title: 'Very long body',
+    expandable: true,
+    defaultExpanded: false,
+    children: (
+      <div style={{ display: 'grid', gap: 8 }}>
+        {Array.from({ length: 40 }, (_, i) => (
+          <textarea
+            key={i}
+            rows={4}
+            aria-label={`Field ${i + 1}`}
+            defaultValue={`Textarea field ${i + 1}`}
+          />
+        ))}
+      </div>
+    ),
+  },
+};

@@ -6,15 +6,31 @@ import {
   useState,
   useCallback,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { Button } from '@/components/input/Button';
 import { cn } from '@/utils/cn';
 import { useInputConfig } from '../input-config';
 import styles from './QuantityStepper.module.css';
 
-/** Props for the QuantityStepper component. */
-export interface QuantityStepperProps extends Omit<
-  ComponentPropsWithoutRef<'div'>,
-  'onChange'
+/**
+ * Curated native surface for the stepper container (div-rooted). Anything
+ * native not listed goes through `containerProps`.
+ */
+export interface QuantityStepperProps extends CuratedSurface<
+  'div',
+  [
+    'className',
+    'id',
+    'title',
+    'tabIndex',
+    'aria-label',
+    'aria-labelledby',
+    'aria-describedby',
+    'aria-hidden',
+    'onClick',
+    'onMouseEnter',
+    'onMouseLeave',
+  ]
 > {
   /** Current value (controlled) */
   value?: number;
@@ -34,7 +50,8 @@ export interface QuantityStepperProps extends Omit<
   disabled?: boolean;
   /** Accessible label */
   label?: string;
-  className?: string;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  containerProps?: NativeRest<'div'>;
 }
 
 /** A standalone +/- quantity selector. */
@@ -51,6 +68,7 @@ export const QuantityStepper = forwardRef<HTMLDivElement, QuantityStepperProps>(
       disabled = false,
       label,
       className,
+      containerProps,
       ...props
     },
     ref,
@@ -86,6 +104,7 @@ export const QuantityStepper = forwardRef<HTMLDivElement, QuantityStepperProps>(
         ref={ref}
         className={cn(styles.stepper, styles[resolvedSize], className)}
         {...props}
+        {...(containerProps as ComponentPropsWithoutRef<'div'>)}
       >
         {label && <span className={styles.label}>{label}</span>}
         <Button

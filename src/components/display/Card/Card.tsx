@@ -102,9 +102,9 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(
         <div
           id={bodyId}
           aria-hidden={!expanded || undefined}
-          className={cn(styles.body, !expanded && styles.collapsed)}
+          className={cn(styles.bodyGrid, !expanded && styles.collapsed)}
         >
-          {children}
+          <div className={styles.body}>{children}</div>
         </div>
         {footer && <div className={styles.footer}>{footer}</div>}
         {actions && <div className={styles.actions}>{actions}</div>}

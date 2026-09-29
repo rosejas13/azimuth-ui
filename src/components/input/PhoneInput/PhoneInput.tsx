@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  type InputHTMLAttributes,
+  type ComponentPropsWithoutRef,
   forwardRef,
   useCallback,
   useEffect,
@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './PhoneInput.module.css';
 
@@ -22,10 +23,34 @@ export interface CountryCode {
   label: string;
 }
 
-/** Props for the PhoneInput component. */
-export interface PhoneInputProps extends Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  'onChange' | 'value' | 'defaultValue'
+/**
+ * Curated native surface for the phone number input. Anything native not
+ * listed goes through `phoneProps`.
+ */
+export interface PhoneInputProps extends CuratedSurface<
+  'input',
+  [
+    'className',
+    'id',
+    'name',
+    'autoComplete',
+    'autoFocus',
+    'maxLength',
+    'inputMode',
+    'pattern',
+    'readOnly',
+    'tabIndex',
+    'aria-label',
+    'aria-labelledby',
+    'aria-describedby',
+    'aria-invalid',
+    'onFocus',
+    'onBlur',
+    'onKeyDown',
+    'onKeyUp',
+    'onPaste',
+    'onInput',
+  ]
 > {
   /** Label displayed above the input. */
   label?: string;
@@ -41,6 +66,12 @@ export interface PhoneInputProps extends Omit<
   helpText?: string;
   /** ISO 3166-1 alpha-2 default country code. @default 'US' */
   defaultCountry?: string;
+  /** @default false */
+  disabled?: boolean;
+  /** @default 'Phone number' */
+  placeholder?: string;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  phoneProps?: NativeRest<'input'>;
 }
 
 const COUNTRIES: CountryCode[] = [
@@ -108,6 +139,9 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
       id,
       disabled,
       placeholder,
+      'aria-invalid': ariaInvalid,
+      'aria-describedby': ariaDescribedby,
+      phoneProps,
       ...props
     },
     ref,
@@ -320,15 +354,17 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             onChange={handleNumberChange}
             disabled={disabled}
             placeholder={placeholder || 'Phone number'}
-            aria-invalid={error ? 'true' : undefined}
+            {...props}
+            aria-invalid={ariaInvalid ?? (error ? 'true' : undefined)}
             aria-describedby={
-              error
+              ariaDescribedby ??
+              (error
                 ? `${generatedId}-error`
                 : helpText
                   ? `${generatedId}-help`
-                  : undefined
+                  : undefined)
             }
-            {...props}
+            {...(phoneProps as ComponentPropsWithoutRef<'input'>)}
           />
         </div>
 

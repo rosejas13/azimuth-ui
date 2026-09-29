@@ -106,4 +106,79 @@ describe('InputGroup', () => {
     expect(wrapper?.className).toContain('wrapperHorizontal');
     expect(override?.className).not.toContain('wrapperHorizontal');
   });
+
+  describe('align', () => {
+    it('defaults to fill class (current behavior preserved)', () => {
+      render(
+        <InputGroup>
+          <input type="text" placeholder="First" />
+        </InputGroup>,
+      );
+      expect(screen.getByRole('group').className).toContain('alignFill');
+    });
+
+    it('applies alignStart class', () => {
+      render(
+        <InputGroup align="start">
+          <input type="text" placeholder="First" />
+        </InputGroup>,
+      );
+      expect(screen.getByRole('group').className).toContain('alignStart');
+    });
+
+    it('applies alignEnd class', () => {
+      render(
+        <InputGroup align="end">
+          <Input placeholder="Search" />
+          <button type="button">Go</button>
+        </InputGroup>,
+      );
+      const group = screen.getByRole('group');
+      expect(group.className).toContain('alignEnd');
+    });
+
+    it('alignEnd still renders all children', () => {
+      render(
+        <InputGroup align="end">
+          <Input placeholder="Search" />
+          <button type="button">Go</button>
+        </InputGroup>,
+      );
+      expect(screen.getByPlaceholderText('Search')).toBeInTheDocument();
+      expect(screen.getByText('Go')).toBeInTheDocument();
+    });
+  });
+
+  describe('responsive', () => {
+    it('does not apply responsive class by default', () => {
+      render(
+        <InputGroup>
+          <input type="text" placeholder="First" />
+        </InputGroup>,
+      );
+      expect(screen.getByRole('group').className).not.toContain('responsive');
+    });
+
+    it('applies responsive class when set', () => {
+      render(
+        <InputGroup responsive>
+          <input type="text" placeholder="First" />
+          <input type="text" placeholder="Second" />
+        </InputGroup>,
+      );
+      expect(screen.getByRole('group').className).toContain('responsive');
+    });
+
+    it('combines with align prop', () => {
+      render(
+        <InputGroup align="end" responsive>
+          <Input placeholder="Search" />
+          <button type="button">Go</button>
+        </InputGroup>,
+      );
+      const group = screen.getByRole('group');
+      expect(group.className).toContain('alignEnd');
+      expect(group.className).toContain('responsive');
+    });
+  });
 });

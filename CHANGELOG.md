@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.16.0 (2026-09-29)
+
+### Features
+
+- **`InputGroup` gains `align` and `responsive`.** `align?: 'start' | 'fill' | 'end'` (default `'fill'`) controls how attached children distribute along the row — the input-plus-button pattern finally lines up without consumer spacer divs; `responsive?: boolean` (opt-in) stacks the group vertically on narrow screens. +tests and story variants.
+- **`ProgressBar` gains a `label` prop** (visible label with the `aria-label` fallback), completing the a11y sweep's nameable-controls work.
+- **Curated-prop surface sweep, batch 1 — interactive inputs.** SearchBar, DropdownList, FileUpload, OTPInput, QuantityStepper, Rating, and PhoneInput now expose curated native surfaces via `CuratedSurface` + editable escape hatch props (`inputProps`/`wrapperProps`/`groupProps`/`containerProps`/`phoneProps`, spread last so overrides win). Editor autocomplete shows ~15 props instead of ~150; behavior unchanged (batch 1 of the `ogp` epic; overlays/nav next).
+
+### Fixes
+
+- **Overlay Enter/Space dismissal guarded (`Modal`, `Dialog`, `Drawer`).** Pressing Space inside a textarea or Enter inside a form control closed the modals — dismissal now requires the overlay itself to be focused (`e.target === e.currentTarget`); Escape still works everywhere, and the space character actually inserts in fields (removing the old unconditional `preventDefault`). Loading dialogs block Escape/click/keys as before. One follow-up bead tracks the same pattern in SlideSheet/Sidebar/CommandPalette.
+- **Card expand no longer clips long bodies.** The `max-height: 2000px` cap is gone; the expanding body animates with the `grid-template-rows: 0fr → 1fr` technique (matching Accordion), so a card with 40 textareas renders in full. Non-expandable cards are untouched.
+- **Form rows stop overflowing with side-by-side controls.** The stretch path's `min-width: 12rem` floor forced every compact control to 144px each; stretched children now use `min-width: 0` flex hygiene. Inputs keep usability minima via their own padding.
+- **`DatePicker` holds its width inside flex rows.** Root gets `flex-shrink: 0` + `min-width: 12rem` (explicit `width` still wins) — no more consumer `flexShrink: 0` wrappers.
+- **Interactive Chip geometry.** `:focus-visible` ring (system focus shadow + primary border, matching Input) and a `scale(0.97)` press affordance, so chip-as-button matches the rest of the workbench.
+
+### Quality
+
+- a11y suite re-verified after the touch points (161 chromium tests green), unit suite 1777 tests green, lint/typecheck zero-error, build clean with the sourcemap guard intact.
+
 ## 0.15.0 (2026-09-25)
 
 ### Fixes

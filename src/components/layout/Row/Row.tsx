@@ -46,6 +46,14 @@ export interface RowProps extends ComponentPropsWithoutRef<'div'> {
  * A horizontal flexbox row with consistent gap spacing.
  * Children stretch (equal widths, label-baseline alignment) only when
  * `stretch` is enabled, which happens by default inside a `<Form>`.
+ *
+ * @remarks
+ * Stretched children carry `flex: 1 1 auto` with `min-width: 0`, so they
+ * shrink to their intrinsic content minimum instead of a fixed floor —
+ * compact controls (buttons, narrow fields) never force the row past its
+ * container. Inputs keep their own usability minimum via padding; long
+ * values inside stretched inputs don't drag the row wider. Required the
+ * `childMin` class so single-field rows also get overflow-safe min-sizing.
  */
 export const Row = forwardRef<HTMLDivElement, RowProps>(
   (
@@ -79,13 +87,15 @@ export const Row = forwardRef<HTMLDivElement, RowProps>(
           })
         : children;
 
+    const stretchClass = (stretch ?? inForm) && styles.formRow;
+
     return (
       <div
         ref={ref}
         className={cn(
           styles.row,
           wrap ? styles.wrap : styles.nowrap,
-          (stretch ?? inForm) && styles.formRow,
+          stretchClass && `${stretchClass} ${styles.childMin}`,
           align && styles[`align${capitalize(align)}`],
           justify && styles[`justify${capitalize(justify)}`],
           styles[`gap${capitalize(gap)}`],

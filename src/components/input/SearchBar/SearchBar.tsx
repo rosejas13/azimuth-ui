@@ -8,14 +8,42 @@ import {
   useEffect,
   useCallback,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './SearchBar.module.css';
 
-/** Props for the SearchBar component. */
-export interface SearchBarProps extends Omit<
-  ComponentPropsWithoutRef<'input'>,
-  'onSubmit'
+/**
+ * Curated native surface for the search input. Anything native not listed
+ * goes through `inputProps`.
+ */
+export interface SearchBarProps extends CuratedSurface<
+  'input',
+  [
+    'className',
+    'id',
+    'name',
+    'autoComplete',
+    'autoFocus',
+    'maxLength',
+    'inputMode',
+    'tabIndex',
+    'aria-label',
+    'aria-labelledby',
+    'aria-describedby',
+    'aria-invalid',
+    'onFocus',
+    'onBlur',
+    'onKeyDown',
+    'onKeyUp',
+    'onKeyPress',
+    'onPaste',
+    'onInput',
+  ]
 > {
+  /** Controlled value. Pair with `onChange`. When omitted the bar is uncontrolled. */
+  value?: string;
+  /** Called with the input's change event on every keystroke. */
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   /** Callback fired on search (debounced). Receives the current query string. */
   onSearch?: (query: string) => void;
   /** Array of suggestion strings shown below the input. */
@@ -28,6 +56,10 @@ export interface SearchBarProps extends Omit<
   placeholder?: string;
   /** @default true */
   clearable?: boolean;
+  /** @default false */
+  disabled?: boolean;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  inputProps?: NativeRest<'input'>;
 }
 
 /** A search input with debounced callbacks, autocomplete suggestions, and a clear button. */
@@ -45,13 +77,12 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
       value: controlledValue,
       onChange,
       onKeyDown,
+      inputProps,
       ...props
     },
     ref,
   ) => {
-    const [localValue, setLocalValue] = useState(
-      (controlledValue as string) ?? '',
-    );
+    const [localValue, setLocalValue] = useState(controlledValue ?? '');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
     const [suggestionsStyle, setSuggestionsStyle] =
@@ -70,7 +101,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
 
     useEffect(() => {
       if (controlledValue !== undefined) {
-        setLocalValue(controlledValue as string);
+        setLocalValue(controlledValue);
       }
     }, [controlledValue]);
 
@@ -275,6 +306,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
             disabled={disabled}
             {...props}
             placeholder={placeholder}
+            {...(inputProps as ComponentPropsWithoutRef<'input'>)}
           />
           {clearable && hasValue && !disabled && (
             <button

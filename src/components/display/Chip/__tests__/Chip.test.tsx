@@ -10,7 +10,14 @@ describe('Chip', () => {
   });
 
   it('renders all variants', () => {
-    const variants = ['neutral', 'accent', 'success', 'warning', 'danger', 'info'] as const;
+    const variants = [
+      'neutral',
+      'accent',
+      'success',
+      'warning',
+      'danger',
+      'info',
+    ] as const;
     for (const variant of variants) {
       const { unmount } = render(<Chip variant={variant}>{variant}</Chip>);
       expect(screen.getByText(variant)).toBeInTheDocument();
@@ -25,13 +32,20 @@ describe('Chip', () => {
 
   it('delete button has correct aria-label', () => {
     render(<Chip deletable>React</Chip>);
-    expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Remove React');
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'aria-label',
+      'Remove React',
+    );
   });
 
   it('fires onDelete', async () => {
     const handleDelete = vi.fn();
     const user = userEvent.setup();
-    render(<Chip deletable onDelete={handleDelete}>React</Chip>);
+    render(
+      <Chip deletable onDelete={handleDelete}>
+        React
+      </Chip>,
+    );
     await user.click(screen.getByRole('button'));
     expect(handleDelete).toHaveBeenCalledOnce();
   });
@@ -44,6 +58,25 @@ describe('Chip', () => {
   it('applies role button when onClick provided', () => {
     render(<Chip onClick={() => {}}>Click me</Chip>);
     expect(screen.getByRole('button')).toBeInTheDocument();
+  });
+
+  it('interactive chip renders role button and is tabbable', () => {
+    render(<Chip onClick={() => {}}>Click me</Chip>);
+    const chip = screen.getByRole('button');
+    expect(chip).toHaveAttribute('role', 'button');
+    expect(chip).toHaveAttribute('tabindex', '0');
+  });
+
+  it('disabled (aria-disabled) interactive chip keeps chip styles', () => {
+    render(
+      <Chip onClick={() => {}} aria-disabled="true">
+        Disabled
+      </Chip>,
+    );
+    const chip = screen.getByRole('button');
+    expect(chip).toHaveAttribute('aria-disabled', 'true');
+    expect(chip.className).toContain('clickable');
+    expect(chip.className).toContain('chip');
   });
 
   it('fires onClick', async () => {

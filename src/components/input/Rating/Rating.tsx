@@ -6,12 +6,30 @@ import {
   useState,
   useCallback,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './Rating.module.css';
 
-/** Props for the Rating component. */
-export interface RatingProps
-  extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
+/**
+ * Curated native surface for the rating group (div-rooted radiogroup).
+ * Anything native not listed goes through `groupProps`.
+ */
+export interface RatingProps extends CuratedSurface<
+  'div',
+  [
+    'className',
+    'id',
+    'title',
+    'tabIndex',
+    'aria-label',
+    'aria-labelledby',
+    'aria-describedby',
+    'aria-hidden',
+    'onKeyDown',
+    'onMouseLeave',
+    'onMouseEnter',
+  ]
+> {
   /** @default 0 */
   value?: number;
   /** @default 5 */
@@ -21,6 +39,8 @@ export interface RatingProps
   size?: 'sm' | 'md' | 'lg';
   /** @default false */
   disabled?: boolean;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  groupProps?: NativeRest<'div'>;
 }
 
 /** A star-based rating input with keyboard navigation and hover preview. */
@@ -33,6 +53,7 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(
       size = 'md',
       disabled = false,
       className,
+      groupProps,
       ...props
     },
     ref,
@@ -82,6 +103,7 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(
         onMouseLeave={() => setHovered(0)}
         onKeyDown={handleKeyDown}
         {...props}
+        {...(groupProps as ComponentPropsWithoutRef<'div'>)}
       >
         {Array.from({ length: max }, (_, i) => {
           const starValue = i + 1;
@@ -94,7 +116,9 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(
               role="radio"
               aria-checked={starValue <= value}
               aria-label={`${starValue} star${starValue > 1 ? 's' : ''}`}
-              tabIndex={i === (focusedIdx >= 0 ? focusedIdx : value - 1) ? 0 : -1}
+              tabIndex={
+                i === (focusedIdx >= 0 ? focusedIdx : value - 1) ? 0 : -1
+              }
               disabled={disabled}
               className={cn(styles.star, filled && styles.filled)}
               onClick={() => {

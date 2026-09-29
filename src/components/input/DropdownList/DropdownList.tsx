@@ -8,13 +8,30 @@ import {
   useEffect,
   useCallback,
 } from 'react';
+import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
 import styles from './DropdownList.module.css';
 
-/** Props for the DropdownList component. */
-export interface DropdownListProps extends Omit<
-  ComponentPropsWithoutRef<'div'>,
-  'onChange'
+/**
+ * Curated native surface for the dropdown wrapper (div-rooted). Anything
+ * native not listed goes through `wrapperProps`.
+ */
+export interface DropdownListProps extends CuratedSurface<
+  'div',
+  [
+    'className',
+    'id',
+    'title',
+    'tabIndex',
+    'aria-label',
+    'aria-labelledby',
+    'aria-describedby',
+    'aria-invalid',
+    'onClick',
+    'onMouseEnter',
+    'onMouseLeave',
+    'onKeyDown',
+  ]
 > {
   data: {
     options: Array<{
@@ -40,6 +57,8 @@ export interface DropdownListProps extends Omit<
   /** @default false */
   disabled?: boolean;
   error?: string;
+  /** Escape hatch for native attributes absent from the curated surface. Spread last, wins. */
+  wrapperProps?: NativeRest<'div'>;
 }
 
 const dataDefault: DropdownListProps['data'] = { options: [] };
@@ -59,6 +78,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
       error,
       label,
       className,
+      wrapperProps,
       ...props
     },
     ref,
@@ -236,6 +256,7 @@ export const DropdownList = forwardRef<HTMLDivElement, DropdownListProps>(
         ref={ref}
         className={cn(styles.wrapper, error && styles.hasError, className)}
         {...props}
+        {...(wrapperProps as ComponentPropsWithoutRef<'div'>)}
       >
         <div ref={wrapperRef}>
           {label && (
