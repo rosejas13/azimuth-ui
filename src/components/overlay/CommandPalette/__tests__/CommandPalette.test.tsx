@@ -4,6 +4,9 @@ import { describe, it, expect, vi } from 'vitest';
 import { CommandPalette } from '../CommandPalette';
 
 async function blurThenFocusOverlay(overlay: HTMLElement) {
+  // The focus trap schedules its first-focus one frame after open; wait it
+  // out so the delayed focus can't land after we hand the overlay focus.
+  await new Promise((r) => setTimeout(r, 40));
   if (document.activeElement instanceof HTMLElement) {
     document.activeElement.blur();
   }
@@ -11,6 +14,9 @@ async function blurThenFocusOverlay(overlay: HTMLElement) {
   await waitFor(() => {
     expect(document.activeElement).toBe(overlay);
   });
+  // One more frame: nothing pending may re-focus content afterward.
+  await new Promise((r) => setTimeout(r, 40));
+  expect(document.activeElement).toBe(overlay);
 }
 
 const groups = [
