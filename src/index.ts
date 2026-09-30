@@ -52,6 +52,13 @@ export type {
   ToolbarAction,
 } from './components/input/MarkdownField';
 
+export { SuggestionsField } from './components/input/SuggestionsField';
+export type {
+  SuggestionsFieldProps,
+  SuggestionsFieldMode,
+  SuggestionsFieldSuggestions,
+} from './components/input/SuggestionsField';
+
 export { Radio } from './components/input/Radio';
 export type { RadioProps } from './components/input/Radio';
 
