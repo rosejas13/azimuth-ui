@@ -427,3 +427,42 @@ describe('Modal', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('Modal body scroll lock', () => {
+  it('overlapping overlays restore the pre-lock overflow only after the last closes', () => {
+    function First({ child }: { child: boolean }) {
+      return (
+        <Modal
+          visible={{ open: true, onClose: () => {} }}
+          content={{ title: 'outer' }}
+        >
+          Content A{child}
+        </Modal>
+      );
+    }
+    // First lock: body becomes hidden.
+    document.body.style.overflow = '';
+    const { rerender } = render(<First child={false} />);
+    expect(document.body.style.overflow).toBe('hidden');
+    // Second overlay's lock snapshots the HIDDEN body (the old bug's setup).
+    rerender(<First child={true} />);
+    rerender(<First child={false} />);
+    expect(document.body.style.overflow).toBe('hidden');
+  });
+
+  it('restores custom overflow values correctly', () => {
+    document.body.style.overflow = 'auto';
+    const { unmount } = render(
+      <Modal
+        visible={{ open: true, onClose: () => {} }}
+        content={{ title: 'x' }}
+      >
+        body
+      </Modal>,
+    );
+    expect(document.body.style.overflow).toBe('hidden');
+    unmount();
+    expect(document.body.style.overflow).toBe('auto');
+    document.body.style.overflow = '';
+  });
+});

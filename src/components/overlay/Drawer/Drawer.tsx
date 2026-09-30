@@ -1,6 +1,7 @@
 'use client';
 
 import { forwardRef, useCallback, useEffect, useRef } from 'react';
+import { lockBodyScroll } from '../lockBodyScroll';
 import { createPortal } from 'react-dom';
 import type { CuratedSurface, NativeRest } from '@/utils/curate';
 import { cn } from '@/utils/cn';
@@ -94,11 +95,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
     useEffect(() => {
       if (!open) return;
 
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = prev;
-      };
+      return lockBodyScroll();
     }, [open]);
 
     useFocusTrap(drawerRef, open);

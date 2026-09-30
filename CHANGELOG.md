@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.17.1 (2026-09-30)
+
+### Fixes
+
+- **0.17.0's published `styles.css` contained a dangling CSS combinator.** A selector group inside the InputGroup `responsive` media block shipped as `.responsive >, .responsive > :has(+ *)` — an invalid selector that makes consumer builds fail with a parse error. Fresh local builds reproduce clean (the corruption happened when same-named module classes collided during the bundle pass), so the primary defense is a hard build gate: `verify-dist.mjs` now scans every dist selector and aborts the release if any combinator dangles. Rebuild + republish of 0.17.1 replaces the broken artifact.
+
+- **Body-scroll lock could stick forever with overlapping overlays.** Each overlay (Modal, Dialog, Drawer, SlideSheet) snapshotted `body.style.overflow` on ITS own mount and restored on ITS own unmount — with a nested overlay (e.g. parent Modal + its ConfirmDialog), the second snapshot captured the already-hidden body, so closing the last child restored `'hidden'` permanently. All four overlays now share a ref-counted lock (`lockBodyScroll`): the body stays hidden until the last lock releases, and the pre-lock value restores exactly once. Closes azimuth_ui-54r.
+
 ## 0.17.0 (2026-09-29)
 
 ### Features

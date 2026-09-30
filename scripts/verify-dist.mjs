@@ -34,4 +34,24 @@ for (const file of readdirSync(dist)) {
 }
 
 if (failed) process.exit(1);
-console.log('OK: dist/ has no sourcemap references');
+
+// Guard: dangling combinators (`X >,` / `X +`-with-no-subject) break consumer
+// builds with a parse error. The bundler has produced this once when
+// same-named module classes collided during aggregation; catch it here.
+const css = readFileSync(resolve(dist, 'index.css'), 'utf8');
+const danglingPattern = /[>+~]\s*(?=[,{}])/g;
+const offenders = [];
+for (const m of css.matchAll(danglingPattern)) {
+  const lineStart = css.lastIndexOf('\n', m.index) + 1;
+  const line = css.slice(lineStart, css.indexOf('\n', m.index)).trim();
+  offenders.push(line);
+}
+if (offenders.length > 0) {
+  console.error(
+    `FAIL: dangling CSS combinator(s) in dist/index.css (${offenders.length}):`,
+  );
+  console.error(offenders.slice(0, 5).join('\n'));
+  process.exit(1);
+}
+
+console.log('OK: dist/ has no sourcemap references and no dangling combinators');
