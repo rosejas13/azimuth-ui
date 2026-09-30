@@ -63,7 +63,7 @@
     align-items: stretch;
   }
 
-  .responsive >,
+  .responsive > *,
   .responsive > :has(+ *) {
     flex: 1 1 auto;
   }
